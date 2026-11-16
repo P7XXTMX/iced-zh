@@ -251,7 +251,7 @@ impl Layer {
             .push(primitive::Instance::new(bounds, primitive));
     }
 
-    #[allow(clippy::drain_collect)] // We want to reuse `Layer` capacity
+    #[allow(clippy::drain_collect)] // We want to reuse `Layer` capacity（我们想复用 `Layer` 的容量）
     fn flush_meshes(&mut self) {
         if !self.pending_meshes.is_empty() {
             self.triangles.push(triangle::Item::Group {
@@ -261,7 +261,7 @@ impl Layer {
         }
     }
 
-    #[allow(clippy::drain_collect)] // We want to reuse `Layer` capacity
+    #[allow(clippy::drain_collect)] // We want to reuse `Layer` capacity（我们想复用 `Layer` 的容量）
     fn flush_text(&mut self) {
         if !self.pending_text.is_empty() {
             self.text.push(text::Item::Group {

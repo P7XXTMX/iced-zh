@@ -1,3 +1,17 @@
+//! 包装给定的部件，并捕获该部件边界内的所有鼠标按键按下事件，
+//! 相当于让它变得“不透明”（_opaque_）。
+//!
+//! 这个部件用于标记 [`Stack`] 中的元素，或者覆盖层内部的元素
+//! （例如 [`Popover`] 的弹出框），以免鼠标事件
+//! 穿透到下方的元素。
+//!
+//! 默认只捕获鼠标按键的按下事件。使用
+//! [`Opaque::capture_scroll`] 可以同时捕获滚轮事件，
+//! 这样滚动就不会穿透到下方的元素。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Wraps the given widget and captures any mouse button presses inside the bounds of
 //! the widget—effectively making it _opaque_.
 //!
@@ -9,10 +23,12 @@
 //! [`Opaque::capture_scroll`] to also capture scroll wheel events, so that
 //! scrolling does not pass through to the elements below.
 //!
+//! </details>
+//!
 //! [`Stack`]: crate::Stack
 //! [`Popover`]: crate::popover::Popover
 //!
-//! # Example
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # use iced::widget::Widget;
@@ -27,7 +43,9 @@
 //! fn view(state: &State) -> impl Widget<Message> {
 //!     stack![
 //!         // This button lies below the opaque top layer: mouse events over
+//!         // 这个按钮位于不透明的顶层之下：顶层上方的鼠标事件
 //!         // the top layer do not pass through to it.
+//!         // 不会穿透到它。
 //!         button("Click me!").on_press(Message::ButtonPressed),
 //!         opaque(text("I am opaque")),
 //!     ]
@@ -41,6 +59,20 @@ use crate::core::widget::tree::{self, Tree};
 use crate::core::widget::{self, Operation, Widget};
 use crate::core::{Element, Event, Layout, Length, Rectangle, Shell, Size, Vector};
 
+/// 包装给定的部件，并捕获该部件边界内的所有鼠标按键按下事件，
+/// 相当于让它变得“不透明”（_opaque_）。
+///
+/// 这个部件用于标记 [`Stack`] 中的元素，或者覆盖层内部的元素
+/// （例如 [`Popover`] 的弹出框），以免鼠标事件
+/// 穿透到下方的元素。
+///
+/// 默认只捕获鼠标按键的按下事件。使用
+/// [`Self::capture_scroll`] 可以同时捕获滚轮事件，
+/// 这样滚动就不会穿透到下方的元素。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Wraps the given widget and captures any mouse button presses inside the bounds of
 /// the widget—effectively making it _opaque_.
 ///
@@ -52,10 +84,12 @@ use crate::core::{Element, Event, Layout, Length, Rectangle, Shell, Size, Vector
 /// [`Self::capture_scroll`] to also capture scroll wheel events, so that
 /// scrolling does not pass through to the elements below.
 ///
+/// </details>
+///
 /// [`Stack`]: crate::Stack
 /// [`Popover`]: crate::popover::Popover
 ///
-/// # Example
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # use iced::widget::Widget;
@@ -70,7 +104,9 @@ use crate::core::{Element, Event, Layout, Length, Rectangle, Shell, Size, Vector
 /// fn view(state: &State) -> impl Widget<Message> {
 ///     stack![
 ///         // This button lies below the opaque top layer: mouse events over
+///         // 这个按钮位于不透明的顶层之下：顶层上方的鼠标事件
 ///         // the top layer do not pass through to it.
+///         // 不会穿透到它。
 ///         button("Click me!").on_press(Message::ButtonPressed),
 ///         opaque(text("I am opaque")),
 ///     ]
@@ -82,7 +118,14 @@ pub struct Opaque<W> {
 }
 
 impl<W> Opaque<W> {
+    /// 创建一个新的 [`Opaque`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Opaque`].
+    ///
+    /// </details>
     pub fn new(content: W) -> Self {
         Opaque {
             content,
@@ -90,18 +133,37 @@ impl<W> Opaque<W> {
         }
     }
 
+    /// 设置当光标位于 [`Opaque`] 的边界之上时，
+    /// 是否捕获滚轮事件。
+    ///
+    /// 默认只捕获鼠标按键的按下事件。启用这个标志后
+    /// 还会捕获滚轮事件，阻止它们穿透到
+    /// 下方的元素。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets whether the scroll wheel should be captured when the cursor is
     /// over the bounds of the [`Opaque`].
     ///
     /// By default, only mouse button presses are captured. Enabling this flag
     /// also captures scroll wheel events, preventing them from passing through
     /// to the elements below.
+    ///
+    /// </details>
     pub fn capture_scroll(mut self, capture: bool) -> Self {
         self.capture_scroll = capture;
         self
     }
 
+    /// 返回被包装的内容。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the wrapped content.
+    ///
+    /// </details>
     pub fn into_inner(self) -> W {
         self.content
     }

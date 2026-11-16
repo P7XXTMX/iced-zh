@@ -1,6 +1,13 @@
+//! 滑块让用户通过移动指示器来设置一个值。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Sliders let users set a value by moving an indicator.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # use iced::widget::Widget;
@@ -44,6 +51,21 @@ use crate::core::widget::tree::{self, Tree};
 use crate::core::window;
 use crate::core::{self, Event, Length, Pixels, Point, Rectangle, Shell, Size, Widget};
 
+/// 一个垂直条和一个手柄，用于从一个取值范围中
+/// 选择单个值。
+///
+/// [`VerticalSlider`] 会尝试填满其容器的垂直空间。
+///
+/// [`VerticalSlider`] 的数值范围是泛型的，步长默认
+/// 为 1 个单位。
+///
+/// 注意：在底层，值会与 f64 相互转换，因此只有能用 f64 精确表示的值
+/// 才能通过滑块选中。不过在这样的量级下，滑块本身的精度
+/// 很可能已经低于 f64 表示所损失的精度。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An vertical bar and a handle that selects a single value from a range of
 /// values.
 ///
@@ -56,7 +78,9 @@ use crate::core::{self, Event, Length, Pixels, Point, Rectangle, Shell, Size, Wi
 /// are possible to select via the slider. However it is likely that the precision of the slider at these
 /// scales is already less than the precision lost from the f64 representation.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # use iced::widget::Widget;
@@ -107,9 +131,28 @@ where
     Message: Clone,
     Theme: Catalog,
 {
+    /// [`VerticalSlider`] 的默认宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default width of a [`VerticalSlider`].
+    ///
+    /// </details>
     pub const DEFAULT_WIDTH: f32 = 16.0;
 
+    /// 创建一个新的 [`VerticalSlider`]。
+    ///
+    /// 它需要：
+    ///   * 一个由可能取值构成的闭区间
+    ///   * [`VerticalSlider`] 的当前值
+    ///   * 一个在 [`VerticalSlider`] 被拖动时调用的函数。
+    ///     它接收 [`VerticalSlider`] 的新值，并且必须产生一个
+    ///     `Message`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`VerticalSlider`].
     ///
     /// It expects:
@@ -118,6 +161,8 @@ where
     ///   * a function that will be called when the [`VerticalSlider`] is dragged.
     ///     It receives the new value of the [`VerticalSlider`] and must produce a
     ///     `Message`.
+    ///
+    /// </details>
     pub fn new<F>(range: RangeInclusive<T>, value: T, on_change: F) -> Self
     where
         F: 'a + Fn(T) -> Message,
@@ -149,52 +194,110 @@ where
         }
     }
 
+    /// 设置 [`VerticalSlider`] 可选的默认值。
+    ///
+    /// 如果设置了，按住 ctrl 或 command 点击时 [`VerticalSlider`] 会重置为这个值。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the optional default value for the [`VerticalSlider`].
     ///
     /// If set, the [`VerticalSlider`] will reset to this value when ctrl-clicked or command-clicked.
+    ///
+    /// </details>
     pub fn default(mut self, default: impl Into<T>) -> Self {
         self.default = Some(default.into());
         self
     }
 
+    /// 设置 [`VerticalSlider`] 的释放消息。
+    /// 它在鼠标从滑块上松开时被调用。
+    ///
+    /// 通常，这条消息产生时，用户与滑块的交互已经结束。
+    /// 如果你需要根据滑块的结果启动一个长时间运行的任务，而
+    /// 默认的 on_change 消息可能产生过多事件，这会很有用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the release message of the [`VerticalSlider`].
     /// This is called when the mouse is released from the slider.
     ///
     /// Typically, the user's interaction with the slider is finished when this message is produced.
     /// This is useful if you need to spawn a long-running task from the slider's result, where
     /// the default on_change message could create too many events.
+    ///
+    /// </details>
     pub fn on_release(mut self, on_release: Message) -> Self {
         self.on_release = Some(on_release);
         self
     }
 
+    /// 设置 [`VerticalSlider`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`VerticalSlider`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Pixels>) -> Self {
         self.width = width.into().0;
         self
     }
 
+    /// 设置 [`VerticalSlider`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`VerticalSlider`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置 [`VerticalSlider`] 的步长。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the step size of the [`VerticalSlider`].
+    ///
+    /// </details>
     pub fn step(mut self, step: impl num_traits::AsPrimitive<f64>) -> Self {
         self.step = step.as_();
         self
     }
 
+    /// 设置 [`VerticalSlider`] 可选的“shift”步长。
+    ///
+    /// 如果设置了，按住 shift 键时会使用这个值作为步长。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the optional "shift" step for the [`VerticalSlider`].
     ///
     /// If set, this value is used as the step while the shift key is pressed.
+    ///
+    /// </details>
     pub fn shift_step(mut self, shift_step: impl num_traits::AsPrimitive<f64>) -> Self {
         self.shift_step = Some(shift_step.as_());
         self
     }
 
+    /// 设置 [`VerticalSlider`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`VerticalSlider`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme, Status) -> Style + 'a) -> Self
     where
@@ -204,7 +307,14 @@ where
         self
     }
 
+    /// 设置 [`VerticalSlider`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`VerticalSlider`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
@@ -507,6 +617,8 @@ where
         if state.is_dragging {
             // FIXME: Fall back to `Pointer` on Windows
             // See https://github.com/rust-windowing/winit/issues/1043
+            // 待修复：在 Windows 上回退到 `Pointer`
+            // 参见 https://github.com/rust-windowing/winit/issues/1043
             if cfg!(target_os = "windows") {
                 mouse::Interaction::Pointer
             } else {

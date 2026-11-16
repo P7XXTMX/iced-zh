@@ -50,6 +50,9 @@ impl Atlas {
             // On the GL backend we start with 2 layers, to help wgpu figure
             // out that this texture is `GL_TEXTURE_2D_ARRAY` rather than `GL_TEXTURE_2D`
             // https://github.com/gfx-rs/wgpu/blob/004e3efe84a320d9331371ed31fa50baa2414911/wgpu-hal/src/gles/mod.rs#L371
+            // 在 GL 后端上我们从 2 个图层开始，以帮助 wgpu 判断出
+            // 这个纹理是 `GL_TEXTURE_2D_ARRAY` 而不是 `GL_TEXTURE_2D`
+            // （参见上面的链接）
             wgpu::Backend::Gl => vec![Layer::Empty, Layer::Empty],
             _ => vec![Layer::Empty],
         };
@@ -120,6 +123,7 @@ impl Atlas {
             let entry = self.allocate(width, height)?;
 
             // We grow the internal texture after allocating if necessary
+            // 必要时，我们在分配之后扩大内部纹理
             let new_layers = self.layers.len() - current_size;
             self.grow(new_layers, device, encoder, self.backend);
 
@@ -178,6 +182,7 @@ impl Atlas {
 
     fn allocate(&mut self, width: u32, height: u32) -> Option<Entry> {
         // Allocate one layer if texture fits perfectly
+        // 如果纹理大小刚好合适，就分配一整个图层
         if width == self.size && height == self.size {
             let mut empty_layers = self
                 .layers
@@ -203,6 +208,7 @@ impl Atlas {
         }
 
         // Split big textures across multiple layers
+        // 把大纹理拆分到多个图层上
         if width > self.size || height > self.size {
             let mut fragments = Vec::new();
             let mut y = 0;
@@ -236,6 +242,7 @@ impl Atlas {
         }
 
         // Try allocating on an existing layer
+        // 尝试在已有的图层上分配
         for (i, layer) in self.layers.iter_mut().enumerate() {
             match layer {
                 Layer::Empty => {
@@ -265,6 +272,7 @@ impl Atlas {
         }
 
         // Create new layer with atlas allocator
+        // 创建带有图集分配器的新图层
         let mut allocator = Allocator::new(self.size);
 
         if let Some(region) = allocator.allocate(width, height) {
@@ -278,6 +286,7 @@ impl Atlas {
         }
 
         // We ran out of memory (?)
+        // 内存用完了（？）
         None
     }
 
@@ -320,6 +329,10 @@ impl Atlas {
         //   BufferCopyView.layout.bytes_per_row % wgpu::COPY_BYTES_PER_ROW_ALIGNMENT == 0
         // So we calculate bytes_per_row by rounding width up to the next
         // multiple of wgpu::COPY_BYTES_PER_ROW_ALIGNMENT.
+        // WebGPU 要求：
+        //   BufferCopyView.layout.bytes_per_row % wgpu::COPY_BYTES_PER_ROW_ALIGNMENT == 0
+        // 所以我们把宽度向上取整到 wgpu::COPY_BYTES_PER_ROW_ALIGNMENT 的
+        // 下一个倍数，以此计算 bytes_per_row。
         let bytes_per_row = (4 * (width + padding.width * 2))
             .next_multiple_of(wgpu::COPY_BYTES_PER_ROW_ALIGNMENT)
             as usize;
@@ -340,6 +353,7 @@ impl Atlas {
         let stride = PIXEL * w;
 
         // Copy image rows
+        // 复制图像的各行
         for row in 0..h {
             let src = offset + row * PIXEL * image_width as usize;
             let dst = (row + pad_h) * bytes_per_row;
@@ -349,6 +363,7 @@ impl Atlas {
                 .copy_from_slice(&pixels[src..src + stride]);
 
             // Add padding to the sides, if needed
+            // 需要时在两侧添加填充
             for i in 0..pad_w {
                 fragment
                     .slice(dst + PIXEL * i..dst + PIXEL * (i + 1))
@@ -363,6 +378,7 @@ impl Atlas {
         }
 
         // Add padding on top and bottom
+        // 在顶部和底部添加填充
         for row in 0..pad_h {
             let dst_top = row * bytes_per_row;
             let dst_bottom = (pad_h + h + row) * bytes_per_row;
@@ -370,33 +386,40 @@ impl Atlas {
             let src_bottom = offset + (h - 1) * PIXEL * image_width as usize;
 
             // Top
+            // 顶部
             fragment
                 .slice(dst_top + PIXEL * pad_w..dst_top + PIXEL * (pad_w + w))
                 .copy_from_slice(&pixels[src_top..src_top + PIXEL * w]);
 
             // Bottom
+            // 底部
             fragment
                 .slice(dst_bottom + PIXEL * pad_w..dst_bottom + PIXEL * (pad_w + w))
                 .copy_from_slice(&pixels[src_bottom..src_bottom + PIXEL * w]);
 
             // Corners
+            // 四个角
             for i in 0..pad_w {
                 // Top left
+                // 左上
                 fragment
                     .slice(dst_top + PIXEL * i..dst_top + PIXEL * (i + 1))
                     .copy_from_slice(&pixels[offset..offset + PIXEL]);
 
                 // Top right
+                // 右上
                 fragment
                     .slice(dst_top + PIXEL * (w + pad_w + i)..dst_top + PIXEL * (w + pad_w + i + 1))
                     .copy_from_slice(&pixels[offset + PIXEL * (w - 1)..offset + PIXEL * w]);
 
                 // Bottom left
+                // 左下
                 fragment
                     .slice(dst_bottom + PIXEL * i..dst_bottom + PIXEL * (i + 1))
                     .copy_from_slice(&pixels[src_bottom..src_bottom + PIXEL]);
 
                 // Bottom right
+                // 右下
                 fragment
                     .slice(
                         dst_bottom + PIXEL * (w + pad_w + i)
@@ -407,6 +430,7 @@ impl Atlas {
         }
 
         // Copy actual image
+        // 复制实际的图像
         encoder.copy_buffer_to_texture(
             wgpu::TexelCopyBufferInfo {
                 buffer: buffer_slice.buffer(),
@@ -450,6 +474,11 @@ impl Atlas {
         // This will over-allocate some unused memory on GL, but it's better than not being able to
         // grow the atlas past multiples of 6!
         // https://github.com/gfx-rs/wgpu/blob/004e3efe84a320d9331371ed31fa50baa2414911/wgpu-hal/src/gles/mod.rs#L371
+        // 在 GL 后端上，如果 layers.len() 是 6 的倍数，我们需要帮助 wgpu 判断出这个纹理
+        // 仍然是 `GL_TEXTURE_2D_ARRAY`，而不是 `GL_TEXTURE_CUBE_MAP` 或 `GL_TEXTURE_CUBE_ARRAY`。
+        // 这会在 GL 上多分配一些用不到的内存，但总好过
+        // 图集无法增长到超过 6 的倍数！
+        // （参见上面的链接）
         let depth_or_array_layers = match backend {
             wgpu::Backend::Gl if self.layers.len().is_multiple_of(6) => {
                 self.layers.len() as u32 + 1

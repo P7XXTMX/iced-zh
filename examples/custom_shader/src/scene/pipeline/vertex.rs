@@ -12,12 +12,16 @@ pub struct Vertex {
 impl Vertex {
     const ATTRIBS: [wgpu::VertexAttribute; 4] = wgpu::vertex_attr_array![
         //position
+        // 位置
         0 => Float32x3,
         //normal
+        // 法线
         1 => Float32x3,
         //tangent
+        // 切线
         2 => Float32x3,
         //uv
+        // uv 坐标
         3 => Float32x2,
     ];
 

@@ -1,4 +1,11 @@
+//! 使用内置部件，或者创建你自己的部件。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Use the built-in widgets or create your own.
+//!
+//! </details>
 #![doc(
     html_logo_url = "https://raw.githubusercontent.com/iced-rs/iced/9ab6923e943f784985e9ef9ca28b10278297225d/docs/logo.svg"
 )]
@@ -171,32 +178,74 @@ use crate::core::widget::tree;
 use crate::core::widget::{self, Tree};
 use crate::core::{Border, Color, Event, Length, Rectangle, Shell, Size, Vector};
 
+/// 装箱的 [`Widget`]。
+///
+/// 它是 [`core::Element`] 的别名，带有默认的 `Theme` 和
+/// `Renderer` 参数。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A boxed [`Widget`].
 ///
 /// This is an alias of [`core::Element`] with default `Theme` and
 /// `Renderer` parameters.
+///
+/// </details>
 pub type Element<'a, Message, Theme = crate::Theme, Renderer = crate::Renderer> =
     crate::core::Element<'a, Message, Theme, Renderer>;
 
+/// 可以被 iced 渲染的部件。
+///
+/// 此特质为 [`core::Widget`] 扩展了几个便捷方法——例如
+/// [`Widget::map`]、[`Widget::boxed`] 和 [`Widget::explain`]——并把
+/// `Theme` 和 `Renderer` 参数默认设为 iced 自己的类型。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that can be rendered by iced.
 ///
 /// This trait extends [`core::Widget`] with a few convenient methods—like
 /// [`Widget::map`], [`Widget::boxed`], and [`Widget::explain`]—and defaults
 /// the `Theme` and `Renderer` parameters to iced's.
+///
+/// </details>
 pub trait Widget<Message, Theme = crate::Theme, Renderer = crate::Renderer>:
     core::Widget<Message, Theme, Renderer>
 {
+    /// 对此 [`Widget`] 产生的消息应用一个变换。
+    ///
+    /// 当你想解耦 UI 的不同部分并让它们
+    /// **可组合**时，此方法很有用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Applies a transformation to the produced message of this [`Widget`].
     ///
     /// This method is useful when you want to decouple different parts of your
     /// UI and make them __composable__.
     ///
-    /// # Example
+    /// </details>
+    ///
+    /// # 示例（Example）
+    /// 假设我们想使用[我们的计数器](index.html#usage)。但我们不是
+    /// 只显示一个计数器，而是想显示很多个。我们可以原封不动地
+    /// 复用 `Counter` 类型！
+    ///
+    /// 我们用组合来为新应用程序的**状态**建模：
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Imagine we want to use [our counter](index.html#usage). But instead of
     /// showing a single counter, we want to display many of them. We can reuse
     /// the `Counter` type as it is!
     ///
     /// We use composition to model the __state__ of our new application:
+    ///
+    /// </details>
     ///
     /// ```
     /// # mod counter {
@@ -209,11 +258,22 @@ pub trait Widget<Message, Theme = crate::Theme, Renderer = crate::Renderer>:
     /// }
     /// ```
     ///
+    /// 现在我们可以存储多个计数器的状态了。然而，
+    /// 之前实现的**消息**描述的是**单个**计数器的
+    /// 用户交互。现在，我们还需要分辨是哪个
+    /// 计数器在接收用户交互。还能再用一次组合吗？
+    /// 可以。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// We can store the state of multiple counters now. However, the
     /// __messages__ we implemented before describe the user interactions
     /// of a __single__ counter. Right now, we need to also identify which
     /// counter is receiving user interactions. Can we use composition again?
     /// Yes.
+    ///
+    /// </details>
     ///
     /// ```
     /// # mod counter {
@@ -226,8 +286,16 @@ pub trait Widget<Message, Theme = crate::Theme, Renderer = crate::Renderer>:
     /// }
     /// ```
     ///
+    /// 我们把之前的**消息**与产生它们的计数器的索引
+    /// 组合起来。现在来实现我们的**视图逻辑**：
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// We compose the previous __messages__ with the index of the counter
     /// producing them. Let's implement our __view logic__ now:
+    ///
+    /// </details>
     ///
     /// ```no_run
     /// # mod iced {
@@ -273,6 +341,7 @@ pub trait Widget<Message, Theme = crate::Theme, Renderer = crate::Renderer>:
     /// impl ManyCounters {
     ///     pub fn view(&self) -> impl Widget<Message, iced_widget::Theme, ()> {
     ///         // We can quickly populate a `row` by mapping our counters
+    ///         // 通过映射我们的计数器，可以快速填充一个 `row`
     ///         row(
     ///             self.counters
     ///                 .iter()
@@ -280,8 +349,11 @@ pub trait Widget<Message, Theme = crate::Theme, Renderer = crate::Renderer>:
     ///                 .enumerate()
     ///                 .map(|(index, counter)| {
     ///                     // Here we turn our `Element<counter::Message>` into
+    ///                     // 在这里，我们把 `Element<counter::Message>` 转换为
     ///                     // an `Element<Message>` by combining the `index` and the
+    ///                     // `Element<Message>`，方法是把 `index` 与
     ///                     // message of the `element`.
+    ///                     // `element` 的消息组合起来。
     ///                     counter.map(Message::Counter.with(index)).boxed()
     ///                 }),
     ///         )
@@ -289,8 +361,16 @@ pub trait Widget<Message, Theme = crate::Theme, Renderer = crate::Renderer>:
     /// }
     /// ```
     ///
+    /// 最后，我们的**更新逻辑**非常直接：简单的
+    /// 委托。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Finally, our __update logic__ is pretty straightforward: simple
     /// delegation.
+    ///
+    /// </details>
     ///
     /// ```
     /// # mod counter {
@@ -333,7 +413,14 @@ pub trait Widget<Message, Theme = crate::Theme, Renderer = crate::Renderer>:
         core::Widget::_map(self, f)
     }
 
+    /// 把此 [`Widget`] 装箱，转换为通用的 [`Element`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Boxes this [`Widget`], turning it into a generic [`Element`].
+    ///
+    /// </details>
     fn boxed<'a>(self) -> Element<'a, Message, Theme, Renderer>
     where
         Self: Sized + 'a,
@@ -341,10 +428,20 @@ pub trait Widget<Message, Theme = crate::Theme, Renderer = crate::Renderer>:
         core::Widget::_boxed(self)
     }
 
+    /// 把此 [`Widget`] 标记为*待解释*。
+    ///
+    /// [`Renderer`] 会以图形方式解释它的布局。
+    /// 这对调试布局非常有用！
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Marks this [`Widget`] as _to-be-explained_.
     ///
     /// The [`Renderer`] will explain its layout graphically.
     /// This can be very useful for debugging your layout!
+    ///
+    /// </details>
     ///
     /// [`Renderer`]: crate::Renderer
     fn explain(self, color: impl Into<Color>) -> impl core::Widget<Message, Theme, Renderer>
@@ -364,12 +461,24 @@ impl<T, Message, Theme, Renderer> Widget<Message, Theme, Renderer> for T where
 {
 }
 
+/// 解释其子部件布局的 [`Widget`]。
+///
+/// [`Renderer`] 会以图形方式解释该布局。这对调试布局
+/// 非常有用！
+///
+/// 此部件由 [`Widget::explain`] 返回。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`Widget`] that explains the layout of its child.
 ///
 /// The [`Renderer`] will explain the layout graphically. This can be very
 /// useful for debugging your layout!
 ///
 /// This widget is returned by [`Widget::explain`].
+///
+/// </details>
 ///
 /// [`Renderer`]: crate::Renderer
 pub struct Explain<W> {

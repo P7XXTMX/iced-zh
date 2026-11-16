@@ -16,7 +16,14 @@ use crate::core::{
     Vector, Widget,
 };
 
+/// 一段 [`Rich`] 文本。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A bunch of [`Rich`] text.
+///
+/// </details>
 pub struct Rich<'a, Link, Message, Theme = crate::Theme>
 where
     Link: Clone + 'static,
@@ -44,7 +51,14 @@ where
     Link: Clone + 'static,
     Theme: Catalog,
 {
+    /// 创建一个新的空 [`Rich`] 文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new empty [`Rich`] text.
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self {
             spans: Box::new([]),
@@ -65,7 +79,14 @@ where
         }
     }
 
+    /// 使用给定的文本片段创建一个新的 [`Rich`] 文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Rich`] text with the given text spans.
+    ///
+    /// </details>
     pub fn with_spans(spans: impl AsRef<[Span<'a, Link>]> + 'a) -> Self {
         Self {
             spans: Box::new(spans),
@@ -73,86 +94,184 @@ where
         }
     }
 
+    /// 设置 [`Rich`] 文本的默认字号。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the default size of the [`Rich`] text.
+    ///
+    /// </details>
     pub fn size(mut self, size: impl Into<Pixels>) -> Self {
         self.size = Some(size.into());
         self
     }
 
+    /// 设置 [`Rich`] 文本的默认 [`LineHeight`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the default [`LineHeight`] of the [`Rich`] text.
+    ///
+    /// </details>
     pub fn line_height(mut self, line_height: impl Into<LineHeight>) -> Self {
         self.line_height = Some(line_height.into());
         self
     }
 
+    /// 设置 [`Rich`] 文本的默认字体。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the default font of the [`Rich`] text.
+    ///
+    /// </details>
     pub fn font(mut self, font: impl Into<Font>) -> Self {
         self.font = Some(font.into());
         self
     }
 
+    /// 设置 [`Rich`] 文本边界的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Rich`] text boundaries.
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Rich`] 文本边界的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Rich`] text boundaries.
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 让 [`Rich`] 文本在水平和垂直方向上都居中。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Centers the [`Rich`] text, both horizontally and vertically.
+    ///
+    /// </details>
     pub fn center(self) -> Self {
         self.align_x(alignment::Horizontal::Center)
             .align_y(alignment::Vertical::Center)
     }
 
+    /// 设置 [`Rich`] 文本的 [`alignment::Horizontal`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`alignment::Horizontal`] of the [`Rich`] text.
+    ///
+    /// </details>
     pub fn align_x(mut self, alignment: impl Into<Alignment>) -> Self {
         self.align_x = alignment.into();
         self
     }
 
+    /// 设置 [`Rich`] 文本的 [`alignment::Vertical`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`alignment::Vertical`] of the [`Rich`] text.
+    ///
+    /// </details>
     pub fn align_y(mut self, alignment: impl Into<alignment::Vertical>) -> Self {
         self.align_y = alignment.into();
         self
     }
 
+    /// 设置 [`Rich`] 文本的 [`Wrapping`] 策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Wrapping`] strategy of the [`Rich`] text.
+    ///
+    /// </details>
     pub fn wrapping(mut self, wrapping: Wrapping) -> Self {
         self.wrapping = wrapping;
         self
     }
 
+    /// 设置 [`Rich`] 文本的 [`Ellipsis`] 策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Ellipsis`] strategy of the [`Rich`] text.
+    ///
+    /// </details>
     pub fn ellipsis(mut self, ellipsis: Ellipsis) -> Self {
         self.ellipsis = ellipsis;
         self
     }
 
+    /// 设置 [`Rich`] 文本中的链接被点击时
+    /// 要产生的消息。
+    ///
+    /// 如果 [`Rich`] 文本的片段中不包含链接，你可能需要用
+    /// `on_link_click(never)` 调用这个方法，以便编译器推断出
+    /// 正确的 `Link` 泛型类型。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when a link of the [`Rich`] text
     /// is clicked.
     ///
     /// If the spans of the [`Rich`] text contain no links, you may need to call
     /// this method with `on_link_click(never)` in order for the compiler to infer
     /// the proper `Link` generic type.
+    ///
+    /// </details>
     pub fn on_link_click(mut self, on_link_click: impl Fn(Link) -> Message + 'a) -> Self {
         self.on_link_click = Some(Box::new(on_link_click));
         self
     }
 
+    /// 设置 [`Rich`] 文本是否可以被选中。
+    ///
+    /// 默认为 `false`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets whether the [`Rich`] text can be selected.
     ///
     /// By default, it is `false`.
+    ///
+    /// </details>
     pub fn selectable(mut self, selectable: bool) -> Self {
         self.selectable = selectable;
         self
     }
 
+    /// 设置 [`Rich`] 文本的默认样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the default style of the [`Rich`] text.
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme) -> Style + 'a) -> Self
     where
@@ -162,7 +281,14 @@ where
         self
     }
 
+    /// 设置 [`Rich`] 文本的默认 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the default [`Color`] of the [`Rich`] text.
+    ///
+    /// </details>
     pub fn color(self, color: impl Into<Color>) -> Self
     where
         Theme::Class<'a>: From<StyleFn<'a, Theme>>,
@@ -170,7 +296,14 @@ where
         self.color_maybe(Some(color))
     }
 
+    /// 如果为 `Some`，设置 [`Rich`] 文本的默认 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the default [`Color`] of the [`Rich`] text, if `Some`.
+    ///
+    /// </details>
     pub fn color_maybe(self, color: Option<impl Into<Color>>) -> Self
     where
         Theme::Class<'a>: From<StyleFn<'a, Theme>>,
@@ -183,7 +316,14 @@ where
         })
     }
 
+    /// 设置 [`Rich`] 文本的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the default style class of the [`Rich`] text.
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
@@ -292,6 +432,8 @@ where
 
                     // The horizontal padding belongs to the start and end
                     // of the span, not to each of its lines
+                    // 水平内边距属于片段的开头和结尾，
+                    // 而不属于它的每一行
                     let left = if starts { span.padding.left } else { 0.0 };
                     let right = if ends { span.padding.right } else { 0.0 };
 

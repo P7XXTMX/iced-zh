@@ -1,0 +1,388 @@
+@@ futures/src/backend.rs:1
+`iced_futures` 契约的底层实现！
+@@ futures/src/backend/default.rs:1
+默认的跨平台后端。
+
+- 在原生平台上，它会使用：
+  - 启用 `tokio` 特性时使用 `backend::native::tokio`。
+  - 启用 `smol` 特性时使用 `backend::native::smol`。
+  - 启用 `thread-pool` 特性时使用 `backend::native::thread_pool`。
+  - 其他情况使用 `backend::null`。
+
+- 在 Wasm 上，它会使用 `backend::wasm::wasm_bindgen`。
+@@ futures/src/backend/native.rs:1
+仅在原生平台（Windows、macOS 或 Linux）上可用的后端。
+@@ futures/src/backend/native/smol.rs:1
+`smol` 后端。
+@@ futures/src/backend/native/smol.rs:3
+`smol` 执行器。
+@@ futures/src/backend/native/smol.rs:22
+监听时间并做出响应。
+@@ futures/src/backend/native/smol.rs:29
+返回一个按固定间隔产生消息的 [`Subscription`]。
+
+第一条消息在经过 `duration` 之后产生，此后每隔
+`duration` 继续产生一条消息。
+@@ futures/src/backend/native/smol.rs:43
+返回一个 [`Subscription`]，它按固定间隔运行给定的异步函数，
+并把函数的结果作为输出。
+@@ futures/src/backend/native/thread_pool.rs:1
+`ThreadPool` 后端。
+@@ futures/src/backend/native/thread_pool.rs:3
+用于 future 的线程池执行器。
+@@ futures/src/backend/native/thread_pool.rs:21
+监听时间并做出响应。
+@@ futures/src/backend/native/tokio.rs:1
+`tokio` 后端。
+@@ futures/src/backend/native/tokio.rs:3
+`tokio` 执行器。
+@@ futures/src/backend/native/tokio.rs:27
+监听时间并做出响应。
+@@ futures/src/backend/native/tokio.rs:34
+返回一个按固定间隔产生消息的 [`Subscription`]。
+
+第一条消息在经过 `duration` 之后产生，此后每隔
+`duration` 继续产生一条消息。
+@@ futures/src/backend/native/tokio.rs:57
+返回一个 [`Subscription`]，它按固定间隔运行给定的异步函数，
+并把函数的结果作为输出。
+@@ futures/src/backend/null.rs:1
+一个什么都不做的后端！
+@@ futures/src/backend/null.rs:4
+一个丢弃所有 future 而不是派生它们的执行器。
+@@ futures/src/backend/null.rs:22
+监听时间并做出响应。
+@@ futures/src/backend/wasm.rs:1
+仅在 Wasm 目标上可用的后端。
+@@ futures/src/backend/wasm/wasm_bindgen.rs:1
+`wasm-bindgen-futures` 后端。
+@@ futures/src/backend/wasm/wasm_bindgen.rs:3
+`wasm-bindgen-futures` 执行器。
+@@ futures/src/backend/wasm/wasm_bindgen.rs:18
+监听时间并做出响应。
+@@ futures/src/backend/wasm/wasm_bindgen.rs:23
+返回一个按固定间隔产生消息的 [`Subscription`]。
+
+第一条消息在经过 `duration` 之后产生，此后每隔
+`duration` 继续产生一条消息。
+@@ futures/src/event.rs:1
+监听运行时事件。
+@@ futures/src/event.rs:7
+返回一个 [`Subscription`]，监听所有被忽略的运行时事件。
+
+这个订阅会把任何没有被部件捕获的 [`Event`]
+通知给你的应用程序。
+@@ futures/src/event.rs:18
+创建一个 [`Subscription`]，它监听所有运行时事件并用给定的函数
+进行过滤，据此产生消息。
+
+这个订阅会对运行时处理的每一个 [`Event`] 调用给定的函数。
+如果该函数：
+
+- 返回 `None`，这个 [`Event`] 会被丢弃。
+- 返回 `Some` 消息，则产生这条 `Message`。
+@@ futures/src/event.rs:50
+创建一个 [`Subscription`]，它为每一个运行时事件产生一条消息，
+包括重绘请求事件。
+
+**警告：** 如果不加过滤，这个 [`Subscription`] 可能会
+无限循环地产生消息。
+@@ futures/src/event.rs:76
+创建一个 [`Subscription`]，在从系统收到自定义应用程序 URL 时
+发出通知。
+
+_**注意：** 目前它只在 macOS 上触发，并且可执行文件需要正确[打包][bundled]！_
+@@ futures/src/executor.rs:1
+选择你偏好的执行器来驱动运行时。
+@@ futures/src/executor.rs:4
+一种可以运行 future 的类型。
+@@ futures/src/executor.rs:6
+创建一个新的 [`Executor`]。
+@@ futures/src/executor.rs:11
+在 [`Executor`] 中派生一个 future。
+@@ futures/src/executor.rs:14
+在 [`Executor`] 内，于当前线程上运行一个 future 直至完成。
+@@ futures/src/executor.rs:18
+在 [`Executor`] 内运行给定的闭包。
+
+有些执行器（例如 `tokio`）要求在创建 future 之前先准备好
+某些全局状态。可以利用这个方法来设置这些全局状态、
+调用函数、恢复状态，并取得调用的
+结果。
+@@ futures/src/keyboard.rs:1
+监听键盘事件。
+@@ futures/src/keyboard.rs:6
+返回一个 [`Subscription`]，监听被忽略的键盘事件。
+@@ futures/src/lib.rs:1
+用于 GUI 编程的异步任务，灵感来自 Elm。
+
+![Iced 生态系统的基础](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/foundations.png?raw=true)
+@@ futures/src/lib.rs:29
+装箱的静态 future。
+
+- 在原生平台上，它需要满足 `Send` 约束。
+- 在 Web 平台上，它不需要满足 `Send` 约束。
+@@ futures/src/lib.rs:35
+装箱的静态流。
+
+- 在原生平台上，它需要满足 `Send` 约束。
+- 在 Web 平台上，它不需要满足 `Send` 约束。
+@@ futures/src/lib.rs:41
+将一个流装箱。
+
+- 在原生平台上，它需要满足 `Send` 约束。
+- 在 Web 平台上，它不需要满足 `Send` 约束。
+@@ futures/src/lib.rs:55
+装箱的静态 future。
+
+- 在原生平台上，它需要满足 `Send` 约束。
+- 在 Web 平台上，它不需要满足 `Send` 约束。
+@@ futures/src/lib.rs:61
+装箱的静态流。
+
+- 在原生平台上，它需要满足 `Send` 约束。
+- 在 Web 平台上，它不需要满足 `Send` 约束。
+@@ futures/src/lib.rs:67
+将一个流装箱。
+
+- 在原生平台上，它需要满足 `Send` 约束。
+- 在 Web 平台上，它不需要满足 `Send` 约束。
+@@ futures/src/maybe.rs:3
+一个扩展特质，仅在原生平台上强制要求 `Send`。
+
+编写跨平台异步代码时很有用！
+@@ futures/src/maybe.rs:10
+一个扩展特质，仅在原生平台上强制要求 `Sync`。
+
+编写跨平台异步代码时很有用！
+@@ futures/src/maybe.rs:20
+一个扩展特质，仅在原生平台上强制要求 `Send`。
+
+编写跨平台异步代码时很有用！
+@@ futures/src/maybe.rs:27
+一个扩展特质，仅在原生平台上强制要求 `Sync`。
+
+编写跨平台异步代码时很有用！
+@@ futures/src/runtime.rs:1
+运行命令并跟踪订阅。
+@@ futures/src/runtime.rs:8
+一个开箱即用的命令与订阅运行时。
+
+如果你有一个 [`Executor`]，就可以利用 [`Runtime`] 运行任何
+`Command` 或 [`Subscription`]，并在有结果时得到通知！
+@@ futures/src/runtime.rs:28
+创建一个新的空 [`Runtime`]。
+
+你需要提供：
+- 一个用于派生 future 的 [`Executor`]
+- 一个实现了 `Sink` 的 `Sender`，用于接收结果
+@@ futures/src/runtime.rs:42
+在 [`Runtime`] 的 [`Executor`] 内运行给定的闭包。
+
+详见 [`Executor::enter`]。
+@@ futures/src/runtime.rs:49
+在 [`Runtime`] 内，于当前线程上运行一个 future 直至完成。
+@@ futures/src/runtime.rs:55
+在 [`Runtime`] 中运行一个 [`Stream`] 直至完成。
+
+产生的 `Message` 会被转发给 [`Runtime`] 的
+`Sender`。
+@@ futures/src/runtime.rs:75
+通过 [`Runtime`] 并发地发送一条消息。
+@@ futures/src/runtime.rs:84
+在 [`Runtime`] 中跟踪一个 [`Subscription`]。
+
+它会根据需要派生新的流或关闭旧的流！
+详见 [`Tracker::update`]！
+@@ futures/src/runtime.rs:109
+向 [`Runtime`] 中当前存活的所有订阅广播一个
+事件。
+
+详见 [`Tracker::broadcast`]。
+@@ futures/src/stream.rs:1
+创建异步数据流。
+@@ futures/src/stream.rs:5
+创建一个新的 [`Stream`]，它产生由某个 [`Future`] 发送到
+闭包所得到的 [`mpsc::Sender`] 中的各个项。
+
+这是更符合人体工学的 [`stream::unfold`]：只需在 [`Future`]
+内部循环并向一个异步通道发布数据，就可以从“future 的世界”
+进入“流的世界”。
+@@ futures/src/stream.rs:19
+创建一个新的 [`Stream`]，它产生由某个可能失败的 [`Future`]
+发送到闭包所得到的 [`mpsc::Sender`] 中的各个项。
+@@ futures/src/subscription.rs:1
+在你的应用程序中监听外部事件。
+@@ futures/src/subscription.rs:15
+订阅事件。
+@@ futures/src/subscription.rs:18
+用户与某个窗口中的用户界面进行了交互。
+@@ futures/src/subscription.rs:20
+这次交互的界面所在的窗口。
+@@ futures/src/subscription.rs:22
+描述这次交互的 [`Event`]。
+@@ futures/src/subscription.rs:27
+这次交互的 [`event::Status`]。
+@@ futures/src/subscription.rs:31
+系统主题发生了变化。
+@@ futures/src/subscription.rs:34
+平台特定的事件。
+@@ futures/src/subscription.rs:38
+平台特定的事件
+@@ futures/src/subscription.rs:41
+MacOS 特定的事件
+@@ futures/src/subscription.rs:45
+描述一个 MacOS 特有的事件
+@@ futures/src/subscription.rs:48
+当应用收到来自系统的 URL 时触发
+
+_**注意：** 要触发这个事件，可执行文件需要正确[打包][bundled]！_
+@@ futures/src/subscription.rs:56
+运行时事件的流。
+
+它是 [`Subscription`] 的输入。
+@@ futures/src/subscription.rs:61
+用于标识订阅的哈希器。
+@@ futures/src/subscription.rs:64
+监听外部事件的请求。
+
+除了用 `Task` 按需执行异步操作之外，大多数应用程序
+还需要被动地监听外部事件。
+
+[`Subscription`] 通常像 `Task` 一样交给某个运行时，
+只要用户持续请求它，它就会不断产生事件。
+
+例如，你可以用 [`Subscription`] 监听 `WebSocket`
+连接、按键、鼠标事件、时钟滴答等。
+@@ futures/src/subscription.rs:75
+{#the-lifetime-of-a-subscription}
+[`Subscription`] 的生命周期
+@@ futures/src/subscription.rs:76
+与 [`Future`] 或 [`Stream`] 很相似，[`Subscription`] 本身不会产生任何效果。
+要让 [`Subscription`] 运行，必须把它返回给 iced 运行时——通常是在
+`application` 或 `daemon` 的 `subscription` 函数中。
+
+当一个 [`Subscription`] 第一次被交给运行时，运行时会开始异步地运行它。
+运行一个 [`Subscription`] 就是构建它底层的 [`Stream`]，
+并在异步运行时中执行它。
+
+因此，你可以把 [`Subscription`] 看作一个“流构建器”。它只是表示了
+构建某个 [`Stream`] 的方式，以及用来_标识_它的方式。
+
+标识之所以重要，是因为当某个 [`Subscription`] 不再被返回给 iced 运行时，
+运行时就会终止与它关联的 [`Stream`]。运行时使用 [`Subscription`] 的标识
+来跟踪它。
+
+通过这种方式，iced 让你可以在需要的时候，以声明式的方式临时__订阅__
+特定的数据流。
+@@ futures/src/subscription.rs:126
+返回一个不会产生任何输出的空 [`Subscription`]。
+@@ futures/src/subscription.rs:133
+返回一个 [`Subscription`]，它会调用给定的函数来创建
+给定的 [`Stream`] 并异步地运行它。
+@@ futures/src/subscription.rs:136
+创建可双向通信的异步工作者
+@@ futures/src/subscription.rs:137
+你可以利用这个辅助函数创建一个 [`Subscription`]，在后台派生
+一个异步工作者，并与 `iced` 应用程序建立
+通信通道。
+
+做法是在闭包内创建一个 `mpsc` 通道，并把 `Sender`
+作为 `Message` 返回给 `Application`：
+@@ futures/src/subscription.rs:169
+创建通道
+@@ futures/src/subscription.rs:172
+把发送端传回应用程序
+@@ futures/src/subscription.rs:178
+读取 `Application` 发来的下一个输入
+@@ futures/src/subscription.rs:183
+执行一些异步工作……
+@@ futures/src/subscription.rs:185
+最后，我们可以选择产生一条消息，告诉
+@@ futures/src/subscription.rs:186
+`Application` 工作已完成
+@@ futures/src/subscription.rs:199
+可以参考 [`websocket`] 示例，它演示了如何用这种模式保持
+`WebSocket` 连接。
+@@ futures/src/subscription.rs:214
+返回一个 [`Subscription`]，它会创建给定的 [`Stream`] 并
+异步地运行它。
+
+`data` 和函数指针都会被用来唯一标识
+这个 [`Subscription`]。
+@@ futures/src/subscription.rs:231
+把给定的所有订阅合并成一批，并返回得到的
+[`Subscription`]。
+@@ futures/src/subscription.rs:242
+向 [`Subscription`] 的上下文中添加一个值。
+
+这个值会成为 [`Subscription`] 标识的一部分。
+@@ futures/src/subscription.rs:295
+用给定的函数转换 [`Subscription`] 的输出。
+
+提供的闭包必须是不捕获环境的闭包。
+@@ futures/src/subscription.rs:350
+用给定的函数转换 [`Subscription`] 的输出，只有当函数返回
+`Some(A)` 时才产生值。
+
+提供的闭包必须是不捕获环境的闭包。
+@@ futures/src/subscription.rs:413
+返回这个 [`Subscription`] 中配方单元的数量。
+@@ futures/src/subscription.rs:425
+根据描述它的 [`Recipe`] 创建一个 [`Subscription`]。
+@@ futures/src/subscription.rs:432
+返回 [`Subscription`] 中的各个配方。
+@@ futures/src/subscription.rs:443
+对一个 [`Subscription`] 的描述。
+
+[`Recipe`] 是 [`Subscription`] 的内部定义。运行时用它来
+运行和标识订阅。你也可以用它创建
+自己的订阅！
+@@ futures/src/subscription.rs:449
+使用这个 [`Recipe`] 的 [`Subscription`] 将会产生的
+事件。
+@@ futures/src/subscription.rs:453
+计算 [`Recipe`] 的哈希。
+
+运行时用它来唯一标识一个 [`Subscription`]。
+@@ futures/src/subscription.rs:458
+执行 [`Recipe`]，并产生其 [`Subscription`] 的
+事件流。
+@@ futures/src/subscription.rs:463
+根据一个可哈希的 id 和一个过滤函数创建 [`Subscription`]。
+@@ futures/src/subscription/tracker.rs:10
+订阅流的注册表。
+
+如果你的应用程序不断返回一个 [`Subscription`]，
+就可以用 [`Tracker`] 跟踪各个配方，并让它们的
+执行保持存活。
+@@ futures/src/subscription/tracker.rs:29
+创建一个新的空 [`Tracker`]。
+@@ futures/src/subscription/tracker.rs:36
+用给定的 [`Subscription`] 更新 [`Tracker`]。
+
+一个 [`Subscription`] 可能导致新的流被派生，或旧的流
+被关闭。
+
+[`Tracker`] 会在对这个方法的多次调用之间跟踪
+这些流：
+
+- 如果给定的 [`Subscription`] 包含一个当前没有在运行的新 [`Recipe`]，
+  它会派生一个新的流并让它保持存活。
+- 反之，如果某个 [`Recipe`] 正在执行，而给定的
+  [`Subscription`] 已不再包含它，那么
+  [`Tracker`] 会关闭并丢弃相应的流。
+
+它返回一组需要被派生的 future，用来落实
+[`Tracker`] 的这些变更。
+@@ futures/src/subscription/tracker.rs:85
+待办：如果（或等到）bus 支持异步，就改用它
+@@ futures/src/subscription/tracker.rs:125
+向当前存活的订阅广播一个事件。
+
+订阅的 [`Recipe::stream`] 总是接收一个事件流
+作为输入。某些订阅可以用这个流来监听
+外壳事件。
+
+这个方法会把给定的事件发布到当前打开的所有
+订阅流。

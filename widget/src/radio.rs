@@ -1,6 +1,13 @@
+//! 单选按钮让用户从一组选项中选择一个。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Radio buttons let users choose a single option from a bunch of options.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # use iced::widget::Widget;
@@ -70,9 +77,16 @@ use crate::core::{
     Background, Color, Event, Font, Layout, Length, Pixels, Rectangle, Shell, Size, Theme, Widget,
 };
 
+/// 表示一个选项的圆形按钮。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A circular button representing a choice.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # use iced::widget::Widget;
@@ -152,12 +166,38 @@ where
     Message: Clone,
     Theme: Catalog,
 {
+    /// [`Radio`] 按钮的默认大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default size of a [`Radio`] button.
+    ///
+    /// </details>
     pub const DEFAULT_SIZE: f32 = 16.0;
 
+    /// [`Radio`] 按钮的默认间距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default spacing of a [`Radio`] button.
+    ///
+    /// </details>
     pub const DEFAULT_SPACING: f32 = 8.0;
 
+    /// 创建一个新的 [`Radio`] 按钮。
+    ///
+    /// 它需要：
+    ///   * 与 [`Radio`] 按钮关联的值
+    ///   * [`Radio`] 按钮的标签
+    ///   * 当前选中的值
+    ///   * 一个在 [`Radio`] 被选中时调用的函数。它
+    ///     接收该单选按钮的值，并且必须产生一个 `Message`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Radio`] button.
     ///
     /// It expects:
@@ -166,6 +206,8 @@ where
     ///   * the current selected value
     ///   * a function that will be called when the [`Radio`] is selected. It
     ///     receives the value of the radio and must produce a `Message`.
+    ///
+    /// </details>
     pub fn new<F, V>(label: impl Into<String>, value: V, selected: Option<V>, f: F) -> Self
     where
         V: Eq + Copy,
@@ -188,55 +230,118 @@ where
         }
     }
 
+    /// 设置 [`Radio`] 按钮的大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the size of the [`Radio`] button.
+    ///
+    /// </details>
     pub fn size(mut self, size: impl Into<Pixels>) -> Self {
         self.size = size.into().0;
         self
     }
 
+    /// 设置 [`Radio`] 按钮的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Radio`] button.
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Radio`] 按钮与文本之间的间距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the spacing between the [`Radio`] button and the text.
+    ///
+    /// </details>
     pub fn spacing(mut self, spacing: impl Into<Pixels>) -> Self {
         self.spacing = spacing.into().0;
         self
     }
 
+    /// 设置 [`Radio`] 按钮的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the text size of the [`Radio`] button.
+    ///
+    /// </details>
     pub fn text_size(mut self, text_size: impl Into<Pixels>) -> Self {
         self.text_size = Some(text_size.into());
         self
     }
 
+    /// 设置 [`Radio`] 按钮的文本 [`text::LineHeight`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the text [`text::LineHeight`] of the [`Radio`] button.
+    ///
+    /// </details>
     pub fn line_height(mut self, line_height: impl Into<text::LineHeight>) -> Self {
         self.line_height = Some(line_height.into());
         self
     }
 
+    /// 设置 [`Radio`] 按钮的 [`text::Shaping`] 策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`text::Shaping`] strategy of the [`Radio`] button.
+    ///
+    /// </details>
     pub fn shaping(mut self, shaping: text::Shaping) -> Self {
         self.shaping = shaping;
         self
     }
 
+    /// 设置 [`Radio`] 按钮的 [`text::Wrapping`] 策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`text::Wrapping`] strategy of the [`Radio`] button.
+    ///
+    /// </details>
     pub fn wrapping(mut self, wrapping: text::Wrapping) -> Self {
         self.wrapping = wrapping;
         self
     }
 
+    /// 设置 [`Radio`] 按钮的文本字体。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the text font of the [`Radio`] button.
+    ///
+    /// </details>
     pub fn font(mut self, font: impl Into<Font>) -> Self {
         self.font = Some(font.into());
         self
     }
 
+    /// 设置 [`Radio`] 按钮的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`Radio`] button.
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme, Status) -> Style + 'a) -> Self
     where
@@ -246,7 +351,14 @@ where
         self
     }
 
+    /// 设置 [`Radio`] 按钮的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`Radio`] button.
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
@@ -281,6 +393,8 @@ where
     fn diff(&mut self, tree: &mut Tree) {
         // The children of the tree are the radio and the label; they only
         // carry their geometry, so no state is needed.
+        // 树的子节点是单选圆钮和标签；它们只
+        // 携带几何信息，所以不需要状态。
         tree.children.resize_with(2, Tree::empty);
     }
 
@@ -447,52 +561,171 @@ where
     }
 }
 
+/// [`Radio`] 按钮可能的交互状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The possible status of a [`Radio`] button.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
+    /// [`Radio`] 按钮可以进行交互。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Radio`] button can be interacted with.
+    ///
+    /// </details>
     Active {
+        /// 表示 [`Radio`] 按钮当前是否被选中。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Indicates whether the [`Radio`] button is currently selected.
+        ///
+        /// </details>
         is_selected: bool,
     },
+    /// [`Radio`] 按钮正被悬停。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Radio`] button is being hovered.
+    ///
+    /// </details>
     Hovered {
+        /// 表示 [`Radio`] 按钮当前是否被选中。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Indicates whether the [`Radio`] button is currently selected.
+        ///
+        /// </details>
         is_selected: bool,
     },
 }
 
+/// 单选按钮的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of a radio button.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Style {
+    /// 单选按钮的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Background`] of the radio button.
+    ///
+    /// </details>
     pub background: Background,
+    /// 单选按钮圆点的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of the dot of the radio button.
+    ///
+    /// </details>
     pub dot_color: Color,
+    /// 单选按钮的边框宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The border width of the radio button.
+    ///
+    /// </details>
     pub border_width: f32,
+    /// 单选按钮的边框 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The border [`Color`] of the radio button.
+    ///
+    /// </details>
     pub border_color: Color,
+    /// 单选按钮的文本 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text [`Color`] of the radio button.
+    ///
+    /// </details>
     pub text_color: Option<Color>,
 }
 
+/// [`Radio`] 的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`Radio`].
+///
+/// </details>
 pub trait Catalog {
+    /// [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of the [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by the [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> Self::Class<'a>;
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(&self, class: &Self::Class<'_>, status: Status) -> Style;
 
+    /// 全局的选中 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The global selection [`Color`].
+    ///
+    /// </details>
     fn selection(&self) -> Color;
 }
 
+/// [`Radio`] 的样式函数。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for a [`Radio`].
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme, Status) -> Style + 'a>;
 
 impl Catalog for Theme {
@@ -511,7 +744,14 @@ impl Catalog for Theme {
     }
 }
 
+/// [`Radio`] 按钮的默认样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default style of a [`Radio`] button.
+///
+/// </details>
 pub fn default(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
 

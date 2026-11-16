@@ -1,9 +1,25 @@
+//! 以无头模式测试你的 `iced` 应用程序。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Test your `iced` applications in headless mode.
 //!
-//! # Basic Usage
+//! </details>
+//!
+//! # 基本用法（Basic Usage）
+//! 假设我们想测试[经典的计数器界面][the classical counter interface]。
+//!
+//! 首先，我们要为界面创建一个 [`Simulator`]：
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Let's assume we want to test [the classical counter interface].
 //!
 //! First, we will want to create a [`Simulator`] of our interface:
+//!
+//! </details>
 //!
 //! ```rust,no_run
 //! # struct Counter { value: i64 }
@@ -16,8 +32,16 @@
 //! let mut ui = simulator(counter.view());
 //! ```
 //!
+//! 现在我们可以模拟用户与界面的交互了。让我们用 [`Simulator::click`] 来点击
+//! 计数器的按钮：
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Now we can simulate a user interacting with our interface. Let's use [`Simulator::click`] to click
 //! the counter buttons:
+//!
+//! </details>
 //!
 //! ```rust,no_run
 //! # struct Counter { value: i64 }
@@ -34,11 +58,22 @@
 //! let _ = ui.click("-");
 //! ```
 //!
+//! [`Simulator::click`] 接受一个实现了 [`Selector`]特质的类型。[`Selector`] 描述了一种查询界面中部件的方式。
+//! 这里我们利用了 `&str` 的 [`Selector`] 实现，它根据部件包含的文本来选择部件。
+//!
+//! 现在我们可以处理这些交互产生的消息，然后断言计数器的最终值
+//! 确实是 `1`！
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! [`Simulator::click`] takes a type implementing the [`Selector`] trait. A [`Selector`] describes a way to query the widgets of an interface.
 //! In this case, we leverage the [`Selector`] implementation of `&str`, which selects a widget by the text it contains.
 //!
 //! We can now process any messages produced by these interactions and then assert that the final value of our counter is
 //! indeed `1`!
+//!
+//! </details>
 //!
 //! ```rust,no_run
 //! # struct Counter { value: i64 }
@@ -62,7 +97,14 @@
 //! assert_eq!(counter.value, 1);
 //! ```
 //!
+//! 我们甚至可以重建界面，用 [`Simulator::find`] 确认计数器 _显示_ 的值是正确的：
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! We can even rebuild the interface to make sure the counter _displays_ the proper value with [`Simulator::find`]:
+//!
+//! </details>
 //!
 //! ```rust,no_run
 //! # struct Counter { value: i64 }
@@ -77,10 +119,20 @@
 //! assert!(ui.find("1").is_ok(), "Counter should display 1!");
 //! ```
 //!
+//! 就是这样！这就是测试 `iced` 应用程序的要点！
+//!
+//! [`Simulator`] 还包含其他操作，可以用来模拟更多交互，例如 [`tap_key`](Simulator::tap_key) 或
+//! [`typewrite`](Simulator::typewrite)，甚至可以进行[_快照测试_](Simulator::snapshot)！
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! And that's it! That's the gist of testing `iced` applications!
 //!
 //! [`Simulator`] contains additional operations you can use to simulate more interactions—like [`tap_key`](Simulator::tap_key) or
 //! [`typewrite`](Simulator::typewrite)—and even perform [_snapshot testing_](Simulator::snapshot)!
+//!
+//! </details>
 //!
 //! [the classical counter interface]: https://book.iced.rs/architecture.html#dissecting-an-interface
 pub use iced_futures as futures;
@@ -112,6 +164,18 @@ use crate::core::window;
 
 use std::path::Path;
 
+/// 为给定的 [`Program`](program::Program) 运行一个 [`Ice`] 测试套件。
+///
+/// 会从给定目录中解析所有 `.ice` 测试，并在给定
+/// [`Program`](program::Program) 的 [`Emulator`] 中执行。
+///
+/// 请记住，[`Emulator`] 执行的是真实的程序！副作用 _一定会_
+/// 发生。你需要自己利用 [`Preset`][program::Preset]
+/// 来保证测试环境可复现。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Runs an [`Ice`] test suite for the given [`Program`](program::Program).
 ///
 /// Any `.ice` tests will be parsed from the given directory and executed in
@@ -120,6 +184,8 @@ use std::path::Path;
 /// Remember that an [`Emulator`] executes the real thing! Side effects _will_
 /// take place. It is up to you to ensure your tests have reproducible environments
 /// by leveraging [`Preset`][program::Preset].
+///
+/// </details>
 pub fn run<P: program::Program + 'static>(
     program: P,
     tests_dir: impl AsRef<Path>,
@@ -185,6 +251,7 @@ pub fn run<P: program::Program + 'static>(
     }
 
     // TODO: Concurrent runtimes
+    // 待办：并发的运行时
     for (file, ice, preset) in tests {
         let (sender, mut receiver) = mpsc::channel(1);
 
@@ -256,8 +323,16 @@ pub fn run<P: program::Program + 'static>(
     Ok(())
 }
 
+/// 让给定的 [`Program`](program::Program) 运行给定的 [`Duration`] 之后，
+/// 按给定的主题、视口和缩放因子为它截图。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Takes a screenshot of the given [`Program`](program::Program) with the given theme, viewport,
 /// and scale factor after running it for the given [`Duration`].
+///
+/// </details>
 pub fn screenshot<P: program::Program + 'static>(
     program: &P,
     theme: &P::Theme,

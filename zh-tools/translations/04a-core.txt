@@ -1,0 +1,653 @@
+@@ core/src/alignment.rs:1
+对齐并定位部件。
+@@ core/src/alignment.rs:3
+在容器某个轴上的对齐方式。
+@@ core/src/alignment.rs:6
+对齐到轴的起点。
+@@ core/src/alignment.rs:9
+对齐到轴的中心。
+@@ core/src/alignment.rs:12
+对齐到轴的终点。
+@@ core/src/alignment.rs:36
+某个资源的水平 [`Alignment`]。
+@@ core/src/alignment.rs:39
+左对齐
+@@ core/src/alignment.rs:42
+水平居中
+@@ core/src/alignment.rs:45
+右对齐
+@@ core/src/alignment.rs:59
+某个资源的垂直 [`Alignment`]。
+@@ core/src/alignment.rs:62
+顶部对齐
+@@ core/src/alignment.rs:65
+垂直居中
+@@ core/src/alignment.rs:68
+底部对齐
+@@ core/src/angle.rs:5
+角度（度）
+@@ core/src/angle.rs:10
+一个圆的角度范围（以度为单位）。
+@@ core/src/angle.rs:84
+弧度
+@@ core/src/angle.rs:89
+一个圆的弧度范围。
+@@ core/src/angle.rs:92
+半个圆的弧度数。
+@@ core/src/animation.rs:1
+为你的应用程序添加动画。
+@@ core/src/animation.rs:6
+某个特定状态的动画。
+
+它跟踪状态的变化，并可以随时间
+投影出插值后的值。
+@@ core/src/animation.rs:16
+待办：在 `lilt` 中公开时长的 getter
+@@ core/src/animation.rs:23
+使用给定的初始状态创建一个新的 [`Animation`]。
+@@ core/src/animation.rs:31
+设置 [`Animation`] 的 [`Easing`] 函数。
+
+详见[缓动函数速查表](https://easings.net)！
+@@ core/src/animation.rs:40
+把 [`Animation`] 的时长设置为 100 毫秒。
+@@ core/src/animation.rs:45
+把 [`Animation`] 的时长设置为 200 毫秒。
+@@ core/src/animation.rs:50
+把 [`Animation`] 的时长设置为 400 毫秒。
+@@ core/src/animation.rs:55
+把 [`Animation`] 的时长设置为 500 毫秒。
+@@ core/src/animation.rs:60
+把 [`Animation`] 的时长设置为给定的值。
+@@ core/src/animation.rs:67
+为 [`Animation`] 设置延迟。
+@@ core/src/animation.rs:73
+让 [`Animation`] 重复给定的次数。
+
+重复 1 次表示动画总共播放两遍。
+@@ core/src/animation.rs:81
+让 [`Animation`] 无限重复。
+@@ core/src/animation.rs:87
+让 [`Animation`] 在重复时自动反向播放。
+@@ core/src/animation.rs:93
+在给定的时刻，让 [`Animation`] 从当前状态过渡到
+给定的新状态。
+@@ core/src/animation.rs:100
+在给定的时刻，让 [`Animation`] 从当前状态过渡到
+给定的新状态（通过引用）。
+@@ core/src/animation.rs:106
+如果 [`Animation`] 当前正在进行中，返回 true。
+
+[`Animation`] 正在向另一个状态过渡时，即为进行中。
+@@ core/src/animation.rs:113
+把 [`Animation`] 投影为给定 [`Instant`] 时刻的插值；使用给定的
+闭包计算插值的各个关键帧。
+
+如果 [`Animation`] 的状态是 `bool`，可以使用更简单的 [`interpolate`] 方法。
+@@ core/src/animation.rs:126
+返回 [`Animation`] 的当前状态。
+@@ core/src/animation.rs:133
+把 [`Animation`] 投影为给定 [`Instant`] 时刻的插值。
+@@ core/src/animation.rs:140
+把 [`Animation`] 投影为给定 [`Instant`] 时刻的插值；以
+`start` 和 `end` 作为起始和目标关键帧。
+@@ core/src/animation.rs:149
+返回 [`Animation`] 剩余的 [`Duration`]。
+@@ core/src/backend.rs:1
+图形后端用于辅助把计算机图形渲染到显示器上。
+@@ core/src/backend.rs:5
+图形后端。
+
+可以通过设置 `ICED_BACKEND` 环境变量来覆盖默认策略。
+如果你使用的是默认渲染器，可用的选项有：
+  - `wgpu`：硬件加速后端。
+  - `tiny-skia`：基于软件的后端。
+@@ core/src/backend.rs:13
+自动检测并选择可用的最佳 [`Backend`]。
+@@ core/src/backend.rs:15
+使用给定 [`Api`] 的硬件加速图形后端。
+@@ core/src/backend.rs:17
+软件图形后端；比基于硬件的后端慢不少，但兼容性更好。
+@@ core/src/backend.rs:19
+具有给定名称的自定义渲染后端。
+@@ core/src/backend.rs:24
+[`Backend`] 所有已知的可能组合。
+@@ core/src/backend.rs:36
+如果 [`Backend`] 是 [`Backend::Hardware`]，返回 true。
+@@ core/src/backend.rs:44
+如果 [`Backend`] 是 [`Backend::Software`]，返回 true。
+@@ core/src/backend.rs:49
+如果 [`Backend`] 是 [`Backend::Best`] 或与给定的名称匹配，返回 true。
+@@ core/src/backend.rs:82
+硬件图形 API。
+@@ core/src/backend.rs:85
+自动检测并选择可用的最佳图形 [`Api`]。
+@@ core/src/backend.rs:88
+Vulkan API（Windows、Linux、Android，以及通过 vulkan-portability/MoltenVK 支持的 MacOS）
+@@ core/src/backend.rs:90
+Metal API（Apple 平台）
+@@ core/src/backend.rs:92
+Direct3D-12（Windows）
+@@ core/src/backend.rs:94
+OpenGL 3.3+（Windows）、OpenGL ES 3.0+（Linux、Android，以及通过 Angle 支持的 MacOS）和 WebGL2
+@@ core/src/backend.rs:96
+WebGPU（Web 浏览器）
+@@ core/src/backend.rs:124
+图形适配器的功耗偏好。
+@@ core/src/backend.rs:126
+选择适配器时没有功耗偏好。
+
+这是默认值。
+@@ core/src/backend.rs:132
+后端会优先选择低功耗适配器，而不是高性能适配器。
+@@ core/src/backend.rs:135
+后端会优先选择高性能适配器。
+@@ core/src/backend.rs:139
+用于配置 [`Backend`] 的设置。
+@@ core/src/backend.rs:142
+要使用的图形后端。
+
+默认为 [`Backend::Best`]。
+@@ core/src/backend.rs:147
+后端的 [`PowerPreference`]。
+
+默认为 [`PowerPreference::None`]。
+@@ core/src/backend.rs:152
+如果设置为 true，渲染器会尝试对某些图元
+进行抗锯齿。
+
+启用后，某些部件（例如 `Canvas`）的显示效果会更平滑，
+但会有性能开销。
+
+默认为 `true`。
+@@ core/src/backend.rs:161
+是否同步帧。
+
+默认为 `true`。
+@@ core/src/backend.rs:189
+创建应用程序的图形上下文时发生的错误。
+@@ core/src/backend.rs:192
+不支持所请求的后端版本。
+@@ core/src/backend.rs:196
+找不到任何符合条件的像素格式。
+@@ core/src/backend.rs:200
+找不到合适的图形适配器或设备。
+@@ core/src/backend.rs:203
+发生错误的后端的名称
+@@ core/src/backend.rs:205
+这个后端无法使用的原因
+@@ core/src/backend.rs:209
+上下文的内部后端发生了错误
+@@ core/src/backend.rs:213
+发生了多个错误
+@@ core/src/backend.rs:218
+找不到图形适配器的原因
+@@ core/src/backend.rs:221
+后端与偏好不匹配
+@@ core/src/backend.rs:223
+偏好的后端
+@@ core/src/backend.rs:226
+创建后端的请求失败
+@@ core/src/background.rs:4
+某个元素的背景。
+@@ core/src/background.rs:7
+纯色。
+@@ core/src/background.rs:9
+在多种颜色之间线性插值。
+@@ core/src/background.rs:11
+待办：添加图像变体
+@@ core/src/background.rs:15
+按给定的系数缩放 [`Background`] 的 alpha
+通道。
+@@ core/src/border.rs:1
+在容器周围绘制线条。
+@@ core/src/border.rs:4
+边框。
+@@ core/src/border.rs:7
+边框的颜色。
+@@ core/src/border.rs:10
+边框的宽度。
+@@ core/src/border.rs:13
+边框的 [`Radius`]。
+@@ core/src/border.rs:17
+使用给定的 [`Radius`] 创建一个新的 [`Border`]。
+@@ core/src/border.rs:28
+使用给定的 [`Color`] 创建一个新的 [`Border`]。
+@@ core/src/border.rs:40
+使用给定的 `width` 创建一个新的 [`Border`]。
+@@ core/src/border.rs:53
+设置 [`Border`] 的 [`Color`]。
+@@ core/src/border.rs:61
+设置 [`Border`] 的 [`Radius`]。
+@@ core/src/border.rs:69
+设置 [`Border`] 的宽度。
+@@ core/src/border.rs:78
+图元各个角的边框半径，顺序为：
+左上、右上、右下、左下。
+@@ core/src/border.rs:82
+左上角半径
+@@ core/src/border.rs:84
+右上角半径
+@@ core/src/border.rs:86
+右下角半径
+@@ core/src/border.rs:88
+左下角半径
+@@ core/src/border.rs:92
+创建一个新的 [`Radius`]，每个角使用相同的值。
+@@ core/src/border.rs:97
+使用给定的左上角值创建一个新的 [`Radius`]。
+@@ core/src/border.rs:102
+使用给定的右上角值创建一个新的 [`Radius`]。
+@@ core/src/border.rs:107
+使用给定的右下角值创建一个新的 [`Radius`]。
+@@ core/src/border.rs:112
+使用给定的左下角值创建一个新的 [`Radius`]。
+@@ core/src/border.rs:117
+创建一个新的 [`Radius`]，把给定的值用作左上角和右上角。
+@@ core/src/border.rs:122
+创建一个新的 [`Radius`]，把给定的值用作左下角和右下角。
+@@ core/src/border.rs:127
+创建一个新的 [`Radius`]，把给定的值用作左上角和左下角。
+@@ core/src/border.rs:132
+创建一个新的 [`Radius`]，把给定的值用作右上角和右下角。
+@@ core/src/border.rs:138
+创建一个新的 [`Radius`]，每个角使用相同的值。
+@@ core/src/border.rs:150
+设置 [`Radius`] 的左上角值。
+@@ core/src/border.rs:158
+设置 [`Radius`] 的右上角值。
+@@ core/src/border.rs:166
+设置 [`Radius`] 的右下角值。
+@@ core/src/border.rs:174
+设置 [`Radius`] 的左下角值。
+@@ core/src/border.rs:182
+设置 [`Radius`] 的左上角和右上角值。
+@@ core/src/border.rs:193
+设置 [`Radius`] 的左下角和右下角值。
+@@ core/src/border.rs:204
+设置 [`Radius`] 的左上角和左下角值。
+@@ core/src/border.rs:215
+设置 [`Radius`] 的右上角和右下角值。
+@@ core/src/clipboard.rs:1
+访问剪贴板。
+@@ core/src/clipboard.rs:5
+一组剪贴板请求。
+@@ core/src/clipboard.rs:8
+运行时必须完成的读取请求。
+@@ core/src/clipboard.rs:10
+运行时必须写入剪贴板的内容
+（如果有）。
+@@ core/src/clipboard.rs:16
+创建一组新的空 [`Clipboard`] 请求。
+@@ core/src/clipboard.rs:24
+把当前的 [`Clipboard`] 请求与另一组请求合并。
+@@ core/src/clipboard.rs:37
+剪贴板事件。
+@@ core/src/clipboard.rs:40
+剪贴板已被读取。
+@@ core/src/clipboard.rs:43
+剪贴板已被写入。
+@@ core/src/clipboard.rs:47
+某种剪贴板内容。
+@@ core/src/clipboard.rs:78
+某个剪贴板 [`Content`] 的种类。
+@@ core/src/clipboard.rs:90
+剪贴板图像。
+@@ core/src/clipboard.rs:94
+图像的像素，RGBA 格式。
+@@ core/src/clipboard.rs:97
+图像的物理 [`Size`](crate::Size)。
+@@ core/src/clipboard.rs:101
+剪贴板错误。
+@@ core/src/clipboard.rs:104
+当前环境中的剪贴板不存在或无法访问。
+@@ core/src/clipboard.rs:107
+原生剪贴板正被其他程序占用，因此无法访问。
+@@ core/src/clipboard.rs:110
+剪贴板内容无法以所请求的格式提供。
+原因可能是剪贴板为空，也可能是剪贴板内容的格式
+与所请求的格式不兼容
+@@ core/src/clipboard.rs:115
+要传入或传出剪贴板的图像或文本无法
+转换为合适的格式。
+@@ core/src/clipboard.rs:119
+不属于其他错误类型的任何错误。
+@@ core/src/clipboard.rs:121
+仅用于帮助开发者的描述信息，不应依赖它在运行时
+识别具体的错误情形。
+@@ core/src/code.rs:5
+代码中的一个特定区域。
+@@ core/src/code.rs:8
+注释。
+@@ core/src/code.rs:10
+字符串或字符字面量。
+@@ core/src/code.rs:12
+关键字或存储类关键字。
+@@ core/src/code.rs:14
+常量、数值或布尔字面量。
+@@ core/src/code.rs:16
+函数名或方法名。
+@@ core/src/code.rs:18
+类型名、类名或标签名。
+@@ core/src/code.rs:20
+变量。
+@@ core/src/code.rs:22
+内置符号或支持库符号。
+@@ core/src/code.rs:24
+标点。
+@@ core/src/code.rs:26
+路径的组成部分。
+@@ core/src/code.rs:28
+无效或错误的结构。
+@@ core/src/code.rs:30
+不属于其他任何类别的内容。
+@@ core/src/code.rs:35
+使用给定的 [`Theme`] 高亮这个 [`Code`]。
+@@ core/src/color.rs:1
+在不同的色彩空间中管理颜色。
+@@ core/src/color.rs:4
+`sRGB` 色彩空间中的颜色。
+@@ core/src/color.rs:6
+字符串表示
+@@ core/src/color.rs:8
+颜色可以用以下任一有效格式表示：`#rrggbb`、`#rrggbbaa`、`#rgb` 和 `#rgba`。
+其中 `rgba` 代表十六进制数字。大写和小写字母都支持。
+
+如果没有指定 `a`（透明度），默认使用 `1.0`（完全不透明）。
+
+如果你有一个静态的颜色字符串，应优先使用 [`color!`] 宏，
+因为它直接利用了十六进制字面量记法和算术运算。
+@@ core/src/color.rs:21
+红色分量，0.0 - 1.0
+@@ core/src/color.rs:23
+绿色分量，0.0 - 1.0
+@@ core/src/color.rs:25
+蓝色分量，0.0 - 1.0
+@@ core/src/color.rs:27
+透明度，0.0 - 1.0
+@@ core/src/color.rs:32
+黑色。
+@@ core/src/color.rs:40
+白色。
+@@ core/src/color.rs:48
+完全透明的颜色。
+@@ core/src/color.rs:56
+创建一个新的 [`Color`]。
+
+在调试模式下，如果各个值不在正确的范围
+0.0 - 1.0 内，它会 panic
+@@ core/src/color.rs:77
+根据 RGB 分量创建一个 [`Color`]。
+@@ core/src/color.rs:82
+根据 RGBA 分量创建一个 [`Color`]。
+@@ core/src/color.rs:87
+根据 RGB8 分量创建一个 [`Color`]。
+@@ core/src/color.rs:92
+根据 RGB8 分量和一个 alpha 值创建一个 [`Color`]。
+@@ core/src/color.rs:97
+根据打包在 `u32` 低位中的 RGB8 分量创建一个 [`Color`]。
+@@ core/src/color.rs:102
+根据打包在 `u32` 低位中的 RGB8 分量和一个 alpha 值
+创建一个 [`Color`]。
+@@ core/src/color.rs:112
+根据线性 RGBA 分量创建一个 [`Color`]。
+@@ core/src/color.rs:114
+出处见上面的链接
+@@ core/src/color.rs:132
+根据 [`Oklch`] 表示创建最接近的 [`Color`]。
+@@ core/src/color.rs:134
+=
+@@ core/src/color.rs:140
+Oklab → LMS（非线性）
+@@ core/src/color.rs:145
+还原立方
+@@ core/src/color.rs:162
+就地反转这个 [`Color`]。
+@@ core/src/color.rs:169
+返回反转后的 [`Color`]。
+@@ core/src/color.rs:174
+按给定的系数缩放 [`Color`] 的 alpha 通道。
+@@ core/src/color.rs:182
+按给定的系数把当前 [`Color`] 与另一种颜色混合。
+@@ core/src/color.rs:198
+返回 [`Color`] 的相对亮度。
+<https://www.w3.org/TR/WCAG21/#dfn-relative-luminance>
+@@ core/src/color.rs:206
+返回这个 [`Color`] 相对于另一种颜色的[相对对比度][relative contrast ratio]。
+@@ core/src/color.rs:217
+如果当前 [`Color`] 放在给定的背景 [`Color`] 之上
+是可读的，返回 true。
+@@ core/src/color.rs:224
+把 [`Color`] 转换为等价的 RGBA8 值。
+@@ core/src/color.rs:235
+把 [`Color`] 转换为线性值。
+@@ core/src/color.rs:238
+出处见上面的链接
+@@ core/src/color.rs:256
+把 [`Color`] 转换为 [`Oklch`] 表示。
+@@ core/src/color.rs:258
+=
+@@ core/src/color.rs:261
+线性 RGB → LMS
+@@ core/src/color.rs:266
+非线性变换（立方根）
+@@ core/src/color.rs:271
+=
+@@ core/src/color.rs:276
+=
+@@ core/src/color.rs:278
+弧度
+@@ core/src/color.rs:308
+从 RGB 十六进制字符串解析颜色时可能返回的错误。
+
+字符串的规范见 [`Color`]。
+@@ core/src/color.rs:313
+字符串无法解析为有效的整数。
+@@ core/src/color.rs:316
+字符串的长度无效。
+@@ core/src/color.rs:330
+如果只得到半个字节（一个字母），就把它扩展为一个完整的字节（两个字母）
+@@ core/src/color.rs:377
+对颜色进行插值。等价于 [`Color::mix`]。
+@@ core/src/color.rs:383
+[Oklab 色彩空间](https://en.wikipedia.org/wiki/Oklab_color_space)中的颜色，
+以 Oklch 表示。
+@@ core/src/color.rs:386
+感知亮度：0 是纯黑，1 是纯白。
+@@ core/src/color.rs:388
+色度强度：0 表示无彩色，+0.5 通常是上限。
+@@ core/src/color.rs:390
+色相角，以弧度为单位。
+@@ core/src/color.rs:392
+alpha 通道。
+@@ core/src/color.rs:396
+用更简短、更清晰的语法创建一个 [`Color`]。
+@@ core/src/color.rs:398
+示例
+@@ core/src/color.rs:418
+简写记法：0x123
+@@ core/src/content_fit.rs:1
+控制某些内容（例如图像）在一块空间内的适应方式。
+@@ core/src/content_fit.rs:6
+让部件的内容适应其包围盒时所用的策略。
+
+这个枚举的每个变体都是一种策略，用来处理
+所显示的图像与显示它的空间之间
+在宽高比和尺寸上的差异。
+
+要以交互方式了解这些属性在 CSS 中的表现，
+请参阅 [Mozilla 的文档][1]，或运行 `tour` 示例
+@@ core/src/content_fit.rs:18
+在不需要裁剪或隐藏任何部分的前提下尽可能放大。
+
+图像会被缩放（保持宽高比），使它刚好能放进
+窗口。这不会使图像变形，也不会裁剪或隐藏任何边缘，
+但如果图像不能完全贴合，上下或左右
+可能会留白。
+
+当你需要完整显示一张图像、不丢失任何部分时，
+尤其是当图像本身就是屏幕的焦点时，
+这种方式非常合适。
+@@ core/src/content_fit.rs:31
+缩放图像以覆盖整个包围盒，必要时进行裁剪。
+
+这不会使图像变形，并且保证部件的区域被
+完全覆盖，但可能会裁掉一些边缘，
+尤其是当部件的宽高比与图像的宽高比
+相差很大时。
+
+最适合把图像用作背景或用来填充空间，
+并且图像边缘的细节不太重要的
+情况。
+@@ core/src/content_fit.rs:43
+让图像变形，使部件在不裁剪的情况下被 100% 覆盖。
+
+这会拉伸图像以适应部件，不留白也不裁剪。
+不过由于拉伸，图像看起来可能会变形或被拉长，
+尤其是在宽高比不匹配的时候。
+@@ core/src/content_fit.rs:50
+完全不调整图像的大小或缩放。
+
+这不会对给定的图像应用任何变换，但这也意味着，
+除非你自己计算好，否则部件的区域不会被
+完全覆盖，或者图像可能被裁剪。
+
+最适合你已经自己调整好图像尺寸的情况。
+@@ core/src/content_fit.rs:59
+如果图像对于这块空间来说太大，就把它缩小，但绝不
+放大。
+
+它的行为与 [`Contain`](Self::Contain) 很相似，区别在于：如果图像
+本来会被放大，它会保持原始分辨率，以避免
+放大图像带来的模糊。
+@@ core/src/content_fit.rs:69
+尝试对某个边界内的内容尺寸应用给定的适应方式。
+
+返回值是建议的内容缩放后尺寸。
+@@ core/src/event.rs:1
+处理用户界面的事件。
+@@ core/src/event.rs:9
+用户界面事件。
+
+_**注意：** 这个类型还很不完整！如果你需要跟踪
+其他事件，欢迎[提交 issue][open an issue] 并分享你的使用场景！_
+@@ core/src/event.rs:17
+键盘事件
+@@ core/src/event.rs:20
+鼠标事件
+@@ core/src/event.rs:23
+窗口事件
+@@ core/src/event.rs:26
+触摸事件
+@@ core/src/event.rs:29
+输入法事件
+@@ core/src/event.rs:32
+剪贴板事件
+@@ core/src/event.rs:35
+唤醒事件，由 [`Waker`](crate::shell::Waker) 产生。
+@@ core/src/event.rs:39
+一个 [`Event`] 被处理之后的状态。
+@@ core/src/event.rs:42
+这个 [`Event`] **没有**被任何部件处理。
+@@ core/src/event.rs:45
+这个 [`Event`] 已被某个部件处理。
+@@ core/src/event.rs:50
+把两个 [`Status`] 合并为一个。
+
+`Captured` 优先于 `Ignored`：
+@@ core/src/font.rs:1
+加载并使用字体。
+@@ core/src/font.rs:4
+字体。
+@@ core/src/font.rs:7
+[`Font`] 的 [`Family`]。
+@@ core/src/font.rs:9
+[`Font`] 的 [`Weight`]。
+@@ core/src/font.rs:11
+[`Font`] 的 [`Stretch`]。
+@@ core/src/font.rs:13
+[`Font`] 的 [`Style`]。
+@@ core/src/font.rs:18
+具有常规 [`Weight`] 的非等宽无衬线字体。
+@@ core/src/font.rs:26
+具有常规 [`Weight`] 的等宽字体。
+@@ core/src/font.rs:32
+使用给定的 [`Family::Name`] 和默认属性创建一个 [`Font`]。
+@@ core/src/font.rs:40
+使用给定的 [`Family`] 和默认属性创建一个 [`Font`]。
+@@ core/src/font.rs:48
+设置 [`Font`] 的 [`Weight`]。
+@@ core/src/font.rs:53
+设置 [`Font`] 的 [`Stretch`]。
+@@ core/src/font.rs:58
+设置 [`Font`] 的 [`Style`]。
+@@ core/src/font.rs:76
+字体族。
+@@ core/src/font.rs:79
+所选字体族的名称。
+@@ core/src/font.rs:82
+衬线字体代表一种文字的正式文本风格。
+@@ core/src/font.rs:85
+按照 CSS 中对这个术语的用法，无衬线字体的字形通常对比度较低，
+笔画末端朴素——没有任何外扩、
+横向笔画或其他装饰。
+@@ core/src/font.rs:91
+草书字体的字形通常采用更随意的书写风格，
+效果看起来更像是用钢笔或毛笔手写的，而不是印刷的
+字体。
+@@ core/src/font.rs:96
+奇幻字体主要是装饰性或表现性的字体，包含
+对字符的装饰性或表现性呈现。
+@@ core/src/font.rs:100
+等宽字体的唯一标准是所有字形具有相同的
+固定宽度。
+@@ core/src/font.rs:106
+所有独立的字体族变体的列表。
+@@ core/src/font.rs:115
+根据给定的字符串创建一个 [`Family::Name`]。
+
+这个名称会被驻留在一个全局缓存中，并且永远不会释放。
+@@ core/src/font.rs:156
+文本的字重。
+@@ core/src/font.rs:172
+文本的字宽。
+@@ core/src/font.rs:188
+文本的字形样式。
+@@ core/src/font.rs:198
+字体错误。
+@@ core/src/gradient.rs:1
+渐进过渡的颜色。
+@@ core/src/gradient.rs:7
+一种沿某个方向渐进过渡颜色的填充，可以是线性的、径向的（待定）
+或锥形的（待定）。
+@@ core/src/gradient.rs:10
+线性渐变沿着特定角度的方向对颜色进行插值。
+@@ core/src/gradient.rs:15
+按给定的系数缩放 [`Gradient`] 的 alpha 通道。
+@@ core/src/gradient.rs:30
+渐变向量上的一个点，在该点处指定的 [`color`] 不与其他颜色混合。
+@@ core/src/gradient.rs:34
+沿渐变向量的偏移量。
+@@ core/src/gradient.rs:37
+渐变在指定 [`offset`] 处的颜色。
+@@ core/src/gradient.rs:43
+线性渐变。
+@@ core/src/gradient.rs:46
+[`Gradient`] 在其边界内的倾斜角度。
+@@ core/src/gradient.rs:48
+线性渐变路径上的各个 [`ColorStop`]。
+@@ core/src/gradient.rs:53
+使用给定的角度（[`Radians`]）创建一个新的 [`Linear`] 渐变。
+@@ core/src/gradient.rs:61
+向渐变添加一个新的 [`ColorStop`]，由偏移量和颜色定义。
+
+任何不在 `0.0..=1.0` 范围内的 `offset` 都会被静默忽略。
+
+第 8 个之后添加的色标都会被静默忽略。
+@@ core/src/gradient.rs:83
+向渐变添加多个 [`ColorStop`]。
+
+第 8 个之后添加的色标都会被静默忽略。
+@@ core/src/gradient.rs:94
+按给定的系数缩放 [`Linear`] 渐变的 alpha
+通道。

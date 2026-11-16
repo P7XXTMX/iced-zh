@@ -1,4 +1,11 @@
+//! 显示一个环形进度指示器。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Show a circular progress indicator.
+//!
+//! </details>
 use iced::advanced::layout;
 use iced::advanced::renderer;
 use iced::advanced::widget::Meta;
@@ -35,7 +42,14 @@ impl<'a, Theme> Circular<'a, Theme>
 where
     Theme: StyleSheet,
 {
+    /// 使用给定的内容创建一个新的 [`Circular`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Circular`] with the given content.
+    ///
+    /// </details>
     pub fn new() -> Self {
         Circular {
             size: 40.0,
@@ -47,13 +61,27 @@ where
         }
     }
 
+    /// 设置这个 [`Circular`] 的缓动。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the easing of this [`Circular`].
+    ///
+    /// </details>
     pub fn easing(mut self, easing: &'a Easing) -> Self {
         self.easing = easing;
         self
     }
 
+    /// 设置这个 [`Circular`] 的循环时长。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the cycle duration of this [`Circular`].
+    ///
+    /// </details>
     pub fn cycle_duration(mut self, duration: Duration) -> Self {
         self.cycle_duration = duration / 2;
         self
@@ -307,9 +335,23 @@ where
 
 #[derive(Debug, Clone, Copy)]
 pub struct Appearance {
+    /// 进度指示器的轨道 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The track [`Color`] of the progress indicator.
+    ///
+    /// </details>
     pub track_color: Color,
+    /// 进度指示器的进度条 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The bar [`Color`] of the progress indicator.
+    ///
+    /// </details>
     pub bar_color: Color,
 }
 
@@ -322,12 +364,33 @@ impl std::default::Default for Appearance {
     }
 }
 
+/// 决定指示器样式的一组规则。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A set of rules that dictate the style of an indicator.
+///
+/// </details>
 pub trait StyleSheet {
+    /// [`StyleSheet`] 支持的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The supported style of the [`StyleSheet`].
+    ///
+    /// </details>
     type Style: Default;
 
+    /// 产生指示器处于活动状态时的 [`Appearance`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Produces the active [`Appearance`] of a indicator.
+    ///
+    /// </details>
     fn appearance(&self, style: &Self::Style) -> Appearance;
 }
 

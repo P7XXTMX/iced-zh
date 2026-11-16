@@ -1,7 +1,17 @@
+//! 一组与后端无关的类型，可用于为 [`iced`]
+//! 构建渲染器。
+//!
+//! ![Iced 生态系统的原生路径](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/native.png?raw=true)
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A bunch of backend-agnostic types that can be leveraged to build a renderer
 //! for [`iced`].
 //!
 //! ![The native path of the Iced ecosystem](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/native.png?raw=true)
+//!
+//! </details>
 //!
 //! [`iced`]: https://github.com/iced-rs/iced
 #![doc(

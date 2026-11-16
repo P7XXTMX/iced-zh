@@ -1,4 +1,4 @@
-#![allow(missing_docs)] // TODO
+#![allow(missing_docs)] // TODO（待办）
 use crate::alignment;
 use crate::clipboard;
 use crate::layout;

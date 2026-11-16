@@ -106,6 +106,7 @@ impl Theme {
         let base = base.into();
 
         // Convert to HSL color for manipulation
+        // 转换为 HSL 颜色以便处理
         let hsl = Hsl::from_color(to_rgb(base));
 
         let lower = [
@@ -182,6 +183,7 @@ impl Theme {
             frame.fill_rectangle(anchor, box_size, color);
 
             // We show a little indicator for the base color
+            // 我们为基准颜色显示一个小小的指示标记
             if color == self.base {
                 let triangle_x = anchor.x + box_size.width / 2.0;
 

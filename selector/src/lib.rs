@@ -1,4 +1,11 @@
+//! 从部件树中选择数据。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Select data from the widget tree.
+//!
+//! </details>
 use iced_core as core;
 
 mod find;
@@ -10,8 +17,28 @@ pub use target::{Bounded, Candidate, Target, Text};
 use crate::core::Point;
 use crate::core::widget;
 
+/// 一种遍历部件树以“选择”数据并产生某种输出的类型。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A type that traverses the widget tree to "select" data and produce some output.
+///
+/// </details>
 pub trait Selector {
+    /// [`Selector`] 的输出类型。
+    ///
+    /// 对于大多数选择器，它通常是 [`Target`]。不过，有些
+    /// 选择器可能希望返回一个更受限的类型，以便在类型系统中
+    /// 表达选择结果的保证。
+    ///
+    /// 例如，[`String`] 和 [`str`] 的 [`Selector`] 实现
+    /// 返回的是 [`target::Text`] 而不是通用的 [`Target`]，因为它们
+    /// 保证只会选择文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The output type of the [`Selector`].
     ///
     /// For most selectors, this will normally be a [`Target`]. However, some
@@ -21,18 +48,44 @@ pub trait Selector {
     /// For instance, the implementations of [`String`] and [`str`] of [`Selector`]
     /// return a [`target::Text`] instead of a generic [`Target`], since they are
     /// guaranteed to only select text.
+    ///
+    /// </details>
     type Output;
 
+    /// 在适用的情况下，对给定的 [`Candidate`] 执行选择。
+    ///
+    /// 这个方法按深度优先的顺序遍历部件树。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Performs a selection of the given [`Candidate`], if applicable.
     ///
     /// This method traverses the widget tree in depth-first order.
+    ///
+    /// </details>
     fn select(&mut self, candidate: Candidate<'_>) -> Option<Self::Output>;
 
+    /// 返回 [`Selector`] 的简短描述，用于调试。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns a short description of the [`Selector`] for debugging purposes.
+    ///
+    /// </details>
     fn description(&self) -> String;
 
+    /// 返回一个 [`widget::Operation`]，它运行 [`Selector`]，并在产生
+    /// 第一个 [`Output`](Self::Output) 后停止。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns a [`widget::Operation`] that runs the [`Selector`] and stops after
     /// the first [`Output`](Self::Output) is produced.
+    ///
+    /// </details>
     fn find(self) -> Find<Self>
     where
         Self: Sized,
@@ -40,8 +93,16 @@ pub trait Selector {
         Find::new(find::One::new(self))
     }
 
+    /// 返回一个 [`widget::Operation`]，它对整棵部件树运行 [`Selector`]，
+    /// 并汇总其所有的 [`Output`](Self::Output)。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns a [`widget::Operation`] that runs the [`Selector`] for the entire
     /// widget tree and aggregates all of its [`Output`](Self::Output).
+    ///
+    /// </details>
     fn find_all(self) -> FindAll<Self>
     where
         Self: Sized,
@@ -142,12 +203,26 @@ where
     }
 }
 
+/// 创建一个新的 [`Selector`]，匹配具有给定 [`widget::Id`] 的部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Selector`] that matches widgets with the given [`widget::Id`].
+///
+/// </details>
 pub fn id(id: impl Into<widget::Id>) -> impl Selector<Output = Target> {
     id.into()
 }
 
+/// 返回一个 [`Selector`]，匹配当前获得焦点的部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Returns a [`Selector`] that matches widgets that are currently focused.
+///
+/// </details>
 pub fn is_focused() -> impl Selector<Output = Target> {
     struct IsFocused;
 

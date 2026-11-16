@@ -7,7 +7,14 @@ use crate::core::widget::{self, Tree, Void};
 use crate::core::{self, Event, Layout, Point, Rectangle, Shell, Size, Vector, Widget};
 use crate::pane_grid::{Draggable, TitleBar};
 
+/// [`Pane`] 的内容。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The content of a [`Pane`].
+///
+/// </details>
 ///
 /// [`Pane`]: super::Pane
 pub struct Content<'a, Message, T, W, Theme = crate::Theme, Renderer = crate::Renderer>
@@ -23,7 +30,14 @@ impl<'a, Message, W, Theme, Renderer> Content<'a, Message, Void, W, Theme, Rende
 where
     Theme: container::Catalog,
 {
+    /// 使用提供的主体创建一个新的 [`Content`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Content`] with the provided body.
+    ///
+    /// </details>
     pub fn new(body: W) -> Self {
         Self {
             title_bar: None,
@@ -37,7 +51,14 @@ impl<'a, Message, T, W, Theme, Renderer> Content<'a, Message, T, W, Theme, Rende
 where
     Theme: container::Catalog,
 {
+    /// 设置 [`Content`] 的 [`TitleBar`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`TitleBar`] of the [`Content`].
+    ///
+    /// </details>
     pub fn title_bar<Title>(
         self,
         title_bar: TitleBar<'a, Message, Title, Theme, Renderer>,
@@ -49,7 +70,14 @@ where
         }
     }
 
+    /// 设置 [`Content`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`Content`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme) -> container::Style + 'a) -> Self
     where
@@ -59,7 +87,14 @@ where
         self
     }
 
+    /// 设置 [`Content`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`Content`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
@@ -100,7 +135,14 @@ where
         }
     }
 
+    /// 使用提供的 [`Renderer`] 和 [`Layout`] 绘制 [`Content`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Draws the [`Content`] with the provided [`Renderer`] and [`Layout`].
+    ///
+    /// </details>
     ///
     /// [`Renderer`]: core::Renderer
     pub fn draw(

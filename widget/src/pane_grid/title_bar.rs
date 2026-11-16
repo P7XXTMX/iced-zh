@@ -7,7 +7,14 @@ use crate::core::widget::{self, Tree};
 use crate::core::{self, Event, Layout, Padding, Point, Rectangle, Shell, Size, Vector, Widget};
 use crate::pane_grid::controls::Controls;
 
+/// [`Pane`] 的标题栏。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The title bar of a [`Pane`].
+///
+/// </details>
 ///
 /// [`Pane`]: super::Pane
 pub struct TitleBar<
@@ -30,7 +37,14 @@ impl<'a, Message, C, Theme, Renderer> TitleBar<'a, Message, C, Theme, Renderer>
 where
     Theme: container::Catalog,
 {
+    /// 使用给定的内容创建一个新的 [`TitleBar`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`TitleBar`] with the given content.
+    ///
+    /// </details>
     pub fn new(content: C) -> Self {
         Self {
             content,
@@ -41,23 +55,48 @@ where
         }
     }
 
+    /// 设置 [`TitleBar`] 的控件。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the controls of the [`TitleBar`].
+    ///
+    /// </details>
     pub fn controls(mut self, controls: impl Into<Controls<'a, Message, Theme, Renderer>>) -> Self {
         self.controls = Some(controls.into());
         self
     }
 
+    /// 设置 [`TitleBar`] 的 [`Padding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Padding`] of the [`TitleBar`].
+    ///
+    /// </details>
     pub fn padding<P: Into<Padding>>(mut self, padding: P) -> Self {
         self.padding = padding.into();
         self
     }
 
+    /// 设置附加在这个 [`TitleBar`] 上的 [`controls`] 是否
+    /// 始终可见。
+    ///
+    /// 默认情况下，只有当这个 [`TitleBar`] 所属的 [`Pane`]
+    /// 被悬停时，控件才可见。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets whether or not the [`controls`] attached to this [`TitleBar`] are
     /// always visible.
     ///
     /// By default, the controls are only visible when the [`Pane`] of this
     /// [`TitleBar`] is hovered.
+    ///
+    /// </details>
     ///
     /// [`controls`]: Self::controls
     /// [`Pane`]: super::Pane
@@ -66,7 +105,14 @@ where
         self
     }
 
+    /// 设置 [`TitleBar`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`TitleBar`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme) -> container::Style + 'a) -> Self
     where
@@ -76,7 +122,14 @@ where
         self
     }
 
+    /// 设置 [`TitleBar`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`TitleBar`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
@@ -132,7 +185,14 @@ where
         tree.children[0].diff(&mut self.content);
     }
 
+    /// 使用提供的 [`Renderer`] 和 [`Layout`] 绘制 [`TitleBar`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Draws the [`TitleBar`] with the provided [`Renderer`] and [`Layout`].
+    ///
+    /// </details>
     ///
     /// [`Renderer`]: core::Renderer
     pub fn draw(
@@ -216,10 +276,20 @@ where
         }
     }
 
+    /// 返回鼠标光标是否位于 [`TitleBar`] 的
+    /// 拾取区域之上。
+    ///
+    /// 除了控件之外，整个 [`TitleBar`] 都是拾取区域。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns whether the mouse cursor is over the pick area of the
     /// [`TitleBar`] or not.
     ///
     /// The whole [`TitleBar`] is a pick area, except its controls.
+    ///
+    /// </details>
     pub fn is_over_pick_area(&self, tree: &Tree, layout: Layout, cursor_position: Point) -> bool {
         if layout.bounds().contains(cursor_position) {
             let mut children = layout.iter(&tree.children);

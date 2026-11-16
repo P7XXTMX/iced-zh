@@ -1,4 +1,11 @@
+//! [`PaneGrid`] 的状态。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! The state of a [`PaneGrid`].
+//!
+//! </details>
 //!
 //! [`PaneGrid`]: super::PaneGrid
 use crate::core::{Point, Size};
@@ -7,6 +14,19 @@ use crate::pane_grid::{Axis, Configuration, Direction, Edge, Node, Pane, Region,
 use std::borrow::Cow;
 use std::collections::BTreeMap;
 
+/// [`PaneGrid`] 的状态。
+///
+/// 它跟踪每个 [`Pane`] 的状态以及每个
+/// [`Split`] 的位置。
+///
+/// [`State`] 需要拥有 [`Pane`] 可能需要的所有可变内容。
+/// 这就是这个结构体对类型 `T` 泛型的原因。这个类型的值
+/// 会被提供给 [`PaneGrid::new`] 的视图函数，用来显示每个
+/// [`Pane`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The state of a [`PaneGrid`].
 ///
 /// It keeps track of the state of each [`Pane`] and the position of each
@@ -17,26 +37,52 @@ use std::collections::BTreeMap;
 /// provided to the view function of [`PaneGrid::new`] for displaying each
 /// [`Pane`].
 ///
+/// </details>
+///
 /// [`PaneGrid`]: super::PaneGrid
 /// [`PaneGrid::new`]: super::PaneGrid::new
 #[derive(Debug, Clone)]
 pub struct State<T> {
+    /// [`PaneGrid`] 的窗格。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The panes of the [`PaneGrid`].
+    ///
+    /// </details>
     ///
     /// [`PaneGrid`]: super::PaneGrid
     pub panes: BTreeMap<Pane, T>,
 
+    /// [`PaneGrid`] 的内部状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The internal state of the [`PaneGrid`].
+    ///
+    /// </details>
     ///
     /// [`PaneGrid`]: super::PaneGrid
     pub internal: Internal,
 }
 
 impl<T> State<T> {
+    /// 创建一个新的 [`State`]，并用提供的状态
+    /// 初始化第一个窗格。
+    ///
+    /// 除了 [`State`]，它还会返回第一个 [`Pane`] 的标识符。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`State`], initializing the first pane with the provided
     /// state.
     ///
     /// Alongside the [`State`], it returns the first [`Pane`] identifier.
+    ///
+    /// </details>
     pub fn new(first_pane_state: T) -> (Self, Pane) {
         (
             Self::with_configuration(Configuration::Pane(first_pane_state)),
@@ -44,7 +90,14 @@ impl<T> State<T> {
         )
     }
 
+    /// 使用给定的 [`Configuration`] 创建一个新的 [`State`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`State`] with the given [`Configuration`].
+    ///
+    /// </details>
     pub fn with_configuration(config: impl Into<Configuration<T>>) -> Self {
         let mut panes = BTreeMap::default();
 
@@ -53,46 +106,106 @@ impl<T> State<T> {
         State { panes, internal }
     }
 
+    /// 返回 [`State`] 中窗格的总数。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the total amount of panes in the [`State`].
+    ///
+    /// </details>
     pub fn len(&self) -> usize {
         self.panes.len()
     }
 
+    /// 如果 [`State`] 中窗格的数量为 0，返回 `true`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns `true` if the amount of panes in the [`State`] is 0.
+    ///
+    /// </details>
     pub fn is_empty(&self) -> bool {
         self.len() == 0
     }
 
+    /// 返回给定 [`Pane`] 的内部状态（如果存在）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the internal state of the given [`Pane`], if it exists.
+    ///
+    /// </details>
     pub fn get(&self, pane: Pane) -> Option<&T> {
         self.panes.get(&pane)
     }
 
+    /// 返回给定 [`Pane`] 的可变内部状态
+    /// （如果存在）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the internal state of the given [`Pane`] with mutability, if it
     /// exists.
+    ///
+    /// </details>
     pub fn get_mut(&mut self, pane: Pane) -> Option<&mut T> {
         self.panes.get_mut(&pane)
     }
 
+    /// 返回一个遍历 [`State`] 中所有窗格
+    /// 及其内部状态的迭代器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns an iterator over all the panes of the [`State`], alongside its
     /// internal state.
+    ///
+    /// </details>
     pub fn iter(&self) -> impl Iterator<Item = (&Pane, &T)> {
         self.panes.iter()
     }
 
+    /// 返回一个遍历 [`State`] 中所有窗格
+    /// 及其内部状态的可变迭代器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns a mutable iterator over all the panes of the [`State`],
     /// alongside its internal state.
+    ///
+    /// </details>
     pub fn iter_mut(&mut self) -> impl Iterator<Item = (&Pane, &mut T)> {
         self.panes.iter_mut()
     }
 
+    /// 返回 [`State`] 的布局。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the layout of the [`State`].
+    ///
+    /// </details>
     pub fn layout(&self) -> &Node {
         &self.internal.layout
     }
 
+    /// 返回某个 [`Pane`] 在给定方向上相邻的 [`Pane`]
+    /// （如果有）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the adjacent [`Pane`] of another [`Pane`] in the given
     /// direction, if there is one.
+    ///
+    /// </details>
     pub fn adjacent(&self, pane: Pane, direction: Direction) -> Option<Pane> {
         let regions = self
             .internal
@@ -121,15 +234,32 @@ impl<T> State<T> {
         Some(*pane)
     }
 
+    /// 沿给定的 [`Axis`] 把给定的 [`Pane`] 一分为二，
+    /// 并用提供的内部状态初始化新的 [`Pane`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Splits the given [`Pane`] into two in the given [`Axis`] and
     /// initializing the new [`Pane`] with the provided internal state.
+    ///
+    /// </details>
     pub fn split(&mut self, axis: Axis, pane: Pane, state: T) -> Option<(Pane, Split)> {
         self.split_node(axis, Some(pane), state, false)
     }
 
+    /// 在给定的 [`Region`] 上，用给定的 [`Pane`] 分割目标 [`Pane`]。
+    ///
+    /// 对于 [`Region::Center`]，默认会交换两个窗格。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Split a target [`Pane`] with a given [`Pane`] on a given [`Region`].
     ///
     /// Panes will be swapped by default for [`Region::Center`].
+    ///
+    /// </details>
     pub fn split_with(&mut self, target: Pane, pane: Pane, region: Region) {
         match region {
             Region::Center => self.swap(pane, target),
@@ -150,7 +280,14 @@ impl<T> State<T> {
         }
     }
 
+    /// 把给定的 [`Pane`] 放置到提供的 [`Target`] 中。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Drops the given [`Pane`] into the provided [`Target`].
+    ///
+    /// </details>
     pub fn drop(&mut self, pane: Pane, target: Target) {
         match target {
             Target::Edge(edge) => self.move_to_edge(pane, edge),
@@ -171,6 +308,7 @@ impl<T> State<T> {
             self.internal.layout.find(pane)?
         } else {
             // Major node
+            // 主节点
             &mut self.internal.layout
         };
 
@@ -203,6 +341,7 @@ impl<T> State<T> {
             && let Some((new_pane, _)) = self.split(axis, target, state)
         {
             // Ensure new node corresponds to original closed `Pane` for state continuity
+            // 确保新节点对应于原先被关闭的 `Pane`，以保持状态的连续性
             self.relabel(new_pane, pane);
 
             if swap {
@@ -211,7 +350,14 @@ impl<T> State<T> {
         }
     }
 
+    /// 把 [`Pane`] 移动到 [`PaneGrid`] 的某条 [`Edge`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move [`Pane`] to an [`Edge`] of the [`PaneGrid`].
+    ///
+    /// </details>
     ///
     /// [`PaneGrid`]: super::PaneGrid
     pub fn move_to_edge(&mut self, pane: Pane, edge: Edge) {
@@ -236,6 +382,7 @@ impl<T> State<T> {
             && let Some((new_pane, _)) = self.split_node(axis, None, state, inverse)
         {
             // Ensure new node corresponds to original closed `Pane` for state continuity
+            // 确保新节点对应于原先被关闭的 `Pane`，以保持状态的连续性
             self.relabel(new_pane, pane);
         }
     }
@@ -249,10 +396,20 @@ impl<T> State<T> {
             .and_then(|state| self.panes.insert(label, state));
     }
 
+    /// 交换 [`State`] 中所提供的两个窗格的位置。
+    ///
+    /// 如果想在 [`PaneGrid`] 中通过拖放来交换窗格，
+    /// 需要在处理 [`DragEvent`] 时调用这个方法。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Swaps the position of the provided panes in the [`State`].
     ///
     /// If you want to swap panes on drag and drop in your [`PaneGrid`], you
     /// will need to call this method when handling a [`DragEvent`].
+    ///
+    /// </details>
     ///
     /// [`PaneGrid`]: super::PaneGrid
     /// [`DragEvent`]: super::DragEvent
@@ -269,6 +426,17 @@ impl<T> State<T> {
         });
     }
 
+    /// 通过设置所提供的 [`Split`] 的位置来调整两个窗格的大小。
+    ///
+    /// 比例是 [0, 1] 范围内的值，表示 [`Split`]
+    /// 在两个窗格之间的确切位置。
+    ///
+    /// 如果想在 [`PaneGrid`] 中启用调整大小的交互，
+    /// 需要在处理 [`ResizeEvent`] 时调用这个方法。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Resizes two panes by setting the position of the provided [`Split`].
     ///
     /// The ratio is a value in [0, 1], representing the exact position of a
@@ -277,14 +445,24 @@ impl<T> State<T> {
     /// If you want to enable resize interactions in your [`PaneGrid`], you will
     /// need to call this method when handling a [`ResizeEvent`].
     ///
+    /// </details>
+    ///
     /// [`PaneGrid`]: super::PaneGrid
     /// [`ResizeEvent`]: super::ResizeEvent
     pub fn resize(&mut self, split: Split, ratio: f32) {
         let _ = self.internal.layout.resize(split, ratio);
     }
 
+    /// 关闭给定的 [`Pane`]，并返回它的内部状态以及与它最近的
+    /// 兄弟窗格（如果存在）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Closes the given [`Pane`] and returns its internal state and its closest
     /// sibling, if it exists.
+    ///
+    /// </details>
     pub fn close(&mut self, pane: Pane) -> Option<(T, Pane)> {
         if self.internal.maximized == Some(pane) {
             let _ = self.internal.maximized.take();
@@ -297,23 +475,46 @@ impl<T> State<T> {
         }
     }
 
+    /// 最大化给定的 [`Pane`]。在调用 [`Self::restore()`] 之前，
+    /// [`PaneGrid`] 只会渲染这个窗格。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Maximize the given [`Pane`]. Only this pane will be rendered by the
     /// [`PaneGrid`] until [`Self::restore()`] is called.
+    ///
+    /// </details>
     ///
     /// [`PaneGrid`]: super::PaneGrid
     pub fn maximize(&mut self, pane: Pane) {
         self.internal.maximized = Some(pane);
     }
 
+    /// 把当前最大化的 [`Pane`] 恢复到正常大小。
+    /// [`PaneGrid`] 会渲染所有窗格。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Restore the currently maximized [`Pane`] to it's normal size. All panes
     /// will be rendered by the [`PaneGrid`].
+    ///
+    /// </details>
     ///
     /// [`PaneGrid`]: super::PaneGrid
     pub fn restore(&mut self) {
         let _ = self.internal.maximized.take();
     }
 
+    /// 返回 [`PaneGrid`] 中被最大化的 [`Pane`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the maximized [`Pane`] of the [`PaneGrid`].
+    ///
+    /// </details>
     ///
     /// [`PaneGrid`]: super::PaneGrid
     pub fn maximized(&self) -> Option<Pane> {
@@ -321,7 +522,14 @@ impl<T> State<T> {
     }
 }
 
+/// [`PaneGrid`] 的内部状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The internal state of a [`PaneGrid`].
+///
+/// </details>
 ///
 /// [`PaneGrid`]: super::PaneGrid
 #[derive(Debug, Clone)]
@@ -332,8 +540,16 @@ pub struct Internal {
 }
 
 impl Internal {
+    /// 根据 [`Configuration`] 初始化 [`PaneGrid`] 的
+    /// [`Internal`] 状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Initializes the [`Internal`] state of a [`PaneGrid`] from a
     /// [`Configuration`].
+    ///
+    /// </details>
     ///
     /// [`PaneGrid`]: super::PaneGrid
     pub fn from_configuration<T>(
@@ -393,38 +609,101 @@ impl Internal {
     }
 }
 
+/// [`PaneGrid`] 当前的动作。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The current action of a [`PaneGrid`].
+///
+/// </details>
 ///
 /// [`PaneGrid`]: super::PaneGrid
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub enum Action {
+    /// [`PaneGrid`] 处于空闲状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`PaneGrid`] is idle.
+    ///
+    /// </details>
     ///
     /// [`PaneGrid`]: super::PaneGrid
     #[default]
     Idle,
+    /// [`PaneGrid`] 中的某个 [`Pane`] 正在被拖动。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A [`Pane`] in the [`PaneGrid`] is being dragged.
+    ///
+    /// </details>
     ///
     /// [`PaneGrid`]: super::PaneGrid
     Dragging {
+        /// 正在被拖动的 [`Pane`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The [`Pane`] being dragged.
+        ///
+        /// </details>
         pane: Pane,
+        /// 拖动交互的起始 [`Point`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The starting [`Point`] of the drag interaction.
+        ///
+        /// </details>
         origin: Point,
     },
+    /// [`PaneGrid`] 中的某个 [`Split`] 正在被拖动。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A [`Split`] in the [`PaneGrid`] is being dragged.
+    ///
+    /// </details>
     ///
     /// [`PaneGrid`]: super::PaneGrid
     Resizing {
+        /// 正在被拖动的 [`Split`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The [`Split`] being dragged.
+        ///
+        /// </details>
         split: Split,
+        /// [`Split`] 的 [`Axis`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The [`Axis`] of the [`Split`].
+        ///
+        /// </details>
         axis: Axis,
     },
 }
 
 impl Action {
+    /// 返回当前正在被拾取的 [`Pane`]（如果有）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current [`Pane`] that is being picked, if any.
+    ///
+    /// </details>
     pub fn picked_pane(&self) -> Option<(Pane, Point)> {
         match *self {
             Action::Dragging { pane, origin, .. } => Some((pane, origin)),
@@ -432,7 +711,14 @@ impl Action {
         }
     }
 
+    /// 返回当前正在被拖动的 [`Split`]（如果有）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current [`Split`] that is being dragged, if any.
+    ///
+    /// </details>
     pub fn picked_split(&self) -> Option<(Split, Axis)> {
         match *self {
             Action::Resizing { split, axis, .. } => Some((split, axis)),

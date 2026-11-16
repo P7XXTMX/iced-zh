@@ -10,16 +10,44 @@ use std::panic;
 #[cfg(feature = "svg-text")]
 use std::sync::Arc;
 
+/// 缓存中与某个 svg 句柄对应的条目
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Entry in cache corresponding to an svg handle
+///
+/// </details>
 pub enum Svg {
+    /// 已解析的 svg
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Parsed svg
+    ///
+    /// </details>
     Loaded(usvg::Tree),
+    /// svg 未找到或解析失败
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Svg not found or failed to parse
+    ///
+    /// </details>
     NotFound,
 }
 
 impl Svg {
+    /// 视口的宽度和高度
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Viewport width and height
+    ///
+    /// </details>
     pub fn viewport_dimensions(&self) -> Size<u32> {
         match self {
             Svg::Loaded(tree) => {
@@ -32,7 +60,14 @@ impl Svg {
     }
 }
 
+/// 缓存 svg 的矢量数据和光栅数据
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Caches svg vector and raster data
+///
+/// </details>
 #[derive(Debug, Default)]
 pub struct Cache {
     svgs: FxHashMap<u64, Svg>,
@@ -47,13 +82,21 @@ pub struct Cache {
 type ColorFilter = Option<[u8; 4]>;
 
 impl Cache {
+    /// 加载 svg
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Load svg
+    ///
+    /// </details>
     pub fn load(&mut self, handle: &svg::Handle) -> &Svg {
         if self.svgs.contains_key(&handle.id()) {
             return self.svgs.get(&handle.id()).unwrap();
         }
 
         // TODO: Reuse `cosmic-text` font database
+        // 待办：复用 `cosmic-text` 的字体数据库
         #[cfg(feature = "svg-text")]
         if self.fontdb.is_none() {
             let mut fontdb = usvg::fontdb::Database::new();
@@ -90,7 +133,14 @@ impl Cache {
         self.svgs.get(&handle.id()).unwrap()
     }
 
+    /// 加载 svg 并上传光栅数据
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Load svg and upload raster data
+    ///
+    /// </details>
     pub fn upload(
         &mut self,
         device: &wgpu::Device,
@@ -110,6 +160,10 @@ impl Cache {
         // We currently rerasterize the SVG when its size changes. This is slow
         // as heck. A GPU rasterizer like `pathfinder` may perform better.
         // It would be cool to be able to smooth resize the `svg` example.
+        // 待办：优化！
+        // 目前 SVG 的大小一变，我们就重新光栅化它。这非常
+        // 慢。像 `pathfinder` 这样的 GPU 光栅化器可能表现更好。
+        // 要是能平滑地调整 `svg` 示例的大小就好了。
         if self.rasterized.contains_key(&key) {
             let _ = self.svg_hits.insert(id);
             let _ = self.rasterized_hits.insert(key);
@@ -123,6 +177,10 @@ impl Cache {
                 // We currently rerasterize the SVG when its size changes. This is slow
                 // as heck. A GPU rasterizer like `pathfinder` may perform better.
                 // It would be cool to be able to smooth resize the `svg` example.
+                // 待办：优化！
+                // 目前 SVG 的大小一变，我们就重新光栅化它。这非常
+                // 慢。像 `pathfinder` 这样的 GPU 光栅化器可能表现更好。
+                // 要是能平滑地调整 `svg` 示例的大小就好了。
                 let mut img = tiny_skia::Pixmap::new(size.width, size.height)?;
 
                 let tree_size = tree.size().to_int_size();
@@ -147,6 +205,8 @@ impl Cache {
 
                 // SVG rendering can panic on malformed or complex vectors.
                 // We catch panics to prevent crashes and continue gracefully.
+                // 遇到格式错误或过于复杂的矢量图时，SVG 渲染可能会 panic。
+                // 我们捕获 panic 以避免崩溃，并平稳地继续运行。
                 let render = panic::catch_unwind(panic::AssertUnwindSafe(|| {
                     resvg::render(tree, transform, &mut img.as_mut());
                 }));
@@ -185,7 +245,14 @@ impl Cache {
         }
     }
 
+    /// 加载 svg 并上传光栅数据
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Load svg and upload raster data
+    ///
+    /// </details>
     pub fn trim(&mut self, atlas: &mut Atlas) {
         if !self.should_trim {
             return;

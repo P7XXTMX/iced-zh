@@ -1,0 +1,1145 @@
+@@ graphics/src/antialiasing.rs:1
+抗锯齿策略。
+@@ graphics/src/antialiasing.rs:4
+2 倍采样的多重采样抗锯齿
+@@ graphics/src/antialiasing.rs:6
+4 倍采样的多重采样抗锯齿
+@@ graphics/src/antialiasing.rs:8
+8 倍采样的多重采样抗锯齿
+@@ graphics/src/antialiasing.rs:10
+16 倍采样的多重采样抗锯齿
+@@ graphics/src/antialiasing.rs:15
+返回 [`Antialiasing`] 的采样数。
+@@ graphics/src/cache.rs:1
+缓存计算结果并高效地复用它们。
+@@ graphics/src/cache.rs:7
+一个简单的缓存，存储已生成的值以避免重复计算。
+
+清空之后仍会记录最后一次生成的值。
+@@ graphics/src/cache.rs:19
+创建一个新的空 [`Cache`]。
+@@ graphics/src/cache.rs:28
+使用给定的 [`Group`] 创建一个新的空 [`Cache`]。
+
+同一分组内的缓存可以复用内部的渲染存储。
+
+通常应当把很可能一起变化的缓存
+归为一组。
+@@ graphics/src/cache.rs:47
+返回 [`Cache`] 的 [`Group`]。
+@@ graphics/src/cache.rs:52
+把给定的值放入 [`Cache`]。
+
+注意，由于这是一个缓存，调用此方法并不需要
+可变引用。你可以放心地在渲染代码中
+更新缓存。
+@@ graphics/src/cache.rs:61
+返回指向 [`Cache`] 内部 [`State`] 的引用单元（reference cell）。
+@@ graphics/src/cache.rs:73
+清空 [`Cache`]。
+@@ graphics/src/cache.rs:88
+缓存分组。
+
+属于同一分组的缓存通常会一起变化。
+
+缓存分组可用于在渲染时实现某些性能优化，
+例如批处理或共享图集。
+@@ graphics/src/cache.rs:101
+生成一个新的唯一缓存 [`Group`]。
+@@ graphics/src/cache.rs:111
+如果 [`Group`] 中永远只可能有
+一个 [`Cache`]，返回 `true`。
+
+这是使用 [`Cache::new`] 时
+默认分配的 [`Group`] 种类。
+
+知道某个 [`Group`] 永远不会被共享，
+可能有助于渲染后端执行额外的
+优化。
+@@ graphics/src/cache.rs:158
+[`Cache`] 的状态。
+@@ graphics/src/cache.rs:161
+[`Cache`] 为空。
+@@ graphics/src/cache.rs:163
+[`Cache`] 先前的值。
+@@ graphics/src/cache.rs:166
+[`Cache`] 已填充。
+@@ graphics/src/cache.rs:168
+[`Cache`] 当前的值
+@@ graphics/src/cache.rs:173
+可以被缓存的一份数据。
+@@ graphics/src/cache.rs:175
+所产生的缓存的类型。
+@@ graphics/src/cache.rs:178
+把 [`Cache`] 加载为一个正式的实例。
+@@ graphics/src/cache.rs:183
+缓存这个值，产生与之对应的 [`Cache`]。
+@@ graphics/src/cache.rs:198
+使所有现存的 [`Cache`] 失效；清空它们的内容。
+@@ graphics/src/compositor.rs:1
+合成器负责初始化渲染器并管理窗口
+表面。
+@@ graphics/src/compositor.rs:16
+可以绘制到窗口的图形合成器。
+@@ graphics/src/compositor.rs:18
+后端的 iced 渲染器。
+@@ graphics/src/compositor.rs:21
+后端的表面。
+@@ graphics/src/compositor.rs:24
+使用给定的 [`backend::Settings`] 创建一个新的 [`Compositor`]。
+@@ graphics/src/compositor.rs:32
+为 [`Compositor`] 创建一个 [`Self::Renderer`]。
+@@ graphics/src/compositor.rs:35
+为给定的窗口创建一个新的 [`Surface`]。
+@@ graphics/src/compositor.rs:40
+使用给定的尺寸配置一个新的 [`Surface`]。
+@@ graphics/src/compositor.rs:45
+返回此 [`Compositor`] 使用的 [`Information`]。
+@@ graphics/src/compositor.rs:48
+从字节数据加载字体。
+@@ graphics/src/compositor.rs:55
+待办：错误处理
+@@ graphics/src/compositor.rs:59
+列出所有可用的字体族。
+@@ graphics/src/compositor.rs:72
+把 [`Renderer`] 的图元呈现到给定 [`Surface`] 的下一帧。
+@@ graphics/src/compositor.rs:85
+把 [`Renderer`] 当前的图元截图到一个离屏纹理，并返回该纹理的字节数据，
+按 `sRGB` 色彩空间中的 `RGBA` 顺序排列。
+@@ graphics/src/compositor.rs:97
+可以在 [`Compositor`] 中使用的窗口。
+
+这只是 `raw-window-handle` 各个特质的一个
+便捷的父特质。
+@@ graphics/src/compositor.rs:105
+可以在 [`Compositor`] 中使用的、拥有所有权的显示句柄。
+
+这只是 `raw-window-handle` 的特质的一个
+便捷的父特质。
+@@ graphics/src/compositor.rs:113
+定义渲染器的默认合成器。
+@@ graphics/src/compositor.rs:115
+渲染器的合成器。
+@@ graphics/src/compositor.rs:119
+调用 [`Compositor::present`] 失败时的结果。
+@@ graphics/src/compositor.rs:122
+尝试获取下一帧时超时。
+@@ graphics/src/compositor.rs:125
+底层表面已经改变，因此必须更新表面。
+@@ graphics/src/compositor.rs:128
+交换链已丢失，需要重新创建。
+@@ graphics/src/compositor.rs:131
+没有剩余内存可用于分配新的帧。
+@@ graphics/src/compositor.rs:134
+表面被遮挡，不得向其绘制。
+@@ graphics/src/compositor.rs:137
+获取纹理失败，出现了一般性错误。
+@@ graphics/src/compositor.rs:142
+包含图形相关的信息（例如图形适配器、图形后端）。
+@@ graphics/src/compositor.rs:145
+图形适配器。
+@@ graphics/src/compositor.rs:147
+图形后端。
+@@ graphics/src/damage.rs:1
+计算帧与帧之间的损伤（damage）。
+@@ graphics/src/damage.rs:4
+根据先前和当前的图元，求出二者差异对应的损伤区域。
+@@ graphics/src/damage.rs:22
+把新增/移除的图元计入损伤区域
+@@ graphics/src/damage.rs:29
+根据先前和当前的图元计算损伤区域。
+@@ graphics/src/damage.rs:45
+在给定的边界内，把彼此靠近的损伤区域
+合并成组。
+@@ graphics/src/color.rs:1
+为着色器管理颜色。
+@@ graphics/src/color.rs:6
+打包为 4 个浮点数的颜色，分别表示 RGBA 通道。
+@@ graphics/src/color.rs:12
+返回 [`Packed`] 颜色的内部分量。
+@@ graphics/src/color.rs:18
+指示渲染器是否应当执行伽马校正的标志。
+@@ graphics/src/color.rs:21
+打包一个 [`Color`]。
+@@ graphics/src/geometry.rs:1
+构建并绘制几何图形。
+@@ graphics/src/geometry.rs:25
+能够绘制某种 [`Self::Geometry`] 的渲染器。
+@@ graphics/src/geometry.rs:27
+此渲染器能够绘制的几何图形种类。
+@@ graphics/src/geometry.rs:30
+此渲染器支持的 [`Frame`] 种类。
+@@ graphics/src/geometry.rs:33
+创建一个新的 [`Self::Frame`]。
+@@ graphics/src/geometry.rs:36
+绘制给定的 [`Self::Geometry`]。
+@@ graphics/src/gradient.rs:1
+可用作某些几何图形填充的渐变。
+
+如果需要可用作部件背景的渐变，参见 [`Gradient`]。
+@@ graphics/src/gradient.rs:13
+沿某个方向对颜色进行线性插值的填充。
+
+如果需要可用作部件背景填充的渐变，参见 [`crate::core::Gradient`]。
+@@ graphics/src/gradient.rs:17
+线性渐变沿着从 `start` 点到 `end` 点的方向
+对颜色进行插值。
+@@ graphics/src/gradient.rs:29
+打包 [`Gradient`]，以便在着色器代码中使用。
+@@ graphics/src/gradient.rs:37
+线性渐变。
+@@ graphics/src/gradient.rs:40
+渐变的绝对起始位置。
+@@ graphics/src/gradient.rs:43
+渐变的绝对结束位置。
+@@ graphics/src/gradient.rs:46
+沿线性渐变方向分布的 [`ColorStop`]。
+@@ graphics/src/gradient.rs:51
+创建一个新的 [`Linear`] 构建器。
+@@ graphics/src/gradient.rs:60
+向渐变添加一个新的 [`ColorStop`]，由偏移量和颜色定义。
+
+任何不在 `0.0..=1.0` 范围内的 `offset` 都会被静默忽略。
+
+第 8 个之后添加的色标都会被静默忽略。
+@@ graphics/src/gradient.rs:82
+向渐变添加多个 [`ColorStop`]。
+
+第 8 个之后添加的色标都会被静默忽略。
+@@ graphics/src/gradient.rs:93
+打包 [`Gradient`]，以便在着色器代码中使用。
+@@ graphics/src/gradient.rs:126
+打包后的 [`Gradient`] 数据，供着色器代码使用。
+@@ graphics/src/gradient.rs:130
+8 个颜色，每个通道为 16 位浮点数，每 2 个颜色打包进 1 个 u32
+@@ graphics/src/gradient.rs:132
+8 个偏移量，8 个 16 位浮点数打包进 4 个 u32
+@@ graphics/src/gradient.rs:137
+创建一个新的 [`Packed`] 渐变，供着色器代码使用。
+@@ graphics/src/gradient.rs:176
+把两个 f16 打包进一个 u32。
+@@ graphics/src/geometry/fill.rs:1
+用某种样式填充 [`Geometry`]。
+@@ graphics/src/geometry/fill.rs:9
+用于填充几何图形的样式。
+@@ graphics/src/geometry/fill.rs:12
+填充的颜色或渐变。
+
+默认设置为 [`Color::BLACK`] 的 [`Style::Solid`]。
+@@ graphics/src/geometry/fill.rs:17
+填充规则定义了如何判断哪些部分位于形状内部、
+哪些部分位于形状外部。
+
+详见 [SVG 规范][1]。
+
+默认设置为 `NonZero`。
+@@ graphics/src/geometry/fill.rs:64
+填充规则定义了如何判断哪些部分位于形状内部、
+哪些部分位于形状外部。
+
+参见 [SVG 规范][1]。
+@@ graphics/src/geometry/cache.rs:7
+一个简单的缓存，存储已生成的几何图形以避免重复计算。
+
+除非所在图层的尺寸发生变化，或者被显式清空，
+否则 [`Cache`] 不会重绘它的几何图形。
+@@ graphics/src/geometry/cache.rs:28
+创建一个新的空 [`Cache`]。
+@@ graphics/src/geometry/cache.rs:35
+使用给定的 [`Group`] 创建一个新的空 [`Cache`]。
+
+同一分组内的缓存可以复用内部的渲染存储。
+
+通常应当把很可能一起变化的缓存
+归为一组。
+@@ graphics/src/geometry/cache.rs:47
+清空 [`Cache`]，强制在下次使用时重绘。
+@@ graphics/src/geometry/cache.rs:52
+使用给定的闭包绘制几何图形，并把它存入
+[`Cache`]。
+
+只有在以下情况下才会调用闭包：
+- 尺寸自上一次绘制调用以来发生了变化。
+- [`Cache`] 为空，或者已被显式清空。
+
+否则，将返回先前存储的几何图形。
+这种情况下 [`Cache`] 不会被清空。换句话说，
+只要有需要，它就会一直返回已存储的几何图形。
+@@ graphics/src/geometry/cache.rs:71
+使用给定的闭包绘制几何图形，并把它存入
+[`Cache`]。
+
+与 [`draw`](Self::draw) 类似，但接受一个裁剪用的 [`Rectangle`]，
+而不是 [`Size`]。
+@@ graphics/src/image/storage.rs:1
+存储图像。
+@@ graphics/src/image/storage.rs:6
+存储缓存的图像数据，供渲染时使用
+@@ graphics/src/image/storage.rs:8
+[`Storage`] 中 [`Entry`] 的类型。
+@@ graphics/src/image/storage.rs:11
+上传或移除 [`Self::Entry`] 时提供的状态。
+@@ graphics/src/image/storage.rs:14
+上传某个 [`Self::Entry`] 的图像数据。
+@@ graphics/src/image/storage.rs:23
+从 [`Storage`] 中移除一个 [`Self::Entry`]。
+@@ graphics/src/image/storage.rs:27
+某个 [`Storage`] 中的条目，
+@@ graphics/src/image/storage.rs:29
+[`Entry`] 的 [`Size`]。
+@@ graphics/src/geometry/path.rs:1
+构建各种二维形状。
+@@ graphics/src/geometry/path.rs:15
+一组不可变的点，这些点可以相连，也可以不相连。
+
+单个 [`Path`] 就可以表示各种不同的二维形状！
+@@ graphics/src/geometry/path.rs:24
+使用给定的闭包创建一个新的 [`Path`]。
+
+使用 [`Builder`] 来配置你的 [`Path`]。
+@@ graphics/src/geometry/path.rs:30
+待办：改为纯函数式，而不是基于副作用（？）
+@@ graphics/src/geometry/path.rs:36
+根据起点和终点创建一个表示线段的
+新 [`Path`]。
+@@ graphics/src/geometry/path.rs:45
+根据左上角坐标和 `Size` 创建一个表示矩形的
+新 [`Path`]。
+@@ graphics/src/geometry/path.rs:51
+根据左上角坐标、[`Size`] 和 [`border::Radius`]
+创建一个表示圆角矩形的新 [`Path`]。
+@@ graphics/src/geometry/path.rs:57
+根据圆心坐标和半径创建一个表示圆的
+新 [`Path`]。
+@@ graphics/src/geometry/path.rs:66
+返回内部的 [`lyon_path::Path`]。
+@@ graphics/src/geometry/path.rs:72
+返回应用了给定变换之后的当前 [`Path`]。
+@@ graphics/src/image.rs:1
+加载并操作图像。
+@@ graphics/src/image.rs:9
+位图或矢量图像。
+@@ graphics/src/image.rs:13
+位图图像。
+@@ graphics/src/image.rs:20
+矢量图像。
+@@ graphics/src/image.rs:29
+返回 [`Image`] 的边界。
+@@ graphics/src/image.rs:38
+图像缓冲区。
+@@ graphics/src/image.rs:43
+尝试根据 [`Handle`] 加载图像。
+@@ graphics/src/image.rs:60
+返回值的含义可参见（例如）上面的链接。
+@@ graphics/src/lib.rs:1
+一组与后端无关的类型，可用于为 [`iced`]
+构建渲染器。
+
+![Iced 生态系统的原生路径](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/native.png?raw=true)
+@@ graphics/src/geometry/style.rs:4
+某个绘制内容的着色样式。
+@@ graphics/src/geometry/style.rs:7
+纯色 [`Color`]。
+@@ graphics/src/geometry/style.rs:10
+[`Gradient`] 渐变色。
+@@ graphics/src/layer.rs:1
+绘制并堆叠由图元组成的图层。
+@@ graphics/src/layer.rs:4
+由图元组成的图层。
+
+图层通常规定了一组按特定顺序
+渲染的图元。
+@@ graphics/src/layer.rs:9
+使用给定的边界创建一个新的 [`Layer`]。
+@@ graphics/src/layer.rs:12
+返回 [`Layer`] 当前的边界。
+@@ graphics/src/layer.rs:15
+刷新并敲定 [`Layer`] 中所有待处理的图元分组。
+
+它会在 [`Layer`] 完成时被调用。这样图层就可以高效地
+把图元记录在一起，并把分组推迟到最后进行。
+@@ graphics/src/layer.rs:21
+把 [`Layer`] 调整为给定的边界。
+@@ graphics/src/layer.rs:24
+清空图层的全部内容并重置其边界。
+@@ graphics/src/layer.rs:27
+返回 [`Layer`] 的起始层级。
+
+层级是 [`Layer`] 内部的“子图层”索引。
+
+一个 [`Layer`] 可能按一定顺序绘制多种图元类型。
+层级表示它所包含的图元类型中
+最低的索引。
+
+因此，如果两个图层 A 和 B 的边界相同，
+并且 A 的结束层级小于或等于 B 的起始层级，它们就可以合并。
+@@ graphics/src/layer.rs:39
+返回 [`Layer`] 的结束层级。
+@@ graphics/src/layer.rs:42
+把一个 [`Layer`] 合并到当前图层。
+@@ graphics/src/layer.rs:46
+用于绘制的图层栈。
+@@ graphics/src/layer.rs:57
+创建一个新的空 [`Stack`]。
+@@ graphics/src/layer.rs:68
+返回 [`Stack`] 当前 [`Layer`] 的可变引用，
+以及当前的 [`Transformation`]。
+@@ graphics/src/layer.rs:77
+返回 [`Stack`] 当前的 [`Transformation`]。
+@@ graphics/src/layer.rs:83
+向 [`Stack`] 压入一个新的裁剪区域；在此过程中
+会创建一个新的图层。
+@@ graphics/src/layer.rs:100
+从 [`Stack`] 弹出当前的裁剪区域，并恢复上一个裁剪区域。
+
+当前图层会被记录下来以供绘制。
+@@ graphics/src/layer.rs:109
+向 [`Stack`] 压入一个新的 [`Transformation`]。
+
+此后的绘制操作都会受这个新的 [`Transformation`] 影响，
+直到使用 [`pop_transformation`] 把它弹出。
+@@ graphics/src/layer.rs:120
+弹出 [`Stack`] 中当前的 [`Transformation`]。
+@@ graphics/src/layer.rs:125
+返回一个迭代器，遍历 [`Stack`] 中各图层的不可变引用。
+@@ graphics/src/layer.rs:130
+返回 [`Stack`] 中图层的切片。
+@@ graphics/src/layer.rs:135
+刷新并敲定 [`Stack`] 中的所有图元。
+@@ graphics/src/layer.rs:140
+尽可能地合并图层。
+
+刷新并敲定 [`Stack`] 中的所有图元。
+@@ graphics/src/layer.rs:146
+这些是尚待处理的图层
+@@ graphics/src/layer.rs:149
+至少要有 2 个图层才能合并
+@@ graphics/src/layer.rs:151
+把尚待处理的最顶层图层设为目标
+@@ graphics/src/layer.rs:157
+向下扫描，寻找一段连续的可合并候选图层
+@@ graphics/src/layer.rs:165
+跳过空图层
+@@ graphics/src/layer.rs:170
+如果候选图层的图元子图层不与先前的目标重叠，
+并且裁剪边界一致，就可以合并
+@@ graphics/src/layer.rs:176
+候选图层非空，并且可以作为合并的目标
+@@ graphics/src/layer.rs:182
+把扫描到的所有图层合并到目标中
+
+由于使用的是 `target_index` 而不是 `current`，
+我们有意避免合并到空图层中。
+
+如果没有可合并的候选图层，这一步什么也不做。
+@@ graphics/src/layer.rs:195
+目标之后发现的空图层可以跳过
+@@ graphics/src/layer.rs:200
+清空 [`Stack`] 的图层，以便复用。
+
+它会把基础图层的边界调整为 `new_bounds`。
+
+这通常会保留图层的内存分配，供以后的绘制操作使用。
+@@ graphics/src/mesh.rs:1
+绘制三角形！
+@@ graphics/src/mesh.rs:11
+用于渲染三角形网格的底层图元。
+@@ graphics/src/mesh.rs:14
+纯色网格。
+@@ graphics/src/mesh.rs:16
+网格的顶点和索引。
+@@ graphics/src/mesh.rs:19
+作用于 [`Mesh`] 顶点的 [`Transformation`]。
+@@ graphics/src/mesh.rs:22
+[`Mesh`] 的裁剪边界。
+@@ graphics/src/mesh.rs:25
+渐变网格。
+@@ graphics/src/mesh.rs:27
+网格的顶点和索引。
+@@ graphics/src/mesh.rs:30
+作用于 [`Mesh`] 顶点的 [`Transformation`]。
+@@ graphics/src/mesh.rs:33
+[`Mesh`] 的裁剪边界。
+@@ graphics/src/mesh.rs:39
+返回 [`Mesh`] 的索引。
+@@ graphics/src/mesh.rs:47
+返回 [`Mesh`] 的 [`Transformation`]。
+@@ graphics/src/mesh.rs:56
+返回 [`Mesh`] 的裁剪边界。
+@@ graphics/src/mesh.rs:73
+表示一组三角形的顶点和索引集合。
+@@ graphics/src/mesh.rs:76
+网格的顶点
+@@ graphics/src/mesh.rs:79
+定义网格各个三角形的顶点索引列表。
+
+因此，这个列表的长度应当始终是 3 的倍数。
+@@ graphics/src/mesh.rs:85
+带颜色的二维顶点。
+@@ graphics/src/mesh.rs:89
+顶点在二维空间中的位置。
+@@ graphics/src/mesh.rs:92
+顶点的颜色，采用 __线性__ RGBA。
+@@ graphics/src/mesh.rs:96
+包含二维位置和打包后的渐变数据的顶点。
+@@ graphics/src/mesh.rs:100
+顶点在二维空间中的位置。
+@@ graphics/src/mesh.rs:103
+渐变的打包顶点数据。
+@@ graphics/src/mesh.rs:107
+对一组网格的各项属性进行计数的结果。
+@@ graphics/src/mesh.rs:110
+纯色顶点的总数。
+@@ graphics/src/mesh.rs:113
+纯色网格的总数。
+@@ graphics/src/mesh.rs:116
+渐变顶点的总数。
+@@ graphics/src/mesh.rs:119
+渐变网格的总数。
+@@ graphics/src/mesh.rs:122
+索引的总数。
+@@ graphics/src/mesh.rs:126
+返回所有 [`Mesh`] 的顶点总数和索引总数。
+@@ graphics/src/mesh.rs:148
+多个网格的缓存。
+@@ graphics/src/mesh.rs:156
+[`Cache`] 的唯一 id。
+@@ graphics/src/mesh.rs:161
+为给定的网格创建一个新的 [`Cache`]。
+@@ graphics/src/mesh.rs:172
+返回 [`Cache`] 的 [`Id`]。
+@@ graphics/src/mesh.rs:177
+返回 [`Cache`] 的当前版本。
+@@ graphics/src/mesh.rs:182
+返回 [`Cache`] 中的那批网格。
+@@ graphics/src/mesh.rs:187
+如果 [`Cache`] 为空，返回 true。
+@@ graphics/src/mesh.rs:192
+使用给定的网格更新 [`Cache`]。
+@@ graphics/src/mesh.rs:199
+能够绘制 [`Mesh`] 的渲染器。
+@@ graphics/src/mesh.rs:201
+绘制给定的 [`Mesh`]。
+@@ graphics/src/mesh.rs:204
+绘制给定的 [`Cache`]。
+@@ graphics/src/shell.rs:1
+从渲染器控制窗口运行时。
+@@ graphics/src/shell.rs:4
+窗口外壳。
+@@ graphics/src/shell.rs:9
+创建一个新的 [`Shell`]。
+@@ graphics/src/shell.rs:14
+创建一个无头 [`Shell`]。
+@@ graphics/src/shell.rs:27
+请求 [`Shell`] 调用
+[`Renderer::tick`](crate::core::Renderer::tick)。
+@@ graphics/src/shell.rs:33
+请求重绘 [`Shell`] 的所有窗口。
+@@ graphics/src/shell.rs:38
+请求重新计算 [`Shell`] 的所有布局。
+@@ graphics/src/shell.rs:44
+可以把某些事件通知给外壳的类型。
+@@ graphics/src/shell.rs:46
+请求 [`Shell`] 调用
+[`Renderer::tick`](crate::core::Renderer::tick)。
+@@ graphics/src/shell.rs:50
+请求重绘 [`Shell`] 的所有窗口。
+@@ graphics/src/shell.rs:53
+请求重新计算 [`Shell`] 的所有布局。
+@@ graphics/src/geometry/text.rs:8
+可以绘制到画布上的一段文本
+@@ graphics/src/geometry/text.rs:11
+文本的内容
+@@ graphics/src/geometry/text.rs:13
+文本相对于对齐属性的位置。
+
+默认情况下，这个位置相对于左上角坐标，也就是说，
+如果水平和垂直对齐方式保持不变，这个属性指定的就是
+文本左上角应当放置的位置。
+
+通过修改 horizontal_alignment 和 vertical_alignment 属性，
+可以改变文本的哪个部分被放置在这个位置。
+
+例如，当 horizontal_alignment 和 vertical_alignment 都设置为 Center 时，
+放置在给定位置的是文本的中心，而不是左上角坐标。
+@@ graphics/src/geometry/text.rs:25
+此 [`Text`] 可用的最大水平空间。
+
+文本到达该宽度时会换行。
+@@ graphics/src/geometry/text.rs:29
+文本的颜色
+@@ graphics/src/geometry/text.rs:31
+文本的大小
+@@ graphics/src/geometry/text.rs:33
+文本的行高。
+@@ graphics/src/geometry/text.rs:35
+文本的字体
+@@ graphics/src/geometry/text.rs:37
+文本的水平对齐方式
+@@ graphics/src/geometry/text.rs:39
+文本的垂直对齐方式
+@@ graphics/src/geometry/text.rs:41
+文本的整形策略。
+@@ graphics/src/geometry/text.rs:43
+文本的换行策略。
+@@ graphics/src/geometry/text.rs:45
+文本的省略策略。
+@@ graphics/src/geometry/text.rs:50
+计算 [`Text`] 的各个 [`Path`]，并使用给定的闭包
+绘制它们。
+@@ graphics/src/geometry/text.rs:130
+待办：为 `Canvas` 支持位图图像
+@@ graphics/src/geometry/frame.rs:1
+绘制并生成几何图形。
+@@ graphics/src/geometry/frame.rs:5
+表面上可用于绘制几何图形的区域。
+@@ graphics/src/geometry/frame.rs:17
+使用给定的尺寸创建一个新的 [`Frame`]。
+
+绘制在该尺寸之外的几何图形都会被裁剪。
+如果需要更精细的控制，请使用 [`with_bounds`](Self::with_bounds)。
+@@ graphics/src/geometry/frame.rs:25
+使用给定的裁剪边界创建一个新的 [`Frame`]。
+@@ graphics/src/geometry/frame.rs:32
+返回 [`Frame`] 的宽度。
+@@ graphics/src/geometry/frame.rs:37
+返回 [`Frame`] 的高度。
+@@ graphics/src/geometry/frame.rs:42
+返回 [`Frame`] 的尺寸。
+@@ graphics/src/geometry/frame.rs:47
+返回 [`Frame`] 中心点的坐标。
+@@ graphics/src/geometry/frame.rs:52
+用给定的样式填充给定的 [`Path`]，
+把它绘制到 [`Frame`] 上。
+@@ graphics/src/geometry/frame.rs:58
+根据左上角坐标和 `Size`，用给定的样式填充一个
+与坐标轴对齐的矩形，把它绘制到 [`Frame`] 上。
+@@ graphics/src/geometry/frame.rs:64
+用给定的样式在 [`Frame`] 上绘制给定 [`Path`] 的
+描边。
+@@ graphics/src/geometry/frame.rs:70
+根据左上角坐标和 `Size`，用给定的样式在 [`Frame`] 上
+绘制一个与坐标轴对齐的矩形的描边。
+@@ graphics/src/geometry/frame.rs:81
+在 [`Frame`] 上绘制给定 [`Text`] 的字符，
+并用给定的颜色填充它们。
+
+__警告：__ 所有文本都会渲染在 `Canvas` 所有图层的
+上方。因此，它目前只适合用于覆盖层，
+这也是最常见的使用场景。
+@@ graphics/src/geometry/frame.rs:91
+在 [`Frame`] 上给定的边界内绘制给定的 [`Image`]。
+@@ graphics/src/geometry/frame.rs:97
+在 [`Frame`] 上给定的边界内绘制给定的 [`Svg`]。
+@@ graphics/src/geometry/frame.rs:103
+保存 [`Frame`] 当前的变换，执行给定的
+绘制操作，之后再恢复该变换。
+
+这个方法适合用来组合变换，
+并在不同的坐标系中执行绘制操作。
+@@ graphics/src/geometry/frame.rs:119
+把当前变换压入变换栈。
+@@ graphics/src/geometry/frame.rs:124
+从变换栈弹出一个变换，并把它设为当前变换。
+@@ graphics/src/geometry/frame.rs:129
+在一个 [`Rectangle`] 区域内执行给定的绘制操作，
+裁剪掉所有超出其边界的几何图形。期间执行的任何变换
+都只在给定的闭包内部生效。
+
+这个方法适合用来执行需要裁剪的
+绘制操作。
+@@ graphics/src/geometry/frame.rs:145
+使用给定的 [`Size`] 创建一个新的 [`Frame`]。
+
+使用 [`paste`] 把它的内容绘制回当前 [`Frame`]。
+@@ graphics/src/geometry/frame.rs:156
+以给定的 [`Point`] 为原点，绘制给定 [`Frame`] 的内容。
+@@ graphics/src/geometry/frame.rs:161
+对 [`Frame`] 的当前变换应用平移。
+@@ graphics/src/geometry/frame.rs:166
+对 [`Frame`] 的当前变换应用以弧度表示的旋转。
+@@ graphics/src/geometry/frame.rs:171
+对 [`Frame`] 的当前变换应用等比缩放。
+@@ graphics/src/geometry/frame.rs:176
+对 [`Frame`] 的当前变换应用非等比缩放。
+@@ graphics/src/geometry/frame.rs:181
+把 [`Frame`] 转换为其底层的几何图形。
+@@ graphics/src/geometry/frame.rs:187
+[`Frame`] 的内部实现。
+
+与 [`Frame`] 类似。各个方法的文档
+请参见 [`Frame`]。
+@@ graphics/src/geometry/stroke.rs:1
+根据 [`Path`] 创建线条，并为其指定各种属性/样式。
+@@ graphics/src/geometry/stroke.rs:8
+描边的样式。
+@@ graphics/src/geometry/stroke.rs:11
+描边的颜色或渐变。
+
+默认设置为 [`Color::BLACK`] 的 [`Style::Solid`]。
+@@ graphics/src/geometry/stroke.rs:15
+描边两条边缘之间的距离。
+@@ graphics/src/geometry/stroke.rs:17
+对开放子路径描边时，其端点处使用的形状。
+@@ graphics/src/geometry/stroke.rs:19
+对路径或基本形状描边时，其拐角处
+使用的形状。
+@@ graphics/src/geometry/stroke.rs:22
+对线条描边时使用的虚线样式。
+@@ graphics/src/geometry/stroke.rs:27
+设置 [`Stroke`] 的颜色。
+@@ graphics/src/geometry/stroke.rs:35
+设置 [`Stroke`] 的宽度。
+@@ graphics/src/geometry/stroke.rs:40
+设置 [`Stroke`] 的 [`LineCap`]。
+@@ graphics/src/geometry/stroke.rs:45
+设置 [`Stroke`] 的 [`LineJoin`]。
+@@ graphics/src/geometry/stroke.rs:63
+对开放子路径描边时，其端点处使用的形状。
+@@ graphics/src/geometry/stroke.rs:66
+每条子路径的描边都不会超出它的两个端点。
+@@ graphics/src/geometry/stroke.rs:69
+在每条子路径的末端，表示描边的形状会
+延伸出一个方形。
+@@ graphics/src/geometry/stroke.rs:72
+在每条子路径的末端，表示描边的形状会
+延伸出一个半圆。
+@@ graphics/src/geometry/stroke.rs:77
+对路径或基本形状描边时，其拐角处使用的
+形状。
+@@ graphics/src/geometry/stroke.rs:81
+尖角。
+@@ graphics/src/geometry/stroke.rs:84
+圆角。
+@@ graphics/src/geometry/stroke.rs:86
+斜角。
+@@ graphics/src/geometry/stroke.rs:90
+对线条描边时使用的虚线样式。
+@@ graphics/src/geometry/stroke.rs:93
+线段与间隙交替出现的长度，用于描述该样式。
+@@ graphics/src/geometry/stroke.rs:96
+样式在 [`LineDash::segments`] 中开始的偏移量。
+@@ graphics/src/text.rs:1
+绘制文本。
+@@ graphics/src/text.rs:21
+文本图元。
+@@ graphics/src/text.rs:24
+段落。
+@@ graphics/src/text.rs:33
+编辑器。
+@@ graphics/src/text.rs:42
+缓存的文本。
+@@ graphics/src/text.rs:44
+文本的内容。
+@@ graphics/src/text.rs:46
+文本的边界。
+@@ graphics/src/text.rs:48
+文本的颜色。
+@@ graphics/src/text.rs:50
+文本的大小，以逻辑像素为单位。
+@@ graphics/src/text.rs:52
+文本的行高。
+@@ graphics/src/text.rs:54
+文本的字体。
+@@ graphics/src/text.rs:56
+文本的水平对齐方式。
+@@ graphics/src/text.rs:58
+文本的垂直对齐方式。
+@@ graphics/src/text.rs:60
+文本的整形策略。
+@@ graphics/src/text.rs:62
+文本的换行策略。
+@@ graphics/src/text.rs:64
+文本的省略策略。
+@@ graphics/src/text.rs:66
+文本的裁剪边界。
+@@ graphics/src/text.rs:69
+原始文本。
+@@ graphics/src/text.rs:78
+返回 [`Text`] 的可见边界。
+@@ graphics/src/text.rs:109
+[Fira Sans] 字体的常规（regular）变体。
+
+启用 `fira-sans` 特性时，它会作为默认字体的一部分
+被加载。
+@@ graphics/src/text.rs:118
+返回全局的 [`FontSystem`]。
+@@ graphics/src/text.rs:161
+一组系统字体。
+@@ graphics/src/text.rs:169
+返回原始的 [`cosmic_text::FontSystem`]。
+@@ graphics/src/text.rs:174
+从字节数据加载字体。
+@@ graphics/src/text.rs:194
+返回一个迭代器，遍历字体数据库中
+所有字体的字体族名称。
+@@ graphics/src/text.rs:204
+返回 [`FontSystem`] 的当前 [`Version`]。
+
+加载字体会使 [`FontSystem`] 的版本递增。
+@@ graphics/src/text.rs:212
+版本号。
+@@ graphics/src/text.rs:216
+可以被绘制的 [`cosmic_text::Buffer`] 的弱引用。
+@@ graphics/src/text.rs:219
+[`cosmic_text::Buffer`] 的弱引用。
+@@ graphics/src/text.rs:221
+文本的位置。
+@@ graphics/src/text.rs:223
+文本的颜色。
+@@ graphics/src/text.rs:225
+文本的裁剪边界。
+@@ graphics/src/text.rs:231
+待办：目前没有比较原始缓冲区的合适办法
+暂时让任意两个 `Raw` 文本实例都不相等。
+这应该没什么问题，但将来可能会触发
+不必要的重绘。
+@@ graphics/src/text.rs:239
+测量给定 [`cosmic_text::Buffer`] 的尺寸。
+@@ graphics/src/text.rs:255
+按给定的 [`Alignment`] 对齐给定的 [`cosmic_text::Buffer`]，
+并返回它的最小 [`Size`]。
+@@ graphics/src/text.rs:283
+待办：对 `cosmic-text` 做一些修改，以避免重新布局（？）
+@@ graphics/src/text.rs:294
+返回给定 [`Font`] 的属性。
+@@ graphics/src/text.rs:360
+把 [`Shaping`] 策略转换为 [`cosmic_text::Shaping`] 策略。
+@@ graphics/src/text.rs:375
+把 [`Wrapping`] 策略转换为 [`cosmic_text::Wrap`] 策略。
+@@ graphics/src/text.rs:385
+把 [`Ellipsis`] 策略转换为 [`cosmic_text::Ellipsize`] 策略。
+@@ graphics/src/text.rs:397
+把 [`Color`] 转换为 [`cosmic_text::Color`]。
+@@ graphics/src/text.rs:404
+根据文本的大小和缩放因子，返回理想的微调（hint）因子。
+@@ graphics/src/text.rs:406
+待办：修复 `cosmic-text` 中的字体微调（hinting）
+@@ graphics/src/text.rs:409
+=
+@@ graphics/src/text.rs:411
+=
+@@ graphics/src/text.rs:420
+计算给定缓冲区中的选区区域。
+@@ graphics/src/text.rs:452
+对于多行选区，把最后一个矩形
+延伸到行的边缘
+@@ graphics/src/text.rs:475
+与 `iced_graphics` 耦合的文本渲染器。
+@@ graphics/src/text.rs:477
+绘制给定的 [`Raw`] 文本。
+@@ graphics/src/viewport.rs:4
+用于显示计算机图形的可视区域。
+@@ graphics/src/viewport.rs:14
+使用给定的物理尺寸和缩放因子创建一个新的
+[`Viewport`]。
+@@ graphics/src/viewport.rs:30
+返回 [`Viewport`] 的物理尺寸。
+@@ graphics/src/viewport.rs:35
+返回 [`Viewport`] 的物理宽度。
+@@ graphics/src/viewport.rs:40
+返回 [`Viewport`] 的物理高度。
+@@ graphics/src/viewport.rs:45
+返回 [`Viewport`] 的逻辑尺寸。
+@@ graphics/src/viewport.rs:50
+返回 [`Viewport`] 的 [`Scale`]。
+@@ graphics/src/viewport.rs:55
+返回 [`Viewport`] 的缩放因子。
+@@ graphics/src/viewport.rs:60
+返回 [`Viewport`] 的投影变换。
+@@ graphics/src/geometry/path/builder.rs:10
+[`Path`] 构建器。
+
+[`Path`] 一旦构建完成，就不能再被修改。
+@@ graphics/src/geometry/path/builder.rs:18
+创建一个新的 [`Builder`]。
+@@ graphics/src/geometry/path/builder.rs:25
+把新子路径的起点移动到给定的 `Point`。
+@@ graphics/src/geometry/path/builder.rs:31
+用一条直线把 [`Path`] 中的最后一个点连接到
+给定的 `Point`。
+@@ graphics/src/geometry/path/builder.rs:38
+向 [`Path`] 添加一段 [`Arc`]，沿顺时针方向
+从 `start_angle` 到 `end_angle`。
+@@ graphics/src/geometry/path/builder.rs:45
+使用给定的控制点和半径向 [`Path`] 添加一段
+圆弧。
+
+这实质上是从当前位置向 `a` 画一条直线段，
+但会嵌入一段半径为 `radius` 的圆弧，该圆弧既与这条线段相切，
+也与 `a` 和 `b` 之间的连线相切。
+
+再调用一次 `.line_to(b)`，得到的路径就会连接
+起点和 `b`：先是朝向 `a` 的直线段，
+并由一段圆弧把 `a` 处的拐角变得平滑。
+
+更多细节和示例参见
+[HTML5 规范中的 `arcTo`](https://html.spec.whatwg.org/multipage/canvas.html#building-paths:dom-context-2d-arcto)。
+@@ graphics/src/geometry/path/builder.rs:103
+沿顺时针方向向 [`Path`] 添加一个椭圆。
+@@ graphics/src/geometry/path/builder.rs:121
+根据两个控制点和终点，向 [`Path`] 添加一条
+三次贝塞尔曲线。
+@@ graphics/src/geometry/path/builder.rs:132
+根据控制点和终点，向 [`Path`] 添加一条
+二次贝塞尔曲线。
+@@ graphics/src/geometry/path/builder.rs:142
+根据左上角坐标和 `Size`，向 [`Path`] 添加一个
+矩形。
+@@ graphics/src/geometry/path/builder.rs:156
+根据左上角坐标、[`Size`] 和 [`border::Radius`]，
+向 [`Path`] 添加一个圆角矩形。
+@@ graphics/src/geometry/path/builder.rs:220
+根据圆心坐标和半径，向 [`Path`] 添加一个
+圆。
+@@ graphics/src/geometry/path/builder.rs:232
+用一条连到起点的直线闭合 [`Path`] 中的
+当前子路径。
+@@ graphics/src/geometry/path/builder.rs:239
+构建此 [`Builder`] 的 [`Path`]。
+@@ graphics/src/text/paragraph.rs:1
+绘制段落。
+@@ graphics/src/text/paragraph.rs:13
+一段文本。
+@@ graphics/src/text/paragraph.rs:42
+创建一个新的空 [`Paragraph`]。
+@@ graphics/src/text/paragraph.rs:47
+返回 [`Paragraph`] 的缓冲区。
+@@ graphics/src/text/paragraph.rs:52
+创建 [`Paragraph`] 的 [`Weak`] 引用。
+
+在不需要引用保证的场合，这可以避免
+克隆 [`Paragraph`]。例如，
+在创建渲染树的时候。
+@@ graphics/src/text/paragraph.rs:404
+渲染器会把这一行的墨迹（ink）在行高范围内居中，
+并把基线放在墨迹顶部下方 `max_ascent`
+的位置：
+@@ graphics/src/text/paragraph.rs:419
+字形可能偏离所在行的基线（例如在复杂文字中）；
+这里沿用 `LayoutGlyph::physical` 中使用的锚点：
+@@ graphics/src/text/paragraph.rs:444
+把字形的墨迹与该文本片段在这一行上的边界
+求并集：
+@@ graphics/src/text/paragraph.rs:468
+模拟一次拖动选择
+@@ graphics/src/text/paragraph.rs:505
+如果光标和选区都落在段落的同一侧边缘，
+就取消选区。
+@@ graphics/src/text/paragraph.rs:634
+[`Paragraph`] 的弱引用。
+@@ graphics/src/text/paragraph.rs:638
+[`Paragraph`] 的最小边界。
+@@ graphics/src/text/paragraph.rs:640
+[`Paragraph`] 的水平对齐方式。
+@@ graphics/src/text/paragraph.rs:642
+[`Paragraph`] 的垂直对齐方式。
+@@ graphics/src/text/paragraph.rs:647
+尝试把该引用升级为 [`Paragraph`]。
+@@ graphics/src/text/paragraph.rs:685
+边界应当覆盖文本片段的墨迹，而不会拉伸到
+行高。
+@@ graphics/src/text/paragraph.rs:703
+较大的文本片段决定这一行的墨迹：
+@@ graphics/src/text/paragraph.rs:707
+两个文本片段共用这一行的基线：
+@@ graphics/src/text/paragraph.rs:712
+较小的文本片段严格位于这一行的墨迹框之内……
+@@ graphics/src/text/paragraph.rs:717
+……并且墨迹始终位于行框之内：
+@@ graphics/src/text/paragraph.rs:723
+边界应当覆盖文本片段各字形的水平范围。
+@@ graphics/src/text/paragraph.rs:737
+第一个文本片段从行首开始，并且是这一行的
+真前缀：
+@@ graphics/src/text/paragraph.rs:743
+第二个文本片段从第一个文本片段结束的位置开始，
+并在行尾结束：
+@@ graphics/src/text/paragraph.rs:749
+跨多行的文本片段在每一行上各产生一个边界。
+@@ graphics/src/text/paragraph.rs:767
+各行依次堆叠、互不重叠，并且两行的
+墨迹高度相同：
+@@ graphics/src/geometry/path/arc.rs:1
+构建并绘制曲线。
+@@ graphics/src/geometry/path/arc.rs:4
+可微曲线的一段。
+@@ graphics/src/geometry/path/arc.rs:7
+圆弧的圆心。
+@@ graphics/src/geometry/path/arc.rs:9
+圆弧的半径。
+@@ graphics/src/geometry/path/arc.rs:11
+这段圆弧的起始角度，从 x 轴正方向起按顺时针旋转。
+@@ graphics/src/geometry/path/arc.rs:13
+这段圆弧的结束角度，从 x 轴正方向起按顺时针旋转。
+@@ graphics/src/geometry/path/arc.rs:17
+椭圆形的 [`Arc`]。
+@@ graphics/src/geometry/path/arc.rs:20
+圆弧的中心。
+@@ graphics/src/geometry/path/arc.rs:22
+圆弧所在椭圆的半径。椭圆的水平和垂直半轴长度分别对应半径向量的 x 值和 y 值。
+@@ graphics/src/geometry/path/arc.rs:24
+圆弧所在椭圆的顺时针旋转角度。
+@@ graphics/src/geometry/path/arc.rs:26
+这段圆弧的起始角度，从 x 轴正方向起按顺时针旋转。
+@@ graphics/src/geometry/path/arc.rs:28
+这段圆弧的结束角度，从 x 轴正方向起按顺时针旋转。
+@@ graphics/src/text/editor.rs:1
+绘制并编辑文本。
+@@ graphics/src/text/editor.rs:14
+多行文本编辑器。
+@@ graphics/src/text/editor.rs:32
+创建一个新的空 [`Editor`]。
+@@ graphics/src/text/editor.rs:37
+返回 [`Editor`] 的缓冲区。
+@@ graphics/src/text/editor.rs:42
+创建 [`Editor`] 的 [`Weak`] 引用。
+
+在不需要引用保证的场合，这可以避免
+克隆 [`Editor`]。例如，
+在创建渲染树的时候。
+@@ graphics/src/text/editor.rs:65
+待办：设法处理存在多个强引用的情况
+@@ graphics/src/text/editor.rs:69
+清除光标缓存
+@@ graphics/src/text/editor.rs:180
+有时，我们要找的字形恰好位于
+两行之间。当某一行在空格处换行时
+就可能出现这种情况。
+这时可以认为光标位于
+上一行的末尾。
+i 保证大于 0，因为第一行的 `start` 始终
+为 0，所以光标不可能
+位于它之前。
+@@ graphics/src/text/editor.rs:268
+移动事件
+@@ graphics/src/text/editor.rs:274
+即使存在选区，这些移动也会
+原样执行
+@@ graphics/src/text/editor.rs:285
+其他移动只是把光标移到选区的某一端
+@@ graphics/src/text/editor.rs:310
+选择事件
+@@ graphics/src/text/editor.rs:323
+如果选区与光标位置重合，则取消选择
+@@ graphics/src/text/editor.rs:367
+编辑事件
+@@ graphics/src/text/editor.rs:492
+鼠标事件
+@@ graphics/src/text/editor.rs:527
+如果选区与光标位置重合，则取消选择
+@@ graphics/src/text/editor.rs:559
+待办：公开 `Affinity`
+@@ graphics/src/text/editor.rs:892
+[`Editor`] 的弱引用。
+@@ graphics/src/text/editor.rs:896
+[`Editor`] 的边界。
+@@ graphics/src/text/editor.rs:901
+尝试把该引用升级为 [`Editor`]。
+@@ graphics/src/text/editor.rs:986
+待办：改为可配置！
+@@ graphics/src/text/cache.rs:1
+缓存文本。
+@@ graphics/src/text/cache.rs:9
+最近使用过的文本片段的存储。
+@@ graphics/src/text/cache.rs:18
+创建一个新的空 [`Cache`]。
+@@ graphics/src/text/cache.rs:23
+获取具有给定 [`KeyHash`] 的文本 [`Entry`]。
+@@ graphics/src/text/cache.rs:28
+如果 [`Cache`] 中尚不存在对应的文本 [`Entry`]，就分配一个。
+@@ graphics/src/text/cache.rs:89
+修剪 [`Cache`]。
+
+这会清除自上一次 `trim` 以来未被使用过的文本片段。
+@@ graphics/src/text/cache.rs:103
+表示一段文本的缓存键。
+@@ graphics/src/text/cache.rs:106
+文本的内容。
+@@ graphics/src/text/cache.rs:108
+文本的大小。
+@@ graphics/src/text/cache.rs:110
+文本的行高。
+@@ graphics/src/text/cache.rs:112
+文本的 [`Font`]。
+@@ graphics/src/text/cache.rs:114
+文本的边界。
+@@ graphics/src/text/cache.rs:116
+文本的整形策略。
+@@ graphics/src/text/cache.rs:118
+文本的对齐方式。
+@@ graphics/src/text/cache.rs:120
+文本的换行策略。
+@@ graphics/src/text/cache.rs:122
+文本的省略策略。
+@@ graphics/src/text/cache.rs:141
+[`Key`] 的哈希值。
+@@ graphics/src/text/cache.rs:144
+缓存条目。
+@@ graphics/src/text/cache.rs:147
+文本缓冲区，可直接用于绘制。
+@@ graphics/src/text/cache.rs:149
+文本的最小边界。
+@@ tiny_skia/src/geometry.rs:198
+待办：遵循图层顺序！
+@@ tiny_skia/src/engine.rs:45
+确保边框半径不大于边界
+@@ tiny_skia/src/engine.rs:185
+边框路径偏移半个边框宽度
+@@ tiny_skia/src/engine.rs:193
+确保边框半径正确
+@@ tiny_skia/src/engine.rs:199
+路径可以正常处理这种情况
+@@ tiny_skia/src/engine.rs:211
+这种情况下对路径描边的效果很好
+@@ tiny_skia/src/engine.rs:230
+把边框半径过小的角按没有边框半径来绘制，
+再用边框半径正确的圆角矩形对它们进行遮罩。
+@@ tiny_skia/src/engine.rs:532
+待办：边框半径
+@@ tiny_skia/src/lib.rs:36
+用于 [`iced`] 的 [`tiny-skia`] 图形渲染器。
+@@ tiny_skia/src/lib.rs:44
+待办：共享引擎
+@@ tiny_skia/src/lib.rs:218
+待办：并发
+@@ tiny_skia/src/lib.rs:226
+待办：不支持字体微调（hinting）
+我们很快会用 `vello_cpu` 替换 `tiny-skia`
+@@ tiny_skia/src/primitive.rs:5
+用某种画笔（paint）填充的路径。
+@@ tiny_skia/src/primitive.rs:7
+要填充的路径。
+@@ tiny_skia/src/primitive.rs:9
+要使用的画笔。
+@@ tiny_skia/src/primitive.rs:11
+要遵循的填充规则。
+@@ tiny_skia/src/primitive.rs:14
+用某种画笔（paint）描边的路径。
+@@ tiny_skia/src/primitive.rs:16
+要描边的路径。
+@@ tiny_skia/src/primitive.rs:18
+要使用的画笔。
+@@ tiny_skia/src/primitive.rs:20
+描边设置。
+@@ tiny_skia/src/primitive.rs:26
+返回 [`Primitive`] 的可见边界。
+@@ tiny_skia/src/text.rs:28
+待办：共享引擎
+@@ tiny_skia/src/text.rs:269
+待办：支持轮廓（outline）
+@@ tiny_skia/src/text.rs:284
+待办：混合 alpha
+@@ tiny_skia/src/text.rs:301
+待办：混合 alpha
+@@ tiny_skia/src/text.rs:317
+待办
+@@ tiny_skia/src/vector.rs:92
+待办：复用 `cosmic-text` 的字体数据库
+@@ tiny_skia/src/vector.rs:175
+遇到格式错误或过于复杂的矢量图时，SVG 渲染可能会 panic。
+我们捕获 panic，以防止崩溃并优雅地继续运行。
+@@ tiny_skia/src/vector.rs:186
+应用颜色滤镜
+@@ tiny_skia/src/vector.rs:193
+交换 R 和 B 通道，以便通过 `softbuffer` 呈现

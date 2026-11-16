@@ -33,7 +33,14 @@ use crate::graphics::Viewport;
 use crate::graphics::compositor;
 use crate::graphics::text::{Editor, Paragraph};
 
+/// 用于 [`iced`] 的 [`tiny-skia`] 图形渲染器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`tiny-skia`] graphics renderer for [`iced`].
+///
+/// </details>
 ///
 /// [`tiny-skia`]: https://github.com/RazrFalcon/tiny-skia
 /// [`iced`]: https://github.com/iced-rs/iced
@@ -41,7 +48,7 @@ use crate::graphics::text::{Editor, Paragraph};
 pub struct Renderer {
     settings: renderer::Settings,
     layers: layer::Stack,
-    engine: Engine, // TODO: Shared engine
+    engine: Engine, // TODO: Shared engine（待办：共享引擎）
 }
 
 impl Renderer {
@@ -216,6 +223,7 @@ impl core::Renderer for Renderer {
         #[cfg(feature = "image")]
         #[allow(unsafe_code)]
         // TODO: Concurrency
+        // 待办：并发
         callback(self.engine.raster_pipeline.load(_handle));
 
         #[cfg(not(feature = "image"))]
@@ -225,6 +233,8 @@ impl core::Renderer for Renderer {
     fn hint(&mut self, _scale: renderer::Scale) {
         // TODO: No hinting supported
         // We'll replace `tiny-skia` with `vello_cpu` soon
+        // 待办：不支持字体微调（hinting）
+        // 我们很快会用 `vello_cpu` 替换 `tiny-skia`
     }
 
     fn scale(&self) -> Option<renderer::Scale> {

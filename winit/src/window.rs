@@ -216,6 +216,17 @@ impl FrameClock {
         self.anchor = now - period / 2;
     }
 
+    /// 把给定的时间吸附到帧网格上，向上取整到网格的
+    /// 下一个点。
+    ///
+    /// 事件循环会在 `WaitUntil` 的截止时间稍后一点才被唤醒，因此
+    /// 向下取整可能会给帧打上早于重绘请求的时间戳，
+    /// 导致下一次重绘（例如光标闪烁）被安排在过去，
+    /// 让循环绘制多余的帧。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Snaps the given time to the frame grid, rounding up to the next
     /// point of the grid.
     ///
@@ -223,6 +234,8 @@ impl FrameClock {
     /// rounding down could stamp the frame before the redraw was requested,
     /// scheduling the next redraw (e.g. a cursor blink) in the past and
     /// making the loop draw redundant frames.
+    ///
+    /// </details>
     fn quantize(&self, now: Instant) -> Instant {
         let Some(period) = self.period else {
             return now;
@@ -547,12 +560,28 @@ mod tests {
     use super::FrameClock;
     use crate::core::time::{Duration, Instant};
 
+    /// 60 Hz 帧时钟的周期，即 `Window::reanchor`
+    /// 根据刷新率为 60 000 mHz 的显示器推导出的值。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The period of a 60 Hz frame clock, as derived by `Window::reanchor`
     /// from a monitor with a 60 000 mHz refresh rate.
+    ///
+    /// </details>
     const PERIOD: Duration = Duration::from_nanos(1_000_000_000_000 / 60_000);
 
+    /// 文本编辑器光标的闪烁间隔
+    /// （`core::text::editor::Focus::CURSOR_BLINK_INTERVAL_MILLIS`）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The interval of the text editor's blinking cursor
     /// (`core::text::editor::Focus::CURSOR_BLINK_INTERVAL_MILLIS`).
+    ///
+    /// </details>
     const BLINK: u128 = 500;
 
     fn clock(anchor: Instant) -> FrameClock {
@@ -562,8 +591,16 @@ mod tests {
         }
     }
 
+    /// 给定时间戳之后的下一个闪烁边界，其计算方式与
+    /// `core::text::editor::Focus` 处理 `RedrawRequested` 事件时相同。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The next blink boundary after the given stamped time, as computed by
     /// `core::text::editor::Focus` when handling a `RedrawRequested` event.
+    ///
+    /// </details>
     fn next_blink(updated_at: Instant, stamped_now: Instant) -> Instant {
         let elapsed = stamped_now.saturating_duration_since(updated_at);
         let millis_until = BLINK - (elapsed.as_millis() % BLINK);
@@ -571,6 +608,19 @@ mod tests {
         stamped_now + Duration::from_millis(millis_until as u64)
     }
 
+    /// 模拟事件循环围绕一次已安排的重绘（一次光标闪烁）
+    /// 逐渐稳定下来的过程：循环等待到截止时间，晚 `wakeup` 被唤醒，
+    /// 绘制一帧（耗时 `frame_cost`），用帧时钟给它打上时间戳，
+    /// 然后根据这个时间戳安排下一次重绘。位于过去的截止时间
+    /// 会被立即处理，就像真实的事件循环那样：
+    /// 截止时间已过的 `ControlFlow::WaitUntil` 不经等待就会唤醒，
+    /// 循环会不断重绘，直到下一个截止时间位于未来。
+    ///
+    /// 返回稳定过程中绘制的各帧的时间戳。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Simulates the event loop settling around a scheduled redraw (a cursor
     /// blink): the loop waits until the deadline, wakes up `wakeup` late,
     /// draws a frame (costing `frame_cost`), stamps it with the frame clock,
@@ -580,6 +630,8 @@ mod tests {
     /// and the loop draws again until the next deadline is in the future.
     ///
     /// Returns the stamps of the frames drawn while settling.
+    ///
+    /// </details>
     fn settle(
         clock: &FrameClock,
         updated_at: Instant,
@@ -599,10 +651,12 @@ mod tests {
 
             if next > now {
                 // The event loop can wait until the next deadline
+                // 事件循环可以等待到下一个截止时间
                 break;
             }
 
             // Past deadline: the event loop wakes up immediately
+            // 截止时间已过：事件循环立即被唤醒
             now += wakeup;
         }
 
@@ -639,14 +693,31 @@ mod tests {
         let clock = clock(anchor);
 
         // A moment after a grid point snaps to the next point
+        // 网格点之后的一瞬间会吸附到下一个点
         let just_after = anchor + PERIOD + Duration::from_nanos(1);
         assert_eq!(clock.quantize(just_after), anchor + PERIOD * 2);
 
         // A moment before a grid point snaps to that point
+        // 网格点之前的一瞬间会吸附到这个点
         let just_before = anchor + PERIOD * 4 - Duration::from_nanos(1);
         assert_eq!(clock.quantize(just_before), anchor + PERIOD * 4);
     }
 
+    /// 文本输入框的光标闪烁恰好在闪烁边界上安排一次重绘，
+    /// 而事件循环会在这个截止时间稍后一点被唤醒。
+    ///
+    /// 这时绘制的帧必须打上不早于该边界的时间戳，
+    /// 这样：
+    ///
+    /// - 光标会以新的相位绘制，并且
+    /// - 根据时间戳安排的下一次闪烁位于未来，于是
+    ///   事件循环可以继续等待，而不是不断绘制多余的帧，
+    ///   直到挂钟时间越过该边界（即窗口每次闪烁时
+    ///   “闪”一下）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A text input's cursor blink schedules a redraw exactly on a blink
     /// boundary, and the event loop wakes up a little after that deadline.
     ///
@@ -658,6 +729,8 @@ mod tests {
     ///   event loop can keep waiting instead of drawing redundant frames
     ///   until the wall clock passes the boundary (the window "flashing"
     ///   once per blink).
+    ///
+    /// </details>
     #[test]
     fn blink_redraw_is_not_stamped_or_scheduled_in_the_past() {
         let updated_at = Instant::now() + Duration::from_secs(10);
@@ -665,6 +738,8 @@ mod tests {
 
         // Place a grid point 10 ms before the boundary, so the frame drawn
         // at the boundary (plus wakeup latency) falls between grid points
+        // 在边界之前 10 ms 处放置一个网格点，这样在边界处
+        // （加上唤醒延迟）绘制的帧就落在两个网格点之间
         let anchor = boundary - Duration::from_millis(10) - PERIOD;
         let clock = clock(anchor);
 
@@ -686,6 +761,9 @@ mod tests {
         // With the previous round-down, the frame was stamped 10 ms before
         // the boundary and the next blink was scheduled right at it, i.e.
         // before the event loop even woke up
+        // 按照之前向下取整的做法，这一帧的时间戳会比边界早 10 ms，
+        // 下一次闪烁正好被安排在边界上，也就是
+        // 在事件循环被唤醒之前
         let elapsed = (wake - anchor).as_nanos();
         let steps = elapsed / PERIOD.as_nanos();
         let floor_stamp = anchor + Duration::from_nanos_u128(steps * PERIOD.as_nanos());
@@ -694,10 +772,20 @@ mod tests {
         assert!(next_blink(updated_at, floor_stamp) <= wake);
     }
 
+    /// 让事件循环围绕一次光标闪烁稳定下来：使用向上取整的时间戳时，
+    /// 循环只绘制一帧就可以再次等待；使用向下取整的时间戳时，
+    /// 下一次重绘会被安排在过去，因此循环要绘制好几帧
+    /// 多余的帧之后才能稳定下来。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Settle the event loop around a cursor blink: with a round-up stamp
     /// the loop draws a single frame and can wait again; a round-down stamp
     /// schedules the next redraw in the past, so the loop settles only after
     /// several redundant frames.
+    ///
+    /// </details>
     #[test]
     fn blink_settles_in_a_single_frame() {
         let updated_at = Instant::now() + Duration::from_secs(10);

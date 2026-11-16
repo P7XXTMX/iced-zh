@@ -1,4 +1,11 @@
+//! 构建基于窗口的 GUI 应用程序。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Build window-based GUI applications.
+//!
+//! </details>
 pub mod icon;
 pub mod screenshot;
 pub mod settings;
@@ -31,14 +38,30 @@ use std::fmt::Debug;
 
 pub use raw_window_handle;
 
+/// 由 iced 管理的窗口。
+///
+/// 它同时实现了 [`HasWindowHandle`] 和 [`HasDisplayHandle`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A window managed by iced.
 ///
 /// It implements both [`HasWindowHandle`] and [`HasDisplayHandle`].
+///
+/// </details>
 pub trait Window: HasWindowHandle + HasDisplayHandle + Debug {}
 
 impl<T> Window for T where T: HasWindowHandle + HasDisplayHandle + Debug {}
 
+/// 无头窗口。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A headless window.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Headless;
 

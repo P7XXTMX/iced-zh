@@ -10,7 +10,14 @@ use winit::window::Window;
 
 use std::fmt::{Debug, Formatter};
 
+/// [`Program`] 的窗口的状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The state of the window of a [`Program`].
+///
+/// </details>
 pub struct State<P: Program>
 where
     P::Theme: theme::Base,
@@ -44,7 +51,14 @@ impl<P: Program> State<P>
 where
     P::Theme: theme::Base,
 {
+    /// 为所提供的 [`Program`] 的 `window` 创建一个新的 [`State`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`State`] for the provided [`Program`]'s `window`.
+    ///
+    /// </details>
     pub fn new(
         program: &program::Instance<P>,
         window_id: window::Id,
@@ -197,6 +211,7 @@ where
         window: &Window,
     ) {
         // Update window title
+        // 更新窗口标题
         let new_title = program.title(window_id);
 
         if self.title != new_title {
@@ -205,6 +220,7 @@ where
         }
 
         // Update scale factor
+        // 更新缩放因子
         let new_scale_factor = program.scale_factor(window_id);
 
         if self.viewport.scale().application != new_scale_factor {
@@ -218,6 +234,7 @@ where
         }
 
         // Update theme and appearance
+        // 更新主题和外观
         self.theme = program.theme(window_id);
         self.style = program.style(self.theme());
 
@@ -234,6 +251,8 @@ where
 
                 // Assume the old mode matches the system one
                 // We will be notified otherwise
+                // 假定旧的模式与系统的模式一致
+                // 否则我们会收到通知
                 if new_mode == theme::Mode::None {
                     self.default_theme = <P::Theme as theme::Base>::default(self.theme_mode);
 
@@ -247,6 +266,8 @@ where
             {
                 // mundy always notifies system theme changes, so we
                 // just restore the default theme mode.
+                // mundy 总是会通知系统主题的变化，所以我们
+                // 只需恢复默认的主题模式。
                 let new_mode = if new_mode == theme::Mode::None {
                     theme::Base::mode(&self.default_theme)
                 } else {

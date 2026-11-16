@@ -1,4 +1,11 @@
+//! 显示表格。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Display tables.
+//!
+//! </details>
 use crate::core;
 use crate::core::alignment;
 use crate::core::layout;
@@ -10,10 +17,20 @@ use crate::core::{
     Alignment, Background, Element, Layout, Length, Pixels, Rectangle, Size, Widget,
 };
 
+/// 使用给定的列和行创建一个新的 [`Table`]。
+///
+/// 列可以使用 [`column()`] 函数创建，而行可以是任意
+/// 遍历某种数据类型 `T` 的迭代器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Table`] with the given columns and rows.
 ///
 /// Columns can be created using the [`column()`] function, while rows can be any
 /// iterator over some data type `T`.
+///
+/// </details>
 pub fn table<'a, 'b, T, Message, Theme, Renderer>(
     columns: impl IntoIterator<Item = Column<'a, 'b, T, Message, Theme, Renderer>>,
     rows: impl IntoIterator<Item = T>,
@@ -25,10 +42,20 @@ where
     Table::new(columns, rows)
 }
 
+/// 使用给定的表头和视图函数创建一个新的 [`Column`]。
+///
+/// 视图函数会为 [`Table`] 中的每一行调用一次，并且必须
+/// 产生对应单元格的内容。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Column`] with the given header and view function.
 ///
 /// The view function will be called for each row in a [`Table`] and it must
 /// produce the resulting contents of a cell.
+///
+/// </details>
 pub fn column<'a, 'b, T, W, Message, Theme, Renderer>(
     header: impl Widget<Message, Theme, Renderer> + 'a,
     view: impl Fn(T) -> W + 'b,
@@ -46,7 +73,14 @@ where
     }
 }
 
+/// 以网格形式直观呈现按列和行分布的数据。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A grid-like visual representation of data distributed in columns and rows.
+///
+/// </details>
 pub struct Table<'a, Message, Theme = crate::Theme, Renderer = crate::Renderer>
 where
     Theme: Catalog,
@@ -72,10 +106,20 @@ impl<'a, Message, Theme, Renderer> Table<'a, Message, Theme, Renderer>
 where
     Theme: Catalog,
 {
+    /// 使用给定的列和行创建一个新的 [`Table`]。
+    ///
+    /// 列可以使用 [`column()`] 函数创建，而行可以是任意
+    /// 遍历某种数据类型 `T` 的迭代器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Table`] with the given columns and rows.
     ///
     /// Columns can be created using the [`column()`] function, while rows can be any
     /// iterator over some data type `T`.
+    ///
+    /// </details>
     pub fn new<'b, T>(
         columns: impl IntoIterator<Item = Column<'a, 'b, T, Message, Theme, Renderer>>,
         rows: impl IntoIterator<Item = T>,
@@ -126,45 +170,94 @@ where
         }
     }
 
+    /// 设置 [`Table`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Table`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Table`] 单元格的内边距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the padding of the cells of the [`Table`].
+    ///
+    /// </details>
     pub fn padding(self, padding: impl Into<Pixels>) -> Self {
         let padding = padding.into();
 
         self.padding_x(padding).padding_y(padding)
     }
 
+    /// 设置 [`Table`] 单元格的水平内边距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the horizontal padding of the cells of the [`Table`].
+    ///
+    /// </details>
     pub fn padding_x(mut self, padding: impl Into<Pixels>) -> Self {
         self.padding_x = padding.into().0;
         self
     }
 
+    /// 设置 [`Table`] 单元格的垂直内边距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the vertical padding of the cells of the [`Table`].
+    ///
+    /// </details>
     pub fn padding_y(mut self, padding: impl Into<Pixels>) -> Self {
         self.padding_y = padding.into().0;
         self
     }
 
+    /// 设置 [`Table`] 单元格之间分隔线的粗细。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the thickness of the line separator between the cells of the [`Table`].
+    ///
+    /// </details>
     pub fn separator(self, separator: impl Into<Pixels>) -> Self {
         let separator = separator.into();
 
         self.separator_x(separator).separator_y(separator)
     }
 
+    /// 设置 [`Table`] 单元格之间水平分隔线的粗细。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the thickness of the horizontal line separator between the cells of the [`Table`].
+    ///
+    /// </details>
     pub fn separator_x(mut self, separator: impl Into<Pixels>) -> Self {
         self.separator_x = separator.into().0;
         self
     }
 
+    /// 设置 [`Table`] 单元格之间垂直分隔线的粗细。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the thickness of the vertical line separator between the cells of the [`Table`].
+    ///
+    /// </details>
     pub fn separator_y(mut self, separator: impl Into<Pixels>) -> Self {
         self.separator_y = separator.into().0;
         self
@@ -241,6 +334,8 @@ where
 
         // FIRST PASS
         // Lay out non-fluid cells
+        // 第一遍
+        // 布局非流式单元格
         let mut x = self.padding_x;
         let mut y = self.padding_y;
 
@@ -296,6 +391,8 @@ where
 
         // SECOND PASS
         // Lay out fluid cells, using metrics from the first pass as limits
+        // 第二遍
+        // 布局流式单元格，使用第一遍得到的度量作为限制
         let left = Size::new(
             available.width
                 - metrics
@@ -390,6 +487,8 @@ where
 
         // THIRD PASS
         // Position each cell
+        // 第三遍
+        // 定位每个单元格
         let mut x = self.padding_x;
         let mut y = self.padding_y;
 
@@ -581,7 +680,14 @@ where
     }
 }
 
+/// 带有表头的一组数据的纵向呈现。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A vertical visualization of some data with a header.
+///
+/// </details>
 pub struct Column<'a, 'b, T, Message, Theme = crate::Theme, Renderer = crate::Renderer> {
     header: Element<'a, Message, Theme, Renderer>,
     view: Box<dyn Fn(T) -> Element<'a, Message, Theme, Renderer> + 'b>,
@@ -591,47 +697,124 @@ pub struct Column<'a, 'b, T, Message, Theme = crate::Theme, Renderer = crate::Re
 }
 
 impl<'a, 'b, T, Message, Theme, Renderer> Column<'a, 'b, T, Message, Theme, Renderer> {
+    /// 设置 [`Column`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Column`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Column`] 水平轴上的对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the alignment for the horizontal axis of the [`Column`].
+    ///
+    /// </details>
     pub fn align_x(mut self, alignment: impl Into<alignment::Horizontal>) -> Self {
         self.align_x = alignment.into();
         self
     }
 
+    /// 设置 [`Column`] 垂直轴上的对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the alignment for the vertical axis of the [`Column`].
+    ///
+    /// </details>
     pub fn align_y(mut self, alignment: impl Into<alignment::Vertical>) -> Self {
         self.align_y = alignment.into();
         self
     }
 }
 
+/// [`Table`] 的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of a [`Table`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy)]
 pub struct Style {
+    /// 单元格之间水平分隔线的背景颜色。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The background color of the horizontal line separator between cells.
+    ///
+    /// </details>
     pub separator_x: Background,
+    /// 单元格之间垂直分隔线的背景颜色。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The background color of the vertical line separator between cells.
+    ///
+    /// </details>
     pub separator_y: Background,
 }
 
+/// [`Table`] 的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`Table`].
+///
+/// </details>
 pub trait Catalog {
+    /// [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of the [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by the [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> Self::Class<'a>;
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(&self, class: &Self::Class<'_>) -> Style;
 }
 
+/// [`Table`] 的样式函数。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for a [`Table`].
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme) -> Style + 'a>;
 
 impl<Theme> From<Style> for StyleFn<'_, Theme> {
@@ -652,7 +835,14 @@ impl Catalog for crate::Theme {
     }
 }
 
+/// [`Table`] 的默认样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default style of a [`Table`].
+///
+/// </details>
 pub fn default(theme: &crate::Theme) -> Style {
     let palette = theme.palette();
     let separator = palette.background.strong.color.into();

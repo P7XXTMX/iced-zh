@@ -6,10 +6,20 @@ use crate::core::widget;
 use crate::core::widget::Tree;
 use crate::core::{Event, Length, Rectangle, Shell, Size, Vector, Widget};
 
+/// 能够感知自身尺寸的部件。
+///
+/// [`Responsive`] 部件总是会尝试填满其父级的
+/// 全部可用空间。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that is aware of its dimensions.
 ///
 /// A [`Responsive`] widget will always try to fill all the available space of
 /// its parent.
+///
+/// </details>
 pub struct Responsive<'a, W> {
     view: Box<dyn Fn(Size) -> W + 'a>,
     width: Length,
@@ -18,12 +28,24 @@ pub struct Responsive<'a, W> {
 }
 
 impl<'a, W> Responsive<'a, W> {
+    /// 使用一个产生其内容的闭包创建一个新的
+    /// [`Responsive`] 部件。
+    ///
+    /// `view` 闭包会在布局期间收到 [`Responsive`] 的
+    /// 最大可用空间。可以利用这个 [`Size`]
+    /// 有条件地构建内容。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Responsive`] widget with a closure that produces its
     /// contents.
     ///
     /// The `view` closure will receive the maximum available space for
     /// the [`Responsive`] during layout. You can use this [`Size`] to
     /// conditionally build the contents.
+    ///
+    /// </details>
     pub fn new(view: impl Fn(Size) -> W + 'a) -> Self {
         Self {
             view: Box::new(view),
@@ -33,13 +55,27 @@ impl<'a, W> Responsive<'a, W> {
         }
     }
 
+    /// 设置 [`Responsive`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Responsive`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Responsive`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Responsive`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
@@ -54,6 +90,7 @@ where
 {
     fn diff(&mut self, _tree: &mut Tree) {
         // Diff is deferred to layout
+        // 差异比较推迟到布局阶段进行
     }
 
     fn size(&self) -> Size<Length> {

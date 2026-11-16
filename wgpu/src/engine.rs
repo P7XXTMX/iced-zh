@@ -27,7 +27,7 @@ impl Engine {
         device: wgpu::Device,
         queue: wgpu::Queue,
         format: wgpu::TextureFormat,
-        antialiasing: Option<Antialiasing>, // TODO: Initialize AA pipelines lazily
+        antialiasing: Option<Antialiasing>, // TODO: Initialize AA pipelines lazily（待办：延迟初始化抗锯齿管线）
         shell: Shell,
     ) -> Self {
         Self {

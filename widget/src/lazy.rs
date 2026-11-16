@@ -1,4 +1,11 @@
+//! 只在必要时才重建其内容的部件。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A widget that only rebuilds its contents when necessary.
+//!
+//! </details>
 use crate::core::layout::{self, Layout};
 use crate::core::mouse;
 use crate::core::overlay;
@@ -10,7 +17,14 @@ use crate::core::{Event, Length, Rectangle, Shell, Size, Vector};
 use rustc_hash::FxHasher;
 use std::hash::{Hash, Hasher};
 
+/// 只在必要时才重建其内容的部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that only rebuilds its contents when necessary.
+///
+/// </details>
 pub struct Lazy<'a, W, Dependency> {
     dependency: Dependency,
     view: Box<dyn Fn(&Dependency) -> W + 'a>,
@@ -21,8 +35,16 @@ impl<'a, W, Dependency> Lazy<'a, W, Dependency>
 where
     Dependency: Hash + 'a,
 {
+    /// 使用给定的数据 `Dependency` 和一个能把该数据转换为部件树的
+    /// 闭包，创建一个新的 [`Lazy`] 部件。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Lazy`] widget with the given data `Dependency` and a
     /// closure that can turn this data into a widget tree.
+    ///
+    /// </details>
     pub fn new(dependency: Dependency, view: impl Fn(&Dependency) -> W + 'a) -> Self {
         Self {
             dependency,
@@ -69,6 +91,8 @@ where
 
         // The widget value is recreated every frame, so the size hint must be
         // re-derived from the cached element on every diff
+        // 部件值每帧都会被重新创建，因此每次 diff 时都必须
+        // 从缓存的元素重新推导尺寸提示
         self.size = current.element.size();
 
         tree::diff_children(

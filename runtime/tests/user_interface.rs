@@ -1,4 +1,11 @@
+//! [`UserInterface`] 的集成测试。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Integration tests for the [`UserInterface`].
+//!
+//! </details>
 use iced_runtime::core;
 use iced_runtime::core::layout;
 use iced_runtime::core::overlay;
@@ -195,7 +202,14 @@ impl widget::Widget<OverlayMessage, core::Theme, Renderer> for MultiOverlayRoot 
 
 impl widget::Meta for MultiOverlayRoot {}
 
+/// 最顶层的覆盖层，覆盖 `(60..80, 0..20)`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The topmost overlay, covering `(60..80, 0..20)`.
+///
+/// </details>
 struct TopOverlay;
 
 impl TopOverlay {
@@ -232,8 +246,16 @@ impl overlay::Overlay<OverlayMessage, core::Theme, Renderer> for TopOverlay {
     }
 }
 
+/// 底部的覆盖层，覆盖 `(0..40, 0..40)`，带有一个覆盖
+/// `(0..20, 0..20)` 的嵌套覆盖层。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The bottom overlay, covering `(0..40, 0..40)`, with a nested overlay
 /// covering `(0..20, 0..20)`.
+///
+/// </details>
 struct BottomOverlay;
 
 impl BottomOverlay {
@@ -277,7 +299,14 @@ impl overlay::Overlay<OverlayMessage, core::Theme, Renderer> for BottomOverlay {
     }
 }
 
+/// [`BottomOverlay`] 的嵌套覆盖层，覆盖 `(0..20, 0..20)`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The nested overlay of [`BottomOverlay`], covering `(0..20, 0..20)`.
+///
+/// </details>
 struct NestedOverlay;
 
 impl NestedOverlay {
@@ -327,6 +356,7 @@ fn multiple_overlays_are_handled_by_index_order_and_nested_overlays_capture_even
     ))];
 
     // The nested overlay (index 0.9) captures events over `(0..20, 0..20)`
+    // 嵌套覆盖层（索引 0.9）捕获 `(0..20, 0..20)` 上的事件
     let (_state, statuses) = user_interface.update(
         &window::Headless,
         &shell::Waker::noop(),
@@ -339,6 +369,7 @@ fn multiple_overlays_are_handled_by_index_order_and_nested_overlays_capture_even
     assert_eq!(messages.len(), 1);
 
     // The bottom overlay (index 0.5) captures events outside its nested overlay
+    // 底部覆盖层（索引 0.5）捕获其嵌套覆盖层之外的事件
     let (_state, statuses) = user_interface.update(
         &window::Headless,
         &shell::Waker::noop(),
@@ -352,6 +383,8 @@ fn multiple_overlays_are_handled_by_index_order_and_nested_overlays_capture_even
 
     // The top overlay (index 1.0) captures events over `(60..80, 0..20)`,
     // skipping the bottom overlay
+    // 顶部覆盖层（索引 1.0）捕获 `(60..80, 0..20)` 上的事件，
+    // 跳过底部覆盖层
     let (_state, statuses) = user_interface.update(
         &window::Headless,
         &shell::Waker::noop(),
@@ -364,6 +397,7 @@ fn multiple_overlays_are_handled_by_index_order_and_nested_overlays_capture_even
     assert_eq!(messages.len(), 3);
 
     // Events not covered by any overlay reach the base widget
+    // 没有被任何覆盖层覆盖的事件会到达基础部件
     let (_state, statuses) = user_interface.update(
         &window::Headless,
         &shell::Waker::noop(),
@@ -376,6 +410,7 @@ fn multiple_overlays_are_handled_by_index_order_and_nested_overlays_capture_even
     assert_eq!(messages.len(), 3);
 
     // The overlays can be drawn
+    // 覆盖层可以被绘制
     user_interface.draw(
         &mut renderer,
         &core::Theme::Light,

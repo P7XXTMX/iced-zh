@@ -1,4 +1,11 @@
+//! 绘制并编辑文本。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Draw and edit text.
+//!
+//! </details>
 use crate::core::text::editor::{self, Action, Cursor, Direction, Edit, Motion, Selection};
 use crate::core::text::highlighter;
 use crate::core::text::{Alignment, LineHeight, Parser, Position, Wrapping};
@@ -11,7 +18,14 @@ use std::borrow::Cow;
 use std::fmt;
 use std::sync::{self, Arc, RwLock};
 
+/// 多行文本编辑器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A multi-line text editor.
+///
+/// </details>
 #[derive(Debug, PartialEq)]
 pub struct Editor(Option<Arc<Internal>>);
 
@@ -29,21 +43,46 @@ struct Internal {
 }
 
 impl Editor {
+    /// 创建一个新的空 [`Editor`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new empty [`Editor`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// 返回 [`Editor`] 的缓冲区。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the buffer of the [`Editor`].
+    ///
+    /// </details>
     pub fn buffer(&self) -> &cosmic_text::Buffer {
         buffer_from_editor(&self.internal().editor)
     }
 
+    /// 创建 [`Editor`] 的 [`Weak`] 引用。
+    ///
+    /// 在不需要引用保证的场合，这可以避免
+    /// 克隆 [`Editor`]。例如，
+    /// 在创建渲染树的时候。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Weak`] reference to the [`Editor`].
     ///
     /// This is useful to avoid cloning the [`Editor`] when
     /// referential guarantees are unnecessary. For instance,
     /// when creating a rendering tree.
+    ///
+    /// </details>
     pub fn downgrade(&self) -> Weak {
         let editor = self.internal();
 
@@ -63,10 +102,12 @@ impl Editor {
         let editor = self.0.take().expect("Editor should always be initialized");
 
         // TODO: Handle multiple strong references somehow
+        // 待办：设法处理存在多个强引用的情况
         let mut internal =
             Arc::try_unwrap(editor).expect("Editor cannot have multiple strong references");
 
         // Clear cursor cache
+        // 清除光标缓存
         let _ = internal
             .selection
             .write()
@@ -185,6 +226,14 @@ impl editor::Editor for Editor {
                             // i is guaranteed to be > 0 because `start` is always
                             // 0 for the first line, so there is no way for the
                             // cursor to be before it.
+                            // 有时，我们要找的字形恰好位于
+                            // 两行之间。当某一行在空格处换行时
+                            // 就可能出现这种情况。
+                            // 这时可以认为光标位于
+                            // 上一行的末尾。
+                            // i 保证大于 0，因为第一行的 `start` 始终
+                            // 为 0，所以光标不可能
+                            // 位于它之前。
                             Some((i - 1, layout[i - 1].w + offset))
                         } else if is_cursor_before_end {
                             let x: f32 = line
@@ -266,6 +315,7 @@ impl editor::Editor for Editor {
 
             match action {
                 // Motion events
+                // 移动事件
                 Action::Move(motion) => {
                     if let Some((start, end)) = editor.selection_bounds() {
                         editor.set_selection(cosmic_text::Selection::None);
@@ -273,6 +323,8 @@ impl editor::Editor for Editor {
                         match motion {
                             // These motions are performed as-is even when a selection
                             // is present
+                            // 即使存在选区，这些移动也会
+                            // 原样执行
                             Motion::Home
                             | Motion::End
                             | Motion::DocumentStart
@@ -283,6 +335,7 @@ impl editor::Editor for Editor {
                                 );
                             }
                             // Other motions simply move the cursor to one end of the selection
+                            // 其他移动只是把光标移到选区的某一端
                             _ => editor.set_cursor(match motion.direction() {
                                 Direction::Left => start,
                                 Direction::Right => end,
@@ -308,6 +361,7 @@ impl editor::Editor for Editor {
                 }
 
                 // Selection events
+                // 选择事件
                 Action::Select(motion) => {
                     let cursor = editor.cursor();
 
@@ -321,6 +375,7 @@ impl editor::Editor for Editor {
                     );
 
                     // Deselect if selection matches cursor position
+                    // 如果选区与光标位置重合，则取消选择
                     if let Some((start, end)) = editor.selection_bounds()
                         && start.line == end.line
                         && start.index == end.index
@@ -365,6 +420,7 @@ impl editor::Editor for Editor {
                 }
 
                 // Editing events
+                // 编辑事件
                 Action::Edit(edit) => {
                     let lines_before_edit = buffer_from_editor(editor).lines.len();
 
@@ -490,6 +546,7 @@ impl editor::Editor for Editor {
                 }
 
                 // Mouse events
+                // 鼠标事件
                 Action::Click(position, kind) => {
                     let scroll = buffer_from_editor(editor).scroll();
 
@@ -525,6 +582,7 @@ impl editor::Editor for Editor {
                     );
 
                     // Deselect if selection matches cursor position
+                    // 如果选区与光标位置重合，则取消选择
                     if let Some((start, end)) = editor.selection_bounds()
                         && start.line == end.line
                         && start.index == end.index
@@ -557,6 +615,7 @@ impl editor::Editor for Editor {
     fn move_to(&mut self, cursor: Cursor) {
         self.with_internal_mut(|internal| {
             // TODO: Expose `Affinity`
+            // 待办：公开 `Affinity`
             internal.editor.set_cursor(cosmic_text::Cursor {
                 line: cursor.position.line,
                 index: cursor.position.index,
@@ -889,16 +948,37 @@ impl fmt::Debug for Internal {
     }
 }
 
+/// [`Editor`] 的弱引用。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A weak reference to an [`Editor`].
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct Weak {
     raw: sync::Weak<Internal>,
+    /// [`Editor`] 的边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The bounds of the [`Editor`].
+    ///
+    /// </details>
     pub bounds: Size,
 }
 
 impl Weak {
+    /// 尝试把该引用升级为 [`Editor`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Tries to update the reference into an [`Editor`].
+    ///
+    /// </details>
     pub fn upgrade(&self) -> Option<Editor> {
         self.raw.upgrade().map(Some).map(Editor)
     }
@@ -983,7 +1063,7 @@ fn shape_until_cursor(
         let scroll = buffer.scroll();
         let (width, _) = buffer.size();
 
-        const CURSOR_WIDTH: f32 = 2.0; // TODO: Configurable!
+        const CURSOR_WIDTH: f32 = 2.0; // TODO: Configurable!（待办：改为可配置！）
 
         buffer.set_scroll(cosmic_text::Scroll {
             horizontal: scroll.horizontal

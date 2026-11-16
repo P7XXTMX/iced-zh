@@ -1,0 +1,2117 @@
+@@ widget/src/mouse_area.rs:1
+用于捕获鼠标事件的容器。
+@@ widget/src/mouse_area.rs:10
+在发生鼠标事件时发出消息。
+@@ widget/src/mouse_area.rs:28
+按下鼠标左键时发出的消息。
+@@ widget/src/mouse_area.rs:35
+松开鼠标左键时发出的消息。
+@@ widget/src/mouse_area.rs:42
+双击时发出的消息。
+
+如果与 [`on_press`]/[`on_release`] 一起使用，
+这些事件仍会照常发出。
+
+事件流为：on_press -> on_release -> on_press
+-> on_double_click -> on_release -> on_press ...
+@@ widget/src/mouse_area.rs:58
+按下鼠标右键时发出的消息。
+@@ widget/src/mouse_area.rs:65
+松开鼠标右键时发出的消息。
+@@ widget/src/mouse_area.rs:72
+按下鼠标中键时发出的消息。
+@@ widget/src/mouse_area.rs:79
+松开鼠标中键时发出的消息。
+@@ widget/src/mouse_area.rs:86
+使用滚轮时发出的消息。
+@@ widget/src/mouse_area.rs:93
+鼠标进入该区域时发出的消息。
+@@ widget/src/mouse_area.rs:100
+鼠标在该区域内移动时发出的消息。
+@@ widget/src/mouse_area.rs:107
+鼠标离开该区域时发出的消息。
+@@ widget/src/mouse_area.rs:114
+悬停在该区域上时使用的 [`mouse::Interaction`]。
+@@ widget/src/mouse_area.rs:122
+[`MouseArea`] 的局部状态。
+@@ widget/src/mouse_area.rs:132
+使用给定的内容创建一个 [`MouseArea`]。
+@@ widget/src/mouse_area.rs:281
+处理给定的 [`Event`]，并相应地更新 [`MouseArea`] 的 [`State`]。
+@@ widget/src/mouse_area.rs:347
+即使这不是一次双击，这次按下也已经由我们处理，
+不应该再向上传递给父部件。
+@@ widget/src/opaque.rs:1
+包装给定的部件，并捕获该部件边界内的所有鼠标按键按下事件，
+相当于让它变得“不透明”（_opaque_）。
+
+这个部件用于标记 [`Stack`] 中的元素，或者覆盖层内部的元素
+（例如 [`Popover`] 的弹出框），以免鼠标事件
+穿透到下方的元素。
+
+默认只捕获鼠标按键的按下事件。使用
+[`Opaque::capture_scroll`] 可以同时捕获滚轮事件，
+这样滚动就不会穿透到下方的元素。
+@@ widget/src/opaque.rs:15
+示例
+@@ widget/src/opaque.rs:29
+这个按钮位于不透明的顶层之下：顶层上方的鼠标事件
+@@ widget/src/opaque.rs:30
+不会穿透到它。
+@@ widget/src/opaque.rs:44
+包装给定的部件，并捕获该部件边界内的所有鼠标按键按下事件，
+相当于让它变得“不透明”（_opaque_）。
+
+这个部件用于标记 [`Stack`] 中的元素，或者覆盖层内部的元素
+（例如 [`Popover`] 的弹出框），以免鼠标事件
+穿透到下方的元素。
+
+默认只捕获鼠标按键的按下事件。使用
+[`Self::capture_scroll`] 可以同时捕获滚轮事件，
+这样滚动就不会穿透到下方的元素。
+@@ widget/src/opaque.rs:58
+示例
+@@ widget/src/opaque.rs:72
+这个按钮位于不透明的顶层之下：顶层上方的鼠标事件
+@@ widget/src/opaque.rs:73
+不会穿透到它。
+@@ widget/src/opaque.rs:85
+创建一个新的 [`Opaque`]。
+@@ widget/src/opaque.rs:93
+设置当光标位于 [`Opaque`] 的边界之上时，
+是否捕获滚轮事件。
+
+默认只捕获鼠标按键的按下事件。启用这个标志后
+还会捕获滚轮事件，阻止它们穿透到
+下方的元素。
+@@ widget/src/opaque.rs:104
+返回被包装的内容。
+@@ widget/src/overlay.rs:1
+在其他部件之上显示可交互的元素。
+@@ widget/src/overlay/menu.rs:1
+构建并显示下拉菜单。
+@@ widget/src/overlay/menu.rs:20
+可选择选项的列表。
+@@ widget/src/overlay/menu.rs:50
+使用给定的 [`State`]、选项列表、选项被选中时产生的消息
+以及 [`Style`] 创建一个新的 [`Menu`]。
+@@ widget/src/overlay/menu.rs:80
+设置 [`Menu`] 的宽度。
+@@ widget/src/overlay/menu.rs:86
+设置 [`Menu`] 的高度。
+@@ widget/src/overlay/menu.rs:92
+设置 [`Menu`] 的 [`Padding`]。
+@@ widget/src/overlay/menu.rs:98
+设置 [`Menu`] 的文本大小。
+@@ widget/src/overlay/menu.rs:104
+设置 [`Menu`] 的文本 [`text::LineHeight`]。
+@@ widget/src/overlay/menu.rs:110
+设置 [`Menu`] 的 [`text::Shaping`] 策略。
+@@ widget/src/overlay/menu.rs:116
+设置 [`Menu`] 的 [`text::Ellipsis`] 策略。
+@@ widget/src/overlay/menu.rs:122
+设置 [`Menu`] 的字体。
+@@ widget/src/overlay/menu.rs:128
+把 [`Menu`] 转换为位于给定目标位置的
+[`overlay::Element`]。
+
+`position` 是目标在屏幕坐标系中的位置，
+`window` 是窗口的大小。
+
+`target_height` 用于决定把菜单显示在目标的上方
+还是下方，这取决于屏幕位置和
+[`Menu`] 的尺寸。
+@@ widget/src/overlay/menu.rs:157
+[`Menu`] 的局部状态。
+@@ widget/src/overlay/menu.rs:164
+为 [`Menu`] 创建一个新的 [`State`]。
+@@ widget/src/overlay/menu.rs:643
+[`Menu`] 的外观。
+@@ widget/src/overlay/menu.rs:646
+菜单的 [`Background`]。
+@@ widget/src/overlay/menu.rs:648
+菜单的 [`Border`]。
+@@ widget/src/overlay/menu.rs:650
+菜单的文本 [`Color`]。
+@@ widget/src/overlay/menu.rs:652
+菜单中被选中选项的文本 [`Color`]。
+@@ widget/src/overlay/menu.rs:654
+菜单中被选中选项的背景 [`Color`]。
+@@ widget/src/overlay/menu.rs:656
+菜单的 [`Shadow`]。
+@@ widget/src/overlay/menu.rs:660
+[`Menu`] 的主题样式目录。
+@@ widget/src/overlay/menu.rs:662
+[`Catalog`] 的样式类。
+@@ widget/src/overlay/menu.rs:665
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/overlay/menu.rs:668
+[`Menu`] 的可滚动区域的默认样式类。
+@@ widget/src/overlay/menu.rs:673
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/overlay/menu.rs:677
+[`Menu`] 的样式函数。
+@@ widget/src/overlay/menu.rs:692
+[`Menu`] 列表的默认样式。
+@@ widget/src/overlay/position.rs:3
+弹出框（弹出层或工具提示）相对于它所锚定的元素
+的位置。
+@@ widget/src/overlay/position.rs:7
+如果首选的 [`Side`] 放得下，弹出框就出现在那一侧，
+否则出现在部件可用空间最大的一侧。
+@@ widget/src/overlay/position.rs:10
+弹出框放得下时首选的 [`Side`]。
+@@ widget/src/overlay/position.rs:13
+弹出框出现在部件的上方。
+@@ widget/src/overlay/position.rs:15
+弹出框出现在部件的下方。
+@@ widget/src/overlay/position.rs:17
+弹出框出现在部件的左侧。
+@@ widget/src/overlay/position.rs:19
+弹出框出现在部件的右侧。
+@@ widget/src/overlay/position.rs:21
+弹出框跟随光标。
+@@ widget/src/overlay/position.rs:34
+计算弹出框在某个 [`Position`] 下所占据的 [`Rectangle`]。
+
+所有参数都使用同一个坐标空间：
+也就是对弹出框进行布局的空间。`content_bounds` 描述
+弹出框所锚定的元素，`popup` 是弹出框自身的大小，
+`gap` 是在它周围留出的空间大小。
+
+`cursor_position` 只在 [`Position`] 为
+[`Position::FollowCursor`] 时使用；`viewport` 只在它为
+[`Position::Auto`] 或 `snap_within_viewport` 为 `true` 时使用，
+后者会把计算出的矩形限制在 `viewport` 之内。
+@@ widget/src/overlay/position.rs:55
+弹出框跟随光标。
+@@ widget/src/overlay/position.rs:59
+弹出框放在基底元素的某一侧；`Auto` 在首选一侧放得下时
+解析为首选的一侧，否则解析为
+可用空间最大的一侧。
+@@ widget/src/overlay/position.rs:97
+弹出框可以出现的一侧。
+@@ widget/src/overlay/position.rs:100
+上侧。
+@@ widget/src/overlay/position.rs:102
+左侧。
+@@ widget/src/overlay/position.rs:104
+右侧。
+@@ widget/src/overlay/position.rs:106
+下侧。
+@@ widget/src/overlay/position.rs:119
+如果首选的一侧放得下，弹出框就放在那一侧。
+@@ widget/src/overlay/position.rs:124
+否则，放在可用空间最大的一侧。
+@@ widget/src/overlay/position.rs:177
+通用输入：位于原点的 50x50 基底元素、80x80 的弹出框、没有间隙、
+位于原点的光标，以及 1000x1000 的视口。
+@@ widget/src/overlay/position.rs:187
+上方的空间（520）比下方（270）更大；但弹出框在下方放得下，
+所以首选项仍然生效。
+@@ widget/src/overlay/position.rs:205
+首选的一侧（`Bottom`）放不下：弹出框（960）比
+基底元素下方的空间（950）更高，因此弹出框改为放在
+可用空间最大的一侧（右侧）。
+@@ widget/src/overlay/position.rs:270
+弹出框的下边缘放在光标处。
+@@ widget/src/overlay/position.rs:282
+不吸附时，`Top` 会把弹出框放在 (-15, -80)，位于
+视口之外；吸附时，它会被限制到视口的
+原点。
+@@ widget/src/overlay/position.rs:296
+紧贴视口右边缘（1000）的基底元素。
+@@ widget/src/overlay/position.rs:299
+不吸附时，`Right` 会把弹出框放在 (1000, -15)，超出
+视口的右边缘；吸附时，它会被移回来，
+使其能够放得下。
+@@ widget/src/pane_grid.rs:1
+窗格网格让用户可以分割应用程序的区域，并动态地组织布局。
+
+![Pane grid - Iced](https://iced.rs/examples/pane_grid.gif)
+
+这种空间分配方式在平铺式窗口管理器中很常见（例如
+[`awesome`](https://awesomewm.org/)、[`i3`](https://i3wm.org/)，甚至
+[`tmux`](https://github.com/tmux/tmux)）。
+
+[`PaneGrid`] 支持：
+
+* 垂直和水平分割
+* 跟踪最后一个活动窗格
+* 用鼠标调整大小
+* 通过拖放重新组织窗格
+* 快捷键支持
+* 可配置的修饰键
+* 用于以编程方式执行动作（`split`、`swap`、`resize` 等）的 [`State`] API
+@@ widget/src/pane_grid.rs:19
+示例
+@@ widget/src/pane_grid.rs:51
+[`pane_grid` 示例][`pane_grid` example]展示了如何使用支持调整大小、
+拖放和快捷键的 [`PaneGrid`]。
+@@ widget/src/pane_grid.rs:97
+一组窗格，通过垂直或水平分割进行分布，
+完全填满可用空间。
+
+![Pane grid - Iced](https://iced.rs/examples/pane_grid.gif)
+
+这种空间分配方式在平铺式窗口管理器中很常见（例如
+[`awesome`](https://awesomewm.org/)、[`i3`](https://i3wm.org/)，甚至
+[`tmux`](https://github.com/tmux/tmux)）。
+
+[`PaneGrid`] 支持：
+
+* 垂直和水平分割
+* 跟踪最后一个活动窗格
+* 用鼠标调整大小
+* 通过拖放重新组织窗格
+* 快捷键支持
+* 可配置的修饰键
+* 用于以编程方式执行动作（`split`、`swap`、`resize` 等）的 [`State`] API
+@@ widget/src/pane_grid.rs:116
+示例
+@@ widget/src/pane_grid.rs:170
+使用给定的 [`State`] 和视图函数创建一个 [`PaneGrid`]。
+
+视图函数会被调用，用来显示 [`State`] 中的每一个 [`Pane`]。
+如果窗格已被最大化，[`bool`] 为 true。
+@@ widget/src/pane_grid.rs:204
+设置 [`PaneGrid`] 的宽度。
+@@ widget/src/pane_grid.rs:210
+设置 [`PaneGrid`] 的高度。
+@@ widget/src/pane_grid.rs:216
+设置 [`PaneGrid`] 各窗格 _之间_ 的间距。
+@@ widget/src/pane_grid.rs:222
+设置 [`PaneGrid`] 中 [`Pane`] 在两个轴上的最小尺寸。
+@@ widget/src/pane_grid.rs:228
+设置 [`PaneGrid`] 的某个 [`Pane`] 被点击时
+产生的消息。
+@@ widget/src/pane_grid.rs:238
+启用 [`PaneGrid`] 的拖放交互，
+并使用提供的函数产生消息。
+@@ widget/src/pane_grid.rs:250
+启用 [`PaneGrid`] 的调整大小交互，
+并使用提供的函数产生消息。
+
+`leeway` 描述分割线周围可以用来
+抓取它的空间大小。
+
+分割线的可抓取区域长度为 `spacing + leeway`，
+并且居中。换句话说，分割线两侧各有
+`(spacing + leeway) / 2.0` 的长度。
+@@ widget/src/pane_grid.rs:269
+设置 [`PaneGrid`] 的样式。
+@@ widget/src/pane_grid.rs:279
+设置 [`PaneGrid`] 的样式类。
+@@ widget/src/pane_grid.rs:364
+`Pane` 总是递增的，并且按 Ord 顺序迭代，因此新的
+状态总是添加在末尾。我们只需移除
+已不存在的状态，`diff_children` 就会
+按正确的顺序对剩余的值做差异比较，并
+在末尾添加新的状态
+@@ widget/src/pane_grid.rs:944
+待办：鼠标坐标变换
+@@ widget/src/pane_grid.rs:1123
+[`PaneGrid`] 的拖放交互过程中产生的事件。
+@@ widget/src/pane_grid.rs:1126
+某个 [`Pane`] 被拾取以进行拖动。
+@@ widget/src/pane_grid.rs:1128
+被拾取的 [`Pane`]。
+@@ widget/src/pane_grid.rs:1132
+某个 [`Pane`] 被放置到另一个 [`Pane`] 之上。
+@@ widget/src/pane_grid.rs:1134
+被拾取的 [`Pane`]。
+@@ widget/src/pane_grid.rs:1137
+被拾取的 [`Pane`] 所放置到的 [`Target`]。
+@@ widget/src/pane_grid.rs:1141
+某个 [`Pane`] 被拾取，然后被放置在其他 [`Pane`]
+的边界之外。
+@@ widget/src/pane_grid.rs:1144
+被拾取的 [`Pane`]。
+@@ widget/src/pane_grid.rs:1149
+窗格可以被放置到的 [`Target`] 区域。
+@@ widget/src/pane_grid.rs:1152
+整个 [`PaneGrid`] 的某条 [`Edge`]。
+@@ widget/src/pane_grid.rs:1154
+[`PaneGrid`] 中的单个 [`Pane`]。
+@@ widget/src/pane_grid.rs:1158
+[`Pane`] 的区域。
+@@ widget/src/pane_grid.rs:1161
+中心区域。
+@@ widget/src/pane_grid.rs:1164
+边缘区域。
+@@ widget/src/pane_grid.rs:1168
+某个区域的各条边。
+@@ widget/src/pane_grid.rs:1171
+上边缘。
+@@ widget/src/pane_grid.rs:1173
+左边缘。
+@@ widget/src/pane_grid.rs:1175
+右边缘。
+@@ widget/src/pane_grid.rs:1177
+下边缘。
+@@ widget/src/pane_grid.rs:1181
+[`PaneGrid`] 的调整大小交互过程中产生的事件。
+@@ widget/src/pane_grid.rs:1184
+正在被拖动以调整大小的 [`Split`]。
+@@ widget/src/pane_grid.rs:1187
+[`Split`] 的新比例。
+
+比例是 [0, 1] 范围内的值，表示 [`Split`]
+在两个窗格之间的确切位置。
+@@ widget/src/pane_grid.rs:1213
+[`PaneGrid`] 的外观。
+@@ widget/src/pane_grid.rs:1216
+被悬停区域的高亮外观。
+@@ widget/src/pane_grid.rs:1218
+被拾取的分割线的外观。
+@@ widget/src/pane_grid.rs:1220
+被悬停的分割线的外观。
+@@ widget/src/pane_grid.rs:1224
+[`PaneGrid`] 的高亮外观。
+@@ widget/src/pane_grid.rs:1227
+窗格区域的 [`Background`]。
+@@ widget/src/pane_grid.rs:1229
+窗格区域的 [`Border`]。
+@@ widget/src/pane_grid.rs:1233
+线条。
+
+通常用于定义某个东西（例如分割线）的高亮。
+@@ widget/src/pane_grid.rs:1238
+[`Line`] 的 [`Color`]。
+@@ widget/src/pane_grid.rs:1240
+[`Line`] 的宽度。
+@@ widget/src/pane_grid.rs:1244
+[`PaneGrid`] 的主题样式目录。
+@@ widget/src/pane_grid.rs:1246
+这个 [`Catalog`] 的样式类。
+@@ widget/src/pane_grid.rs:1249
+这个 [`Catalog`] 产生的默认样式类。
+@@ widget/src/pane_grid.rs:1252
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/pane_grid.rs:1256
+[`PaneGrid`] 的样式函数。
+
+它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+@@ widget/src/pane_grid.rs:1273
+[`PaneGrid`] 的默认样式。
+@@ widget/src/pane_grid/axis.rs:3
+用于度量坐标的固定参考线。
+@@ widget/src/pane_grid/axis.rs:6
+水平轴：—
+@@ widget/src/pane_grid/axis.rs:8
+垂直轴：|
+@@ widget/src/pane_grid/axis.rs:13
+使用给定的 `ratio` 和 `spacing`，沿当前 [`Axis`]
+分割提供的 [`Rectangle`]。
+@@ widget/src/pane_grid/axis.rs:73
+计算分割线在某个 [`Rectangle`] 区域中的边界。
+@@ widget/src/pane_grid/axis.rs:116
+偶数高度，偶数间距
+@@ widget/src/pane_grid/axis.rs:124
+奇数高度，偶数间距
+@@ widget/src/pane_grid/axis.rs:132
+偶数高度，奇数间距
+@@ widget/src/pane_grid/axis.rs:140
+奇数高度，奇数间距
+@@ widget/src/pane_grid/axis.rs:148
+偶数宽度，偶数间距
+@@ widget/src/pane_grid/axis.rs:156
+奇数宽度，偶数间距
+@@ widget/src/pane_grid/axis.rs:164
+偶数宽度，奇数间距
+@@ widget/src/pane_grid/axis.rs:172
+奇数宽度，奇数间距
+@@ widget/src/pane_grid/configuration.rs:3
+[`PaneGrid`] 的排布方式。
+@@ widget/src/pane_grid/configuration.rs:8
+对可用空间的一次分割。
+@@ widget/src/pane_grid/configuration.rs:10
+分割的方向。
+@@ widget/src/pane_grid/configuration.rs:13
+分割的比例，取值范围为 [0.0, 1.0]。
+@@ widget/src/pane_grid/configuration.rs:16
+分割左侧/上方的 [`Configuration`]。
+@@ widget/src/pane_grid/configuration.rs:19
+分割右侧/下方的 [`Configuration`]。
+@@ widget/src/pane_grid/configuration.rs:22
+一个 [`Pane`]。
+@@ widget/src/pane_grid/content.rs:10
+[`Pane`] 的内容。
+@@ widget/src/pane_grid/content.rs:26
+使用提供的主体创建一个新的 [`Content`]。
+@@ widget/src/pane_grid/content.rs:40
+设置 [`Content`] 的 [`TitleBar`]。
+@@ widget/src/pane_grid/content.rs:52
+设置 [`Content`] 的样式。
+@@ widget/src/pane_grid/content.rs:62
+设置 [`Content`] 的样式类。
+@@ widget/src/pane_grid/content.rs:103
+使用提供的 [`Renderer`] 和 [`Layout`] 绘制 [`Content`]。
+@@ widget/src/pane_grid/controls.rs:4
+[`Pane`] 的控件。
+@@ widget/src/pane_grid/controls.rs:19
+使用给定的内容创建一个新的 [`Controls`]。
+@@ widget/src/pane_grid/controls.rs:27
+创建一个带有完整版本和紧凑版本的新 [`Controls`]。
+如果空间不足以在不重叠的情况下显示完整版本，
+就会改为显示紧凑版本。
+@@ widget/src/pane_grid/direction.rs:1
+四个基本方向之一。
+@@ widget/src/pane_grid/draggable.rs:4
+可以被拖动的窗格。
+@@ widget/src/pane_grid/draggable.rs:6
+返回具有给定 [`Layout`] 的 [`Draggable`] 能否在
+提供的光标位置被拾取。
+@@ widget/src/pane_grid/node.rs:6
+[`PaneGrid`] 的布局节点。
+@@ widget/src/pane_grid/node.rs:11
+这个 [`Node`] 的区域被一分为二。
+@@ widget/src/pane_grid/node.rs:13
+这个 [`Node`] 的 [`Split`]。
+@@ widget/src/pane_grid/node.rs:16
+分割的方向。
+@@ widget/src/pane_grid/node.rs:19
+分割的比例，取值范围为 [0.0, 1.0]。
+@@ widget/src/pane_grid/node.rs:22
+分割左侧/上方的 [`Node`]。
+@@ widget/src/pane_grid/node.rs:25
+分割右侧/下方的 [`Node`]。
+@@ widget/src/pane_grid/node.rs:28
+这个 [`Node`] 的区域被一个 [`Pane`] 占据。
+@@ widget/src/pane_grid/node.rs:60
+返回一个遍历这个 [`Node`] 中每个 [`Split`] 的迭代器。
+@@ widget/src/pane_grid/node.rs:106
+根据窗格之间的间距和总的可用空间，
+返回 [`Node`] 中每个 [`Pane`] 的矩形区域。
+@@ widget/src/pane_grid/node.rs:133
+根据窗格之间的间距和总的可用空间，
+返回 [`Node`] 中每个 [`Split`] 的轴、矩形区域
+和比例。
+@@ widget/src/pane_grid/pane.rs:1
+[`PaneGrid`] 中用于显示部件的矩形区域。
+@@ widget/src/pane_grid/split.rs:1
+把 [`PaneGrid`] 中的一个区域分成两个不同窗格的分隔条。
+@@ widget/src/pane_grid/state.rs:1
+[`PaneGrid`] 的状态。
+@@ widget/src/pane_grid/state.rs:10
+[`PaneGrid`] 的状态。
+
+它跟踪每个 [`Pane`] 的状态以及每个
+[`Split`] 的位置。
+
+[`State`] 需要拥有 [`Pane`] 可能需要的所有可变内容。
+这就是这个结构体对类型 `T` 泛型的原因。这个类型的值
+会被提供给 [`PaneGrid::new`] 的视图函数，用来显示每个
+[`Pane`]。
+@@ widget/src/pane_grid/state.rs:24
+[`PaneGrid`] 的窗格。
+@@ widget/src/pane_grid/state.rs:29
+[`PaneGrid`] 的内部状态。
+@@ widget/src/pane_grid/state.rs:36
+创建一个新的 [`State`]，并用提供的状态
+初始化第一个窗格。
+
+除了 [`State`]，它还会返回第一个 [`Pane`] 的标识符。
+@@ widget/src/pane_grid/state.rs:47
+使用给定的 [`Configuration`] 创建一个新的 [`State`]。
+@@ widget/src/pane_grid/state.rs:56
+返回 [`State`] 中窗格的总数。
+@@ widget/src/pane_grid/state.rs:61
+如果 [`State`] 中窗格的数量为 0，返回 `true`。
+@@ widget/src/pane_grid/state.rs:66
+返回给定 [`Pane`] 的内部状态（如果存在）。
+@@ widget/src/pane_grid/state.rs:71
+返回给定 [`Pane`] 的可变内部状态
+（如果存在）。
+@@ widget/src/pane_grid/state.rs:77
+返回一个遍历 [`State`] 中所有窗格
+及其内部状态的迭代器。
+@@ widget/src/pane_grid/state.rs:83
+返回一个遍历 [`State`] 中所有窗格
+及其内部状态的可变迭代器。
+@@ widget/src/pane_grid/state.rs:89
+返回 [`State`] 的布局。
+@@ widget/src/pane_grid/state.rs:94
+返回某个 [`Pane`] 在给定方向上相邻的 [`Pane`]
+（如果有）。
+@@ widget/src/pane_grid/state.rs:124
+沿给定的 [`Axis`] 把给定的 [`Pane`] 一分为二，
+并用提供的内部状态初始化新的 [`Pane`]。
+@@ widget/src/pane_grid/state.rs:130
+在给定的 [`Region`] 上，用给定的 [`Pane`] 分割目标 [`Pane`]。
+
+对于 [`Region::Center`]，默认会交换两个窗格。
+@@ widget/src/pane_grid/state.rs:153
+把给定的 [`Pane`] 放置到提供的 [`Target`] 中。
+@@ widget/src/pane_grid/state.rs:173
+主节点
+@@ widget/src/pane_grid/state.rs:205
+确保新节点对应于原先被关闭的 `Pane`，以保持状态的连续性
+@@ widget/src/pane_grid/state.rs:214
+把 [`Pane`] 移动到 [`PaneGrid`] 的某条 [`Edge`]。
+@@ widget/src/pane_grid/state.rs:238
+确保新节点对应于原先被关闭的 `Pane`，以保持状态的连续性
+@@ widget/src/pane_grid/state.rs:252
+交换 [`State`] 中所提供的两个窗格的位置。
+
+如果想在 [`PaneGrid`] 中通过拖放来交换窗格，
+需要在处理 [`DragEvent`] 时调用这个方法。
+@@ widget/src/pane_grid/state.rs:272
+通过设置所提供的 [`Split`] 的位置来调整两个窗格的大小。
+
+比例是 [0, 1] 范围内的值，表示 [`Split`]
+在两个窗格之间的确切位置。
+
+如果想在 [`PaneGrid`] 中启用调整大小的交互，
+需要在处理 [`ResizeEvent`] 时调用这个方法。
+@@ widget/src/pane_grid/state.rs:286
+关闭给定的 [`Pane`]，并返回它的内部状态以及与它最近的
+兄弟窗格（如果存在）。
+@@ widget/src/pane_grid/state.rs:300
+最大化给定的 [`Pane`]。在调用 [`Self::restore()`] 之前，
+[`PaneGrid`] 只会渲染这个窗格。
+@@ widget/src/pane_grid/state.rs:308
+把当前最大化的 [`Pane`] 恢复到正常大小。
+[`PaneGrid`] 会渲染所有窗格。
+@@ widget/src/pane_grid/state.rs:316
+返回 [`PaneGrid`] 中被最大化的 [`Pane`]。
+@@ widget/src/pane_grid/state.rs:324
+[`PaneGrid`] 的内部状态。
+@@ widget/src/pane_grid/state.rs:335
+根据 [`Configuration`] 初始化 [`PaneGrid`] 的
+[`Internal`] 状态。
+@@ widget/src/pane_grid/state.rs:396
+[`PaneGrid`] 当前的动作。
+@@ widget/src/pane_grid/state.rs:401
+[`PaneGrid`] 处于空闲状态。
+@@ widget/src/pane_grid/state.rs:406
+[`PaneGrid`] 中的某个 [`Pane`] 正在被拖动。
+@@ widget/src/pane_grid/state.rs:410
+正在被拖动的 [`Pane`]。
+@@ widget/src/pane_grid/state.rs:412
+拖动交互的起始 [`Point`]。
+@@ widget/src/pane_grid/state.rs:415
+[`PaneGrid`] 中的某个 [`Split`] 正在被拖动。
+@@ widget/src/pane_grid/state.rs:419
+正在被拖动的 [`Split`]。
+@@ widget/src/pane_grid/state.rs:421
+[`Split`] 的 [`Axis`]。
+@@ widget/src/pane_grid/state.rs:427
+返回当前正在被拾取的 [`Pane`]（如果有）。
+@@ widget/src/pane_grid/state.rs:435
+返回当前正在被拖动的 [`Split`]（如果有）。
+@@ widget/src/pane_grid/title_bar.rs:10
+[`Pane`] 的标题栏。
+@@ widget/src/pane_grid/title_bar.rs:33
+使用给定的内容创建一个新的 [`TitleBar`]。
+@@ widget/src/pane_grid/title_bar.rs:44
+设置 [`TitleBar`] 的控件。
+@@ widget/src/pane_grid/title_bar.rs:50
+设置 [`TitleBar`] 的 [`Padding`]。
+@@ widget/src/pane_grid/title_bar.rs:56
+设置附加在这个 [`TitleBar`] 上的 [`controls`] 是否
+始终可见。
+
+默认情况下，只有当这个 [`TitleBar`] 所属的 [`Pane`]
+被悬停时，控件才可见。
+@@ widget/src/pane_grid/title_bar.rs:69
+设置 [`TitleBar`] 的样式。
+@@ widget/src/pane_grid/title_bar.rs:79
+设置 [`TitleBar`] 的样式类。
+@@ widget/src/pane_grid/title_bar.rs:135
+使用提供的 [`Renderer`] 和 [`Layout`] 绘制 [`TitleBar`]。
+@@ widget/src/pane_grid/title_bar.rs:219
+返回鼠标光标是否位于 [`TitleBar`] 的
+拾取区域之上。
+
+除了控件之外，整个 [`TitleBar`] 都是拾取区域。
+@@ widget/src/pick_list.rs:1
+选择列表显示一个由可选选项组成的下拉列表。
+@@ widget/src/pick_list.rs:3
+示例
+@@ widget/src/pick_list.rs:84
+用于从选项列表中选择单个值的部件。
+@@ widget/src/pick_list.rs:86
+示例
+@@ widget/src/pick_list.rs:182
+使用给定的选项列表、当前选中的值，以及选项被选中时
+产生的消息，创建一个新的 [`PickList`]。
+@@ widget/src/pick_list.rs:208
+设置 [`PickList`] 的占位文本。
+@@ widget/src/pick_list.rs:214
+设置 [`PickList`] 的宽度。
+@@ widget/src/pick_list.rs:220
+设置 [`Menu`] 的高度。
+@@ widget/src/pick_list.rs:226
+设置 [`PickList`] 的 [`Padding`]。
+@@ widget/src/pick_list.rs:232
+设置 [`PickList`] 的文本大小。
+@@ widget/src/pick_list.rs:238
+设置 [`PickList`] 的文本 [`text::LineHeight`]。
+@@ widget/src/pick_list.rs:244
+设置 [`PickList`] 的 [`text::Shaping`] 策略。
+@@ widget/src/pick_list.rs:250
+设置 [`PickList`] 的 [`text::Ellipsis`] 策略。
+@@ widget/src/pick_list.rs:256
+设置 [`PickList`] 的字体。
+@@ widget/src/pick_list.rs:262
+设置 [`PickList`] 的 [`Handle`]。
+@@ widget/src/pick_list.rs:268
+设置 [`PickList`] 选中的值发生变化时产生的消息。
+@@ widget/src/pick_list.rs:274
+设置 [`PickList`] 被打开时产生的消息。
+@@ widget/src/pick_list.rs:280
+设置 [`PickList`] 被关闭时产生的消息。
+@@ widget/src/pick_list.rs:286
+设置 [`PickList`] 的样式。
+@@ widget/src/pick_list.rs:296
+设置 [`Menu`] 的样式。
+@@ widget/src/pick_list.rs:306
+设置 [`PickList`] 的样式类。
+@@ widget/src/pick_list.rs:314
+设置 [`Menu`] 的样式类。
+@@ widget/src/pick_list.rs:448
+事件没有被覆盖层处理，说明光标点击的位置要么在覆盖层的
+边界之外，要么在下拉框上；无论哪种情况，我们都关闭覆盖层。
+@@ widget/src/pick_list.rs:779
+为 [`PickList`] 创建一个新的 [`State`]。
+@@ widget/src/pick_list.rs:798
+[`PickList`] 右侧的手柄。
+@@ widget/src/pick_list.rs:801
+显示一个箭头图标（▼）。
+
+这是默认值。
+@@ widget/src/pick_list.rs:805
+内容的字体大小。
+@@ widget/src/pick_list.rs:808
+自定义的静态手柄。
+@@ widget/src/pick_list.rs:810
+自定义的动态手柄。
+@@ widget/src/pick_list.rs:812
+[`PickList`] 关闭时使用的 [`Icon`]。
+@@ widget/src/pick_list.rs:814
+[`PickList`] 打开时使用的 [`Icon`]。
+@@ widget/src/pick_list.rs:817
+不显示手柄。
+@@ widget/src/pick_list.rs:827
+[`Handle`] 的图标。
+@@ widget/src/pick_list.rs:830
+用于显示 `code_point` 的字体，
+@@ widget/src/pick_list.rs:832
+用作图标的 unicode 码位。
+@@ widget/src/pick_list.rs:834
+内容的字体大小。
+@@ widget/src/pick_list.rs:836
+内容的行高。
+@@ widget/src/pick_list.rs:838
+图标的文本整形策略。
+@@ widget/src/pick_list.rs:842
+[`PickList`] 可能的交互状态。
+@@ widget/src/pick_list.rs:845
+[`PickList`] 可以进行交互。
+@@ widget/src/pick_list.rs:847
+[`PickList`] 正被悬停。
+@@ widget/src/pick_list.rs:849
+[`PickList`] 处于打开状态。
+@@ widget/src/pick_list.rs:851
+[`PickList`] 在打开时是否被悬停。
+@@ widget/src/pick_list.rs:854
+[`PickList`] 已被禁用。
+@@ widget/src/pick_list.rs:858
+选择列表的外观。
+@@ widget/src/pick_list.rs:861
+选择列表的文本 [`Color`]。
+@@ widget/src/pick_list.rs:863
+选择列表的占位文本 [`Color`]。
+@@ widget/src/pick_list.rs:865
+选择列表的手柄 [`Color`]。
+@@ widget/src/pick_list.rs:867
+选择列表的 [`Background`]。
+@@ widget/src/pick_list.rs:869
+选择列表的 [`Border`]。
+@@ widget/src/pick_list.rs:873
+[`PickList`] 的主题样式目录。
+@@ widget/src/pick_list.rs:875
+[`Catalog`] 的样式类。
+@@ widget/src/pick_list.rs:878
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/pick_list.rs:881
+[`PickList`] 的菜单的默认样式类。
+@@ widget/src/pick_list.rs:886
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/pick_list.rs:890
+[`PickList`] 的样式函数。
+
+它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+@@ widget/src/pick_list.rs:907
+[`PickList`] 字段部分的默认样式。
+@@ widget/src/pin.rs:1
+pin 部件把一个部件定位在其边界内的某个固定坐标处。
+@@ widget/src/pin.rs:3
+示例
+@@ widget/src/pin.rs:28
+把内容定位在自身边界内某个固定坐标处的部件。
+
+默认情况下，[`Pin`] 部件会尝试填满它的父级。
+@@ widget/src/pin.rs:32
+示例
+@@ widget/src/pin.rs:58
+使用给定的内容创建一个 [`Pin`] 部件。
+@@ widget/src/pin.rs:68
+设置 [`Pin`] 的宽度。
+@@ widget/src/pin.rs:74
+设置 [`Pin`] 的高度。
+@@ widget/src/pin.rs:80
+设置 [`Pin`] 的位置，即被固定的部件显示的位置。
+@@ widget/src/pin.rs:86
+设置 [`Pin`] 的 X 坐标。
+@@ widget/src/pin.rs:92
+设置 [`Pin`] 的 Y 坐标。
+@@ widget/src/popover.rs:1
+弹出层是出现在某个元素之上的一块浮动内容。
+
+与 [`tooltip`] 不同，弹出层不会在悬停时显示，也不
+控制自身的可见性。相反，`popover` 参数是一个
+`Option`：`Some` 显示覆盖层（打开），`None` 隐藏它（关闭）。
+基底元素始终存在。
+
+当用户在弹出层的边界之外点击时，弹出层会通过
+它的 `on_close` 处理函数通知应用程序，应用程序通常
+就是据此决定把 `popover` 参数设为 `None`（也就是
+关闭它）。
+
+[`popover()`] 辅助函数会用 [`opaque()`] 包装弹出框，因此
+弹出框边界内的鼠标按键按下事件会被捕获，不会穿透到
+下方的元素。使用 [`Popover::passthrough`] 可以让它们穿透
+到基底层，使用 [`Popover::capture_scroll`] 可以同时捕获
+弹出框上的滚轮事件。
+@@ widget/src/popover.rs:23
+示例
+@@ widget/src/popover.rs:38
+基底元素始终存在。弹出层打开时，`popover` 参数为 `Some`；
+@@ widget/src/popover.rs:39
+关闭时为 `None`。
+@@ widget/src/popover.rs:59
+出现在另一个元素之上的一块浮动内容。
+
+弹出层不控制自身的可见性。相反，`popover`
+参数是一个 `Option`：`Some` 显示覆盖层（打开），`None`
+隐藏它（关闭）。基底元素始终存在。
+
+当用户在弹出层的边界之外点击时，弹出层会通过
+它的 `on_close` 处理函数通知应用程序。
+
+[`popover()`] 辅助函数会用 [`opaque()`] 包装弹出框，因此
+弹出框边界内的鼠标按键按下事件会被捕获，不会穿透到
+下方的元素。使用 [`Self::passthrough`] 可以让它们穿透到
+基底层，使用 [`Self::capture_scroll`] 可以同时捕获
+弹出框上的滚轮事件。
+@@ widget/src/popover.rs:77
+示例
+@@ widget/src/popover.rs:92
+基底元素始终存在。弹出层打开时，`popover` 参数为 `Some`；
+@@ widget/src/popover.rs:93
+关闭时为 `None`。
+@@ widget/src/popover.rs:114
+创建一个新的 [`Popover`]。
+
+它需要：
+  * 弹出层所锚定的 `content` 部件（基底元素），以及
+  * 可选的、要显示的 `popup` 部件：弹出层打开时为 `Some`，
+    关闭时为 `None`。
+
+基底元素始终存在；是否显示覆盖层由 `popup` 参数
+控制。默认情况下，[`Popover`] 的位置是
+[`Position::Auto`]；使用 [`Self::position`] 方法可以设置
+特定的位置。
+@@ widget/src/popover.rs:136
+设置用户在 [`Popover`] 的边界之外点击时
+产生的消息。
+
+应用程序通常就是据此决定关闭弹出层的，
+做法是把 `popover` 参数设为 `None`。
+@@ widget/src/popover.rs:146
+设置 [`Popover`] 的 [`Position`]。
+
+默认情况下，[`Popover`] 的位置是 [`Position::Auto`]，
+它会把弹出层放在基底元素可用空间最大的一侧。
+@@ widget/src/popover.rs:155
+设置内容与其 [`Popover`] 之间的间隙。
+@@ widget/src/popover.rs:161
+设置 [`Popover`] 是否吸附在视口之内。
+@@ widget/src/popover.rs:169
+让 [`Popover`] 弹出框上的交互穿透
+到基底层。
+@@ widget/src/popover.rs:182
+设置当光标位于弹出框的边界之上时，
+是否捕获滚轮事件。
+
+默认只捕获鼠标按键的按下事件。启用这个标志后
+还会捕获滚轮事件，阻止它们穿透到
+下方的元素。
+@@ widget/src/popover.rs:217
+弹出框的内容可能已经改变，因此缓存的布局
+（如果有）不再有效
+@@ widget/src/popover.rs:334
+如果弹出框的布局已被 `Widget::diff` 作废，
+就（重新）计算它
+@@ widget/src/popover.rs:381
+弹出层的位置。
+@@ widget/src/popover.rs:384
+弹出层出现在部件可用空间最大的
+一侧。
+@@ widget/src/popover.rs:388
+弹出层出现在部件的上方。
+@@ widget/src/popover.rs:390
+弹出层出现在部件的下方。
+@@ widget/src/popover.rs:392
+弹出层出现在部件的左侧。
+@@ widget/src/popover.rs:394
+弹出层出现在部件的右侧。
+@@ widget/src/popover.rs:454
+基底元素负责它自己的行为，所以让
+事件到达它。
+@@ widget/src/popover.rs:459
+用户在弹出层之外点击：向应用程序通知
+关闭请求。
+@@ widget/src/popover.rs:527
+在其他覆盖层之上绘制弹出层。
+@@ widget/src/progress_bar.rs:1
+进度条用于直观地展示耗时较长的计算机操作的进度，例如下载、文件传输或安装。
+@@ widget/src/progress_bar.rs:3
+示例
+@@ widget/src/progress_bar.rs:31
+显示进度的条。
+@@ widget/src/progress_bar.rs:33
+示例
+@@ widget/src/progress_bar.rs:68
+[`ProgressBar`] 的默认粗细。
+@@ widget/src/progress_bar.rs:71
+创建一个新的 [`ProgressBar`]。
+
+它需要：
+  * 一个包含两端的可能取值范围
+  * [`ProgressBar`] 的当前值
+@@ widget/src/progress_bar.rs:87
+设置 [`ProgressBar`] 的宽度。
+@@ widget/src/progress_bar.rs:93
+设置 [`ProgressBar`] 的高度。
+@@ widget/src/progress_bar.rs:99
+把 [`ProgressBar`] 变成垂直的 [`ProgressBar`]。
+
+默认情况下，[`ProgressBar`] 是水平的。
+@@ widget/src/progress_bar.rs:107
+设置 [`ProgressBar`] 的样式。
+@@ widget/src/progress_bar.rs:117
+设置 [`ProgressBar`] 的样式类。
+@@ widget/src/progress_bar.rs:225
+进度条的外观。
+@@ widget/src/progress_bar.rs:228
+进度条的 [`Background`]。
+@@ widget/src/progress_bar.rs:230
+进度条中进度部分的 [`Background`]。
+@@ widget/src/progress_bar.rs:232
+进度条的 [`Border`]。
+@@ widget/src/progress_bar.rs:236
+[`ProgressBar`] 的主题样式目录。
+@@ widget/src/progress_bar.rs:238
+[`Catalog`] 的样式类。
+@@ widget/src/progress_bar.rs:241
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/progress_bar.rs:244
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/progress_bar.rs:248
+[`ProgressBar`] 的样式函数。
+
+它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+@@ widget/src/progress_bar.rs:265
+[`ProgressBar`] 的主要（primary）样式。
+@@ widget/src/progress_bar.rs:272
+[`ProgressBar`] 的次要（secondary）样式。
+@@ widget/src/progress_bar.rs:282
+[`ProgressBar`] 的成功（success）样式。
+@@ widget/src/progress_bar.rs:289
+[`ProgressBar`] 的警告（warning）样式。
+@@ widget/src/progress_bar.rs:296
+[`ProgressBar`] 的危险（danger）样式。
+@@ widget/src/qr_code.rs:1
+二维码用一种二维矩阵条码来展示信息。
+@@ widget/src/qr_code.rs:3
+示例
+@@ widget/src/qr_code.rs:38
+一种由排列在网格中的方块组成的矩阵条码，
+可以被摄像头等成像设备读取。
+@@ widget/src/qr_code.rs:41
+示例
+@@ widget/src/qr_code.rs:74
+使用提供的 [`Data`] 创建一个新的 [`QRCode`]。
+@@ widget/src/qr_code.rs:83
+设置 [`QRCode`] 网格单元格方块的大小。
+@@ widget/src/qr_code.rs:89
+设置整个 [`QRCode`] 的大小。
+@@ widget/src/qr_code.rs:96
+设置 [`QRCode`] 的样式。
+@@ widget/src/qr_code.rs:106
+设置 [`QRCode`] 的样式类。
+@@ widget/src/qr_code.rs:166
+尽可能复用缓存
+@@ widget/src/qr_code.rs:168
+把单位缩放到单元格大小
+@@ widget/src/qr_code.rs:171
+绘制背景
+@@ widget/src/qr_code.rs:178
+避免在静区上绘制
+@@ widget/src/qr_code.rs:181
+绘制内容
+@@ widget/src/qr_code.rs:207
+[`QRCode`] 的数据。
+
+它存储将要显示的内容。
+@@ widget/src/qr_code.rs:218
+使用提供的数据创建一个新的 [`Data`]。
+
+这个方法使用 [`ErrorCorrection::Medium`]，并选择能显示
+这些数据的最小尺寸。
+@@ widget/src/qr_code.rs:228
+使用提供的 [`ErrorCorrection`] 创建一个新的 [`Data`]。
+@@ widget/src/qr_code.rs:238
+使用提供的 [`Version`] 和 [`ErrorCorrection`]
+创建一个新的 [`Data`]。
+@@ widget/src/qr_code.rs:263
+[`QRCode`] 的尺寸。
+
+版本越高，单元格网格越大，因此 [`QRCode`]
+能携带的信息也越多。
+@@ widget/src/qr_code.rs:268
+普通二维码版本。应在 1 到 40 之间。
+@@ widget/src/qr_code.rs:271
+微型二维码版本。应在 1 到 4 之间。
+@@ widget/src/qr_code.rs:284
+纠错级别。
+
+它控制在仍然能够恢复原始信息的前提下，
+可以损坏的数据量。
+
+纠错级别越高，允许损坏的数据越多。
+@@ widget/src/qr_code.rs:292
+低纠错级别。可以恢复 7% 的数据。
+@@ widget/src/qr_code.rs:294
+中纠错级别。可以恢复 15% 的数据。
+@@ widget/src/qr_code.rs:296
+四分位纠错级别。可以恢复 25% 的数据。
+@@ widget/src/qr_code.rs:298
+高纠错级别。可以恢复 30% 的数据。
+@@ widget/src/qr_code.rs:313
+为 [`QRCode`] 构建 [`Data`] 时发生的错误。
+@@ widget/src/qr_code.rs:316
+数据太长，无法用所选的 [`Version`] 编码为二维码。
+@@ widget/src/qr_code.rs:320
+所选的 [`Version`] 与 [`ErrorCorrection`] 的组合无效。
+@@ widget/src/qr_code.rs:324
+提供的数据中有一个或多个字符不被所选的
+[`Version`] 支持。
+@@ widget/src/qr_code.rs:332
+所选的 ECI 指示符无效。有效的指示符应
+在 0 到 999999 之间。
+@@ widget/src/qr_code.rs:340
+发现了不属于该字符集的字符。
+@@ widget/src/qr_code.rs:364
+二维码的外观。
+@@ widget/src/qr_code.rs:367
+二维码数据单元格的颜色
+@@ widget/src/qr_code.rs:369
+二维码背景的颜色
+@@ widget/src/qr_code.rs:373
+[`QRCode`] 的主题样式目录。
+@@ widget/src/qr_code.rs:375
+[`Catalog`] 的样式类。
+@@ widget/src/qr_code.rs:378
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/qr_code.rs:381
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/qr_code.rs:385
+[`QRCode`] 的样式函数。
+@@ widget/src/qr_code.rs:400
+[`QRCode`] 的默认样式。
+@@ widget/src/radio.rs:1
+单选按钮让用户从一组选项中选择一个。
+@@ widget/src/radio.rs:3
+示例
+@@ widget/src/radio.rs:73
+表示一个选项的圆形按钮。
+@@ widget/src/radio.rs:75
+示例
+@@ widget/src/radio.rs:155
+[`Radio`] 按钮的默认大小。
+@@ widget/src/radio.rs:158
+[`Radio`] 按钮的默认间距。
+@@ widget/src/radio.rs:161
+创建一个新的 [`Radio`] 按钮。
+
+它需要：
+  * 与 [`Radio`] 按钮关联的值
+  * [`Radio`] 按钮的标签
+  * 当前选中的值
+  * 一个在 [`Radio`] 被选中时调用的函数。它
+    接收该单选按钮的值，并且必须产生一个 `Message`。
+@@ widget/src/radio.rs:191
+设置 [`Radio`] 按钮的大小。
+@@ widget/src/radio.rs:197
+设置 [`Radio`] 按钮的宽度。
+@@ widget/src/radio.rs:203
+设置 [`Radio`] 按钮与文本之间的间距。
+@@ widget/src/radio.rs:209
+设置 [`Radio`] 按钮的文本大小。
+@@ widget/src/radio.rs:215
+设置 [`Radio`] 按钮的文本 [`text::LineHeight`]。
+@@ widget/src/radio.rs:221
+设置 [`Radio`] 按钮的 [`text::Shaping`] 策略。
+@@ widget/src/radio.rs:227
+设置 [`Radio`] 按钮的 [`text::Wrapping`] 策略。
+@@ widget/src/radio.rs:233
+设置 [`Radio`] 按钮的文本字体。
+@@ widget/src/radio.rs:239
+设置 [`Radio`] 按钮的样式。
+@@ widget/src/radio.rs:249
+设置 [`Radio`] 按钮的样式类。
+@@ widget/src/radio.rs:282
+树的子节点是单选圆钮和标签；它们只
+携带几何信息，所以不需要状态。
+@@ widget/src/radio.rs:450
+[`Radio`] 按钮可能的交互状态。
+@@ widget/src/radio.rs:453
+[`Radio`] 按钮可以进行交互。
+@@ widget/src/radio.rs:455
+表示 [`Radio`] 按钮当前是否被选中。
+@@ widget/src/radio.rs:458
+[`Radio`] 按钮正被悬停。
+@@ widget/src/radio.rs:460
+表示 [`Radio`] 按钮当前是否被选中。
+@@ widget/src/radio.rs:465
+单选按钮的外观。
+@@ widget/src/radio.rs:468
+单选按钮的 [`Background`]。
+@@ widget/src/radio.rs:470
+单选按钮圆点的 [`Color`]。
+@@ widget/src/radio.rs:472
+单选按钮的边框宽度。
+@@ widget/src/radio.rs:474
+单选按钮的边框 [`Color`]。
+@@ widget/src/radio.rs:476
+单选按钮的文本 [`Color`]。
+@@ widget/src/radio.rs:480
+[`Radio`] 的主题样式目录。
+@@ widget/src/radio.rs:482
+[`Catalog`] 的样式类。
+@@ widget/src/radio.rs:485
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/radio.rs:488
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/radio.rs:491
+全局的选中 [`Color`]。
+@@ widget/src/radio.rs:495
+[`Radio`] 的样式函数。
+@@ widget/src/radio.rs:514
+[`Radio`] 按钮的默认样式。
+@@ widget/src/responsive.rs:9
+能够感知自身尺寸的部件。
+
+[`Responsive`] 部件总是会尝试填满其父级的
+全部可用空间。
+@@ widget/src/responsive.rs:21
+使用一个产生其内容的闭包创建一个新的
+[`Responsive`] 部件。
+
+`view` 闭包会在布局期间收到 [`Responsive`] 的
+最大可用空间。可以利用这个 [`Size`]
+有条件地构建内容。
+@@ widget/src/responsive.rs:36
+设置 [`Responsive`] 的宽度。
+@@ widget/src/responsive.rs:42
+设置 [`Responsive`] 的高度。
+@@ widget/src/responsive.rs:56
+差异比较推迟到布局阶段进行
+@@ widget/src/row.rs:1
+水平分布内容。
+@@ widget/src/row.rs:10
+水平分布其内容的容器。
+@@ widget/src/row.rs:12
+示例
+@@ widget/src/row.rs:43
+创建一个空的 [`Row`]。
+@@ widget/src/row.rs:48
+使用给定的容量创建一个 [`Row`]。
+@@ widget/src/row.rs:53
+使用给定的部件创建一个 [`Row`]。
+@@ widget/src/row.rs:63
+根据一个已分配的 [`Vec`] 创建一个 [`Row`]。
+
+请注意，[`Row`] 不会检查这个 [`Vec`]，这意味着
+它不会自动适应其内容的尺寸策略。
+
+如果任何子元素使用 [`Length::Fill`] 策略，你需要
+相应地调用 [`Row::width`] 或 [`Row::height`]。
+@@ widget/src/row.rs:82
+设置元素 _之间_ 的水平间距。
+
+iced 中不存在针对单个元素的自定义外边距。你应该改用
+这个方法！它虽然不那么灵活，但有助于让元素之间的间距
+保持一致。
+@@ widget/src/row.rs:92
+设置 [`Row`] 的 [`Padding`]。
+@@ widget/src/row.rs:98
+设置 [`Row`] 的宽度。
+@@ widget/src/row.rs:104
+设置 [`Row`] 的高度。
+@@ widget/src/row.rs:110
+设置 [`Row`] 内容的垂直对齐方式。
+@@ widget/src/row.rs:116
+设置 [`Row`] 的内容在溢出时是否应该
+被裁剪。
+@@ widget/src/row.rs:123
+向 [`Row`] 添加一个 [`Widget`]。
+@@ widget/src/row.rs:135
+用给定的子元素扩展 [`Row`]。
+@@ widget/src/row.rs:143
+把 [`Row`] 变成一个 [`Wrapping`] 行。
+
+[`Row`] 原有的对齐方式会在换行后的每一行中保留。
+@@ widget/src/row.rs:327
+会对其内容进行换行的 [`Row`]。
+
+先创建一个 [`Row`]，然后调用 [`Row::wrap`]，
+即可得到一个会对其内容进行换行的 [`Row`]。
+
+[`Row`] 原有的对齐方式会在换行后的每一行中保留。
+@@ widget/src/row.rs:340
+设置各行 _之间_ 的垂直间距。
+@@ widget/src/row.rs:346
+设置换行 [`Row`] 的水平对齐方式。
+@@ widget/src/rule.rs:1
+分隔线在水平或垂直方向上划分空间。
+@@ widget/src/rule.rs:3
+示例
+@@ widget/src/rule.rs:27
+使用给定的高度创建一个新的水平 [`Rule`]。
+@@ widget/src/rule.rs:39
+使用给定的宽度创建一个新的垂直 [`Rule`]。
+@@ widget/src/rule.rs:51
+显示一条用于划分内容的水平或垂直分隔线。
+@@ widget/src/rule.rs:53
+示例
+@@ widget/src/rule.rs:82
+设置 [`Rule`] 的样式。
+@@ widget/src/rule.rs:92
+设置 [`Rule`] 的样式类。
+@@ widget/src/rule.rs:186
+分隔线的外观。
+@@ widget/src/rule.rs:189
+分隔线的颜色。
+@@ widget/src/rule.rs:191
+线条拐角的半径。
+@@ widget/src/rule.rs:193
+分隔线的 [`FillMode`]。
+@@ widget/src/rule.rs:195
+分隔线是否应该对齐到像素网格。
+@@ widget/src/rule.rs:199
+分隔线的填充模式。
+@@ widget/src/rule.rs:202
+填满容器的整个长度。
+@@ widget/src/rule.rs:204
+填充容器长度的一定百分比。分隔线
+会在该容器中居中。
+
+取值范围为 `[0.0, 100.0]`。
+@@ widget/src/rule.rs:209
+两端相同的偏移量，以长度单位计。
+@@ widget/src/rule.rs:211
+分隔线两端各自不同的偏移量，以长度单位计。
+第一个值 = 上端或左端。
+@@ widget/src/rule.rs:217
+返回分隔线的起始偏移量和长度。
+
+* `space` - 要填充的空间。
+@@ widget/src/rule.rs:221
+返回值
+@@ widget/src/rule.rs:223
+=
+@@ widget/src/rule.rs:263
+[`Rule`] 的主题样式目录。
+@@ widget/src/rule.rs:265
+[`Catalog`] 的样式类。
+@@ widget/src/rule.rs:268
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/rule.rs:271
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/rule.rs:275
+[`Rule`] 的样式函数。
+
+它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+@@ widget/src/rule.rs:292
+[`Rule`] 的默认样式。
+@@ widget/src/rule.rs:304
+使用弱背景色的 [`Rule`] 样式。
+@@ widget/src/scrollable.rs:1
+可滚动区域让用户借助滚动条浏览无限多的内容。
+@@ widget/src/scrollable.rs:3
+示例
+@@ widget/src/scrollable.rs:44
+可以借助滚动条在垂直方向上显示无限多内容的
+部件。
+@@ widget/src/scrollable.rs:47
+示例
+@@ widget/src/scrollable.rs:67
+滚动条
+@@ widget/src/scrollable.rs:69
+滚动条有两个可交互的部分：*滚动块*（scroller，可拖动的
+滑块）和*轨道*（rail，滚动块在其上滑动的轨道）。
+
+* 按下并拖动**滚动块**时，它会与指针 1:1 同步移动。
+* 按下**轨道**会滚动一页（启用 [`Self::smooth_scroll`] 时，
+  会像滚轮滚动一样带有动画）。按键保持按下期间，
+  滚动块随后会以恒定速度滑向指针，在其边缘到达指针时
+  停止；移动指针时，目标也会
+  随之移动。这与大多数工具包的轨道自动滚动行为一致。
+* 按住 `Shift` 点击**轨道**则会让滚动块跳转，使其
+  中心位于指针之下，然后从那里开始拖动它。
+
+启用 [`Self::click_to_scroll`] 后，按下轨道与
+按住 `Shift` 点击的行为会互换。
+@@ widget/src/scrollable.rs:103
+创建一个新的垂直 [`Scrollable`]。
+@@ widget/src/scrollable.rs:108
+使用给定的 [`Direction`] 创建一个新的 [`Scrollable`]。
+@@ widget/src/scrollable.rs:124
+让 [`Scrollable`] 水平滚动，使用默认的 [`Scrollbar`] 设置。
+@@ widget/src/scrollable.rs:129
+设置 [`Scrollable`] 的 [`Direction`]。
+@@ widget/src/scrollable.rs:135
+设置 [`Scrollable`] 的 [`widget::Id`]。
+@@ widget/src/scrollable.rs:141
+设置 [`Scrollable`] 的宽度。
+@@ widget/src/scrollable.rs:147
+设置 [`Scrollable`] 的高度。
+@@ widget/src/scrollable.rs:153
+设置 [`Scrollable`] 滚动时调用的处理函数。
+
+这个函数接收一个 [`Scroll`]，其中包含
+[`Scrollable`] 的 [`Viewport`]，以及引起这次通知的
+滚动的 [`Source`]。
+@@ widget/src/scrollable.rs:166
+把 [`Scrollable`] 的垂直方向锚定到顶部。
+@@ widget/src/scrollable.rs:171
+把 [`Scrollable`] 的垂直方向锚定到底部。
+@@ widget/src/scrollable.rs:176
+把 [`Scrollable`] 的水平方向锚定到左侧。
+@@ widget/src/scrollable.rs:181
+把 [`Scrollable`] 的水平方向锚定到右侧。
+@@ widget/src/scrollable.rs:186
+设置 [`Scrollable`] 水平方向的 [`Anchor`]（如果适用）。
+@@ widget/src/scrollable.rs:198
+设置 [`Scrollable`] 垂直方向的 [`Anchor`]（如果适用）。
+@@ widget/src/scrollable.rs:210
+把 [`Scrollbar`] 嵌入 [`Scrollable`]，而不是让它浮动在
+内容之上。
+
+提供的 `spacing` 会用作 [`Scrollbar`] 与 [`Scrollable`]
+内容之间的间距。
+@@ widget/src/scrollable.rs:226
+在 [`Scrollable`] 的各个 [`Scrollbar`] 两端添加内边距。
+
+当滚动条可见时，提供的 `padding` 会用作
+垂直 [`Scrollbar`] 顶部和底部的空间，以及水平
+[`Scrollbar`] 左右两端的空间。
+
+与 [`Self::spacing`] 不同，这个内边距不会影响
+[`Scrollable`] 的布局。
+@@ widget/src/scrollable.rs:253
+设置是否允许用户用鼠标中键对 [`Scrollable`]
+进行自动滚动。
+
+默认禁用。
+@@ widget/src/scrollable.rs:262
+设置滚轮滚动是否应随时间平滑进行，而不是
+立即移动 [`Scrollable`]。
+
+启用后，离散的滚动（例如来自鼠标滚轮）会移动一个目标
+滚动偏移量（它带有滚轮各格的动量），而
+[`Scrollable`] 会在几帧之内缓动到该目标。高精度的
+滚动（例如来自触摸板）本身已经是平滑的，因此总是
+立即生效。
+
+这个设置同时也是各个滚动操作
+（`snap_to`、`scroll_to`、`scroll_by`）的默认行为：使用
+[`Animation::Auto`] 的操作当且仅当它启用时才会平滑滚动。
+
+默认启用。
+@@ widget/src/scrollable.rs:281
+设置在滚动条轨道上的普通点击是否应让
+滚动块跳转到点击位置，而不是滚动一页。
+
+默认情况下，按下轨道会滚动一页（并在按键保持按下期间
+自动滚动），而按住 `Shift` 点击会让滚动块跳转，
+使其中心位于指针之下，并从那里开始拖动它。
+
+启用后，行为会互换：普通点击会让
+滚动块跳转，使其中心位于指针之下（并从那里
+开始拖动它），而按住 `Shift` 点击会滚动一页（并在
+按键保持按下期间自动滚动）。
+
+默认禁用。
+@@ widget/src/scrollable.rs:299
+设置这个 [`Scrollable`] 的样式。
+@@ widget/src/scrollable.rs:309
+设置 [`Scrollable`] 的样式类。
+@@ widget/src/scrollable.rs:318
+[`Scrollable`] 的方向。
+@@ widget/src/scrollable.rs:321
+垂直滚动
+@@ widget/src/scrollable.rs:323
+水平滚动
+@@ widget/src/scrollable.rs:325
+垂直和水平双向滚动
+@@ widget/src/scrollable.rs:327
+垂直滚动条的属性。
+@@ widget/src/scrollable.rs:329
+水平滚动条的属性。
+@@ widget/src/scrollable.rs:335
+返回水平 [`Scrollbar`]（如果有）。
+@@ widget/src/scrollable.rs:344
+返回垂直 [`Scrollbar`]（如果有）。
+@@ widget/src/scrollable.rs:376
+[`Scrollable`] 中的滚动条。
+@@ widget/src/scrollable.rs:401
+创建一个用于 [`Scrollable`] 的新 [`Scrollbar`]。
+@@ widget/src/scrollable.rs:406
+创建一个宽度为零的 [`Scrollbar`]，让 [`Scrollable`] 可以在没有可见
+滚动块的情况下滚动。
+@@ widget/src/scrollable.rs:412
+设置 [`Scrollbar`] 的滚动条宽度。
+@@ widget/src/scrollable.rs:418
+设置 [`Scrollbar`] 的滚动条外边距。
+@@ widget/src/scrollable.rs:424
+设置 [`Scrollbar`] 的滚动块宽度。
+@@ widget/src/scrollable.rs:430
+设置 [`Scrollbar`] 的 [`Anchor`]。
+@@ widget/src/scrollable.rs:436
+设置 [`Scrollbar`] 是否应嵌入 [`Scrollable`] 之中，并在它与
+内容之间使用给定的间距。
+
+嵌入的 [`Scrollbar`] 会始终显示、占用布局空间，
+并且不会浮动在内容之上。
+@@ widget/src/scrollable.rs:446
+设置 [`Scrollbar`] 的内边距。
+
+当滚动条可见时，内边距会添加在它的顶部和底部
+（对于水平 [`Scrollbar`]，则是左右两端）。
+
+与 [`Self::margin`] 和 [`Self::spacing`] 不同，内边距不会
+影响 [`Scrollable`] 的布局。
+@@ widget/src/scrollable.rs:459
+[`Scrollable`] 的滚动块在给定轴上相对于其 [`Viewport`]
+的锚点。
+@@ widget/src/scrollable.rs:463
+滚动块锚定到 [`Viewport`] 的起点。
+@@ widget/src/scrollable.rs:466
+内容对齐到 [`Viewport`] 的终点。
+@@ widget/src/scrollable.rs:621
+`Animation::Auto` 的滚动操作会依据它来解析
+@@ widget/src/scrollable.rs:824
+绘制内部内容
+@@ widget/src/scrollable.rs:1156
+被按住的轨道上指针的新位置（如果它移动过）。
+
+指针移动后需要重新评估自动滚动的暂停和停止条件，
+因此它会通过一次重绘唤醒动画。
+@@ widget/src/scrollable.rs:1175
+[`State::interact`] 请求委托给子部件的
+内容更新。
+@@ widget/src/scrollable.rs:1179
+传递给子部件的 [`mouse::Cursor`]
+@@ widget/src/scrollable.rs:1183
+[`State::interact`] 的结果：需要在 [`Shell`] 上落实的效果，
+以及事件是否必须委托给内容。
+@@ widget/src/scrollable.rs:1187
+滚动发生变化时要发布的滚动通知：事件之后的
+最终状态，合并了所有中间变化
+@@ widget/src/scrollable.rs:1191
+是否必须捕获该事件
+@@ widget/src/scrollable.rs:1194
+是否必须使布局失效
+@@ widget/src/scrollable.rs:1197
+是否必须请求重绘
+@@ widget/src/scrollable.rs:1200
+交互是否提前结束：事件既不能委托
+给内容，也不能由 [`State::update`] 处理
+@@ widget/src/scrollable.rs:1204
+如果为 `Some`，事件必须连同给定的光标和视口
+委托给内容
+@@ widget/src/scrollable.rs:1209
+[`State::update`] 的结果：需要在 [`Shell`] 上落实的效果
+@@ widget/src/scrollable.rs:1212
+滚动发生变化时要发布的滚动通知：事件之后的
+最终状态，合并了所有中间变化
+@@ widget/src/scrollable.rs:1216
+是否必须捕获该事件
+@@ widget/src/scrollable.rs:1219
+是否必须使布局失效
+@@ widget/src/scrollable.rs:1222
+是否必须请求重绘
+@@ widget/src/scrollable.rs:1267
+当前滚动条交互（拖动滚动块或按住轨道）
+所在的轴（如果有）。
+@@ widget/src/scrollable.rs:1277
+用户是否正在与滚动条交互：拖动
+滚动块或按住轨道。
+@@ widget/src/scrollable.rs:1283
+如果正在拖动滚动块，返回所在的轴以及
+滚动块被抓取位置的比例。
+@@ widget/src/scrollable.rs:1294
+轨道正被按住的 [`Scrollable`] 的状态。
+
+对轨道的普通按下会（平滑地）滚动一页，并在
+[`State::RAIL_AUTOSCROLL_DELAY`] 之后以恒定速度自动滚动，
+直到滚动块到达指针，这与 Chromium 的轨道
+自动滚动（`cc::ScrollbarController`）一致。
+@@ widget/src/scrollable.rs:1302
+轨道被按下时所在的轴
+@@ widget/src/scrollable.rs:1305
+自动滚动的方向，以偏移量单位计（`+1.0` 或
+`-1.0`），在轨道被按下时确定
+@@ widget/src/scrollable.rs:1309
+轨道被按下的位置在滚动块的哪一侧，以光标
+单位计：`+1.0` 表示在其下方，`-1.0` 表示在其上方。
+
+它与锚点的镜像无关，并决定了
+自动滚动停止时所对齐的滚动块边缘（它的前缘）以及
+使自动滚动暂停的轨道部分。
+@@ widget/src/scrollable.rs:1317
+自动滚动的速度，单位为像素每秒
+@@ widget/src/scrollable.rs:1320
+轨道被按下的时刻
+@@ widget/src/scrollable.rs:1323
+指针的最新位置
+@@ widget/src/scrollable.rs:1326
+自动滚动上一次步进所对应的帧，用于防止
+在同一时刻步进两次
+@@ widget/src/scrollable.rs:1331
+对被按住的轨道的自动滚动进行一次步进的结果。
+@@ widget/src/scrollable.rs:1334
+偏移量发生了移动；应当发出滚动通知并重绘
+@@ widget/src/scrollable.rs:1337
+自动滚动尚未开始（仍在按下延迟之内）；必须
+继续产生帧
+@@ widget/src/scrollable.rs:1341
+在指针再次移动之前，没有任何东西可以移动
+@@ widget/src/scrollable.rs:1345
+[`Scrollable`] 内容的轴。
+@@ widget/src/scrollable.rs:1348
+水平轴。
+@@ widget/src/scrollable.rs:1351
+垂直轴。
+@@ widget/src/scrollable.rs:1356
+给定尺寸沿这个轴的长度。
+@@ widget/src/scrollable.rs:1365
+给定的 `point` 沿这个轴的坐标。
+@@ widget/src/scrollable.rs:1373
+在这个轴上为给定的 `value`、在另一个轴上为 `0.0` 的
+[`Vector`]。
+@@ widget/src/scrollable.rs:1442
+[`Scrollable`] 的偏移量，使用绝对单位或相对单位。
+@@ widget/src/scrollable.rs:1445
+绝对偏移量，以像素为单位。
+@@ widget/src/scrollable.rs:1448
+相对偏移量，表示为可滚动范围的比例。
+@@ widget/src/scrollable.rs:1453
+返回这个偏移量是否是吸附的，即相对的。
+@@ widget/src/scrollable.rs:1475
+正在进行的平滑滚动的目标。
+
+这些偏移量是滚动最终停留的位置，因此相对（吸附）的
+偏移量会保持吸附。
+@@ widget/src/scrollable.rs:1481
+目标的 X 偏移量，以 [`Offset`] 为单位。
+@@ widget/src/scrollable.rs:1484
+目标的 Y 偏移量，以 [`Offset`] 为单位。
+@@ widget/src/scrollable.rs:1487
+这些偏移量在当前边界下解析出的结果，也就是
+当前运行的动画段所缓动到的点。
+@@ widget/src/scrollable.rs:1493
+把给定的偏移量解析为一个 [`Target`]。
+@@ widget/src/scrollable.rs:1503
+最终停留在给定的绝对 `destination` 处的 [`Target`]。
+@@ widget/src/scrollable.rs:1513
+滚动通知的来源。
+@@ widget/src/scrollable.rs:1516
+用户使用鼠标滚轮或触摸板滚动。
+@@ widget/src/scrollable.rs:1519
+用户通过触摸滑动来滚动。
+@@ widget/src/scrollable.rs:1522
+用户通过拖动滚动条的滚动块来滚动。
+@@ widget/src/scrollable.rs:1525
+用户通过鼠标中键自动滚动来滚动。
+@@ widget/src/scrollable.rs:1528
+由滚动操作（`scroll_to`、`snap_to` 或 `scroll_by`）引起的滚动。
+@@ widget/src/scrollable.rs:1531
+由滚动 [`Action`] 引起的滚动。
+@@ widget/src/scrollable.rs:1534
+内容的大小发生了变化。
+@@ widget/src/scrollable.rs:1537
+[`Scrollable`] 的大小发生了变化。
+@@ widget/src/scrollable.rs:1541
+描述 [`Scrollable`] 的一次滚动的事件。
+@@ widget/src/scrollable.rs:1544
+[`Scrollable`] 的 [`Viewport`]。
+@@ widget/src/scrollable.rs:1547
+滚动事件之前的原始 [`Viewport`]（如果有）。
+@@ widget/src/scrollable.rs:1550
+滚动的 [`Source`]。
+@@ widget/src/scrollable.rs:1553
+滚动的 [`Target`]。
+@@ widget/src/scrollable.rs:1558
+返回这次滚动最终停留的 [`Viewport`]。
+
+平滑滚动动画进行期间，返回的
+[`Viewport`] 带有 [`Target`] 的偏移量（也就是
+滚动最终停留的偏移量），而不是当前的偏移量。
+@@ widget/src/scrollable.rs:1578
+[`Scrollable`] 当前的 [`Viewport`]。
+@@ widget/src/scrollable.rs:1581
+当前的 X 偏移量，以 [`Offset`] 为单位。
+@@ widget/src/scrollable.rs:1584
+当前的 Y 偏移量，以 [`Offset`] 为单位。
+@@ widget/src/scrollable.rs:1587
+[`Scrollable`] 的边界。
+@@ widget/src/scrollable.rs:1590
+[`Scrollable`] 内容的大小。
+@@ widget/src/scrollable.rs:1595
+返回 [`Viewport`] 的终点。
+@@ widget/src/scrollable.rs:1600
+返回一个与给定视口的坐标对齐的
+新 [`Viewport`]。
+@@ widget/src/scrollable.rs:1610
+返回各个轴上从当前滚动位置到内容末尾的
+距离，以像素为单位。
+
+这是还可以滚动进入视野的内容量：
+当内容放得下，或者已经滚动到末尾时，它为零。
+@@ widget/src/scrollable.rs:1624
+返回当前 [`Viewport`] 的 [`AbsoluteOffset`]。
+@@ widget/src/scrollable.rs:1632
+返回当前 [`Viewport`] 的 [`AbsoluteOffset`]，但把它的
+对齐方式反转。
+
+在切换 [`Scrollable`] 的对齐方式、同时保持其
+滚动位置时，这个方法很有用。
+@@ widget/src/scrollable.rs:1646
+返回当前 [`Viewport`] 的 [`RelativeOffset`]。
+@@ widget/src/scrollable.rs:1657
+为响应 [`Scroll`] 而执行的动作。
+
+这是 [`Scrollable::on_scroll`] 处理函数的返回类型。它让
+处理函数可以通过进一步驱动 [`Scrollable`]，
+或者发布一条消息，来响应滚动通知。
+@@ widget/src/scrollable.rs:1664
+什么也不做。
+@@ widget/src/scrollable.rs:1667
+使用给定的 [`Animation`] 滚动到给定的 [`AbsoluteOffset`]。
+
+设为 `None` 的轴保持当前位置。
+@@ widget/src/scrollable.rs:1672
+使用给定的 [`Animation`] 吸附到给定的 [`RelativeOffset`]。
+
+设为 `None` 的轴保持当前位置。
+@@ widget/src/scrollable.rs:1677
+发布给定的消息。
+@@ widget/src/scrollable.rs:1719
+滚轮每滚动一行所对应的距离（以逻辑像素为单位）。
+
+Chromium 对传统滚轮的每一格固定滚动 120 个 CSS 像素，
+与页面的行高无关：操作系统的增量被归一化为
+120 个单位（`ui::MouseWheelEvent::kWheelDelta`），并按 1:1 传递。
+
+这个值假定平台每一格报告一行（例如 X11）。
+在每一格报告三行的平台上，`40.0`（Chromium 的
+`cc::kPixelsPerLineStep`）是与之等价的值。
+@@ widget/src/scrollable.rs:1730
+下面的平滑滚动行为（缓动曲线、动画
+时长，以及保持速度的重定目标）源自
+Chromium 项目的滚轮滚动动画
+（`cc/animation/scroll_offset_animation_curve.{h,cc}`），它
+采用 BSD 3-Clause 许可证：
+<https://chromium.googlesource.com/chromium/src/+/main/LICENSE>
+@@ widget/src/scrollable.rs:1737
+平滑滚动缓动曲线的控制点。
+
+这是标准的 ease-in-out 三次贝塞尔曲线，Chromium 也把它用于
+滚轮滚动：滚动从静止开始，在中途达到峰值，
+并在目标处静止下来。
+@@ widget/src/scrollable.rs:1745
+平滑滚动动画时长的除数，与
+Chromium 的取值一致。
+@@ widget/src/scrollable.rs:1749
+滚轮事件与下一个绘制帧之间的延迟（以秒为单位）。
+
+滚轮事件在帧与帧之间处理，而平滑滚动
+动画只在绘制下一帧时才会步进。让
+动画在事件*之前*一个标称帧开始（一个标称帧
+是 `SMOOTH_SCROLL_DURATION_DIVISOR` 的一个单位），可以确保
+第一个绘制帧就已经显示出一些进展，而不是重复
+上一帧。
+
+这里使用一整帧，而不是半帧的平均延迟：它
+保证第一个绘制帧有可见的移动，即使
+事件恰好在一帧之后到达。这样动画会提前一帧
+静止下来，但由于曲线以静止结束，这是察觉不到的。
+@@ widget/src/scrollable.rs:1764
+平滑滚动时长的渐变区间起止处的
+距离（以像素为单位）。
+@@ widget/src/scrollable.rs:1769
+平滑滚动动画的最短和最长时长，以
+`SMOOTH_SCROLL_DURATION_DIVISOR` 为单位，与 Chromium 的取值一致。
+
+在这个范围内，时长与距离成*反比*：
+短距离滚动的动画更长（更柔和），而长距离
+滚动的动画更短（更干脆）。
+@@ widget/src/scrollable.rs:1778
+对正在运行的动画重定目标时，应用于“以当前速度
+走完新距离所需时间”的系数，与
+Chromium 的取值一致。
+
+用它来限制新的时长，可以避免在高速滚动时加入一个
+很小的新增量而出现“橡皮筋”效应。
+@@ widget/src/scrollable.rs:1786
+重定目标后的动画初始斜率的钳制范围，与
+Chromium 的取值一致。
+@@ widget/src/scrollable.rs:1790
+下面的按住轨道行为（按下延迟、自动滚动
+速度，以及翻页步长）源自 Chromium
+项目的合成器滚动条控制器
+（`cc/input/scrollbar_controller.{h,cc}` 和 `cc/input/scrollbar.h`），它
+采用 BSD 3-Clause 许可证：
+<https://chromium.googlesource.com/chromium/src/+/main/LICENSE>
+@@ widget/src/scrollable.rs:1797
+从按下轨道到开始按住轨道自动滚动之间的
+延迟，与 Chromium 的 `cc::kInitialAutoscrollTimerDelay` 一致。
+
+在延迟期间，只会应用最初的翻页步长（像滚轮滚动
+一样带有动画）；因此快速点击一次恰好滚动一页。
+@@ widget/src/scrollable.rs:1804
+把轨道的翻页步长换算为按住轨道自动滚动
+速度的系数，与 Chromium 的 `cc::kAutoscrollMultiplier` 一致。
+
+Chromium 的主线程自动滚动每 50 毫秒应用一次翻页步长；
+等价的恒定速度就是步长乘以 20。
+@@ widget/src/scrollable.rs:1811
+点击轨道时最初的翻页步长所覆盖的视口
+比例，与 Chromium 的 `cc::kMinFractionToStepWhenPaging`
+（非 Mac 平台的翻页步长）一致。
+@@ widget/src/scrollable.rs:1816
+自动滚动（鼠标中键）时忽略移动的
+距离范围（以像素为单位）。
+@@ widget/src/scrollable.rs:1820
+自动滚动速度曲线的指数，它让
+自动滚动随着与起点距离的增大而加速。
+@@ widget/src/scrollable.rs:1825
+给定可滚动视口的长度时，点击轨道最初的
+翻页步长的距离（以像素为单位）。
+@@ widget/src/scrollable.rs:1853
+把*目标*滚动偏移量移动 `delta`，用于平滑滚动。
+
+增量会累加到待处理的目标（如果有）上，这样
+快速的滚轮移动就不会丢失（尚未滚动的）距离；
+随后通过 [`State::scroll_smoothly_to`] 对目标进行动画。
+@@ widget/src/scrollable.rs:1870
+累加到待处理的目标（如果有）上，这样快速的滚轮
+移动就不会丢失（尚未滚动的）距离
+@@ widget/src/scrollable.rs:1890
+平滑滚动到给定的 `target`。
+
+这个目标会替换任何待处理的目标。如果已有动画段正在运行，
+就会从当前位置和速度对它重定目标，这样
+滚动会连贯地进行，而不是重新开始。
+
+随后在每一帧通过 [`State::step`] 向目标缓动，
+使用 ease-in-out 动画，其时长取决于距离：
+短距离滚动的动画更长（更柔和），而长距离滚动的
+动画更短（更干脆）。
+@@ widget/src/scrollable.rs:1907
+滚动是在帧与帧之间请求的；让动画提前一个
+标称帧开始，这样第一个绘制帧就已经显示出
+进展
+@@ widget/src/scrollable.rs:1917
+没有需要动画的内容：内容放得下，或者我们已经在目标处
+@@ widget/src/scrollable.rs:1927
+一轮新的滚动：从当前位置、由静止状态开始
+一个全新的动画段
+@@ widget/src/scrollable.rs:1944
+目标没有变化：保持正在运行的动画段不变
+@@ widget/src/scrollable.rs:1952
+从当前位置和速度，把正在运行的动画段重定目标到 `target`，
+这样滚动会连贯地进行，而不是重新开始。
+@@ widget/src/scrollable.rs:1955
+从当前位置对正在运行的动画段重定目标，并保持
+当前速度
+@@ widget/src/scrollable.rs:1964
+绝对值最大的带符号分量，与 Chromium 的做法类似
+@@ widget/src/scrollable.rs:1971
+新的时长，它受到限制，使得在高速下加入的小增量
+不会产生“橡皮筋”效应；符号相反的限制值表示
+新的增量与当前运动方向相反，此时该限制不适用
+@@ widget/src/scrollable.rs:1984
+新目标就在我们当前的位置上：立即结束动画
+@@ widget/src/scrollable.rs:1992
+调整新动画段的初始斜率，使它以
+当前速度开始
+@@ widget/src/scrollable.rs:2007
+让平滑滚动动画朝目标偏移量
+向前步进。
+
+如果动画仍在进行中，返回 `true`。
+@@ widget/src/scrollable.rs:2016
+动画运行期间，边界和内容可能已经改变；
+重新解析目标，如果它移动了就重定目标
+@@ widget/src/scrollable.rs:2032
+恰好停在目标上，保持相对（吸附）的
+偏移量
+@@ widget/src/scrollable.rs:2053
+取消任何正在进行的平滑滚动动画，保持当前的
+偏移量。
+
+这确保直接操作（拖动滚动条、触摸滚动、
+自动滚动、以编程方式滚动）始终优先于
+待处理的滚轮动画。
+@@ widget/src/scrollable.rs:2064
+把绝对滚动偏移量钳制到给定内容在给定视口内
+可以滚动的范围之内。
+@@ widget/src/scrollable.rs:2074
+`now` 时刻的动画位置；如果没有动画段正在运行，
+则为 [`Point::ORIGIN`]。
+@@ widget/src/scrollable.rs:2093
+`now` 时刻的动画速度，以像素每秒为单位，沿
+动画段的最大分量方向；如果没有动画段正在运行，则为 `0.0`。
+@@ widget/src/scrollable.rs:2117
+覆盖给定距离（以像素为单位）的平滑滚动动画段的
+时长（以秒为单位）。
+
+在一个渐变区间内，时长与距离成反比：
+短距离滚动的动画更长（更柔和），而长距离滚动的
+动画更短（更干脆）。
+@@ widget/src/scrollable.rs:2132
+在给定的时间进度（位于 `[0, 1]`）和给定的初始斜率下，
+平滑滚动缓动曲线的进度。
+
+该曲线是一条 ease-in-out 三次贝塞尔曲线，它的起始控制点
+按 `slope` 缩放（斜率为 `0.0` 时就是普通的 ease-in-out 曲线）。
+@@ widget/src/scrollable.rs:2150
+y(s)，其中 y2 = 1
+@@ widget/src/scrollable.rs:2154
+在给定的时间进度（位于 `[0, 1]`）和给定的初始斜率下，
+平滑滚动缓动曲线的斜率（dy/dx）。
+@@ widget/src/scrollable.rs:2170
+x'(s) 和 y'(s)，其中 y2 = 1
+@@ widget/src/scrollable.rs:2178
+针对平滑滚动贝塞尔曲线的 x 轴，在 `[0, 1]` 内
+求解满足 `x(s) = time` 的 `s`。
+
+对于这里使用的控制点，x 轴是严格递增的，因此
+二分法无条件收敛。
+@@ widget/src/scrollable.rs:2208
+如果当前视口自上次通知以来发生了变化，就为它构建一个
+[`Scroll`] 通知，并记录用户进行了滚动。
+@@ widget/src/scrollable.rs:2220
+如果当前视口自上次通知以来发生了变化，就为它构建一个
+[`Scroll`] 通知，并把它记录下来，以免再次报告。
+@@ widget/src/scrollable.rs:2234
+不要向外壳发布重复的视口
+@@ widget/src/scrollable.rs:2251
+通知的来源：正在进行或待处理的滚动；或者，
+当滚动位置自行发生变化时，布局中
+发生变化的部分
+@@ widget/src/scrollable.rs:2255
+正在进行的动画：报告该动画段的来源，并保留它，
+这样静止时的通知也会报告它
+@@ widget/src/scrollable.rs:2259
+已静止或待处理的滚动：消耗掉这个来源
+@@ widget/src/scrollable.rs:2270
+第一次通知：内容完成了布局
+@@ widget/src/scrollable.rs:2286
+让滚动沿给定的轴跳转到给定的 `percentage`，
+并把它吸附到最近的逻辑位置。
+@@ widget/src/scrollable.rs:2305
+在 `cursor_position` 处按下给定轴的轨道，开始
+按住轨道的自动滚动。
+
+这与 Chromium 的轨道按下行为
+（`cc::ScrollbarController::HandlePointerDown`）一致：立即应用一个翻页步长，
+像滚轮滚动一样带有动画（禁用平滑滚动时
+则立即生效）；并且在按键保持按下期间，经过一段延迟后
+以恒定速度自动滚动，直到滚动块到达
+指针（在每一帧通过 [`Self::step_rail`] 步进）。
+@@ widget/src/scrollable.rs:2328
+按下的位置在滚动块的哪一侧，以光标空间计：
+对两种锚点都有效，因为滚动块的边界已经考虑了
+`Anchor::End` 的镜像
+@@ widget/src/scrollable.rs:2338
+滚动块的前缘（朝向指针的一侧）到达指针时的
+偏移量：`grabbed_at` 为 `0.0` 表示
+滚动块的起始边缘，`1.0` 表示它的结束边缘
+@@ widget/src/scrollable.rs:2345
+方向，以偏移量单位计：停止线在偏移量空间中的
+符号，它考虑了锚点的镜像
+@@ widget/src/scrollable.rs:2349
+指针就在停止线上：没有可滚动的内容
+@@ widget/src/scrollable.rs:2355
+最初的翻页步长：像滚轮滚动一样带有动画，或者
+在禁用平滑滚动时立即应用
+@@ widget/src/scrollable.rs:2374
+在某一帧上步进给定轴的按住轨道自动滚动。
+
+如果滚动条在轨道被按住期间消失，返回 `None`，
+此时必须放弃这次交互（就像 Chromium 在
+滚动条被注销时所做的那样）；否则返回这次步进的
+结果。
+@@ widget/src/scrollable.rs:2392
+自动滚动在按下延迟之后开始，此时最初的
+翻页步长仍在缓动之中
+@@ widget/src/scrollable.rs:2398
+`last_frame` 用于防止在同一时刻步进两次
+@@ widget/src/scrollable.rs:2403
+自上次步进以来经过的时间；第一次步进从
+自动滚动的标称起点开始计算，而不是从按下时开始
+@@ widget/src/scrollable.rs:2419
+滚动块的前缘（按下一侧的边缘，以光标空间计）
+到达指针时的偏移量
+@@ widget/src/scrollable.rs:2429
+当指针在轨道上、但已不在（移动中的）滚动块的
+按下一侧时，自动滚动会暂停；而当指针
+离开轨道时，自动滚动会继续，这与指针离开
+滚动条图层时 Chromium 的行为一致
+@@ widget/src/scrollable.rs:2443
+……并且当滚动块的前缘已经到达指针时，
+它会停止
+@@ widget/src/scrollable.rs:2454
+一次恒定速度的步进，它受到钳制，使滚动块不会
+在这一帧内越过指针
+@@ widget/src/scrollable.rs:2463
+这次步进被钳制为零（例如在内容的末尾）：
+在指针再次移动之前，没有任何东西可以移动
+@@ widget/src/scrollable.rs:2469
+使用给定的 [`Animation`] 把滚动吸附到给定的
+[`RelativeOffset`]。
+@@ widget/src/scrollable.rs:2495
+把目标轴相对于内容进行吸附，并保持
+这次吸附未涉及的轴的当前偏移量
+@@ widget/src/scrollable.rs:2514
+使用给定的 [`Animation`] 滚动到给定的 [`AbsoluteOffset`]。
+@@ widget/src/scrollable.rs:2539
+把目标轴滚动到钳制后的绝对偏移量，并
+保持这次滚动未涉及的轴的当前偏移量
+@@ widget/src/scrollable.rs:2558
+使用给定的 [`Animation`] 按提供的 [`AbsoluteOffset`]
+进行滚动。
+@@ widget/src/scrollable.rs:2578
+结合部件的平滑滚动设置，判断给定的 [`Animation`]
+是否请求平滑滚动。
+@@ widget/src/scrollable.rs:2588
+处理用户与 [`Scrollable`] 的交互，直到（但
+不包括）把事件委托给内容。
+
+返回需要在 [`Shell`] 上落实的 [`Interact`] 效果，以及
+事件是否必须委托给内容。
+@@ widget/src/scrollable.rs:2608
+如果用户不再滚动，就清除滚动事务
+@@ widget/src/scrollable.rs:2630
+步进平滑滚动动画（如果有）；`last_frame`
+用于防止在同一时刻步进两次
+@@ widget/src/scrollable.rs:2642
+步进按住轨道的自动滚动（如果有）；几何信息会根据
+当前的平移量重新构建，这样暂停和停止
+条件就会针对这一帧的滚动块来评估
+@@ widget/src/scrollable.rs:2675
+滚动条在轨道被按住期间消失：放弃
+这次交互，就像 Chromium 在滚动条
+被注销时所做的那样
+@@ widget/src/scrollable.rs:2754
+没有产生通知的来源，不能被
+归到之后的通知上
+@@ widget/src/scrollable.rs:2761
+被按住的轨道：跟踪指针，用于自动滚动的暂停和停止
+条件；指针移动后会重新评估这些条件，并唤醒动画
+@@ widget/src/scrollable.rs:2771
+被拖动的滚动块会 1:1 跟随指针，直到按键
+被松开
+@@ widget/src/scrollable.rs:2802
+否则，在光标下方的滚动条上按下时，会抓取它的
+滚动块、跳转并拖动它（按住 `Shift`，或者在启用
+`click_to_scroll` 时普通按下），或者按下轨道
+@@ widget/src/scrollable.rs:2815
+滚动块：跳转到点击位置，并
+从那里开始拖动它
+@@ widget/src/scrollable.rs:2827
+在轨道上的“跳转点击”（默认是按住 `Shift`
+点击，启用 `click_to_scroll` 时则是普通点击）：
+让滚动块跳转到点击
+位置，并从那里开始拖动它，类似于
+Chromium 在轨道上的 `Shift`+点击
+@@ widget/src/scrollable.rs:2842
+翻页式的轨道按下（默认是普通点击，
+启用 `click_to_scroll` 时则是按住 `Shift`
+点击）：一个翻页步长（像滚轮滚动一样
+带有动画），并且在按键保持按下期间，
+以恒定速度自动滚动，直到滚动块
+到达指针，类似于 Chromium 的轨道
+自动滚动
+@@ widget/src/scrollable.rs:2911
+处理交互中在事件委托给内容之后
+发生的部分。
+
+返回需要在 [`Shell`] 上落实的 [`Update`] 效果。
+@@ widget/src/scrollable.rs:2953
+按下 Shift 时，macOS 会自动
+交换两个轴
+@@ widget/src/scrollable.rs:2972
+像素增量（例如来自高精度触摸板）本身
+已经是平滑的，因此立即滚动可以避免
+对它们进行二次平滑
+@@ widget/src/scrollable.rs:3093
+把给定轴的偏移量落实为绝对偏移量，这样它
+就不再吸附到某个逻辑位置。
+@@ widget/src/scrollable.rs:3108
+给定轴的绝对偏移量，以像素为单位。
+@@ widget/src/scrollable.rs:3116
+给定 [`Direction`]、[`Scrollable`] 的边界及其内容的边界，
+返回 [`State`] 的滚动平移量。
+@@ widget/src/scrollable.rs:3136
+[`Scrollbar`] 被某个光标位置命中的部分。
+@@ widget/src/scrollable.rs:3139
+[`Scrollbar`] 的滚动块（滑块），在其长度的给定
+比例处被抓取。
+@@ widget/src/scrollable.rs:3142
+滚动块被抓取的位置，表示为从其起点算起、
+占其长度的比例。
+@@ widget/src/scrollable.rs:3147
+[`Scrollbar`] 的轨道，即滚动块之外的部分。
+@@ widget/src/scrollable.rs:3152
+两个 [`Scrollbar`] 的状态。
+@@ widget/src/scrollable.rs:3159
+如果内容溢出 [`Scrollable`] 的边界，就创建 y 和/或 x 滚动条。
+@@ widget/src/scrollable.rs:3179
+如果存在水平滚动条，就调整垂直滚动条的
+高度
+@@ widget/src/scrollable.rs:3186
+内边距纯粹是视觉上的：它缩短滚动条的顶部和底部，
+而不影响布局
+@@ widget/src/scrollable.rs:3190
+滚动条 + 外边距 + 滚动块宽度的总边界
+@@ widget/src/scrollable.rs:3198
+仅滚动条本身的边界
+@@ widget/src/scrollable.rs:3211
+最小高度，便于在内容特别高时抓取
+@@ widget/src/scrollable.rs:3250
+如果存在垂直滚动条，需要调整水平滚动条的
+宽度
+@@ widget/src/scrollable.rs:3257
+内边距纯粹是视觉上的：它缩短滚动条的左右两端，
+而不影响布局
+@@ widget/src/scrollable.rs:3261
+滚动条 + 外边距 + 滚动块宽度的总边界
+@@ widget/src/scrollable.rs:3269
+仅滚动条本身的边界
+@@ widget/src/scrollable.rs:3282
+最小宽度，便于在内容特别宽时抓取
+@@ widget/src/scrollable.rs:3318
+给定轴的 [`internals::Scrollbar`]（如果它正在显示）。
+@@ widget/src/scrollable.rs:3326
+给定的 `cursor` 所在的滚动条的 [`Axis`]（如果有）。
+
+两个滚动条的总边界互不重叠，因此光标最多
+位于其中一个之上；垂直滚动条优先。
+@@ widget/src/scrollable.rs:3358
+给定轴的 [`internals::Scrollbar`]，以及它被给定光标位置
+命中的部分（如果有）。
+@@ widget/src/scrollable.rs:3411
+返回鼠标是否位于滚动条之上。
+@@ widget/src/scrollable.rs:3416
+根据光标位置，返回沿给定轴的
+滚动百分比。
+@@ widget/src/scrollable.rs:3440
+[`Scrollbar`] 的手柄。
+@@ widget/src/scrollable.rs:3443
+[`Scroller`] 的边界。
+@@ widget/src/scrollable.rs:3448
+[`Scrollable`] 可能的交互状态。
+@@ widget/src/scrollable.rs:3451
+[`Scrollable`] 可以进行交互。
+@@ widget/src/scrollable.rs:3453
+水平滚动条是否被禁用，被禁用意味着内容没有溢出。
+@@ widget/src/scrollable.rs:3455
+垂直滚动条是否被禁用，被禁用意味着内容没有溢出。
+@@ widget/src/scrollable.rs:3458
+[`Scrollable`] 正被悬停。
+@@ widget/src/scrollable.rs:3460
+表示水平滚动条是否正被悬停。
+@@ widget/src/scrollable.rs:3462
+表示垂直滚动条是否正被悬停。
+@@ widget/src/scrollable.rs:3464
+水平滚动条是否被禁用，被禁用意味着内容没有溢出。
+@@ widget/src/scrollable.rs:3466
+垂直滚动条是否被禁用，被禁用意味着内容没有溢出。
+@@ widget/src/scrollable.rs:3469
+[`Scrollable`] 正被拖动。
+@@ widget/src/scrollable.rs:3471
+表示水平滚动条是否正被拖动。
+@@ widget/src/scrollable.rs:3473
+表示垂直滚动条是否正被拖动。
+@@ widget/src/scrollable.rs:3475
+水平滚动条是否被禁用，被禁用意味着内容没有溢出。
+@@ widget/src/scrollable.rs:3477
+垂直滚动条是否被禁用，被禁用意味着内容没有溢出。
+@@ widget/src/scrollable.rs:3482
+可滚动区域的外观。
+@@ widget/src/scrollable.rs:3485
+可滚动区域的 [`container::Style`]。
+@@ widget/src/scrollable.rs:3487
+垂直 [`Rail`] 的外观。
+@@ widget/src/scrollable.rs:3489
+水平 [`Rail`] 的外观。
+@@ widget/src/scrollable.rs:3491
+水平滚动条与垂直滚动条之间空隙的 [`Background`]。
+@@ widget/src/scrollable.rs:3493
+[`AutoScroll`] 覆盖层的外观。
+@@ widget/src/scrollable.rs:3497
+可滚动区域的滚动条的外观。
+@@ widget/src/scrollable.rs:3500
+滚动条的 [`Background`]。
+@@ widget/src/scrollable.rs:3502
+滚动条的 [`Border`]。
+@@ widget/src/scrollable.rs:3504
+滚动条的 [`Scroller`] 的外观。
+@@ widget/src/scrollable.rs:3508
+可滚动区域的滚动块的外观。
+@@ widget/src/scrollable.rs:3511
+滚动块的 [`Background`]。
+@@ widget/src/scrollable.rs:3513
+滚动块的 [`Border`]。
+@@ widget/src/scrollable.rs:3517
+可滚动区域的自动滚动覆盖层的外观。
+@@ widget/src/scrollable.rs:3520
+[`AutoScroll`] 覆盖层的 [`Background`]。
+@@ widget/src/scrollable.rs:3522
+[`AutoScroll`] 覆盖层的 [`Border`]。
+@@ widget/src/scrollable.rs:3524
+[`AutoScroll`] 覆盖层的 [`Shadow`]。
+@@ widget/src/scrollable.rs:3526
+[`AutoScroll`] 覆盖层箭头图标的 [`Color`]。
+@@ widget/src/scrollable.rs:3530
+[`Scrollable`] 的主题样式目录。
+@@ widget/src/scrollable.rs:3532
+[`Catalog`] 的样式类。
+@@ widget/src/scrollable.rs:3535
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/scrollable.rs:3538
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/scrollable.rs:3542
+[`Scrollable`] 的样式函数。
+@@ widget/src/scrollable.rs:3557
+[`Scrollable`] 的默认样式。

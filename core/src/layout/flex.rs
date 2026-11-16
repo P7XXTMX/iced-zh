@@ -1,4 +1,11 @@
+//! 使用基于 flex 的布局来分布元素。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Distribute elements using a flex-based layout.
+//!
+//! </details>
 // This code is heavily inspired by the [`druid`] codebase.
 //
 // [`druid`]: https://github.com/xi-editor/druid
@@ -16,18 +23,54 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// 这段代码在很大程度上受到了 [`druid`] 代码库的启发。
+//
+// 版权所有 2018 The xi-editor Authors, Héctor Ramón
+//
+// 根据 Apache 许可证 2.0 版（“许可证”）授权；
+// 除非遵守许可证，否则你不得使用此文件。
+// 你可以在以下网址获取许可证的副本：
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// 除非适用法律要求或经书面同意，
+// 根据许可证分发的软件均按“原样”分发，
+// 不附带任何明示或暗示的保证或条件。
+// 有关许可证下的权限和限制的具体规定，
+// 请参阅许可证。
 use crate::layout::{Limits, Vector};
 use crate::length;
 use crate::widget;
 use crate::{Alignment, Length, Padding, Size, Widget};
 
+/// flex 布局的主轴。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The main axis of a flex layout.
+///
+/// </details>
 #[derive(Debug)]
 pub enum Axis {
+    /// 水平轴
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The horizontal axis
+    ///
+    /// </details>
     Horizontal,
 
+    /// 垂直轴
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The vertical axis
+    ///
+    /// </details>
     Vertical,
 }
 
@@ -54,6 +97,18 @@ impl Axis {
     }
 }
 
+/// [`resolve`] 所用的、每个容器各自保留的状态。
+///
+/// [`resolve`] 会在它的多个阶段之间保留每个子级的簿记数据。为了
+/// 避免在每次调用 `layout` 时都分配这些簿记数据，每个 flex
+/// 容器都在它的 [`widget::Tree`] 状态里存储一个 [`Cache`]，
+/// [`resolve`] 会在多次布局调用之间复用存储在那里的缓冲区。
+///
+/// 该类型是不透明的：其内容完全由 [`resolve`] 管理。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Per-container retained state for [`resolve`].
 ///
 /// [`resolve`] keeps per-child bookkeeping across its multiple passes. To
@@ -62,6 +117,8 @@ impl Axis {
 /// [`resolve`] reuses the buffer stored there between layout calls.
 ///
 /// The type is opaque: its contents are managed entirely by [`resolve`].
+///
+/// </details>
 #[derive(Debug, Default)]
 pub struct Cache {
     metas: Vec<Meta>,
@@ -83,6 +140,18 @@ enum Category {
     MainFluid,
 }
 
+/// 使用给定的轴和限制计算 flex 布局，并根据需要
+/// 对各个条目应用间距、内边距和对齐。
+///
+/// 布局会存储在给定的各个子级 [`widget::Tree`] 中，并返回
+/// 容器解析后的尺寸。
+///
+/// 给定的 [`Cache`] 保存着算法中每个子级的簿记数据；
+/// 它应该在多次调用之间复用（参见 [`Cache`]）。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Computes the flex layout with the given axis and limits, applying spacing,
 /// padding and alignment to the items as needed.
 ///
@@ -91,6 +160,8 @@ enum Category {
 ///
 /// The provided [`Cache`] holds the per-child bookkeeping of the algorithm;
 /// it is expected to be reused between calls (see [`Cache`]).
+///
+/// </details>
 pub fn resolve<Message, Theme, Renderer>(
     axis: Axis,
     renderer: &Renderer,
@@ -141,6 +212,10 @@ pub fn resolve<Message, Theme, Renderer>(
     // We lay out non-fluid elements in the main axis.
     // If we need to compress the cross axis, then we skip any of these elements
     // that are also fluid in the cross axis.
+    // 静态阶段
+    // 我们在主轴上布局非流动（non-fluid）元素。
+    // 如果需要压缩交叉轴，就跳过其中那些
+    // 在交叉轴上同样是流动的元素。
     for (i, child) in items.iter_mut().enumerate() {
         let size = child.size();
         let (size_main, size_cross) = axis.pack(size.width, size.height);
@@ -231,6 +306,16 @@ pub fn resolve<Message, Theme, Renderer>(
     //
     // We can defer the layout of any elements that have a fixed size in the main axis,
     // allowing them to use the cross calculations of the next pass.
+    // 交叉轴流动阶段
+    // 如果必须压缩交叉轴，并且存在在交叉轴上流动的元素，
+    // 我们就布局其中那些在主轴上非流动的元素
+    // （即我们在第一阶段特意跳过的那些）。
+    //
+    // 我们把第一阶段得到的最大交叉轴长度用作
+    // 交叉轴的最大限制。
+    //
+    // 对于在主轴上具有固定尺寸的元素，我们可以推迟它们的布局，
+    // 让它们使用下一阶段的交叉轴计算结果。
     if cross_dynamic && some_fill_cross {
         for (i, child) in items.iter_mut().enumerate() {
             let meta = cache.metas[i];
@@ -268,6 +353,14 @@ pub fn resolve<Message, Theme, Renderer>(
     //
     // Since the remaining space may change mid-iteration, we need to revisit previous elements
     // until they stabilize. Still, `layout` is only called once per element.
+    // 最小 / 最大阶段
+    // 我们布局那些有边界的元素，或者带有最小 / 最大约束的流动元素。
+    //
+    // 首先，我们布局带有 `Max` 边界的元素，以尽可能腾出空间；然后
+    // 再用一个阶段布局带有 `Min` 边界的元素。
+    //
+    // 由于剩余空间可能在迭代中途发生变化，我们需要重新访问之前的元素，
+    // 直到它们稳定下来。不过，每个元素的 `layout` 仍然只会被调用一次。
     #[derive(Debug, Clone, Copy)]
     enum Stage {
         Max,
@@ -384,6 +477,9 @@ pub fn resolve<Message, Theme, Renderer>(
     // MAIN FLUID PASS (conditional)
     // We lay out the elements that are fluid in the main axis.
     // We use the remaining space to evenly allocate space based on fill factors.
+    // 主轴流动阶段（有条件执行）
+    // 我们布局在主轴上流动的元素。
+    // 我们根据填充因子，用剩余空间均匀地分配空间。
     if !main_compress {
         for (i, child) in items.iter_mut().enumerate() {
             let meta = cache.metas[i];
@@ -437,6 +533,10 @@ pub fn resolve<Message, Theme, Renderer>(
     // We lay out any elements that were deferred in the second pass.
     // These are elements that must be compressed in their cross axis and have
     // a fixed length in the main axis.
+    // 交叉轴流动的延迟阶段（有条件执行）
+    // 我们布局在第二阶段被推迟的元素。
+    // 这些元素必须在交叉轴上被压缩，并且
+    // 在主轴上具有固定长度。
     if cross_dynamic && some_fill_cross {
         for (i, child) in items.iter_mut().enumerate() {
             let meta = cache.metas[i];
@@ -471,6 +571,8 @@ pub fn resolve<Message, Theme, Renderer>(
 
     // ALIGNMENT PASS
     // We align all the laid out nodes in the cross axis, if needed.
+    // 对齐阶段
+    // 如有需要，我们在交叉轴上对齐所有已布局的节点。
 
     for (i, tree) in children.iter_mut().enumerate() {
         if i > 0 {

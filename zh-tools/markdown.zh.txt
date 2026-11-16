@@ -1,0 +1,939 @@
+@@@ README.md
+<div align="center">
+
+<img src="docs/logo.svg" width="140px" />
+
+# Iced
+
+[![Documentation](https://docs.rs/iced/badge.svg)][documentation]
+[![Crates.io](https://img.shields.io/crates/v/iced.svg)](https://crates.io/crates/iced)
+[![License](https://img.shields.io/crates/l/iced.svg)](https://github.com/iced-rs/iced/blob/master/LICENSE)
+[![Downloads](https://img.shields.io/crates/d/iced.svg)](https://crates.io/crates/iced)
+[![Test Status](https://img.shields.io/github/actions/workflow/status/iced-rs/iced/test.yml?branch=master&event=push&label=test)](https://github.com/iced-rs/iced/actions)
+[![Zulip Chat](https://img.shields.io/badge/chat-on%20Zulip-5e7ce2?logo=zulip&logoColor=white)](https://iced.zulipchat.com/)
+[![Discord Server](https://img.shields.io/discord/628993209984614400?label=&labelColor=6A7EC2&logo=discord&logoColor=ffffff&color=7389D8)](https://discord.gg/3xZJ65GAhd)
+
+一个专注于简洁和类型安全的 Rust 跨平台 GUI 库。
+灵感来自 [Elm]。
+
+<a href="https://github.com/squidowl/halloy">
+  <img src="https://iced.rs/showcase/halloy.gif" width="460px">
+</a>
+<a href="https://github.com/hecrj/icebreaker">
+  <img src="https://iced.rs/showcase/icebreaker.gif" width="360px">
+</a>
+
+</div>
+
+> 本项目 fork 自 [iced](https://github.com/iced-rs/iced)，将注释和文档翻译成了中文。使用方法见[翻译说明](TRANSLATION.md)。
+
+## 特性
+
+* 简单易用、开箱即用的 API
+* 类型安全的响应式编程模型
+* [跨平台支持][Cross-platform support]（Windows、macOS、Linux 和 Web）
+* 响应式布局
+* 内置部件（包括[文本输入框][text inputs]、[可滚动区域][scrollables]等等！）
+* 支持自定义部件（创建你自己的部件！）
+* [带有性能指标和时间旅行的调试工具][Debug tooling with performance metrics and time traveling]
+* 对异步操作的一等支持（使用 future！）
+* 模块化的生态系统，拆分为多个可复用的部分：
+  * 一个[与渲染器无关的原生运行时][renderer-agnostic native runtime]，可以集成到已有的系统中
+  * 两个内置渲染器，分别基于 [`wgpu`] 和 [`tiny-skia`]
+    * [`iced_wgpu`] 支持 Vulkan、Metal 和 DX12
+    * [`iced_tiny_skia`] 提供软件渲染作为回退方案
+  * 一个[窗口外壳][windowing shell]
+
+__Iced 目前是实验性软件。__ 可以[看看路线图][Take a look at the roadmap]，
+也可以[查看 issue 列表][check out the issues]。
+
+## 概览
+
+受 [Elm 架构][The Elm Architecture]的启发，Iced 期望你把用户界面
+拆分为四个不同的概念：
+
+* __状态（State）__ —— 应用程序的状态
+* __消息（Messages）__ —— 你关心的用户交互或有意义的事件
+* __视图逻辑（View logic）__ —— 把__状态__显示为部件的方式，
+  这些部件在用户交互时可能产生__消息__
+* __更新逻辑（Update logic）__ —— 响应__消息__并更新__状态__的方式
+
+我们可以动手做个东西来看看它是如何工作的！假设我们想要一个简单的计数器，
+可以用两个按钮来增加和减少。
+
+我们先为应用程序的__状态__建模：
+
+```rust
+#[derive(Default)]
+struct Counter {
+    value: i32,
+}
+```
+
+接下来，我们需要定义计数器可能的用户交互：
+按钮的按下。这些交互就是我们的__消息__：
+
+```rust
+#[derive(Debug, Clone, Copy)]
+pub enum Message {
+    Increment,
+    Decrement,
+}
+```
+
+现在，让我们在__视图逻辑__中把这些组合起来，
+显示出真正的计数器：
+
+```rust
+use iced::widget::{button, column, text, Widget};
+
+impl Counter {
+    pub fn view(&self) -> impl Widget<Message> {
+        // 我们使用一个列：一种简单的垂直布局
+        column![
+            // 增加按钮。我们让它在被按下时产生一条
+            // `Increment` 消息
+            button("+").on_press(Message::Increment),
+
+            // 我们在这里显示计数器的值
+            text(self.value).size(50),
+
+            // 减少按钮。我们让它在被按下时产生一条
+            // `Decrement` 消息
+            button("-").on_press(Message::Decrement),
+        ]
+    }
+}
+```
+
+最后，我们需要能够在__更新逻辑__中响应产生的__消息__，
+并相应地改变__状态__：
+
+```rust
+impl Counter {
+    // ...
+
+    pub fn update(&mut self, message: Message) {
+        match message {
+            Message::Increment => {
+                self.value += 1;
+            }
+            Message::Decrement => {
+                self.value -= 1;
+            }
+        }
+    }
+}
+```
+
+这就是全部了！我们刚刚写出了一个完整的用户界面。让我们运行它：
+
+```rust
+fn main() -> iced::Result {
+    iced::run(Counter::update, Counter::view)
+}
+```
+
+Iced 会自动：
+
+  1. 取得__视图逻辑__的结果，并对其中的部件进行布局。
+  1. 处理来自系统的事件，并为__更新逻辑__产生__消息__。
+  1. 绘制得到的用户界面。
+
+阅读[这本书][book]、[文档][documentation]和[示例][examples]以了解更多！
+
+## 实现细节
+
+Iced 最初诞生于一次尝试：把 [Elm] 和 [Elm 架构][The Elm Architecture]的简洁
+带入 [Coffee]——我正在开发的一个 2D 游戏库。
+
+这个库的核心是在 2019 年 5 月通过[这个 pull request][this pull request] 实现的。
+[第一个 alpha 版本][The first alpha version]最终作为
+[一个与渲染器无关的 GUI 库][a renderer-agnostic GUI library]发布。当时这个库不提供渲染器，
+并在游戏库 [`ggez`] 之上实现了现在的 [tour 示例][tour example]。
+
+从那以后，重心转向提供一个开箱即用、面向最终用户的 GUI 库，
+同时保持生态系统的模块化。
+
+## 贡献 / 反馈
+
+如果你想参与贡献，请阅读我们的[贡献指南][contributing guidelines]了解详情。
+
+也欢迎反馈！你可以在[我们的 Zulip 论坛][our Zulip forum]发起新话题，
+或者来[我们的 Discord 服务器][our Discord server]聊天。
+
+## 赞助者
+
+Iced 的开发由 [Kraken.com] 的 [Cryptowatch] 团队赞助
+
+@@@ CONTRIBUTING.md
+# 贡献
+
+感谢你考虑为 Iced 做贡献！可以先看看[路线图][the roadmap]，了解这个库目前的状态。
+
+核心团队很忙，没有时间指导或照看新的贡献者。如果核心团队的某位成员认为，审查并理解你的工作所花的时间和精力比他们自己从头写一遍还要多，你的贡献就会被拒绝。如何沟通、如何降低这种可能性，是你自己的责任！
+
+给新贡献者的一般建议是：把你的想法分享给社区。你可以在[我们的 Zulip 论坛][our Zulip forum]分享想法并收集反馈。这是非常重要的一步。它有助于协调工作、达成共识并开始建立信任。请记住[代码是容易的部分][Code is the Easy Part]，以及[开源中困难的部分][The Hard Parts of Open Source]！
+
+建立起沟通渠道之后，你必须等待核心团队的成员参与进来。如果核心团队很忙，这可能需要很长时间（也许几个月！）。你的想法可能需要多次迭代，可能变成完全不同的东西，也可能被彻底放弃！你需要保持耐心和谦逊。请记住，开源是一份礼物。
+
+除了直接写代码，你还可以用许多其他方式做贡献。举几个例子：
+
+- 撰写教程或博客文章
+- 改进文档
+- 提交 bug 报告和使用场景
+- 分享、讨论、研究和探索新的想法或 crate
+
+@@@ ROADMAP.md
+# 路线图
+我们现在有了[一份详细的图形化路线图](https://whimsical.com/roadmap-iced-7vhq6R35Lp3TmYH4WeYwLM)！
+
+@@@ DEPENDENCIES.md
+# 依赖
+
+Iced 需要一些系统依赖才能工作，而并非所有操作系统
+都预装了它们。
+
+你可以按照下面针对你的系统的说明来获取这些依赖；
+如果这里没有你的系统，欢迎补充！
+
+## NixOS
+
+你可以把这个 `shell.nix` 添加到项目中，并通过运行 `nix-shell` 来使用它：
+
+```nix
+{ pkgs ? import <nixpkgs> { } }:
+
+let
+  dlopenLibraries = with pkgs; [
+    libxkbcommon
+
+    # GPU 后端
+    vulkan-loader
+    # libGL
+
+    # 窗口系统
+    wayland
+    # xorg.libX11
+    # xorg.libXcursor
+    # xorg.libXi
+  ];
+in pkgs.mkShell {
+  nativeBuildInputs = with pkgs; [
+    cargo
+    rustc
+  ];
+
+  # 你的项目在构建时链接的其他库，
+  # 例如 OpenSSL
+  buildInputs = [];
+
+  env.RUSTFLAGS = "-C link-arg=-Wl,-rpath,${pkgs.lib.makeLibraryPath dlopenLibraries}";
+}
+```
+
+或者，你也可以用这个 `flake.nix` 创建一个开发 shell，通过 `nix develop` 激活：
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    systems.url = "github:nix-systems/default";
+  };
+
+  outputs = { nixpkgs, systems, ... }:
+    let
+      eachSystem = nixpkgs.lib.genAttrs (import systems);
+      pkgsFor = nixpkgs.legacyPackages;
+    in {
+      devShells = eachSystem (system:
+        let
+          pkgs = pkgsFor.${system};
+          dlopenLibraries = with pkgs; [
+            libxkbcommon
+
+            # GPU 后端
+            vulkan-loader
+            # libGL
+
+            # 窗口系统
+            wayland
+            # xorg.libX11
+            # xorg.libXcursor
+            # xorg.libXi
+          ];
+        in {
+          default = pkgs.mkShell {
+            nativeBuildInputs = with pkgs; [
+              cargo
+              rustc
+            ];
+
+            # 你的项目在构建时链接的其他库，
+            # 例如 OpenSSL
+            buildInputs = [];
+
+            env.RUSTFLAGS = "-C link-arg=-Wl,-rpath,${nixpkgs.lib.makeLibraryPath dlopenLibraries}";
+          };
+        });
+    };
+}
+```
+
+@@@ core/README.md
+# `iced_core`
+[![Documentation](https://docs.rs/iced_core/badge.svg)][documentation]
+[![Crates.io](https://img.shields.io/crates/v/iced_core.svg)](https://crates.io/crates/iced_core)
+[![License](https://img.shields.io/crates/l/iced_core.svg)](https://github.com/iced-rs/iced/blob/master/LICENSE)
+[![Discord Server](https://img.shields.io/discord/628993209984614400?label=&labelColor=6A7EC2&logo=discord&logoColor=ffffff&color=7389D8)](https://discord.gg/3xZJ65GAhd)
+
+`iced_core` 包含公共 API 中可复用的基础类型。例如 `Point`、`Rectangle`、`Length` 等基本数据类型。
+
+这个 crate 旨在作为构建 Iced 运行时的起点。
+
+<p align="center">
+  <img alt="基础" src="../docs/graphs/foundations.png" width="50%">
+</p>
+
+@@@ runtime/README.md
+# `iced_runtime`
+[![Documentation](https://docs.rs/iced_runtime/badge.svg)][documentation]
+[![Crates.io](https://img.shields.io/crates/v/iced_runtime.svg)](https://crates.io/crates/iced_runtime)
+[![License](https://img.shields.io/crates/l/iced_runtime.svg)](https://github.com/iced-rs/iced/blob/master/LICENSE)
+[![Discord Server](https://img.shields.io/discord/628993209984614400?label=&labelColor=6A7EC2&logo=discord&logoColor=ffffff&color=7389D8)](https://discord.gg/3xZJ65GAhd)
+
+`iced_runtime` 以 [`iced_core`] 为基础，在其上构建了一个运行时。
+
+__Iced 发展很快，`master` 分支可能包含破坏性变更！__ 如果你想了解
+某个特定的发布版本，请查看[发布列表][the release list]。
+
+@@@ wgpu/README.md
+# `iced_wgpu`
+[![Documentation](https://docs.rs/iced_wgpu/badge.svg)][documentation]
+[![Crates.io](https://img.shields.io/crates/v/iced_wgpu.svg)](https://crates.io/crates/iced_wgpu)
+[![License](https://img.shields.io/crates/l/iced_wgpu.svg)](https://github.com/iced-rs/iced/blob/master/LICENSE)
+[![Discord Server](https://img.shields.io/discord/628993209984614400?label=&labelColor=6A7EC2&logo=discord&logoColor=ffffff&color=7389D8)](https://discord.gg/3xZJ65GAhd)
+
+`iced_wgpu` 是 [`iced_runtime`] 的一个 [`wgpu`] 渲染器。目前，它是 Iced 在[原生平台][native platforms]上的默认渲染器。
+
+[`wgpu`] 支持大多数现代图形后端：Vulkan、Metal、DX12、OpenGL 和 WebGPU。
+
+<p align="center">
+  <img alt="原生目标" src="../docs/graphs/native.png" width="80%">
+</p>
+
+@@@ winit/README.md
+# `iced_winit`
+[![Documentation](https://docs.rs/iced_winit/badge.svg)][documentation]
+[![Crates.io](https://img.shields.io/crates/v/iced_winit.svg)](https://crates.io/crates/iced_winit)
+[![License](https://img.shields.io/crates/l/iced_winit.svg)](https://github.com/iced-rs/iced/blob/master/LICENSE)
+[![Discord Server](https://img.shields.io/discord/628993209984614400?label=&labelColor=6A7EC2&logo=discord&logoColor=ffffff&color=7389D8)](https://discord.gg/3xZJ65GAhd)
+
+`iced_winit` 在 [`iced_native`] 之上提供了一些便捷的抽象，帮助你在使用 [`winit`] 时快速开始开发。
+
+它公开了一个与渲染器无关的 `Application` trait，实现它之后只需一次简单的调用即可运行。这个 trait 的使用是可选的。对于决定自己实现事件循环的用户，还提供了一个 `conversion` 模块。
+
+<p align="center">
+  <img alt="原生目标" src="../docs/graphs/native.png" width="80%">
+</p>
+
+@@@ examples/README.md
+# 示例（Examples）
+__Iced 发展很快，`master` 分支可能包含破坏性变更！__ 如果你想浏览与最新发布版本兼容的示例，
+请[切换到 `latest` 分支](https://github.com/iced-rs/iced/tree/latest/examples#examples)。
+
+## [Tour](tour)
+一个简单的 UI 导览，既可以在原生平台上运行，也可以在 Web 上运行！它展示了可以用 Iced 构建的各种部件。
+
+__[`main`](tour/src/main.rs)__ 文件包含了这个示例的全部代码！所有跨平台 GUI 都是用__状态__、__消息__、__更新逻辑__和__视图逻辑__来定义的。
+
+<div align="center">
+  <a href="https://iced.rs/examples/tour.mp4">
+    <img src="https://iced.rs/examples/tour.gif">
+  </a>
+</div>
+
+你可以用 `cargo run` 运行原生版本：
+```
+cargo run --package tour
+```
+
+## [Todos](todos)
+一个受 [TodoMVC] 启发的待办事项管理器。它展示了动态布局、文本输入、复选框、可滚动区域、图标和异步操作！它会在后台自动保存你的任务，即使你还没有输入完。
+
+示例代码位于 __[`main`](todos/src/main.rs)__ 文件中。
+
+<div align="center">
+  <a href="https://iced.rs/examples/todos.mp4">
+    <img src="https://iced.rs/examples/todos.gif" height="400px">
+  </a>
+</div>
+
+你可以用 `cargo run` 运行原生版本：
+```
+cargo run --package todos
+```
+
+## [Game of Life](game_of_life)
+[生命游戏][Game of Life]的交互式版本，生命游戏由 [John Horton Conway] 发明。
+
+它在后台线程中运行模拟，同时允许与一个 `Canvas` 交互；这个 `Canvas` 显示一个无限网格，支持缩放、平移和绘制。
+
+相关代码位于 __[`main`](game_of_life/src/main.rs)__ 文件中。
+
+<div align="center">
+  <img src="https://iced.rs/examples/game_of_life.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package game_of_life
+```
+
+## [Styling](styling)
+一个展示自定义样式的示例，带有亮色和暗色主题。
+
+示例代码位于 __[`main`](styling/src/main.rs)__ 文件中。
+
+<div align="center">
+  <img src="https://iced.rs/examples/styling.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package styling
+```
+
+## 其他示例（Extras）
+还有许多更简单的示例：
+
+- [`bezier_tool`](bezier_tool)：一个类似画图的工具，使用 `Canvas` 部件绘制贝塞尔曲线。
+- [`clock`](clock)：一个使用 `Canvas` 部件绘制时钟及其指针来显示当前时间的应用程序。
+- [`color_palette`](color_palette)：一个基于用户自定义根颜色的调色板生成器。
+- [`counter`](counter)：[`README`](../README.md) 中讲解的经典计数器示例。
+- [`custom_widget`](custom_widget)：演示如何构建一个绘制圆形的自定义部件。
+- [`download_progress`](download_progress)：一个基本的应用程序，异步下载一个 100 MB 的虚拟文件并跟踪下载进度。
+- [`events`](events)：使用条件 `Subscription` 显示的原生事件日志。
+- [`geometry`](geometry)：一个自定义部件，展示如何用 [`iced_wgpu`](../wgpu) 中的 `Mesh2D` 图元绘制几何图形。
+- [`integration`](integration)：演示如何把 Iced 集成到一个已有的 [`wgpu`] 应用程序中。
+- [`pane_grid`](pane_grid)：一个由窗格组成的网格，窗格可以分割、调整大小和重新排列。
+- [`pick_list`](pick_list)：一个由可选选项组成的下拉列表。
+- [`pokedex`](pokedex)：一个使用 [PokéAPI] 显示随机宝可梦图鉴条目（包括精灵图！）的应用程序。
+- [`progress_bar`](progress_bar)：一个简单的进度条，可以用滑块来填充。
+- [`scrollable`](scrollable)：展示各种可滚动内容的配置。
+- [`sierpinski_triangle`](sierpinski_triangle)：一个[谢尔宾斯基三角形](https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle)模拟器，使用 `Canvas` 和 `Slider`。
+- [`solar_system`](solar_system)：一个用 `Canvas` 部件绘制的动画太阳系，展示如何组合不同的变换。
+- [`stopwatch`](stopwatch)：一个带有开始/停止和重置按钮的秒表，展示如何监听时间。
+- [`svg`](svg)：一个利用 `Svg` 部件渲染 [Ghostscript Tiger] 的应用程序。
+
+它们都被打包在各自的 crate 中，因此可以用 `cargo` 运行：
+```
+cargo run --package <example>
+```
+
+## [Coffee]
+自从 [Iced 在 2019 年 5 月诞生][Iced was born in May 2019]以来，它一直为
+实验性 2D 游戏引擎 [Coffee] 提供用户界面。
+
+<div align="center">
+  <img src="https://iced.rs/examples/coffee.gif">
+</div>
+
+@@@ examples/arc/README.md
+## Arc（圆弧）
+
+一个使用 `Canvas` 部件绘制旋转圆弧的应用程序。
+
+这是针对 https://github.com/iced-rs/iced/pull/1358 的一个简单演示。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package arc
+```
+
+@@@ examples/bezier_tool/README.md
+## Bézier tool（贝塞尔工具）
+
+一个类似画图的工具，使用 `Canvas` 部件绘制贝塞尔曲线。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="https://iced.rs/examples/bezier_tool.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package bezier_tool
+```
+
+@@@ examples/checkbox/README.md
+## Checkbox（复选框）
+
+一个可以勾选的方框。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package checkbox
+```
+
+@@@ examples/clock/README.md
+## Clock（时钟）
+
+一个使用 `Canvas` 部件绘制时钟及其指针来显示当前时间的应用程序。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/518289/74716344-a3e6b300-522e-11ea-8aea-3cc0a5100a2e.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package clock
+```
+
+@@@ examples/color_palette/README.md
+## Color palette（调色板）
+
+一个基于用户自定义根颜色的调色板生成器。
+
+<div align="center">
+  <img src="screenshot.png">
+</div>
+
+你可以用 `cargo run` 运行它：
+
+```
+cargo run --package color_palette
+```
+
+@@@ examples/combo_box/README.md
+## Combo-Box（组合框）
+
+一个由可搜索、可选择的选项组成的下拉列表。
+
+它根据部件在窗口中的位置来显示并定位一个覆盖层。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+    <img src="combobox.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package combo_box
+```
+
+@@@ examples/counter/README.md
+## Counter（计数器）
+
+[`README`](../../README.md) 中讲解的经典计数器示例。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="https://iced.rs/examples/counter.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package counter
+```
+
+Web 版本可以用 [`trunk`] 运行：
+
+```
+cd examples/counter
+trunk serve
+```
+
+@@@ examples/custom_widget/README.md
+## Custom widget（自定义部件）
+
+演示如何构建一个绘制圆形的自定义部件。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="https://iced.rs/examples/custom_widget.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package custom_widget
+```
+
+@@@ examples/download_progress/README.md
+## Download progress（下载进度）
+
+一个基本的应用程序，异步下载多个 100 MB 的虚拟文件并跟踪下载进度。
+
+这个示例在 __[`download`](src/download.rs)__ 模块中实现了一个自定义的 `Subscription`。这个订阅执行下载，并产生可用于跟踪其进度的消息。
+
+<div align="center">
+  <img src="https://iced.rs/examples/download_progress.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+
+```
+cargo run --package download_progress
+```
+
+@@@ examples/events/README.md
+## Events（事件）
+
+使用条件 `Subscription` 显示的原生事件日志。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package events
+```
+
+@@@ examples/exit/README.md
+## Exit（退出）
+
+如何根据用户输入退出应用程序。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package exit
+```
+
+@@@ examples/game_of_life/README.md
+## Game of Life（生命游戏）
+
+[生命游戏][Game of Life]的交互式版本，生命游戏由 [John Horton Conway] 发明。
+
+它在后台线程中运行模拟，同时允许与一个 `Canvas` 交互；这个 `Canvas` 显示一个无限网格，支持缩放、平移和绘制。
+
+__[`main`]__ 文件包含了这个示例的相关代码。
+
+<div align="center">
+  <img src="https://iced.rs/examples/game_of_life.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package game_of_life
+```
+
+@@@ examples/geometry/README.md
+## Geometry（几何图形）
+
+一个自定义部件，展示如何用 [`iced_wgpu`](../../wgpu) 中的 `Mesh2D` 图元绘制几何图形。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="https://iced.rs/examples/geometry.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package geometry
+```
+
+@@@ examples/integration/README.md
+## `wgpu` integration（`wgpu` 集成）
+
+演示如何把 Iced 集成到一个已有的 [`wgpu`] 应用程序中。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="https://iced.rs/examples/integration.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package integration
+```
+
+@@@ examples/loading_spinners/README.md
+## Loading Spinners（加载指示器）
+
+带动画的不确定进度加载指示器的示例实现。
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package loading_spinners
+```
+
+@@@ examples/pane_grid/README.md
+## Pane grid（窗格网格）
+
+一个由窗格组成的网格，窗格可以分割、调整大小和重新排列。
+
+这个示例展示了 `PaneGrid` 部件，它的特性包括：
+
+* 垂直和水平分割
+* 跟踪最后一个活动窗格
+* 用鼠标调整大小
+* 通过拖放重新排列窗格
+* 支持快捷键
+* 可配置的修饰键
+* 以编程方式执行操作的 API（`split`、`swap`、`resize` 等）
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="https://iced.rs/examples/pane_grid.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package pane_grid
+```
+
+@@@ examples/pick_list/README.md
+## Pick-list（选择列表）
+
+一个由可选选项组成的下拉列表。
+
+它根据部件在窗口中的位置来显示并定位一个覆盖层。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/518289/87125075-2c232e80-c28a-11ea-95c2-769c610b8843.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package pick_list
+```
+
+@@@ examples/pokedex/README.md
+# Pokédex（宝可梦图鉴）
+一个使用 [PokéAPI] 加载随机宝可梦图鉴条目的应用程序。
+
+全部示例代码都在 __[`main`](src/main.rs)__ 文件中。
+
+<div align="center">
+  <img src="https://iced.rs/examples/pokedex.gif">
+</div>
+
+你可以用 `cargo run` 在原生平台上运行它：
+```
+cargo run --package pokedex
+```
+
+@@@ examples/progress_bar/README.md
+## Progress bar（进度条）
+
+一个简单的进度条，可以用滑块来填充。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="https://iced.rs/examples/progress_bar.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package progress_bar
+```
+
+@@@ examples/qr_code/README.md
+## QR Code Generator（二维码生成器）
+
+一个基本的二维码生成器，展示了 `QRCode` 部件。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="https://iced.rs/examples/qr_code.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package qr_code
+```
+
+@@@ examples/scrollable/README.md
+# Scrollable（可滚动区域）
+一个展示 Scrollable 各种尺寸和样式选项的示例。
+
+全部示例代码位于 __[`main`](src/main.rs)__ 文件中。
+
+<div align="center">
+  <a href="screenshot.png">
+    <img src="screenshot.png" height="640px">
+  </a>
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package scrollable
+```
+
+@@@ examples/sierpinski_triangle/README.md
+## Sierpinski Triangle Emulator（谢尔宾斯基三角形模拟器）
+
+一个简单的[谢尔宾斯基三角形](https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle)模拟器，使用画布和滑块。
+
+左键单击添加固定点，右键单击移除固定点。
+
+<div align="center">
+  <img src="https://iced.rs/examples/sierpinski_triangle.gif">
+</div>
+
+你可以用 cargo 运行：
+```
+cargo run --package sierpinski_triangle
+```
+
+@@@ examples/slider/README.md
+## Slider（滑块）
+
+`Slider` 由一个条和一个手柄组成，用来从一个取值范围中选择单个值。
+根据你需要的方向，有 `Slider` 和 `VerticalSlider` 两种。
+
+<div align="center">
+    <img src="sliders.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+
+```
+cargo run --package slider
+```
+
+@@@ examples/solar_system/README.md
+## Solar system（太阳系）
+
+一个用 `Canvas` 部件绘制的动画太阳系，展示如何组合不同的变换。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="https://iced.rs/examples/solar_system.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package solar_system
+```
+
+@@@ examples/stopwatch/README.md
+## Stopwatch（秒表）
+
+一个带有开始/停止和重置按钮的秒表，展示如何监听时间。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="https://iced.rs/examples/stopwatch.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package stopwatch
+```
+
+@@@ examples/styling/README.md
+# Styling（样式）
+一个展示自定义样式的示例，带有亮色和暗色主题。
+
+全部示例代码位于 __[`main`](src/main.rs)__ 文件中。
+
+<div align="center">
+  <img src="https://iced.rs/examples/styling.gif">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package styling
+```
+
+@@@ examples/svg/README.md
+## SVG
+
+一个利用 `Svg` 部件渲染 [Ghostscript Tiger] 的应用程序。
+
+__[`main`]__ 文件包含了这个示例的全部代码。
+
+<div align="center">
+  <img src="resources/tiger.svg">
+</div>
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package svg
+```
+
+@@@ examples/todos/README.md
+## Todos（待办事项）
+
+一个受 [TodoMVC] 启发的待办事项管理器。它展示了动态布局、文本输入、复选框、可滚动区域、图标和异步操作！它会在后台自动保存你的任务，即使你还没有输入完。
+
+全部示例代码位于 __[`main`]__ 文件中。
+
+<div align="center">
+  <a href="https://iced.rs/examples/todos.mp4">
+    <img src="https://iced.rs/examples/todos.gif">
+  </a>
+</div>
+
+你可以用 `cargo run` 运行原生版本：
+```
+cargo run --package todos
+```
+
+Web 版本可以用 [`trunk`] 运行：
+
+```
+cd examples/todos
+trunk serve
+```
+
+@@@ examples/tour/README.md
+## Tour（导览）
+
+一个简单的 UI 导览，既可以在原生平台上运行，也可以在 Web 上运行！它展示了可以用 Iced 构建的各种部件。
+
+__[`main`]__ 文件包含了这个示例的全部代码！所有跨平台 GUI 都是用__状态__、__消息__、__更新逻辑__和__视图逻辑__来定义的。
+
+<div align="center">
+  <a href="https://iced.rs/examples/tour.mp4">
+    <img src="https://iced.rs/examples/tour.gif">
+  </a>
+</div>
+
+你可以用 `cargo run` 运行原生版本：
+```
+cargo run --package tour
+```
+
+Web 版本可以用 [`trunk`] 运行：
+
+```
+cd examples/tour
+trunk serve
+```
+
+@@@ examples/websocket/README.md
+## Websocket
+
+一个简单的示例，它与一个回显服务器保持 WebSocket 连接。
+
+这个示例由 3 个模块组成：
+- [`main`] 包含 `Application` 逻辑。
+- [`echo`] 使用 `async-tungstenite` 实现了一个连接 [`echo::server`] 的 WebSocket 客户端。
+- [`echo::server`] 使用 `warp` 实现了一个简单的 WebSocket 回显服务器。
+
+你可以用 `cargo run` 运行它：
+```
+cargo run --package websocket
+```

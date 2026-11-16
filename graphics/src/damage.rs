@@ -1,7 +1,21 @@
+//! 计算帧与帧之间的损伤（damage）。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Compute the damage between frames.
+//!
+//! </details>
 use crate::core::{Point, Rectangle};
 
+/// 根据先前和当前的图元，求出二者差异对应的损伤区域。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Diffs the damage regions given some previous and current primitives.
+///
+/// </details>
 pub fn diff<T>(
     previous: &[T],
     current: &[T],
@@ -20,13 +34,21 @@ pub fn diff<T>(
         };
 
         // Extend damage by the added/removed primitives
+        // 把新增/移除的图元计入损伤区域
         damage
             .chain(bigger[smaller.len()..].iter().flat_map(bounds))
             .collect()
     }
 }
 
+/// 根据先前和当前的图元计算损伤区域。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Computes the damage regions given some previous and current primitives.
+///
+/// </details>
 pub fn list<T>(
     previous: &[T],
     current: &[T],
@@ -42,8 +64,16 @@ pub fn list<T>(
     })
 }
 
+/// 在给定的边界内，把彼此靠近的损伤区域
+/// 合并成组。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Groups the given damage regions that are close together inside the given
 /// bounds.
+///
+/// </details>
 pub fn group(mut damage: Vec<Rectangle>, bounds: Rectangle) -> Vec<Rectangle> {
     const AREA_THRESHOLD: f32 = 20_000.0;
 

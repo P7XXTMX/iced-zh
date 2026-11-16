@@ -1,9 +1,19 @@
+//! 工具提示在某个元素被悬停时，在其上方显示一条提示信息。
+//!
+//! 默认情况下，工具提示会立即显示，不过可以通过
+//! [`Tooltip::delay`] 调整。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Tooltips display a hint of information over some element when hovered.
 //!
 //! By default, the tooltip is displayed immediately, however, this can be adjusted
 //! with [`Tooltip::delay`].
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # use iced::widget::Widget;
@@ -34,9 +44,16 @@ use crate::core::widget::{self, Widget};
 use crate::core::window;
 use crate::core::{Element, Event, Length, Pixels, Point, Rectangle, Shell, Size, Vector};
 
+/// 用于在一个部件上方显示另一个部件的元素。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An element to display a widget over another.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # use iced::widget::Widget;
@@ -67,6 +84,15 @@ pub struct Tooltip<W, V> {
 }
 
 impl<W, V> Tooltip<W, V> {
+    /// 创建一个新的 [`Tooltip`]。
+    ///
+    /// 默认情况下，[`Tooltip`] 的位置为 [`Position::Auto`]，
+    /// 它会把工具提示放在被悬停元素可用空间最多的
+    /// 那一侧。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Tooltip`].
     ///
     /// [`Tooltip`]: struct.Tooltip.html
@@ -74,6 +100,8 @@ impl<W, V> Tooltip<W, V> {
     /// By default, the [`Tooltip`] is positioned [`Position::Auto`], which
     /// places it on the side of the hovered element with the most available
     /// space.
+    ///
+    /// </details>
     pub fn new(content: W, tooltip: V) -> Self {
         Tooltip {
             content,
@@ -85,31 +113,65 @@ impl<W, V> Tooltip<W, V> {
         }
     }
 
+    /// 设置 [`Tooltip`] 的 [`Position`]。
+    ///
+    /// 默认情况下，[`Tooltip`] 的位置为 [`Position::Auto`]，
+    /// 它会把工具提示放在被悬停元素可用空间最多的
+    /// 那一侧。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Position`] of the [`Tooltip`].
     ///
     /// By default, the [`Tooltip`] is positioned [`Position::Auto`], which
     /// places it on the side of the hovered element with the most available
     /// space.
+    ///
+    /// </details>
     pub fn position(mut self, position: Position) -> Self {
         self.position = position;
         self
     }
 
+    /// 设置内容与其 [`Tooltip`] 之间的间隙。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the gap between the content and its [`Tooltip`].
+    ///
+    /// </details>
     pub fn gap(mut self, gap: impl Into<Pixels>) -> Self {
         self.gap = gap.into().0;
         self
     }
 
+    /// 设置 [`Tooltip`] 显示之前的延迟。
+    ///
+    /// 设置为 [`Duration::ZERO`] 则立即显示。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the delay before the [`Tooltip`] is shown.
     ///
     /// Set to [`Duration::ZERO`] to be shown immediately.
+    ///
+    /// </details>
     pub fn delay(mut self, delay: Duration) -> Self {
         self.delay = delay;
         self
     }
 
+    /// 设置 [`Tooltip`] 是否被限制在视口之内。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets whether the [`Tooltip`] is snapped within the viewport.
+    ///
+    /// </details>
     pub fn snap_within_viewport(mut self, snap: bool) -> Self {
         self.snap_within_viewport = snap;
         self
@@ -129,6 +191,8 @@ where
 
         // The tooltip's contents may have changed, so the cached layout
         // (if any) is no longer valid
+        // 工具提示的内容可能已经改变，因此缓存的布局
+        // （如果有）不再有效
         if let State::Open { needs_relayout, .. } = state {
             *needs_relayout = true;
         }
@@ -305,6 +369,8 @@ where
 
         // (Re)compute the tooltip's layout if it was invalidated by
         // `Widget::diff`
+        // 如果工具提示的布局已被 `Widget::diff` 置为无效，
+        // 则（重新）计算它
         if let State::Open { needs_relayout, .. } = state
             && *needs_relayout
         {
@@ -386,7 +452,14 @@ where
     }
 }
 
+/// 工具提示的位置。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The position of the tooltip.
+///
+/// </details>
 pub use crate::overlay::Position;
 
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -451,6 +524,8 @@ where
     ) {
         // The tooltip content is drawn directly; users are responsible for
         // styling it.
+        // 工具提示的内容是直接绘制的；由用户负责
+        // 为它设置样式。
         let viewport = Rectangle::with_size(self.window);
 
         renderer.with_layer(viewport, |renderer| {

@@ -1,4 +1,11 @@
+//! 编辑文本。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Edit text.
+//!
+//! </details>
 use crate::clipboard;
 use crate::input_method;
 use crate::keyboard;
@@ -18,46 +25,145 @@ use crate::{
 use std::borrow::Cow;
 use std::sync::Arc;
 
+/// 可供部件用来编辑多行文本的组件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A component that can be used by widgets to edit multi-line text.
+///
+/// </details>
 pub trait Editor: Sized + Default {
+    /// 使用给定的文本创建一个已完成布局的新 [`Editor`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Editor`] laid out with the given text.
+    ///
+    /// </details>
     fn with_text(text: &str) -> Self;
 
+    /// 如果 [`Editor`] 没有内容，返回 true。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns true if the [`Editor`] has no contents.
+    ///
+    /// </details>
     fn is_empty(&self) -> bool;
 
+    /// 返回 [`Editor`] 当前的 [`Cursor`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current [`Cursor`] of the [`Editor`].
+    ///
+    /// </details>
     fn cursor(&self) -> Cursor;
 
+    /// 返回 [`Editor`] 当前的 [`Selection`]（如果可见）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current [`Selection`] of the [`Editor`], if visible.
+    ///
+    /// </details>
     fn selection(&self) -> Option<Selection>;
 
+    /// 返回 [`Editor`] 当前选中的文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current selected text of the [`Editor`].
+    ///
+    /// </details>
     fn copy(&self) -> Option<String>;
 
+    /// 返回 [`Editor`] 中给定行的文本（如果该行存在）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the text of the given line in the [`Editor`], if it exists.
+    ///
+    /// </details>
     fn line(&self, index: usize) -> Option<Line<'_>>;
 
+    /// 返回 [`Editor`] 中的行数。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the amount of lines in the [`Editor`].
+    ///
+    /// </details>
     fn line_count(&self) -> usize;
 
+    /// 在 [`Editor`] 上执行一个 [`Action`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Performs an [`Action`] on the [`Editor`].
+    ///
+    /// </details>
     fn perform(&mut self, action: Action);
 
+    /// 把光标移动到给定的位置。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Moves the cursor to the given position.
+    ///
+    /// </details>
     fn move_to(&mut self, cursor: Cursor);
 
+    /// 返回 [`Editor`] 当前的边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current boundaries of the [`Editor`].
+    ///
+    /// </details>
     fn bounds(&self) -> Size;
 
+    /// 返回能容纳 [`Editor`] 当前内容的
+    /// 最小边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the minimum boundaries to fit the current contents of
     /// the [`Editor`].
+    ///
+    /// </details>
     fn min_bounds(&self) -> Size;
 
+    /// 返回 [`Editor`] 的微调（hint）因子。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the hint factor of the [`Editor`].
+    ///
+    /// </details>
     fn hint_factor(&self) -> Option<f32>;
 
+    /// 使用一些新的属性更新 [`Editor`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Updates the [`Editor`] with some new attributes.
+    ///
+    /// </details>
     fn update(
         &mut self,
         new_bounds: Size,
@@ -70,10 +176,24 @@ pub trait Editor: Sized + Default {
         new_parser: &mut impl text::Parser,
     );
 
+    /// 覆盖 [`Editor`] 当前的内容。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Overwrites the current contents of the [`Editor`].
+    ///
+    /// </details>
     fn overwrite(&mut self, new_text: &str);
 
+    /// 在 [`Editor`] 中运行一个 [`text::Highlighter`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Runs a [`text::Highlighter`] in the [`Editor`].
+    ///
+    /// </details>
     fn highlight<P: text::Parser>(
         &mut self,
         font: Font,
@@ -81,7 +201,14 @@ pub trait Editor: Sized + Default {
         highlight: impl Fn(P::Output) -> highlighter::Style,
     );
 
+    /// 返回一个迭代器，遍历 [`Editor`] 中各行的文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns an iterator of the text of the lines in the [`Editor`].
+    ///
+    /// </details>
     fn lines(&self) -> impl Iterator<Item = Line<'_>> {
         (0..)
             .map(|i| self.line(i))
@@ -89,7 +216,14 @@ pub trait Editor: Sized + Default {
             .flatten()
     }
 
+    /// 返回 [`Editor`] 的文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the text of the [`Editor`].
+    ///
+    /// </details>
     fn text(&self) -> String {
         let mut contents = String::new();
         let mut lines = self.lines().peekable();
@@ -109,111 +243,412 @@ pub trait Editor: Sized + Default {
         contents
     }
 
+    /// 返回 [`Editor`] 当前的 [`Font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current [`Font`] of the [`Editor`].
+    ///
+    /// </details>
     fn font(&self) -> Font;
 
+    /// 返回 [`Editor`] 当前的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current text size of the [`Editor`].
+    ///
+    /// </details>
     fn text_size(&self) -> Pixels;
 
+    /// 返回 [`Editor`] 当前的 [`LineHeight`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current [`LineHeight`] of the [`Editor`].
+    ///
+    /// </details>
     fn line_height(&self) -> LineHeight;
 }
 
+/// 与 [`Editor`] 的一次交互。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An interaction with an [`Editor`].
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub enum Action {
+    /// 应用一个 [`Motion`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Apply a [`Motion`].
+    ///
+    /// </details>
     Move(Motion),
+    /// 使用给定的 [`Motion`] 选择文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Select text with a given [`Motion`].
+    ///
+    /// </details>
     Select(Motion),
+    /// 选择当前光标处的单词。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Select the word at the current cursor.
+    ///
+    /// </details>
     SelectWord,
+    /// 选择当前光标处的行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Select the line at the current cursor.
+    ///
+    /// </details>
     SelectLine,
+    /// 选择整个缓冲区。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Select the entire buffer.
+    ///
+    /// </details>
     SelectAll,
+    /// 执行一个 [`Edit`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Perform an [`Edit`].
+    ///
+    /// </details>
     Edit(Edit),
+    /// 在给定的 [`Point`] 处点击 [`Editor`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Click the [`Editor`] at the given [`Point`].
+    ///
+    /// </details>
     Click(Point, mouse::click::Kind),
+    /// 在 [`Editor`] 上把鼠标拖动到给定的 [`Point`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Drag the mouse on the [`Editor`] to the given [`Point`].
+    ///
+    /// </details>
     Drag(Point),
+    /// 把 [`Editor`] 滚动一定的行数。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Scroll the [`Editor`] a certain amount of lines.
+    ///
+    /// </details>
     Scroll {
+        /// 要滚动的行数。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The amount of lines to scroll.
+        ///
+        /// </details>
         lines: i32,
     },
 }
 
 impl Action {
+    /// 返回该 [`Action`] 是否为编辑动作。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns whether the [`Action`] is an editing action.
+    ///
+    /// </details>
     pub fn is_edit(&self) -> bool {
         matches!(self, Self::Edit(_))
     }
 }
 
+/// 编辑文本的动作。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An action that edits text.
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub enum Edit {
+    /// 插入给定的字符。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Insert the given character.
+    ///
+    /// </details>
     Insert(char),
+    /// 粘贴给定的文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Paste the given text.
+    ///
+    /// </details>
     Paste(Arc<String>),
+    /// 在当前行换行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Break the current line.
+    ///
+    /// </details>
     Enter,
+    /// 缩进当前行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Indent the current line.
+    ///
+    /// </details>
     Indent,
+    /// 取消当前行的缩进。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Unindent the current line.
+    ///
+    /// </details>
     Unindent,
+    /// 删除前一个字符。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the previous character.
+    ///
+    /// </details>
     Backspace,
+    /// 删除光标之前的单词。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the word before the cursor.
+    ///
+    /// </details>
     BackspaceWord,
+    /// 删除光标之前的行内容。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the line before the cursor.
+    ///
+    /// </details>
     BackspaceLine,
+    /// 删除后一个字符。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the next character.
+    ///
+    /// </details>
     Delete,
+    /// 删除光标之后的单词。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the word after the cursor.
+    ///
+    /// </details>
     DeleteWord,
+    /// 删除光标之后的行内容。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the line after the cursor.
+    ///
+    /// </details>
     DeleteLine,
+    /// 撤销在 [`Editor`] 上执行的上一次更改。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Undo the last change performed on the [`Editor`].
+    ///
+    /// </details>
     Undo,
+    /// 重做 [`Editor`] 上最近一次被撤销的更改。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Redo the last undone change on the [`Editor`].
+    ///
+    /// </details>
     Redo,
 }
 
+/// 光标的移动。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A cursor movement.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Motion {
+    /// 向左移动。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move left.
+    ///
+    /// </details>
     Left,
+    /// 向右移动。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move right.
+    ///
+    /// </details>
     Right,
+    /// 向上移动。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move up.
+    ///
+    /// </details>
     Up,
+    /// 向下移动。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move down.
+    ///
+    /// </details>
     Down,
+    /// 移动到单词的左边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move to the left boundary of a word.
+    ///
+    /// </details>
     WordLeft,
+    /// 移动到单词的右边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move to the right boundary of a word.
+    ///
+    /// </details>
     WordRight,
+    /// 移动到行首。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move to the start of the line.
+    ///
+    /// </details>
     Home,
+    /// 移动到行尾。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move to the end of the line.
+    ///
+    /// </details>
     End,
+    /// 移动到上一屏的开头。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move to the start of the previous window.
+    ///
+    /// </details>
     PageUp,
+    /// 移动到下一屏的开头。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move to the start of the next window.
+    ///
+    /// </details>
     PageDown,
+    /// 移动到文本的开头。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move to the start of the text.
+    ///
+    /// </details>
     DocumentStart,
+    /// 移动到文本的末尾。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Move to the end of the text.
+    ///
+    /// </details>
     DocumentEnd,
 }
 
 impl Motion {
+    /// 如果可能，扩大该 [`Motion`] 的范围。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Widens the [`Motion`], if possible.
+    ///
+    /// </details>
     pub fn widen(self) -> Self {
         match self {
             Self::Left => Self::WordLeft,
@@ -224,7 +659,14 @@ impl Motion {
         }
     }
 
+    /// 返回 [`Motion`] 的 [`Direction`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the [`Direction`] of the [`Motion`].
+    ///
+    /// </details>
     pub fn direction(&self) -> Direction {
         match self {
             Self::Left
@@ -243,7 +685,14 @@ impl Motion {
     }
 }
 
+/// 文本中的方向。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A direction in some text.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Direction {
     /// <-
@@ -252,53 +701,165 @@ pub enum Direction {
     Right,
 }
 
+/// [`Editor`] 的光标。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The cursor of an [`Editor`].
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub enum Selection {
+    /// 没有选区的光标
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Cursor without a selection
+    ///
+    /// </details>
     Caret(Point),
 
+    /// 选中一段文本范围的光标
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Cursor selecting a range of text
+    ///
+    /// </details>
     Range(Arc<[Rectangle]>),
 }
 
+/// [`Editor`] 的范围。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The range of an [`Editor`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Cursor {
+    /// 光标位置。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The cursor position.
+    ///
+    /// </details>
     pub position: Position,
 
+    /// 选区位置（如果有）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The selection position, if any.
+    ///
+    /// </details>
     pub selection: Option<Position>,
 }
 
+/// [`Editor`] 的一行。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A line of an [`Editor`].
+///
+/// </details>
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Line<'a> {
+    /// [`Line`] 的原始文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The raw text of the [`Line`].
+    ///
+    /// </details>
     pub text: Cow<'a, str>,
+    /// [`Line`] 的行尾符。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The line ending of the [`Line`].
+    ///
+    /// </details>
     pub ending: LineEnding,
 }
 
+/// [`Line`] 的行尾符。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The line ending of a [`Line`].
+///
+/// </details>
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub enum LineEnding {
+    /// 使用 `\n` 作为行尾符（POSIX 风格）
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Use `\n` for line ending (POSIX-style)
+    ///
+    /// </details>
     #[default]
     Lf,
+    /// 使用 `\r\n` 作为行尾符（Windows 风格）
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Use `\r\n` for line ending (Windows-style)
+    ///
+    /// </details>
     CrLf,
+    /// 使用 `\r` 作为行尾符（许多旧式系统）
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Use `\r` for line ending (many legacy systems)
+    ///
+    /// </details>
     Cr,
+    /// 使用 `\n\r` 作为行尾符（部分旧式系统）
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Use `\n\r` for line ending (some legacy systems)
+    ///
+    /// </details>
     LfCr,
+    /// 没有行尾符
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// No line ending
+    ///
+    /// </details>
     None,
 }
 
 impl LineEnding {
+    /// 获取 [`LineEnding`] 的字符串表示。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Gets the string representation of the [`LineEnding`].
+    ///
+    /// </details>
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Lf => "\n",
@@ -310,7 +871,14 @@ impl LineEnding {
     }
 }
 
+/// [`Editor`] 的内部状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The internal state of an [`Editor`].
+///
+/// </details>
 #[derive(Debug, Clone, Default)]
 pub struct State {
     focus: Option<Focus>,
@@ -321,12 +889,26 @@ pub struct State {
 }
 
 impl State {
+    /// 创建一个新的 [`State`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`State`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// 针对给定的 [`Editor`] 更新 [`State`]，并返回相关的 [`Update`]（如果有）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Updates the [`State`] for the given [`Editor`] and returns any relevant [`Update`].
+    ///
+    /// </details>
     pub fn update<Message>(
         &mut self,
         editor: &impl Editor,
@@ -601,7 +1183,14 @@ impl State {
         }
     }
 
+    /// 返回 [`State`] 针对给定 [`Editor`] 的当前 [`InputMethod`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current [`InputMethod`] of the [`State`] for the given [`Editor`].
+    ///
+    /// </details>
     pub fn input_method<'a>(
         &'a self,
         editor: &impl Editor,
@@ -637,7 +1226,14 @@ impl State {
         }
     }
 
+    /// 使用当前的 [`State`] 绘制给定的 [`Editor`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Draws the given [`Editor`] with the current [`State`].
+    ///
+    /// </details>
     pub fn draw<Renderer: text::Renderer>(
         &self,
         editor: &Renderer::Editor,
@@ -708,23 +1304,52 @@ impl State {
             }
             Selection::Caret(_) => {
                 // Drawing an empty quad helps some renderers to track the damage of the blinking cursor
+                // 绘制一个空的四边形，有助于某些渲染器跟踪闪烁光标的损坏区域
                 renderer.fill_quad(renderer::Quad::default(), Color::TRANSPARENT);
             }
         }
     }
 
+    /// 返回 [`Editor`] 的光标是否可见。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns whether the cursor of the [`Editor`] is visible.
+    ///
+    /// </details>
     pub fn is_cursor_visible(&self) -> bool {
         self.focus.as_ref().is_some_and(Focus::is_cursor_visible)
     }
 }
 
+/// [`Editor`] 的视觉样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The visual style of an [`Editor`].
+///
+/// </details>
 pub struct Style {
+    /// 内容的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of the contents.
+    ///
+    /// </details>
     pub value: Color,
 
+    /// 选区的背景 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The background [`Color`] of any selection.
+    ///
+    /// </details>
     pub selection: Color,
 }
 
@@ -756,7 +1381,14 @@ impl Focus {
 }
 
 impl State {
+    /// 返回 [`Editor`] 当前是否获得焦点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns whether the [`Editor`] is currently focused or not.
+    ///
+    /// </details>
     pub fn is_focused(&self) -> bool {
         self.focus.is_some()
     }
@@ -776,78 +1408,294 @@ impl Focusable for State {
     }
 }
 
+/// 到 [`Editor`] 中某个动作的绑定。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A binding to an action in the [`Editor`].
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub enum Binding<Message> {
+    /// 让 [`Editor`] 失去焦点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Unfocus the [`Editor`].
+    ///
+    /// </details>
     Unfocus,
+    /// 复制 [`Editor`] 的选区。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Copy the selection of the [`Editor`].
+    ///
+    /// </details>
     Copy,
+    /// 剪切 [`Editor`] 的选区。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Cut the selection of the [`Editor`].
+    ///
+    /// </details>
     Cut,
+    /// 把剪贴板的内容粘贴到 [`Editor`] 中。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Paste the clipboard contents in the [`Editor`].
+    ///
+    /// </details>
     Paste,
+    /// 撤销在 [`Editor`] 中执行的上一次更改。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Undo the last change peformed in the [`Editor`].
+    ///
+    /// </details>
     Undo,
+    /// 重做 [`Editor`] 中最近一次被撤销的更改。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Redo the last change undone in the [`Editor`].
+    ///
+    /// </details>
     Redo,
+    /// 应用一个 [`Motion`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Apply a [`Motion`].
+    ///
+    /// </details>
     Move(Motion),
+    /// 使用给定的 [`Motion`] 选择文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Select text with a given [`Motion`].
+    ///
+    /// </details>
     Select(Motion),
+    /// 选择当前光标处的单词。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Select the word at the current cursor.
+    ///
+    /// </details>
     SelectWord,
+    /// 选择当前光标处的行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Select the line at the current cursor.
+    ///
+    /// </details>
     SelectLine,
+    /// 选择整个缓冲区。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Select the entire buffer.
+    ///
+    /// </details>
     SelectAll,
+    /// 插入给定的字符。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Insert the given character.
+    ///
+    /// </details>
     Insert(char),
+    /// 在当前行换行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Break the current line.
+    ///
+    /// </details>
     Enter,
+    /// 删除前一个字符。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the previous character.
+    ///
+    /// </details>
     Backspace,
+    /// 删除光标之前的单词。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the word before the cursor.
+    ///
+    /// </details>
     BackspaceWord,
+    /// 删除光标之前的行内容。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the line before the cursor.
+    ///
+    /// </details>
     BackspaceLine,
+    /// 删除后一个字符。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the next character.
+    ///
+    /// </details>
     Delete,
+    /// 删除光标之后的单词。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the word after the cursor.
+    ///
+    /// </details>
     DeleteWord,
+    /// 删除光标之后的行内容。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the line after the cursor.
+    ///
+    /// </details>
     DeleteLine,
+    /// 要依次执行的一系列绑定。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A sequence of bindings to execute.
+    ///
+    /// </details>
     Sequence(Vec<Self>),
+    /// 产生给定的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Produce the given message.
+    ///
+    /// </details>
     Custom(Message),
 }
 
+/// 一次按键。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A key press.
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct KeyPress {
+    /// 按下的原始按键，未应用修饰键。
+    ///
+    /// 组合键（例如 Ctrl+C）应当使用这个按键。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The original key pressed without modifiers applied to it.
     ///
     /// You should use this key for combinations (e.g. Ctrl+C).
+    ///
+    /// </details>
     pub key: keyboard::Key,
+    /// 按下的按键，已应用修饰键。
+    ///
+    /// 任何单键绑定（例如光标移动）都应当使用这个按键。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The key pressed with modifiers applied to it.
     ///
     /// You should use this key for any single key bindings (e.g. motions).
+    ///
+    /// </details>
     pub modified_key: keyboard::Key,
+    /// 按下的物理按键。
+    ///
+    /// 与键盘布局无关的绑定应当使用这个按键。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The physical key pressed.
     ///
     /// You should use this key for layout-independent bindings.
+    ///
+    /// </details>
     pub physical_key: keyboard::key::Physical,
+    /// 键盘修饰键的状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The state of the keyboard modifiers.
+    ///
+    /// </details>
     pub modifiers: keyboard::Modifiers,
+    /// 这次按键产生的文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text produced by the key press.
+    ///
+    /// </details>
     pub text: Option<SmolStr>,
+    /// [`Editor`] 是否获得焦点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Whether the [`Editor`] is focused.
+    ///
+    /// </details>
     pub is_focused: bool,
 }
 
 impl<Message> Binding<Message> {
+    /// 返回给定按键对应的默认 [`Binding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the default [`Binding`] for the given key press.
+    ///
+    /// </details>
     pub fn from_key_press(event: KeyPress) -> Option<Self> {
         let KeyPress {
             key,
@@ -941,27 +1789,104 @@ impl<Message> Binding<Message> {
     }
 }
 
+/// [`Editor`] 的更新，由 [`State::update`] 返回。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The update of an [`Editor`], returned by [`State::update`].
+///
+/// </details>
 pub enum Update<Message> {
+    /// 必须在 [`Editor`] 中执行一个 [`Action`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// An [`Action`] must be performed in the [`Editor`].
+    ///
+    /// </details>
     Action(Action),
+    /// [`Editor`] 刚刚获得焦点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Editor`] just gained focus.
+    ///
+    /// </details>
     Focus,
+    /// [`Editor`] 刚刚失去焦点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Editor`] just lost focus.
+    ///
+    /// </details>
     Unfocus,
+    /// [`Editor`] 改变了它的 [`InputMethod`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Editor`] changed its [`InputMethod`].
+    ///
+    /// </details>
     InputMethod,
+    /// 在 [`Editor`] 中松开了一次鼠标按压。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A mouse press was released in the [`Editor`].
+    ///
+    /// </details>
     Release,
+    /// [`Editor`] 必须把一些文本复制到剪贴板。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Editor`] must copy some text to the clipboard.
+    ///
+    /// </details>
     Copy(String),
+    /// [`Editor`] 必须粘贴剪贴板的内容。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Editor`] must paste the clipboard contents.
+    ///
+    /// </details>
     Paste,
+    /// [`Editor`] 必须在给定的 [`Instant`] 重绘。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Editor`] must be redrawn at the given [`Instant`].
+    ///
+    /// </details>
     RedrawAt(Instant),
+    /// [`Editor`] 产生了一条必须发布的自定义消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Editor`] produced a custom message that must be published.
+    ///
+    /// </details>
     Custom(Message),
+    /// [`Editor`] 产生了一系列更新。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Editor`] produced a sequence of updates.
+    ///
+    /// </details>
     Sequence(Vec<Update<Message>>),
 }
 

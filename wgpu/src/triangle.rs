@@ -1,4 +1,11 @@
+//! 绘制三角形网格。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Draw meshes of triangles.
+//!
+//! </details>
 mod msaa;
 
 use crate::Buffer;
@@ -362,12 +369,17 @@ impl Layer {
         transformation: Transformation,
     ) {
         // Count the total amount of vertices & indices we need to handle
+        // 统计我们需要处理的顶点和索引的总数
         let count = mesh::attribute_count_of(meshes);
 
         // Then we ensure the current attribute buffers are big enough, resizing if necessary.
         // We are not currently using the return value of these functions as we have no system in
         // place to calculate mesh diff, or to know whether or not that would be more performant for
         // the majority of use cases. Therefore we will write GPU data every frame (for now).
+        // 然后确保当前的属性缓冲区足够大，必要时调整大小。
+        // 我们目前没有使用这些函数的返回值，因为我们还没有
+        // 计算网格差异的机制，也不知道对大多数用例来说那样做是否
+        // 性能更好。因此（暂时）我们每一帧都会写入 GPU 数据。
         let _ = self.index_buffer.resize(device, count.indices);
         let _ = self.solid.vertices.resize(device, count.solid_vertices);
         let _ = self
@@ -580,8 +592,16 @@ fn multisample_state(antialiasing: Option<Antialiasing>) -> wgpu::MultisampleSta
 #[repr(C)]
 pub struct Uniforms {
     transform: [f32; 16],
+    /// uniform 值必须按 256 对齐；
+    /// 参见：[`wgpu::Limits`] 的 `min_uniform_buffer_offset_alignment`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Uniform values must be 256-aligned;
     /// see: [`wgpu::Limits`] `min_uniform_buffer_offset_alignment`.
+    ///
+    /// </details>
     _padding: [f32; 48],
 }
 
@@ -715,8 +735,10 @@ mod solid {
                         step_mode: wgpu::VertexStepMode::Vertex,
                         attributes: &wgpu::vertex_attr_array!(
                             // Position
+                            // 位置
                             0 => Float32x2,
                             // Color
+                            // 颜色
                             1 => Float32x4,
                         ),
                     })],
@@ -849,18 +871,25 @@ mod gradient {
                         step_mode: wgpu::VertexStepMode::Vertex,
                         attributes: &wgpu::vertex_attr_array!(
                             // Position
+                            // 位置
                             0 => Float32x2,
                             // Colors 1-2
+                            // 颜色 1-2
                             1 => Uint32x4,
                             // Colors 3-4
+                            // 颜色 3-4
                             2 => Uint32x4,
                             // Colors 5-6
+                            // 颜色 5-6
                             3 => Uint32x4,
                             // Colors 7-8
+                            // 颜色 7-8
                             4 => Uint32x4,
                             // Offsets
+                            // 偏移
                             5 => Uint32x4,
                             // Direction
+                            // 方向
                             6 => Float32x4
                         ),
                     })],

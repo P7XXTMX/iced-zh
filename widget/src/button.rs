@@ -1,6 +1,13 @@
+//! 按钮让用户可以通过按下它们来执行动作。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Buttons allow your users to perform actions by pressing them.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # use iced::widget::Widget;
@@ -31,9 +38,16 @@ use crate::core::{
     Vector, Widget,
 };
 
+/// 被按下时产生一条消息的通用部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A generic widget that produces a message when pressed.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # use iced::widget::Widget;
@@ -50,8 +64,16 @@ use crate::core::{
 /// }
 /// ```
 ///
+/// 如果没有设置 [`Button::on_press`] 处理函数，得到的 [`Button`] 将
+/// 处于禁用状态：
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// If a [`Button::on_press`] handler is not set, the resulting [`Button`] will
 /// be disabled:
+///
+/// </details>
 ///
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
@@ -100,7 +122,14 @@ impl<'a, Message, W, Theme> Button<'a, Message, W, Theme>
 where
     Theme: Catalog,
 {
+    /// 使用给定的内容创建一个新的 [`Button`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Button`] with the given content.
+    ///
+    /// </details>
     pub fn new(content: W) -> Self {
         Button {
             content,
@@ -114,32 +143,74 @@ where
         }
     }
 
+    /// 设置 [`Button`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Button`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Button`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Button`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置 [`Button`] 的 [`Padding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Padding`] of the [`Button`].
+    ///
+    /// </details>
     pub fn padding<P: Into<Padding>>(mut self, padding: P) -> Self {
         self.padding = padding.into();
         self
     }
 
+    /// 设置 [`Button`] 被按下时产生的消息。
+    ///
+    /// 除非调用了 `on_press`，否则 [`Button`] 将处于禁用状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when the [`Button`] is pressed.
     ///
     /// Unless `on_press` is called, the [`Button`] will be disabled.
+    ///
+    /// </details>
     pub fn on_press(mut self, on_press: Message) -> Self {
         self.on_press = Some(OnPress::Direct(on_press));
         self
     }
 
+    /// 设置 [`Button`] 被按下时产生的消息。
+    ///
+    /// 它与 [`Button::on_press`] 类似，但使用闭包来产生
+    /// 消息。
+    ///
+    /// 该闭包只有在 [`Button`] 真正被按下时才会被调用，
+    /// 因此，如果创建消息的开销较大，此方法有助于
+    /// 减少开销。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when the [`Button`] is pressed.
     ///
     /// This is analogous to [`Button::on_press`], but using a closure to produce
@@ -148,20 +219,47 @@ where
     /// This closure will only be called when the [`Button`] is actually pressed and,
     /// therefore, this method is useful to reduce overhead if creating the resulting
     /// message is slow.
+    ///
+    /// </details>
     pub fn on_press_with(mut self, on_press: impl Fn() -> Message + 'a) -> Self {
         self.on_press = Some(OnPress::Closure(Box::new(on_press)));
         self
     }
 
+    /// 设置 [`Button`] 被按下时产生的消息，
+    /// 如果为 `Some` 的话。
+    ///
+    /// 如果为 `None`，[`Button`] 将处于禁用状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when the [`Button`] is pressed,
     /// if `Some`.
     ///
     /// If `None`, the [`Button`] will be disabled.
+    ///
+    /// </details>
     pub fn on_press_maybe(mut self, on_press: Option<Message>) -> Self {
         self.on_press = on_press.map(OnPress::Direct);
         self
     }
 
+    /// 设置 [`Button`] 被按下时产生的消息，
+    /// 如果为 `Some` 的话。
+    ///
+    /// 它与 [`Button::on_press`] 类似，但使用闭包来产生
+    /// 消息。
+    ///
+    /// 该闭包只有在 [`Button`] 真正被按下时才会被调用，
+    /// 因此，如果创建消息的开销较大，此方法有助于
+    /// 减少开销。
+    ///
+    /// 如果为 `None`，[`Button`] 将处于禁用状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when the [`Button`] is pressed,
     /// if `Some`.
     ///
@@ -173,19 +271,36 @@ where
     /// message is slow.
     ///
     /// If `None`, the [`Button`] will be disabled.
+    ///
+    /// </details>
     pub fn on_press_maybe_with(mut self, on_press: Option<impl Fn() -> Message + 'a>) -> Self {
         self.on_press = on_press.map(|on_press| OnPress::Closure(Box::new(on_press)));
         self
     }
 
+    /// 设置 [`Button`] 的内容在溢出时是否应该
+    /// 被裁剪。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets whether the contents of the [`Button`] should be clipped on
     /// overflow.
+    ///
+    /// </details>
     pub fn clip(mut self, clip: bool) -> Self {
         self.clip = clip;
         self
     }
 
+    /// 设置 [`Button`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`Button`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme, Status) -> Style + 'a) -> Self
     where
@@ -195,7 +310,14 @@ where
         self
     }
 
+    /// 设置 [`Button`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`Button`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
@@ -440,7 +562,14 @@ where
     }
 }
 
+/// [`Button`] 的默认 [`Padding`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default [`Padding`] of a [`Button`].
+///
+/// </details>
 pub const DEFAULT_PADDING: Padding = Padding {
     top: 5.0,
     bottom: 5.0,
@@ -448,39 +577,126 @@ pub const DEFAULT_PADDING: Padding = Padding {
     left: 10.0,
 };
 
+/// [`Button`] 可能的交互状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The possible status of a [`Button`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
+    /// [`Button`] 可以被按下。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Button`] can be pressed.
+    ///
+    /// </details>
     Active,
+    /// [`Button`] 可以被按下，并且正处于悬停状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Button`] can be pressed and it is being hovered.
+    ///
+    /// </details>
     Hovered,
+    /// [`Button`] 正在被按下。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Button`] is being pressed.
+    ///
+    /// </details>
     Pressed,
+    /// [`Button`] 不能被按下。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Button`] cannot be pressed.
+    ///
+    /// </details>
     Disabled,
 }
 
+/// 按钮的样式。
+///
+/// 如果没有通过 [`Button::style`] 指定，
+/// 将由主题提供样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The style of a button.
 ///
 /// If not specified with [`Button::style`]
 /// the theme will provide the style.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Style {
+    /// 按钮的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Background`] of the button.
+    ///
+    /// </details>
     pub background: Option<Background>,
+    /// 按钮的文本 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text [`Color`] of the button.
+    ///
+    /// </details>
     pub text_color: Color,
+    /// 按钮的 [`Border`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Border`] of the button.
+    ///
+    /// </details>
     pub border: Border,
+    /// 按钮的 [`Shadow`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Shadow`] of the button.
+    ///
+    /// </details>
     pub shadow: Shadow,
+    /// 按钮是否应该对齐到像素网格。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Whether the button should be snapped to the pixel grid.
+    ///
+    /// </details>
     pub snap: bool,
 }
 
 impl Style {
+    /// 使用给定的 [`Background`] 更新 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Updates the [`Style`] with the given [`Background`].
+    ///
+    /// </details>
     pub fn with_background(self, background: impl Into<Background>) -> Self {
         Self {
             background: Some(background.into()),
@@ -501,12 +717,22 @@ impl Default for Style {
     }
 }
 
+/// [`Button`] 的主题样式目录。
+///
+/// 所有可以与 [`Button`] 一起使用的主题
+/// 都必须实现此特质。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`Button`].
 ///
 /// All themes that can be used with [`Button`]
 /// must implement this trait.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # use iced_widget::core::{Color, Background};
 /// # use iced_widget::button::{Catalog, Status, Style};
@@ -545,21 +771,58 @@ impl Default for Style {
 /// }
 /// ```
 ///
+/// 不过，要想对 `MyTheme` 使用 [`Button::style`]，
+/// [`Catalog::Class`] 必须实现
+/// `From<StyleFn<'_, MyTheme>>`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Although, in order to use [`Button::style`]
 /// with `MyTheme`, [`Catalog::Class`] must implement
 /// `From<StyleFn<'_, MyTheme>>`.
+///
+/// </details>
 pub trait Catalog {
+    /// [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of the [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by the [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> Self::Class<'a>;
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(&self, class: &Self::Class<'_>, status: Status) -> Style;
 }
 
+/// [`Button`] 的样式函数。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for a [`Button`].
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme, Status) -> Style + 'a>;
 
 impl Catalog for Theme {
@@ -574,7 +837,14 @@ impl Catalog for Theme {
     }
 }
 
+/// 主要按钮；表示主要动作。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A primary button; denoting a main action.
+///
+/// </details>
 pub fn primary(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
     let base = styled(palette.primary.base);
@@ -589,7 +859,14 @@ pub fn primary(theme: &Theme, status: Status) -> Style {
     }
 }
 
+/// 次要按钮；表示补充性的动作。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A secondary button; denoting a complementary action.
+///
+/// </details>
 pub fn secondary(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
     let base = styled(palette.secondary.base);
@@ -604,7 +881,14 @@ pub fn secondary(theme: &Theme, status: Status) -> Style {
     }
 }
 
+/// 成功按钮；表示良好的结果。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A success button; denoting a good outcome.
+///
+/// </details>
 pub fn success(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
     let base = styled(palette.success.base);
@@ -619,7 +903,14 @@ pub fn success(theme: &Theme, status: Status) -> Style {
     }
 }
 
+/// 警告按钮；表示有风险的动作。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A warning button; denoting a risky action.
+///
+/// </details>
 pub fn warning(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
     let base = styled(palette.warning.base);
@@ -634,7 +925,14 @@ pub fn warning(theme: &Theme, status: Status) -> Style {
     }
 }
 
+/// 危险按钮；表示破坏性的动作。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A danger button; denoting a destructive action.
+///
+/// </details>
 pub fn danger(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
     let base = styled(palette.danger.base);
@@ -649,7 +947,14 @@ pub fn danger(theme: &Theme, status: Status) -> Style {
     }
 }
 
+/// 文本按钮；适合用作链接。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A text button; useful for links.
+///
+/// </details>
 pub fn text(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
 
@@ -668,7 +973,14 @@ pub fn text(theme: &Theme, status: Status) -> Style {
     }
 }
 
+/// 使用背景色阶的按钮。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A button using background shades.
+///
+/// </details>
 pub fn background(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
     let base = styled(palette.background.base);
@@ -687,7 +999,14 @@ pub fn background(theme: &Theme, status: Status) -> Style {
     }
 }
 
+/// 使用较弱背景色阶的低调按钮。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A subtle button using weak background shades.
+///
+/// </details>
 pub fn subtle(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
     let base = styled(palette.background.weakest);

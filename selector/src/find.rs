@@ -6,12 +6,28 @@ use crate::target::Candidate;
 
 use std::any::Any;
 
+/// 一个 [`Operation`]，它运行 [`Selector`]，并在产生
+/// 第一个 [`Output`](Selector::Output) 后停止。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An [`Operation`] that runs the [`Selector`] and stops after
 /// the first [`Output`](Selector::Output) is produced.
+///
+/// </details>
 pub type Find<S> = Finder<One<S>>;
 
+/// 一个 [`Operation`]，它对整棵部件树运行 [`Selector`]，
+/// 并汇总其所有的 [`Output`](Selector::Output)。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An [`Operation`] that runs the [`Selector`] for the entire
 /// widget tree and aggregates all of its [`Output`](Selector::Output).
+///
+/// </details>
 pub type FindAll<S> = Finder<All<S>>;
 
 #[derive(Debug)]

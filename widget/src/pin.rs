@@ -1,6 +1,13 @@
+//! pin 部件把一个部件定位在其边界内的某个固定坐标处。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A pin widget positions a widget at some fixed coordinates inside its boundaries.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; pub use iced_widget::core::Length::Fill; }
 //! # use iced::widget::Widget;
@@ -25,11 +32,20 @@ use crate::core::renderer;
 use crate::core::widget;
 use crate::core::{Event, Layout, Length, Pixels, Point, Rectangle, Shell, Size, Vector, Widget};
 
+/// 把内容定位在自身边界内某个固定坐标处的部件。
+///
+/// 默认情况下，[`Pin`] 部件会尝试填满它的父级。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that positions its contents at some fixed coordinates inside of its boundaries.
 ///
 /// By default, a [`Pin`] widget will try to fill its parent.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; pub use iced_widget::core::Length::Fill; }
 /// # use iced::widget::Widget;
@@ -55,7 +71,14 @@ pub struct Pin<W> {
 }
 
 impl<W> Pin<W> {
+    /// 使用给定的内容创建一个 [`Pin`] 部件。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Pin`] widget with the given content.
+    ///
+    /// </details>
     pub fn new(content: W) -> Self {
         Self {
             content,
@@ -65,31 +88,66 @@ impl<W> Pin<W> {
         }
     }
 
+    /// 设置 [`Pin`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Pin`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Pin`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Pin`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置 [`Pin`] 的位置，即被固定的部件显示的位置。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the position of the [`Pin`]; where the pinned widget will be displayed.
+    ///
+    /// </details>
     pub fn position(mut self, position: impl Into<Point>) -> Self {
         self.position = position.into();
         self
     }
 
+    /// 设置 [`Pin`] 的 X 坐标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the X coordinate of the [`Pin`].
+    ///
+    /// </details>
     pub fn x(mut self, x: impl Into<Pixels>) -> Self {
         self.position.x = x.into().0;
         self
     }
 
+    /// 设置 [`Pin`] 的 Y 坐标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the Y coordinate of the [`Pin`].
+    ///
+    /// </details>
     pub fn y(mut self, y: impl Into<Pixels>) -> Self {
         self.position.y = y.into().0;
         self

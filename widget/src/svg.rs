@@ -1,6 +1,13 @@
+//! Svg 部件在你的应用程序中显示矢量图形。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Svg widgets display vector graphics in your application.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # use iced::widget::Widget;
@@ -30,6 +37,16 @@ use std::path::PathBuf;
 
 pub use crate::core::svg::Handle;
 
+/// 矢量图形图像。
+///
+/// [`Svg`] 图像可以平滑地调整大小而不损失任何质量。
+///
+/// [`Svg`] 图像在调整大小时可能有相当大的渲染开销，
+/// 尤其是当它们很复杂的时候。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A vector graphics image.
 ///
 /// An [`Svg`] image resizes smoothly without losing any quality.
@@ -37,7 +54,9 @@ pub use crate::core::svg::Handle;
 /// [`Svg`] images can have a considerable rendering cost when resized,
 /// specially when they are complex.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # use iced::widget::Widget;
@@ -70,7 +89,14 @@ impl<'a, Theme> Svg<'a, Theme>
 where
     Theme: Catalog,
 {
+    /// 从给定的 [`Handle`] 创建一个新的 [`Svg`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Svg`] from the given [`Handle`].
+    ///
+    /// </details>
     pub fn new(handle: impl Into<Handle>) -> Self {
         Svg {
             handle: handle.into(),
@@ -84,30 +110,61 @@ where
         }
     }
 
+    /// 创建一个新的 [`Svg`]，显示给定路径处的
+    /// 文件内容。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Svg`] that will display the contents of the file at the
     /// provided path.
+    ///
+    /// </details>
     #[must_use]
     pub fn from_path(path: impl Into<PathBuf>) -> Self {
         Self::new(Handle::from_path(path))
     }
 
+    /// 设置 [`Svg`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Svg`].
+    ///
+    /// </details>
     #[must_use]
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Svg`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Svg`].
+    ///
+    /// </details>
     #[must_use]
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置 [`Svg`] 的 [`ContentFit`]。
+    ///
+    /// 默认为 [`ContentFit::Contain`]
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`ContentFit`] of the [`Svg`].
     ///
     /// Defaults to [`ContentFit::Contain`]
+    ///
+    /// </details>
     #[must_use]
     pub fn content_fit(self, content_fit: ContentFit) -> Self {
         Self {
@@ -116,7 +173,14 @@ where
         }
     }
 
+    /// 设置 [`Svg`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`Svg`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme, Status) -> Style + 'a) -> Self
     where
@@ -126,7 +190,14 @@ where
         self
     }
 
+    /// 设置 [`Svg`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`Svg`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
@@ -134,16 +205,33 @@ where
         self
     }
 
+    /// 对 [`Svg`] 应用给定的 [`Rotation`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Applies the given [`Rotation`] to the [`Svg`].
+    ///
+    /// </details>
     pub fn rotation(mut self, rotation: impl Into<Rotation>) -> Self {
         self.rotation = rotation.into();
         self
     }
 
+    /// 设置 [`Svg`] 的不透明度。
+    ///
+    /// 它应该在 [0.0, 1.0] 范围内——`0.0` 表示完全透明，
+    /// `1.0` 表示完全不透明。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the opacity of the [`Svg`].
     ///
     /// It should be in the [0.0, 1.0] range—`0.0` meaning completely transparent,
     /// and `1.0` meaning completely opaque.
+    ///
+    /// </details>
     pub fn opacity(mut self, opacity: impl Into<f32>) -> Self {
         self.opacity = opacity.into();
         self
@@ -166,19 +254,24 @@ where
 
     fn layout(&mut self, tree: &mut Tree, renderer: &Renderer, limits: &layout::Limits) {
         // The raw w/h of the underlying image
+        // 底层图像的原始宽高
         let Size { width, height } = renderer.measure_svg(&self.handle);
         let image_size = Size::new(width as f32, height as f32);
 
         // The rotated size of the svg
+        // svg 旋转后的大小
         let rotated_size = self.rotation.apply(image_size);
 
         // The size to be available to the widget prior to `Shrink`ing
+        // 在 `Shrink` 收缩之前可供部件使用的大小
         let raw_size = limits.resolve(self.width, self.height, rotated_size);
 
         // The uncropped size of the image when fit to the bounds above
+        // 图像适配到上述边界后未裁剪的大小
         let full_size = self.content_fit.fit(rotated_size, raw_size);
 
         // Shrink the widget to fit the resized image, if requested
+        // 如果有要求，把部件收缩到适合调整大小后的图像
         let final_size = Size {
             width: match self.width {
                 Length::Fit | Length::Shrink => f32::min(raw_size.width, full_size.width),
@@ -267,35 +360,102 @@ where
     }
 }
 
+/// [`Svg`] 可能的交互状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The possible status of an [`Svg`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
+    /// [`Svg`] 处于空闲状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Svg`] is idle.
+    ///
+    /// </details>
     Idle,
+    /// [`Svg`] 正处于悬停状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Svg`] is being hovered.
+    ///
+    /// </details>
     Hovered,
 }
 
+/// [`Svg`] 的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of an [`Svg`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub struct Style {
+    /// [`Svg`] 的 [`Color`] 滤镜。
+    ///
+    /// 适合用来给符号图标着色。
+    ///
+    /// `None` 保留原始颜色。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] filter of an [`Svg`].
     ///
     /// Useful for coloring a symbolic icon.
     ///
     /// `None` keeps the original color.
+    ///
+    /// </details>
     pub color: Option<Color>,
 }
 
+/// [`Svg`] 的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of an [`Svg`].
+///
+/// </details>
 pub trait Catalog {
+    /// [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of the [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by the [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> Self::Class<'a>;
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(&self, class: &Self::Class<'_>, status: Status) -> Style;
 }
 
@@ -311,9 +471,18 @@ impl Catalog for Theme {
     }
 }
 
+/// [`Svg`] 的样式函数。
+///
+/// 它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for an [`Svg`].
 ///
 /// This is just a boxed closure: `Fn(&Theme, Status) -> Style`.
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme, Status) -> Style + 'a>;
 
 impl<Theme> From<Style> for StyleFn<'_, Theme> {

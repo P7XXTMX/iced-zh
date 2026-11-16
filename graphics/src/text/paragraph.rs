@@ -1,4 +1,11 @@
+//! 绘制段落。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Draw paragraphs.
+//!
+//! </details>
 use crate::core;
 use crate::core::alignment;
 use crate::core::text::{
@@ -10,7 +17,14 @@ use crate::text;
 use std::fmt;
 use std::sync::{self, Arc};
 
+/// 一段文本。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A bunch of text.
+///
+/// </details>
 #[derive(Clone, PartialEq)]
 pub struct Paragraph(Arc<Internal>);
 
@@ -39,21 +53,46 @@ struct Selection {
 }
 
 impl Paragraph {
+    /// 创建一个新的空 [`Paragraph`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new empty [`Paragraph`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// 返回 [`Paragraph`] 的缓冲区。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the buffer of the [`Paragraph`].
+    ///
+    /// </details>
     pub fn buffer(&self) -> &cosmic_text::Buffer {
         &self.internal().buffer
     }
 
+    /// 创建 [`Paragraph`] 的 [`Weak`] 引用。
+    ///
+    /// 在不需要引用保证的场合，这可以避免
+    /// 克隆 [`Paragraph`]。例如，
+    /// 在创建渲染树的时候。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Weak`] reference to the [`Paragraph`].
     ///
     /// This is useful to avoid cloning the [`Paragraph`] when
     /// referential guarantees are unnecessary. For instance,
     /// when creating a rendering tree.
+    ///
+    /// </details>
     pub fn downgrade(&self) -> Weak {
         let paragraph = self.internal();
 
@@ -404,6 +443,9 @@ impl core::text::Paragraph for Paragraph {
                 // The renderer centers the line's ink within the line
                 // height and places the baseline `max_ascent` below the
                 // top of the ink:
+                // 渲染器会把这一行的墨迹（ink）在行高范围内居中，
+                // 并把基线放在墨迹顶部下方 `max_ascent`
+                // 的位置：
                 let baseline = y + (line_height - ink_height) / 2.0 + line.max_ascent;
 
                 let glyphs = line.glyphs.iter().map(move |glyph| (baseline, glyph));
@@ -418,6 +460,8 @@ impl core::text::Paragraph for Paragraph {
         for (baseline, glyph) in glyphs {
             // Glyphs can be offset from the line's baseline (e.g. by complex
             // scripts); mirror the anchor used in `LayoutGlyph::physical`:
+            // 字形可能偏离所在行的基线（例如在复杂文字中）；
+            // 这里沿用 `LayoutGlyph::physical` 中使用的锚点：
             let anchor = baseline + glyph.y - glyph.font_size * glyph.y_offset;
             let ink_top = anchor - glyph.ascender;
             let ink_bottom = anchor + glyph.descender;
@@ -443,6 +487,8 @@ impl core::text::Paragraph for Paragraph {
                 Some(current) => {
                     // Union the glyph's ink with the span's bounds on this
                     // line:
+                    // 把字形的墨迹与该文本片段在这一行上的边界
+                    // 求并集：
                     let left = current.x.min(glyph.x * scale);
                     let top = current.y.min(ink_top * scale);
                     let right = (current.x + current.width).max((glyph.x + glyph.w) * scale);
@@ -466,6 +512,7 @@ impl core::text::Paragraph for Paragraph {
         let mut font_system = text::font_system().write().expect("write font system");
 
         // Simulate a selection drag
+        // 模拟一次拖动选择
         let mut editor =
             cosmic_text::Editor::new(cosmic_text::BufferRef::Borrowed(&mut paragraph.buffer));
 
@@ -504,6 +551,8 @@ impl core::text::Paragraph for Paragraph {
 
         // If the cursor and selection both fall at either edge of the paragraph,
         // nullify the selection.
+        // 如果光标和选区都落在段落的同一侧边缘，
+        // 就取消选区。
         if cursor == selection
             && ((cursor.line == 0 && cursor.index == 0)
                 || (cursor.line + 1 == paragraph.buffer.lines.len()
@@ -631,20 +680,55 @@ impl Default for Internal {
     }
 }
 
+/// [`Paragraph`] 的弱引用。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A weak reference to a [`Paragraph`].
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct Weak {
     raw: sync::Weak<Internal>,
+    /// [`Paragraph`] 的最小边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The minimum bounds of the [`Paragraph`].
+    ///
+    /// </details>
     pub min_bounds: Size,
+    /// [`Paragraph`] 的水平对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The horizontal alignment of the [`Paragraph`].
+    ///
+    /// </details>
     pub align_x: Alignment,
+    /// [`Paragraph`] 的垂直对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The vertical alignment of the [`Paragraph`].
+    ///
+    /// </details>
     pub align_y: alignment::Vertical,
 }
 
 impl Weak {
+    /// 尝试把该引用升级为 [`Paragraph`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Tries to update the reference into a [`Paragraph`].
+    ///
+    /// </details>
     pub fn upgrade(&self) -> Option<Paragraph> {
         self.raw.upgrade().map(Paragraph)
     }
@@ -682,8 +766,16 @@ mod tests {
         Paragraph::with_spans(text)
     }
 
+    /// 边界应当覆盖文本片段的墨迹，而不会拉伸到
+    /// 行高。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Bounds should cover the ink of the span, without stretching to the
     /// line height.
+    ///
+    /// </details>
     #[test]
     fn span_bounds_cover_ink() {
         let paragraph = rich_paragraph(&[Span::new("a"), Span::new("a").size(40.0)]);
@@ -701,26 +793,37 @@ mod tests {
         let centering = (line_height - ink_height) / 2.0;
 
         // The larger span determines the line's ink:
+        // 较大的文本片段决定这一行的墨迹：
         assert!((big[0].y - centering).abs() < 1e-2);
         assert!((big[0].height - ink_height).abs() < 1e-2);
 
         // Both spans share the line's baseline:
+        // 两个文本片段共用这一行的基线：
         let baseline = centering + line.max_ascent;
         assert!((small[0].y + line.max_ascent / 2.0 - baseline).abs() < 1e-2);
         assert!((big[0].y + line.max_ascent - baseline).abs() < 1e-2);
 
         // The smaller span is strictly inside the line's ink box...
+        // 较小的文本片段严格位于这一行的墨迹框之内……
         assert!(small[0].y > centering);
         assert!(small[0].y + small[0].height < centering + ink_height);
         assert!((small[0].height - ink_height / 2.0).abs() < 1e-2);
 
         // ...and the ink stays inside the line box:
+        // ……并且墨迹始终位于行框之内：
         if ink_height < line_height {
             assert!(big[0].height < line_height);
         }
     }
 
+    /// 边界应当覆盖文本片段各字形的水平范围。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Bounds should cover the horizontal extent of the span's glyphs.
+    ///
+    /// </details>
     #[test]
     fn span_bounds_cover_width() {
         let paragraph = rich_paragraph(&[Span::new("Hello"), Span::new(", world!")]);
@@ -736,17 +839,28 @@ mod tests {
 
         // The first span starts at the beginning of the line and is a
         // proper prefix of it:
+        // 第一个文本片段从行首开始，并且是这一行的
+        // 真前缀：
         assert!((first[0].x - 0.0).abs() < 1e-2);
         assert!(first[0].width > 0.0);
         assert!(first[0].width < line.w);
 
         // The second span starts where the first span ends, and ends at
         // the end of the line:
+        // 第二个文本片段从第一个文本片段结束的位置开始，
+        // 并在行尾结束：
         assert!((second[0].x - (first[0].x + first[0].width)).abs() < 1e-2);
         assert!((second[0].x + second[0].width - line.w).abs() < 1e-2);
     }
 
+    /// 跨多行的文本片段在每一行上各产生一个边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A span on multiple lines produces one bounds per line.
+    ///
+    /// </details>
     #[test]
     fn span_bounds_cover_each_line() {
         let paragraph = rich_paragraph(&[Span::new("ab\ncd")]);
@@ -766,6 +880,8 @@ mod tests {
 
         // The lines are stacked without overlap, and both lines have the
         // same ink height:
+        // 各行依次堆叠、互不重叠，并且两行的
+        // 墨迹高度相同：
         assert!(bounds[0].y + bounds[0].height <= bounds[1].y + 1e-2);
         assert!((bounds[0].height - bounds[1].height).abs() < 1e-2);
     }

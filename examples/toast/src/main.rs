@@ -106,7 +106,14 @@ impl App {
         }
     }
 
+    /// 安排 `id` 对应的 toast 的过期时间。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Schedules the expiration of the toast with the given `id`.
+    ///
+    /// </details>
     fn expire(id: Id, timeout_secs: u64) -> Task<Message> {
         Task::perform(tokio::time::sleep(seconds(timeout_secs)), move |_| {
             Message::Close(id)

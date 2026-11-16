@@ -184,6 +184,7 @@ impl Cache {
     #[cfg(feature = "svg")]
     pub fn measure_svg(&mut self, handle: &core::svg::Handle) -> Size<u32> {
         // TODO: Concurrency
+        // 待办：并发
         self.vector.load(handle).viewport_dimensions()
     }
 
@@ -223,6 +224,7 @@ impl Cache {
         const MAX_SYNC_SIZE: usize = 2 * 1024 * 1024;
 
         // TODO: Concurrent Wasm support
+        // 待办：Wasm 的并发支持
         if image.len() < MAX_SYNC_SIZE || cfg!(target_arch = "wasm32") {
             let entry =
                 self.atlas
@@ -260,6 +262,7 @@ impl Cache {
         size: Size<u32>,
     ) -> Option<(&atlas::Entry, &Arc<wgpu::BindGroup>)> {
         // TODO: Concurrency
+        // 待办：并发
         self.vector
             .upload(device, encoder, belt, handle, color, size, &mut self.atlas)
             .map(|entry| (entry, self.atlas.bind_group()))
@@ -276,7 +279,7 @@ impl Cache {
         }
 
         #[cfg(feature = "svg")]
-        self.vector.trim(&mut self.atlas); // TODO: Concurrency
+        self.vector.trim(&mut self.atlas); // TODO: Concurrency（待办：并发）
     }
 
     #[cfg(feature = "image")]
@@ -363,9 +366,11 @@ fn load_image<'a>(
     if !cache.contains(handle) {
         if cfg!(target_arch = "wasm32") {
             // TODO: Concurrent support for Wasm
+            // 待办：Wasm 的并发支持
             cache.insert(handle, Memory::load(handle));
         } else if let core::image::Handle::Rgba { .. } = handle {
             // Load RGBA handles synchronously, since it's very cheap
+            // 同步加载 RGBA 句柄，因为开销非常小
             cache.insert(handle, Memory::load(handle));
         } else if !pending.contains_key(&handle.id()) {
             let _ = pending.insert(handle.id(), Vec::from_iter(callback));

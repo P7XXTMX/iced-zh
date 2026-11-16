@@ -1,0 +1,1273 @@
+@@ core/src/keyboard.rs:1
+监听键盘事件。
+@@ core/src/keyboard/event.rs:5
+键盘事件。
+
+_**注意：** 这个类型还很不完整！如果你需要跟踪
+其他事件，欢迎[提交 issue][open an issue] 并分享你的使用场景！_
+@@ core/src/keyboard/event.rs:13
+某个键盘按键被按下。
+@@ core/src/keyboard/event.rs:15
+被按下的按键。
+@@ core/src/keyboard/event.rs:18
+应用了除 Ctrl 之外所有键盘修饰键之后的被按下的按键。
+@@ core/src/keyboard/event.rs:21
+被按下的物理按键。
+@@ core/src/keyboard/event.rs:24
+按键的位置。
+@@ core/src/keyboard/event.rs:27
+修饰键的状态。
+@@ core/src/keyboard/event.rs:30
+这次按键产生的文本（如果有）。
+@@ core/src/keyboard/event.rs:33
+该事件是否由按键重复产生。
+@@ core/src/keyboard/event.rs:37
+某个键盘按键被释放。
+@@ core/src/keyboard/event.rs:39
+被释放的按键。
+@@ core/src/keyboard/event.rs:42
+应用了除 Ctrl 之外所有键盘修饰键之后的被释放的按键。
+@@ core/src/keyboard/event.rs:45
+被释放的物理按键。
+@@ core/src/keyboard/event.rs:48
+按键的位置。
+@@ core/src/keyboard/event.rs:51
+修饰键的状态。
+@@ core/src/keyboard/event.rs:55
+键盘修饰键发生了变化。
+@@ core/src/keyboard/location.rs:1
+按键在键盘上的位置。
+@@ core/src/keyboard/location.rs:4
+键盘上的标准按键区。
+@@ core/src/keyboard/location.rs:6
+键盘的左侧。
+@@ core/src/keyboard/location.rs:8
+键盘的右侧。
+@@ core/src/keyboard/location.rs:10
+键盘的数字小键盘。
+@@ core/src/keyboard/modifiers.rs:4
+键盘修饰键的当前状态。
+@@ core/src/keyboard/modifiers.rs:7
+“shift” 键。
+@@ core/src/keyboard/modifiers.rs:9
+=
+@@ core/src/keyboard/modifiers.rs:12
+“control” 键。
+@@ core/src/keyboard/modifiers.rs:14
+=
+@@ core/src/keyboard/modifiers.rs:17
+“alt” 键。
+@@ core/src/keyboard/modifiers.rs:19
+=
+@@ core/src/keyboard/modifiers.rs:22
+Windows 上的 “windows” 键、Mac 上的 “command” 键，以及
+Linux 上的 “super” 键。
+@@ core/src/keyboard/modifiers.rs:25
+=
+@@ core/src/keyboard/modifiers.rs:27
+没有修饰键
+@@ core/src/keyboard/modifiers.rs:33
+“command” 键。
+
+通常是用于快捷键的主修饰键。
+
+在 macOS 上，它等同于 `Self::LOGO`。
+在其他平台上，它等同于 `Self::CTRL`。
+@@ core/src/keyboard/modifiers.rs:45
+如果 [`Modifiers`] 中 [`SHIFT`] 键处于按下状态，返回 true。
+@@ core/src/keyboard/modifiers.rs:52
+如果 [`Modifiers`] 中 [`CTRL`] 键处于按下状态，返回 true。
+@@ core/src/keyboard/modifiers.rs:59
+如果 [`Modifiers`] 中 [`ALT`] 键处于按下状态，返回 true。
+@@ core/src/keyboard/modifiers.rs:66
+如果 [`Modifiers`] 中 [`LOGO`] 键处于按下状态，返回 true。
+@@ core/src/keyboard/modifiers.rs:73
+如果 [`Modifiers`] 中“命令键”处于按下状态，返回 true。
+
+“命令键”是当前平台上用于发出命令的主修饰键。
+具体来说：
+
+- 在 macOS 上是 `logo` 键，即 command 键（⌘）
+- 在其他平台上是 `control` 键
+@@ core/src/keyboard/modifiers.rs:90
+如果 [`Modifiers`] 中“跳转键”处于按下状态，返回 true。
+
+“跳转键”是用于扩大文本移动范围的修饰键。在 macOS 上是 `Alt`
+键，在其他平台上是 `Ctrl` 键。
+@@ core/src/keyboard/modifiers.rs:102
+如果在 macOS 设备上“命令键”处于按下状态，返回 true。
+
+用于 macOS 特有的操作（例如 `⌘ + ArrowLeft` 把光标
+移动到行首）。
+@@ core/src/keyboard/key.rs:1
+识别键盘按键。
+@@ core/src/keyboard/key.rs:4
+键盘上的按键。
+
+基本上就是 [`winit`] 中的 `Key` 类型。
+@@ core/src/keyboard/key.rs:11
+具有既定名称的按键。
+@@ core/src/keyboard/key.rs:14
+与用户键入的字符相对应的按键字符串，其中考虑了
+用户当前的区域设置，以及所有正在生效的系统级键盘映射
+覆盖。
+@@ core/src/keyboard/key.rs:19
+无法识别的按键。
+@@ core/src/keyboard/key.rs:24
+把 `Key::Character(SmolStr)` 转换为 `Key::Character(&str)`，以便更方便地对
+`Key` 进行匹配。其他变体保持不变。
+@@ core/src/keyboard/key.rs:34
+尝试把这个逻辑 [`Key`] 转换为对应的拉丁字符；如果它本身不是拉丁字符，
+则使用给定的 [`Physical`] 物理按键进行转换。
+
+如果找不到对应的拉丁字符，返回 `None`。
+@@ core/src/keyboard/key.rs:42
+拉丁字母 c
+@@ core/src/keyboard/key.rs:48
+西里尔字母 с
+@@ core/src/keyboard/key.rs:54
+左方向键
+@@ core/src/keyboard/key.rs:126
+具名按键。
+
+基本上就是 [`winit`] 中的 `NamedKey` 类型。
+@@ core/src/keyboard/key.rs:134
+`Alt`（Alternative）键。
+
+该键启用交替修饰功能，用于解释同时或随后的
+键盘输入。Apple 的 <kbd>Option</kbd> 键也使用这个键值。
+@@ core/src/keyboard/key.rs:139
+Alternate Graphics（<kbd>AltGr</kbd> 或 <kbd>AltGraph</kbd>）键。
+
+该键用于启用 ISO Level 3 shift 修饰键（标准的 `Shift` 键是
+level 2 修饰键）。
+@@ core/src/keyboard/key.rs:144
+`Caps Lock`（Capital）键。
+
+切换大写字符锁定功能，用于解释随后的键盘输入事件。
+@@ core/src/keyboard/key.rs:148
+`Control` 或 `Ctrl` 键。
+
+用于启用 control 修饰功能，以解释同时或随后的键盘
+输入。
+@@ core/src/keyboard/key.rs:153
+功能切换键 `Fn`。与另一个键同时按下时，会把
+那个键的值改为另一个字符或功能。该键通常由键盘硬件
+直接处理，一般不会产生按键事件。
+@@ core/src/keyboard/key.rs:157
+功能锁定（`FnLock` 或 `F-Lock`）键。按下该键会切换
+键盘的模式，把某些键的值改为另一个字符或功能。该键
+通常由键盘硬件直接处理，一般不会产生按键事件。
+@@ core/src/keyboard/key.rs:161
+`NumLock` 键，即数字锁定键。用于切换数字小键盘模式功能，以解释
+随后的键盘输入。
+@@ core/src/keyboard/key.rs:164
+在滚动模式和光标移动模式之间切换。
+@@ core/src/keyboard/key.rs:166
+用于启用 shift 修饰功能，以解释同时或随后的键盘
+输入。
+@@ core/src/keyboard/key.rs:169
+Symbol 修饰键（用于某些虚拟键盘）。
+@@ core/src/keyboard/key.rs:172
+旧式修饰键。在某些场合也称为 “Super”。
+@@ core/src/keyboard/key.rs:174
+旧式修饰键。
+@@ core/src/keyboard/key.rs:176
+用于启用 “super” 修饰功能，以解释同时或随后的键盘
+输入。“Windows 徽标”键和 Apple 的 `Command` 键（`⌘`）都使用这个键值。
+
+注意：在某些环境中（例如 Web），它被称为 “Meta” 键。
+@@ core/src/keyboard/key.rs:181
+`Enter` 或 `↵` 键。用于激活当前选中项或确认当前输入。
+`Return` 键（Macintosh 数字小键盘）也使用这个键值。
+Android 的 `KEYCODE_DPAD_CENTER` 也使用这个键值。
+@@ core/src/keyboard/key.rs:185
+水平制表键 `Tab`。
+@@ core/src/keyboard/key.rs:187
+在文本中用于在单词之间插入空格。通常位于字符键的下方。
+@@ core/src/keyboard/key.rs:189
+向下导航或遍历。（`KEYCODE_DPAD_DOWN`）
+@@ core/src/keyboard/key.rs:191
+向左导航或遍历。（`KEYCODE_DPAD_LEFT`）
+@@ core/src/keyboard/key.rs:193
+向右导航或遍历。（`KEYCODE_DPAD_RIGHT`）
+@@ core/src/keyboard/key.rs:195
+向上导航或遍历。（`KEYCODE_DPAD_UP`）
+@@ core/src/keyboard/key.rs:197
+End 键，在键盘输入时用于跳到内容末尾（`KEYCODE_MOVE_END`）。
+@@ core/src/keyboard/key.rs:199
+Home 键，在键盘输入时用于跳到内容开头（`KEYCODE_MOVE_HOME`）。
+手机上的 `Home` 键（回到手机主屏幕）请使用 [`GoHome`]。
+@@ core/src/keyboard/key.rs:204
+向下滚动或显示下一页内容。
+@@ core/src/keyboard/key.rs:206
+向上滚动或显示上一页内容。
+@@ core/src/keyboard/key.rs:208
+用于删除光标左侧的字符。MacOS 键盘上标有 `Delete` 的键
+也使用这个键值。
+@@ core/src/keyboard/key.rs:211
+移除当前选中的输入。
+@@ core/src/keyboard/key.rs:213
+复制当前选中内容。（`APPCOMMAND_COPY`）
+@@ core/src/keyboard/key.rs:215
+Cursor Select（光标选择）键。
+@@ core/src/keyboard/key.rs:217
+剪切当前选中内容。（`APPCOMMAND_CUT`）
+@@ core/src/keyboard/key.rs:219
+用于删除光标右侧的字符。在 MacOS 键盘上，`Fn` 生效时
+标有 `Delete` 的键也使用这个键值。
+@@ core/src/keyboard/key.rs:222
+Erase to End of Field（擦除到字段末尾）键。该键删除从当前光标
+位置到当前字段末尾的所有字符。
+@@ core/src/keyboard/key.rs:225
+Extend Selection（Exsel，扩展选择）键。
+@@ core/src/keyboard/key.rs:227
+在插入和改写两种文本模式之间切换。
+（`KEYCODE_INSERT`）
+@@ core/src/keyboard/key.rs:230
+Paste（粘贴）键。（`APPCOMMAND_PASTE`）
+@@ core/src/keyboard/key.rs:232
+重做上一个操作。（`APPCOMMAND_REDO`）
+@@ core/src/keyboard/key.rs:234
+撤销上一个操作。（`APPCOMMAND_UNDO`）
+@@ core/src/keyboard/key.rs:236
+Accept（Commit、OK）键。接受当前选项或输入法序列的转换结果。
+@@ core/src/keyboard/key.rs:238
+重做或重复某个操作。
+@@ core/src/keyboard/key.rs:240
+Attention（Attn）键。
+@@ core/src/keyboard/key.rs:243
+显示应用程序的上下文菜单。
+该键通常位于右 `Super` 键和右 `Control` 键之间。
+@@ core/src/keyboard/key.rs:246
+`Esc` 键。该键最初用于发起转义序列，但
+现在更普遍地用于退出（“escape”）当前上下文，例如关闭对话框
+或退出全屏模式。
+@@ core/src/keyboard/key.rs:251
+打开查找对话框。（`APPCOMMAND_FIND`）
+@@ core/src/keyboard/key.rs:253
+打开帮助对话框，或切换帮助信息的显示。（`APPCOMMAND_HELP`、
+`KEYCODE_HELP`）
+@@ core/src/keyboard/key.rs:256
+暂停当前状态或应用程序（视情况而定）。
+
+注意：不要把这个值用于媒体控制器上的 `Pause` 按钮。请改用
+`"MediaPause"`。
+@@ core/src/keyboard/key.rs:261
+播放或恢复当前状态或应用程序（视情况而定）。
+
+注意：不要把这个值用于媒体控制器上的 `Play` 按钮。请改用
+`"MediaPlay"`。
+@@ core/src/keyboard/key.rs:266
+属性（Props）键。
+@@ core/src/keyboard/key.rs:269
+ZoomIn（放大）键。（`KEYCODE_ZOOM_IN`）
+@@ core/src/keyboard/key.rs:271
+ZoomOut（缩小）键。（`KEYCODE_ZOOM_OUT`）
+@@ core/src/keyboard/key.rs:273
+Brightness Down（降低亮度）键。通常用于控制显示器亮度。
+（`KEYCODE_BRIGHTNESS_DOWN`）
+@@ core/src/keyboard/key.rs:276
+Brightness Up（提高亮度）键。通常用于控制显示器亮度。（`KEYCODE_BRIGHTNESS_UP`）
+@@ core/src/keyboard/key.rs:278
+在弹出（打开）和插入（关闭）状态之间切换可移动介质。（`KEYCODE_MEDIA_EJECT`）
+@@ core/src/keyboard/key.rs:281
+切换电源状态。（`KEYCODE_POWER`）
+注意：某些设备可能不会把该键暴露给操作环境。
+@@ core/src/keyboard/key.rs:284
+`PowerOff` 键。有时也称为 `PowerDown`。
+@@ core/src/keyboard/key.rs:286
+启动截屏（print-screen）功能。
+@@ core/src/keyboard/key.rs:288
+Hibernate（休眠）键。该键把计算机的当前状态保存到磁盘，以便之后
+恢复。随后计算机将关机。
+@@ core/src/keyboard/key.rs:291
+Standby（待机）键。该键关闭显示器，并让计算机进入低功耗
+模式而不完全关机。有时该键标为 `Suspend` 或 `Sleep`。
+（`KEYCODE_SLEEP`）
+@@ core/src/keyboard/key.rs:295
+WakeUp（唤醒）键。（`KEYCODE_WAKEUP`）
+@@ core/src/keyboard/key.rs:297
+启动多候选模式。
+@@ core/src/keyboard/key.rs:300
+启动代码输入模式，允许通过码点
+输入字符。
+@@ core/src/keyboard/key.rs:303
+Compose 键，在 X Window System 中也称为 “Multi_key”。该键的
+行为类似于死键，会触发一种模式，把随后的按键组合起来
+产生另一个字符。
+@@ core/src/keyboard/key.rs:307
+转换当前的输入法序列。
+@@ core/src/keyboard/key.rs:309
+某些亚洲键盘上的 Final Mode 键 `Final`，用于启用输入法（IME）的 final 模式。
+@@ core/src/keyboard/key.rs:311
+切换到第一个字符组。（ISO/IEC 9995）
+@@ core/src/keyboard/key.rs:313
+切换到最后一个字符组。（ISO/IEC 9995）
+@@ core/src/keyboard/key.rs:315
+切换到下一个字符组。（ISO/IEC 9995）
+@@ core/src/keyboard/key.rs:317
+切换到上一个字符组。（ISO/IEC 9995）
+@@ core/src/keyboard/key.rs:319
+在输入法（IME）的输入模式之间切换或循环切换。
+@@ core/src/keyboard/key.rs:322
+在输入法（IME）中不经转换，直接接受当前的
+输入法序列。
+@@ core/src/keyboard/key.rs:328
+在韩文（Hangul）模式和英文模式之间切换。
+@@ core/src/keyboard/key.rs:332
+Eisu（英数）键。该键可能会关闭输入法，但其用途由当前输入法决定。
+（`KEYCODE_EISU`）
+@@ core/src/keyboard/key.rs:335
+Hankaku（半角）字符键。
+@@ core/src/keyboard/key.rs:337
+Hiragana（平假名，日语假名字符）键。
+@@ core/src/keyboard/key.rs:339
+Hiragana/Katakana（平假名/片假名）切换键。（`KEYCODE_KATAKANA_HIRAGANA`）
+@@ core/src/keyboard/key.rs:341
+Kana Mode（假名模式，即 Kana Lock）键。该键用于进入平假名模式（通常是从
+罗马字模式进入）。
+@@ core/src/keyboard/key.rs:344
+Kanji（汉字，日语中对源自中文的表意文字的称呼）Mode 键。该键
+通常用于切换到平假名键盘，以便把输入转换为
+汉字。（`KEYCODE_KANA`）
+@@ core/src/keyboard/key.rs:348
+Katakana（片假名，日语假名字符）键。
+@@ core/src/keyboard/key.rs:350
+Roman characters（罗马字）功能键。
+@@ core/src/keyboard/key.rs:352
+Zenkaku（全角）字符键。
+@@ core/src/keyboard/key.rs:354
+Zenkaku/Hankaku（全角/半角）切换键。（`KEYCODE_ZENKAKU_HANKAKU`）
+@@ core/src/keyboard/key.rs:356
+通用虚拟功能键，索引为 1。
+@@ core/src/keyboard/key.rs:358
+通用虚拟功能键，索引为 2。
+@@ core/src/keyboard/key.rs:360
+通用虚拟功能键，索引为 3。
+@@ core/src/keyboard/key.rs:362
+通用虚拟功能键，索引为 4。
+@@ core/src/keyboard/key.rs:364
+选择（按数字或逻辑顺序的）下一个更低的频道。（`APPCOMMAND_MEDIA_CHANNEL_DOWN`、
+`KEYCODE_CHANNEL_DOWN`）
+@@ core/src/keyboard/key.rs:367
+选择（按数字或逻辑顺序的）下一个更高的频道。（`APPCOMMAND_MEDIA_CHANNEL_UP`、
+`KEYCODE_CHANNEL_UP`）
+@@ core/src/keyboard/key.rs:370
+关闭当前文档或消息（注意：这不会关闭应用程序）。
+（`APPCOMMAND_CLOSE`）
+@@ core/src/keyboard/key.rs:373
+打开编辑器以转发当前邮件。（`APPCOMMAND_FORWARD_MAIL`）
+@@ core/src/keyboard/key.rs:375
+打开编辑器以回复当前邮件。（`APPCOMMAND_REPLY_TO_MAIL`）
+@@ core/src/keyboard/key.rs:377
+发送当前邮件。（`APPCOMMAND_SEND_MAIL`）
+@@ core/src/keyboard/key.rs:379
+关闭当前媒体，例如关闭 CD 或 DVD 托盘。（`KEYCODE_MEDIA_CLOSE`）
+@@ core/src/keyboard/key.rs:381
+以高于正常的速度开始或继续正向播放；如果已经在快进，
+则提高速度。（`APPCOMMAND_MEDIA_FAST_FORWARD`、`KEYCODE_MEDIA_FAST_FORWARD`）
+@@ core/src/keyboard/key.rs:384
+暂停当前正在播放的媒体。（`APPCOMMAND_MEDIA_PAUSE`、`KEYCODE_MEDIA_PAUSE`）
+
+注意：媒体控制器设备的暂停键应使用这个值，而不是
+`"Pause"`。
+@@ core/src/keyboard/key.rs:389
+如果当前不是以正常速度播放，则以正常速度开始或继续播放
+媒体。（`APPCOMMAND_MEDIA_PLAY`、`KEYCODE_MEDIA_PLAY`）
+@@ core/src/keyboard/key.rs:392
+在播放和暂停状态之间切换媒体。（`APPCOMMAND_MEDIA_PLAY_PAUSE`、
+`KEYCODE_MEDIA_PLAY_PAUSE`）
+@@ core/src/keyboard/key.rs:395
+开始或恢复录制当前选中的媒体。（`APPCOMMAND_MEDIA_RECORD`、
+`KEYCODE_MEDIA_RECORD`）
+@@ core/src/keyboard/key.rs:398
+以高于正常的速度开始或继续反向播放；如果已经在快退，
+则提高速度。（`APPCOMMAND_MEDIA_REWIND`、`KEYCODE_MEDIA_REWIND`）
+@@ core/src/keyboard/key.rs:401
+如果尚未停止，则停止媒体的播放、暂停、快进、快退或录制。
+（`APPCOMMAND_MEDIA_STOP`、`KEYCODE_MEDIA_STOP`）
+@@ core/src/keyboard/key.rs:404
+跳到下一个媒体或节目曲目。（`APPCOMMAND_MEDIA_NEXTTRACK`、`KEYCODE_MEDIA_NEXT`）
+@@ core/src/keyboard/key.rs:406
+跳到上一个媒体或节目曲目。（`APPCOMMAND_MEDIA_PREVIOUSTRACK`、
+`KEYCODE_MEDIA_PREVIOUS`）
+@@ core/src/keyboard/key.rs:409
+新建文档或消息。（`APPCOMMAND_NEW`）
+@@ core/src/keyboard/key.rs:411
+打开已有的文档或消息。（`APPCOMMAND_OPEN`）
+@@ core/src/keyboard/key.rs:413
+打印当前文档或消息。（`APPCOMMAND_PRINT`）
+@@ core/src/keyboard/key.rs:415
+保存当前文档或消息。（`APPCOMMAND_SAVE`）
+@@ core/src/keyboard/key.rs:417
+对当前文档或选中内容进行拼写检查。（`APPCOMMAND_SPELL_CHECK`）
+@@ core/src/keyboard/key.rs:419
+`11` 键，见于按钮为 `1` ... `12` 的
+媒体数字小键盘。
+@@ core/src/keyboard/key.rs:422
+`12` 键，见于按钮为 `1` ... `12` 的
+媒体数字小键盘。
+@@ core/src/keyboard/key.rs:425
+向左调整音频平衡。（`VK_AUDIO_BALANCE_LEFT`）
+@@ core/src/keyboard/key.rs:427
+向右调整音频平衡。（`VK_AUDIO_BALANCE_RIGHT`）
+@@ core/src/keyboard/key.rs:429
+减弱音频低音增强，或向下循环切换低音增强状态。（`APPCOMMAND_BASS_DOWN`、
+`VK_BASS_BOOST_DOWN`）
+@@ core/src/keyboard/key.rs:432
+打开/关闭低音增强。（`APPCOMMAND_BASS_BOOST`）
+@@ core/src/keyboard/key.rs:434
+加强音频低音增强，或向上循环切换低音增强状态。（`APPCOMMAND_BASS_UP`、
+`VK_BASS_BOOST_UP`）
+@@ core/src/keyboard/key.rs:437
+把音频衰减器（fader）向前调整。（`VK_FADER_FRONT`）
+@@ core/src/keyboard/key.rs:439
+把音频衰减器（fader）向后调整。（`VK_FADER_REAR`）
+@@ core/src/keyboard/key.rs:441
+把环绕声模式切换到下一个可用模式。（`VK_SURROUND_MODE_NEXT`）
+@@ core/src/keyboard/key.rs:443
+降低高音。（`APPCOMMAND_TREBLE_DOWN`）
+@@ core/src/keyboard/key.rs:445
+提高高音。（`APPCOMMAND_TREBLE_UP`）
+@@ core/src/keyboard/key.rs:447
+降低音量。（`APPCOMMAND_VOLUME_DOWN`、`KEYCODE_VOLUME_DOWN`）
+@@ core/src/keyboard/key.rs:449
+提高音量。（`APPCOMMAND_VOLUME_UP`、`KEYCODE_VOLUME_UP`）
+@@ core/src/keyboard/key.rs:451
+在静音状态和之前的音量之间切换。（`APPCOMMAND_VOLUME_MUTE`、
+`KEYCODE_VOLUME_MUTE`）
+@@ core/src/keyboard/key.rs:454
+打开/关闭麦克风。（`APPCOMMAND_MIC_ON_OFF_TOGGLE`）
+@@ core/src/keyboard/key.rs:456
+降低麦克风音量。（`APPCOMMAND_MICROPHONE_VOLUME_DOWN`）
+@@ core/src/keyboard/key.rs:458
+提高麦克风音量。（`APPCOMMAND_MICROPHONE_VOLUME_UP`）
+@@ core/src/keyboard/key.rs:460
+将麦克风静音。（`APPCOMMAND_MICROPHONE_VOLUME_MUTE`、`KEYCODE_MUTE`）
+@@ core/src/keyboard/key.rs:462
+当某个词被错误识别时，显示更正列表。（`APPCOMMAND_CORRECTION_LIST`）
+@@ core/src/keyboard/key.rs:464
+在听写模式和命令/控制模式之间切换。
+（`APPCOMMAND_DICTATE_OR_COMMAND_CONTROL_TOGGLE`）
+@@ core/src/keyboard/key.rs:467
+第一个通用 “LaunchApplication” 键。通常用于启动“我的
+电脑”，键上可能印有计算机符号。（`APPCOMMAND_LAUNCH_APP1`）
+@@ core/src/keyboard/key.rs:470
+第二个通用 “LaunchApplication” 键。通常用于启动
+“计算器”，键上可能印有计算器符号。（`APPCOMMAND_LAUNCH_APP2`、
+`KEYCODE_CALCULATOR`）
+@@ core/src/keyboard/key.rs:474
+“Calendar”（日历）键。（`KEYCODE_CALENDAR`）
+@@ core/src/keyboard/key.rs:476
+“Contacts”（联系人）键。（`KEYCODE_CONTACTS`）
+@@ core/src/keyboard/key.rs:478
+“Mail”（邮件）键。（`APPCOMMAND_LAUNCH_MAIL`）
+@@ core/src/keyboard/key.rs:480
+“Media Player”（媒体播放器）键。（`APPCOMMAND_LAUNCH_MEDIA_SELECT`）
+@@ core/src/keyboard/key.rs:489
+导航到当前历史记录中的上一个内容或页面。（`APPCOMMAND_BROWSER_BACKWARD`）
+@@ core/src/keyboard/key.rs:491
+打开浏览器收藏夹列表。（`APPCOMMAND_BROWSER_FAVORITES`）
+@@ core/src/keyboard/key.rs:493
+导航到当前历史记录中的下一个内容或页面。（`APPCOMMAND_BROWSER_FORWARD`）
+@@ core/src/keyboard/key.rs:495
+前往用户首选的主页。（`APPCOMMAND_BROWSER_HOME`）
+@@ core/src/keyboard/key.rs:497
+刷新当前页面或内容。（`APPCOMMAND_BROWSER_REFRESH`）
+@@ core/src/keyboard/key.rs:499
+调出用户首选的搜索页面。（`APPCOMMAND_BROWSER_SEARCH`）
+@@ core/src/keyboard/key.rs:501
+停止加载当前页面或内容。（`APPCOMMAND_BROWSER_STOP`）
+@@ core/src/keyboard/key.rs:503
+应用切换键，提供一个可供切换的最近使用的应用列表。
+（`KEYCODE_APP_SWITCH`）
+@@ core/src/keyboard/key.rs:506
+Call（拨号）键。（`KEYCODE_CALL`）
+@@ core/src/keyboard/key.rs:508
+Camera（相机）键。（`KEYCODE_CAMERA`）
+@@ core/src/keyboard/key.rs:510
+Camera focus（相机对焦）键。（`KEYCODE_FOCUS`）
+@@ core/src/keyboard/key.rs:512
+End Call（挂断）键。（`KEYCODE_ENDCALL`）
+@@ core/src/keyboard/key.rs:514
+Back（返回）键。（`KEYCODE_BACK`）
+@@ core/src/keyboard/key.rs:516
+Home 键，回到手机的主屏幕。（`KEYCODE_HOME`）
+@@ core/src/keyboard/key.rs:518
+Headset Hook（耳机挂钩）键。（`KEYCODE_HEADSETHOOK`）
+@@ core/src/keyboard/key.rs:521
+Notification（通知）键。（`KEYCODE_NOTIFICATION`）
+@@ core/src/keyboard/key.rs:523
+在礼仪模式的各状态之间切换：静音、振动、响铃……（`KEYCODE_MANNER_MODE`）
+@@ core/src/keyboard/key.rs:526
+切换到观看电视。（`KEYCODE_TV`）
+@@ core/src/keyboard/key.rs:528
+电视 3D 模式。（`KEYCODE_3D_MODE`）
+@@ core/src/keyboard/key.rs:530
+在天线输入和有线输入之间切换。（`KEYCODE_TV_ANTENNA_CABLE`）
+@@ core/src/keyboard/key.rs:532
+音频描述。（`KEYCODE_TV_AUDIO_DESCRIPTION`）
+@@ core/src/keyboard/key.rs:534
+降低音频描述的混音音量。（`KEYCODE_TV_AUDIO_DESCRIPTION_MIX_DOWN`）
+@@ core/src/keyboard/key.rs:536
+提高音频描述的混音音量。（`KEYCODE_TV_AUDIO_DESCRIPTION_MIX_UP`）
+@@ core/src/keyboard/key.rs:538
+内容菜单。（`KEYCODE_TV_CONTENTS_MENU`）
+@@ core/src/keyboard/key.rs:540
+内容菜单。（`KEYCODE_TV_DATA_SERVICE`）
+@@ core/src/keyboard/key.rs:542
+切换外接电视的输入模式。（`KEYCODE_TV_INPUT`）
+@@ core/src/keyboard/key.rs:544
+切换到分量输入 #1。（`KEYCODE_TV_INPUT_COMPONENT_1`）
+@@ core/src/keyboard/key.rs:546
+切换到分量输入 #2。（`KEYCODE_TV_INPUT_COMPONENT_2`）
+@@ core/src/keyboard/key.rs:548
+切换到复合输入 #1。（`KEYCODE_TV_INPUT_COMPOSITE_1`）
+@@ core/src/keyboard/key.rs:550
+切换到复合输入 #2。（`KEYCODE_TV_INPUT_COMPOSITE_2`）
+@@ core/src/keyboard/key.rs:552
+切换到 HDMI 输入 #1。（`KEYCODE_TV_INPUT_HDMI_1`）
+@@ core/src/keyboard/key.rs:554
+切换到 HDMI 输入 #2。（`KEYCODE_TV_INPUT_HDMI_2`）
+@@ core/src/keyboard/key.rs:556
+切换到 HDMI 输入 #3。（`KEYCODE_TV_INPUT_HDMI_3`）
+@@ core/src/keyboard/key.rs:558
+切换到 HDMI 输入 #4。（`KEYCODE_TV_INPUT_HDMI_4`）
+@@ core/src/keyboard/key.rs:560
+切换到 VGA 输入 #1。（`KEYCODE_TV_INPUT_VGA_1`）
+@@ core/src/keyboard/key.rs:562
+媒体上下文菜单。（`KEYCODE_TV_MEDIA_CONTEXT_MENU`）
+@@ core/src/keyboard/key.rs:564
+切换网络。（`KEYCODE_TV_NETWORK`）
+@@ core/src/keyboard/key.rs:566
+数字输入。（`KEYCODE_TV_NUMBER_ENTRY`）
+@@ core/src/keyboard/key.rs:568
+开关外接电视的电源。（`KEYCODE_TV_POWER`）
+@@ core/src/keyboard/key.rs:570
+广播（Radio）。（`KEYCODE_TV_RADIO_SERVICE`）
+@@ core/src/keyboard/key.rs:572
+卫星。（`KEYCODE_TV_SATELLITE`）
+@@ core/src/keyboard/key.rs:574
+广播卫星（BS）。（`KEYCODE_TV_SATELLITE_BS`）
+@@ core/src/keyboard/key.rs:576
+通信卫星（CS）。（`KEYCODE_TV_SATELLITE_CS`）
+@@ core/src/keyboard/key.rs:578
+在可用的卫星之间切换。（`KEYCODE_TV_SATELLITE_SERVICE`）
+@@ core/src/keyboard/key.rs:580
+地面模拟信号。（`KEYCODE_TV_TERRESTRIAL_ANALOG`）
+@@ core/src/keyboard/key.rs:582
+地面数字信号。（`KEYCODE_TV_TERRESTRIAL_DIGITAL`）
+@@ core/src/keyboard/key.rs:584
+定时器编程。（`KEYCODE_TV_TIMER_PROGRAMMING`）
+@@ core/src/keyboard/key.rs:586
+切换外接 AVR（音视频接收器）的输入模式。（`KEYCODE_AVR_INPUT`）
+@@ core/src/keyboard/key.rs:588
+开关外接 AVR（音视频接收器）的电源。（`KEYCODE_AVR_POWER`）
+@@ core/src/keyboard/key.rs:590
+通用彩色媒体功能键，索引为 0（红色）。（`VK_COLORED_KEY_0`、
+`KEYCODE_PROG_RED`）
+@@ core/src/keyboard/key.rs:593
+通用彩色媒体功能键，索引为 1（绿色）。（`VK_COLORED_KEY_1`、
+`KEYCODE_PROG_GREEN`）
+@@ core/src/keyboard/key.rs:596
+通用彩色媒体功能键，索引为 2（黄色）。（`VK_COLORED_KEY_2`、
+`KEYCODE_PROG_YELLOW`）
+@@ core/src/keyboard/key.rs:599
+通用彩色媒体功能键，索引为 3（蓝色）。（`VK_COLORED_KEY_3`、
+`KEYCODE_PROG_BLUE`）
+@@ core/src/keyboard/key.rs:602
+通用彩色媒体功能键，索引为 4（灰色）。（`VK_COLORED_KEY_4`）
+@@ core/src/keyboard/key.rs:604
+通用彩色媒体功能键，索引为 5（棕色）。（`VK_COLORED_KEY_5`）
+@@ core/src/keyboard/key.rs:606
+切换隐藏式字幕（Closed Captions）的显示。（`VK_CC`、`KEYCODE_CAPTIONS`）
+@@ core/src/keyboard/key.rs:608
+通过在各状态之间切换或循环切换来调整设备亮度。（`VK_DIMMER`）
+@@ core/src/keyboard/key.rs:610
+交换视频源。（`VK_DISPLAY_SWAP`）
+@@ core/src/keyboard/key.rs:612
+选择数字视频录像机（DVR）。（`KEYCODE_DVR`）
+@@ core/src/keyboard/key.rs:614
+退出当前应用程序。（`VK_EXIT`）
+@@ core/src/keyboard/key.rs:616
+清除保存为收藏 0 的节目或内容。（`VK_CLEAR_FAVORITE_0`）
+@@ core/src/keyboard/key.rs:618
+清除保存为收藏 1 的节目或内容。（`VK_CLEAR_FAVORITE_1`）
+@@ core/src/keyboard/key.rs:620
+清除保存为收藏 2 的节目或内容。（`VK_CLEAR_FAVORITE_2`）
+@@ core/src/keyboard/key.rs:622
+清除保存为收藏 3 的节目或内容。（`VK_CLEAR_FAVORITE_3`）
+@@ core/src/keyboard/key.rs:624
+选择（调出）保存为收藏 0 的节目或内容。（`VK_RECALL_FAVORITE_0`）
+@@ core/src/keyboard/key.rs:626
+选择（调出）保存为收藏 1 的节目或内容。（`VK_RECALL_FAVORITE_1`）
+@@ core/src/keyboard/key.rs:628
+选择（调出）保存为收藏 2 的节目或内容。（`VK_RECALL_FAVORITE_2`）
+@@ core/src/keyboard/key.rs:630
+选择（调出）保存为收藏 3 的节目或内容。（`VK_RECALL_FAVORITE_3`）
+@@ core/src/keyboard/key.rs:632
+把当前节目或内容保存为收藏 0。（`VK_STORE_FAVORITE_0`）
+@@ core/src/keyboard/key.rs:634
+把当前节目或内容保存为收藏 1。（`VK_STORE_FAVORITE_1`）
+@@ core/src/keyboard/key.rs:636
+把当前节目或内容保存为收藏 2。（`VK_STORE_FAVORITE_2`）
+@@ core/src/keyboard/key.rs:638
+把当前节目或内容保存为收藏 3。（`VK_STORE_FAVORITE_3`）
+@@ core/src/keyboard/key.rs:640
+切换节目或内容指南的显示。（`VK_GUIDE`、`KEYCODE_GUIDE`）
+@@ core/src/keyboard/key.rs:642
+如果指南处于活动状态并已显示，则显示后一天的内容。（`VK_NEXT_DAY`）
+@@ core/src/keyboard/key.rs:644
+如果指南处于活动状态并已显示，则显示前一天的内容。（`VK_PREV_DAY`）
+@@ core/src/keyboard/key.rs:646
+切换当前选中的上下文或媒体的信息显示。（`VK_INFO`、
+`KEYCODE_INFO`）
+@@ core/src/keyboard/key.rs:649
+切换即时回放。（`VK_INSTANT_REPLAY`）
+@@ core/src/keyboard/key.rs:651
+在可用且合适时，启动链接的内容。（`VK_LINK`）
+@@ core/src/keyboard/key.rs:653
+列出当前节目。（`VK_LIST`）
+@@ core/src/keyboard/key.rs:655
+切换当前可用的直播内容或节目列表的显示。（`VK_LIVE`）
+@@ core/src/keyboard/key.rs:657
+锁定或解锁当前内容或节目。（`VK_LOCK`）
+@@ core/src/keyboard/key.rs:659
+显示媒体应用程序列表：音频/视频播放器和图片查看器。（`VK_APPS`）
+
+注意：不要把这个键值与 Windows 的 `VK_APPS` / `VK_CONTEXT_MENU` 键混淆，
+后者被编码为 `"ContextMenu"`。
+@@ core/src/keyboard/key.rs:664
+音轨键。（`KEYCODE_MEDIA_AUDIO_TRACK`）
+@@ core/src/keyboard/key.rs:666
+选择上一次选中的频道或媒体。（`VK_LAST`、`KEYCODE_LAST_CHANNEL`）
+@@ core/src/keyboard/key.rs:668
+向后跳到下一个内容或节目。（`KEYCODE_MEDIA_SKIP_BACKWARD`）
+@@ core/src/keyboard/key.rs:670
+向前跳到下一个内容或节目。（`VK_SKIP`、`KEYCODE_MEDIA_SKIP_FORWARD`）
+@@ core/src/keyboard/key.rs:672
+向后步进到下一个内容或节目。（`KEYCODE_MEDIA_STEP_BACKWARD`）
+@@ core/src/keyboard/key.rs:674
+向前步进到下一个内容或节目。（`KEYCODE_MEDIA_STEP_FORWARD`）
+@@ core/src/keyboard/key.rs:676
+媒体顶层菜单。（`KEYCODE_MEDIA_TOP_MENU`）
+@@ core/src/keyboard/key.rs:678
+向内导航。（`KEYCODE_NAVIGATE_IN`）
+@@ core/src/keyboard/key.rs:680
+导航到下一个键。（`KEYCODE_NAVIGATE_NEXT`）
+@@ core/src/keyboard/key.rs:682
+向外导航。（`KEYCODE_NAVIGATE_OUT`）
+@@ core/src/keyboard/key.rs:684
+导航到上一个键。（`KEYCODE_NAVIGATE_PREVIOUS`）
+@@ core/src/keyboard/key.rs:686
+循环切换到（收藏列表中的）下一个收藏频道。（`VK_NEXT_FAVORITE_CHANNEL`）
+@@ core/src/keyboard/key.rs:688
+循环切换到下一个用户配置（如果有多个用户配置）。（`VK_USER`）
+@@ core/src/keyboard/key.rs:690
+访问点播内容或节目。（`VK_ON_DEMAND`）
+@@ core/src/keyboard/key.rs:692
+用于配对设备的配对键。（`KEYCODE_PAIRING`）
+@@ core/src/keyboard/key.rs:694
+向下移动画中画窗口。（`VK_PINP_DOWN`）
+@@ core/src/keyboard/key.rs:696
+移动画中画窗口。（`VK_PINP_MOVE`）
+@@ core/src/keyboard/key.rs:698
+切换画中画窗口的显示。（`VK_PINP_TOGGLE`）
+@@ core/src/keyboard/key.rs:700
+向上移动画中画窗口。（`VK_PINP_UP`）
+@@ core/src/keyboard/key.rs:702
+降低媒体播放速度。（`VK_PLAY_SPEED_DOWN`）
+@@ core/src/keyboard/key.rs:704
+把播放重置为正常速度。（`VK_PLAY_SPEED_RESET`）
+@@ core/src/keyboard/key.rs:706
+提高媒体播放速度。（`VK_PLAY_SPEED_UP`）
+@@ core/src/keyboard/key.rs:708
+切换媒体或内容的随机播放模式。（`VK_RANDOM_TOGGLE`）
+@@ core/src/keyboard/key.rs:710
+不是物理按键，但遥控器电池电量不足时会发送这个键码。
+（`VK_RC_LOW_BATTERY`）
+@@ core/src/keyboard/key.rs:713
+在媒体录制速度之间切换或循环切换。（`VK_RECORD_SPEED_NEXT`）
+@@ core/src/keyboard/key.rs:715
+切换 RF（射频）输入直通模式（把 RF 输入直接传给 RF 输出）。
+（`VK_RF_BYPASS`）
+@@ core/src/keyboard/key.rs:718
+切换频道扫描模式。（`VK_SCAN_CHANNELS_TOGGLE`）
+@@ core/src/keyboard/key.rs:720
+把屏幕显示模式切换到下一个可用模式。（`VK_SCREEN_MODE_NEXT`）
+@@ core/src/keyboard/key.rs:722
+切换设备设置界面的显示。（`VK_SETTINGS`、`KEYCODE_SETTINGS`）
+@@ core/src/keyboard/key.rs:724
+切换分屏模式。（`VK_SPLIT_SCREEN_TOGGLE`）
+@@ core/src/keyboard/key.rs:726
+切换外接 STB（机顶盒）的输入模式。（`KEYCODE_STB_INPUT`）
+@@ core/src/keyboard/key.rs:728
+开关外接 STB（机顶盒）的电源。（`KEYCODE_STB_POWER`）
+@@ core/src/keyboard/key.rs:730
+切换字幕的显示（如果有）。（`VK_SUBTITLE`）
+@@ core/src/keyboard/key.rs:732
+切换图文电视（teletext）的显示（如果有）（`VK_TELETEXT`、`KEYCODE_TV_TELETEXT`）。
+@@ core/src/keyboard/key.rs:734
+把视频模式切换到下一个可用模式。（`VK_VIDEO_MODE_NEXT`）
+@@ core/src/keyboard/key.rs:736
+让设备以某种方式表明自己的身份，例如发出声音或可见提示。（`VK_WINK`）
+@@ core/src/keyboard/key.rs:738
+在全屏内容和缩放内容之间切换，或改变放大级别。（`VK_ZOOM`、
+`KEYCODE_TV_ZOOM_MODE`）
+@@ core/src/keyboard/key.rs:741
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:744
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:747
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:750
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:753
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:756
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:759
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:762
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:765
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:768
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:771
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:774
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:777
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:780
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:783
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:786
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:789
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:792
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:795
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:798
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:801
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:804
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:807
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:810
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:813
+通用功能键。
+@@ core/src/keyboard/key.rs:815
+通用功能键。
+@@ core/src/keyboard/key.rs:817
+通用功能键。
+@@ core/src/keyboard/key.rs:819
+通用功能键。
+@@ core/src/keyboard/key.rs:821
+通用功能键。
+@@ core/src/keyboard/key.rs:823
+通用功能键。
+@@ core/src/keyboard/key.rs:825
+通用功能键。
+@@ core/src/keyboard/key.rs:827
+通用功能键。
+@@ core/src/keyboard/key.rs:829
+通用功能键。
+@@ core/src/keyboard/key.rs:831
+通用功能键。
+@@ core/src/keyboard/key.rs:833
+通用功能键。
+@@ core/src/keyboard/key.rs:837
+表示物理按键位置的代码。
+
+它基本遵循 UI Events 规范的 [`KeyboardEvent.code`]，只有少数
+例外：
+- 规范中称为 “MetaLeft” 和 “MetaRight” 的按键，在这里命名为 “SuperLeft” 和
+  “SuperRight”。
+- 规范中称为 “Super” 的按键，在这里报告为 `Unidentified`。
+@@ core/src/keyboard/key.rs:850
+美式键盘上的 <kbd>`</kbd>。也称为反引号（backtick）或重音符（grave）。
+在日语键盘上是 <kbd>半角</kbd>/<kbd>全角</kbd>/<kbd>漢字</kbd>
+（hankaku/zenkaku/kanji）键
+@@ core/src/keyboard/key.rs:854
+既用于美式键盘（101 键布局）上的 <kbd>\\</kbd>，也用于
+102、104 和 106 键布局中位于 C 行 <kbd>"</kbd> 和 <kbd>Enter</kbd> 键之间的
+那个键。
+在英式（102 键）键盘上标为 <kbd>#</kbd>。
+@@ core/src/keyboard/key.rs:859
+美式键盘上的 <kbd>[</kbd>。
+@@ core/src/keyboard/key.rs:861
+美式键盘上的 <kbd>]</kbd>。
+@@ core/src/keyboard/key.rs:863
+美式键盘上的 <kbd>,</kbd>。
+@@ core/src/keyboard/key.rs:865
+美式键盘上的 <kbd>0</kbd>。
+@@ core/src/keyboard/key.rs:867
+美式键盘上的 <kbd>1</kbd>。
+@@ core/src/keyboard/key.rs:869
+美式键盘上的 <kbd>2</kbd>。
+@@ core/src/keyboard/key.rs:871
+美式键盘上的 <kbd>3</kbd>。
+@@ core/src/keyboard/key.rs:873
+美式键盘上的 <kbd>4</kbd>。
+@@ core/src/keyboard/key.rs:875
+美式键盘上的 <kbd>5</kbd>。
+@@ core/src/keyboard/key.rs:877
+美式键盘上的 <kbd>6</kbd>。
+@@ core/src/keyboard/key.rs:879
+美式键盘上的 <kbd>7</kbd>。
+@@ core/src/keyboard/key.rs:881
+美式键盘上的 <kbd>8</kbd>。
+@@ core/src/keyboard/key.rs:883
+美式键盘上的 <kbd>9</kbd>。
+@@ core/src/keyboard/key.rs:885
+美式键盘上的 <kbd>=</kbd>。
+@@ core/src/keyboard/key.rs:887
+位于左 <kbd>Shift</kbd> 键和 <kbd>Z</kbd> 键之间。
+在英式键盘上标为 <kbd>\\</kbd>。
+@@ core/src/keyboard/key.rs:890
+位于 <kbd>/</kbd> 键和右 <kbd>Shift</kbd> 键之间。
+在日语键盘上标为 <kbd>\\</kbd>（ro）。
+@@ core/src/keyboard/key.rs:893
+位于 <kbd>=</kbd> 键和 <kbd>Backspace</kbd> 键之间。
+在日语键盘上标为 <kbd>¥</kbd>（yen）。在俄语键盘上是
+<kbd>\\</kbd>。
+@@ core/src/keyboard/key.rs:897
+美式键盘上的 <kbd>a</kbd>。
+在 AZERTY（例如法语）键盘上标为 <kbd>q</kbd>。
+@@ core/src/keyboard/key.rs:900
+美式键盘上的 <kbd>b</kbd>。
+@@ core/src/keyboard/key.rs:902
+美式键盘上的 <kbd>c</kbd>。
+@@ core/src/keyboard/key.rs:904
+美式键盘上的 <kbd>d</kbd>。
+@@ core/src/keyboard/key.rs:906
+美式键盘上的 <kbd>e</kbd>。
+@@ core/src/keyboard/key.rs:908
+美式键盘上的 <kbd>f</kbd>。
+@@ core/src/keyboard/key.rs:910
+美式键盘上的 <kbd>g</kbd>。
+@@ core/src/keyboard/key.rs:912
+美式键盘上的 <kbd>h</kbd>。
+@@ core/src/keyboard/key.rs:914
+美式键盘上的 <kbd>i</kbd>。
+@@ core/src/keyboard/key.rs:916
+美式键盘上的 <kbd>j</kbd>。
+@@ core/src/keyboard/key.rs:918
+美式键盘上的 <kbd>k</kbd>。
+@@ core/src/keyboard/key.rs:920
+美式键盘上的 <kbd>l</kbd>。
+@@ core/src/keyboard/key.rs:922
+美式键盘上的 <kbd>m</kbd>。
+@@ core/src/keyboard/key.rs:924
+美式键盘上的 <kbd>n</kbd>。
+@@ core/src/keyboard/key.rs:926
+美式键盘上的 <kbd>o</kbd>。
+@@ core/src/keyboard/key.rs:928
+美式键盘上的 <kbd>p</kbd>。
+@@ core/src/keyboard/key.rs:930
+美式键盘上的 <kbd>q</kbd>。
+在 AZERTY（例如法语）键盘上标为 <kbd>a</kbd>。
+@@ core/src/keyboard/key.rs:933
+美式键盘上的 <kbd>r</kbd>。
+@@ core/src/keyboard/key.rs:935
+美式键盘上的 <kbd>s</kbd>。
+@@ core/src/keyboard/key.rs:937
+美式键盘上的 <kbd>t</kbd>。
+@@ core/src/keyboard/key.rs:939
+美式键盘上的 <kbd>u</kbd>。
+@@ core/src/keyboard/key.rs:941
+美式键盘上的 <kbd>v</kbd>。
+@@ core/src/keyboard/key.rs:943
+美式键盘上的 <kbd>w</kbd>。
+在 AZERTY（例如法语）键盘上标为 <kbd>z</kbd>。
+@@ core/src/keyboard/key.rs:946
+美式键盘上的 <kbd>x</kbd>。
+@@ core/src/keyboard/key.rs:948
+美式键盘上的 <kbd>y</kbd>。
+在 QWERTZ（例如德语）键盘上标为 <kbd>z</kbd>。
+@@ core/src/keyboard/key.rs:951
+美式键盘上的 <kbd>z</kbd>。
+在 AZERTY（例如法语）键盘上标为 <kbd>w</kbd>，在
+QWERTZ（例如德语）键盘上标为 <kbd>y</kbd>。
+@@ core/src/keyboard/key.rs:955
+美式键盘上的 <kbd>-</kbd>。
+@@ core/src/keyboard/key.rs:957
+美式键盘上的 <kbd>.</kbd>。
+@@ core/src/keyboard/key.rs:959
+美式键盘上的 <kbd>'</kbd>。
+@@ core/src/keyboard/key.rs:961
+美式键盘上的 <kbd>;</kbd>。
+@@ core/src/keyboard/key.rs:963
+美式键盘上的 <kbd>/</kbd>。
+@@ core/src/keyboard/key.rs:965
+<kbd>Alt</kbd>、<kbd>Option</kbd> 或 <kbd>⌥</kbd>。
+@@ core/src/keyboard/key.rs:967
+<kbd>Alt</kbd>、<kbd>Option</kbd> 或 <kbd>⌥</kbd>。
+在许多键盘布局上标为 <kbd>AltGr</kbd>。
+@@ core/src/keyboard/key.rs:970
+<kbd>Backspace</kbd> 或 <kbd>⌫</kbd>。
+在 Apple 键盘上标为 <kbd>Delete</kbd>。
+@@ core/src/keyboard/key.rs:973
+<kbd>CapsLock</kbd> 或 <kbd>⇪</kbd>
+@@ core/src/keyboard/key.rs:975
+应用程序上下文菜单键，通常位于右
+<kbd>Super</kbd> 键和右 <kbd>Control</kbd> 键之间。
+@@ core/src/keyboard/key.rs:978
+<kbd>Control</kbd> 或 <kbd>⌃</kbd>
+@@ core/src/keyboard/key.rs:980
+<kbd>Control</kbd> 或 <kbd>⌃</kbd>
+@@ core/src/keyboard/key.rs:982
+<kbd>Enter</kbd> 或 <kbd>↵</kbd>。在 Apple 键盘上标为 <kbd>Return</kbd>。
+@@ core/src/keyboard/key.rs:984
+Windows 键、<kbd>⌘</kbd>、<kbd>Command</kbd> 或其他操作系统符号键。
+@@ core/src/keyboard/key.rs:986
+Windows 键、<kbd>⌘</kbd>、<kbd>Command</kbd> 或其他操作系统符号键。
+@@ core/src/keyboard/key.rs:988
+<kbd>Shift</kbd> 或 <kbd>⇧</kbd>
+@@ core/src/keyboard/key.rs:990
+<kbd>Shift</kbd> 或 <kbd>⇧</kbd>
+@@ core/src/keyboard/key.rs:992
+<kbd> </kbd>（空格）
+@@ core/src/keyboard/key.rs:994
+<kbd>Tab</kbd> 或 <kbd>⇥</kbd>
+@@ core/src/keyboard/key.rs:996
+日语：<kbd>変</kbd>（henkan）
+@@ core/src/keyboard/key.rs:998
+日语：<kbd>カタカナ</kbd>/<kbd>ひらがな</kbd>/<kbd>ローマ字</kbd>
+（katakana/hiragana/romaji）
+@@ core/src/keyboard/key.rs:1001
+韩语：HangulMode <kbd>한/영</kbd>（han/yeong）
+
+日语（Mac 键盘）：<kbd>か</kbd>（kana）
+@@ core/src/keyboard/key.rs:1005
+韩语：Hanja <kbd>한</kbd>（hanja）
+
+日语（Mac 键盘）：<kbd>英</kbd>（eisu）
+@@ core/src/keyboard/key.rs:1009
+日语（文字处理键盘）：Katakana
+@@ core/src/keyboard/key.rs:1011
+日语（文字处理键盘）：Hiragana
+@@ core/src/keyboard/key.rs:1013
+日语（文字处理键盘）：Zenkaku/Hankaku
+@@ core/src/keyboard/key.rs:1015
+日语：<kbd>無変換</kbd>（muhenkan）
+@@ core/src/keyboard/key.rs:1017
+<kbd>⌦</kbd>。向前删除键。
+注意：在 Apple 键盘上，主键区标有 <kbd>Delete</kbd> 的键
+被编码为 [`Backspace`]。
+@@ core/src/keyboard/key.rs:1023
+<kbd>Page Down</kbd>、<kbd>End</kbd> 或 <kbd>↘</kbd>
+@@ core/src/keyboard/key.rs:1025
+<kbd>Help</kbd>。标准 PC 键盘上没有这个键。
+@@ core/src/keyboard/key.rs:1027
+<kbd>Home</kbd> 或 <kbd>↖</kbd>
+@@ core/src/keyboard/key.rs:1029
+<kbd>Insert</kbd> 或 <kbd>Ins</kbd>。Apple 键盘上没有这个键。
+@@ core/src/keyboard/key.rs:1031
+<kbd>Page Down</kbd>、<kbd>PgDn</kbd> 或 <kbd>⇟</kbd>
+@@ core/src/keyboard/key.rs:1033
+<kbd>Page Up</kbd>、<kbd>PgUp</kbd> 或 <kbd>⇞</kbd>
+@@ core/src/keyboard/key.rs:1035
+=
+@@ core/src/keyboard/key.rs:1037
+=
+@@ core/src/keyboard/key.rs:1039
+=
+@@ core/src/keyboard/key.rs:1041
+=
+@@ core/src/keyboard/key.rs:1043
+在 Mac 上，它用于数字小键盘的 <kbd>Clear</kbd> 键。
+@@ core/src/keyboard/key.rs:1045
+键盘上的 <kbd>0 Ins</kbd>。手机或遥控器上的 <kbd>0</kbd>
+@@ core/src/keyboard/key.rs:1047
+键盘上的 <kbd>1 End</kbd>。手机或遥控器上的 <kbd>1</kbd> 或
+<kbd>1 QZ</kbd>
+@@ core/src/keyboard/key.rs:1050
+键盘上的 <kbd>2 ↓</kbd>。手机或遥控器上的 <kbd>2 ABC</kbd>
+@@ core/src/keyboard/key.rs:1052
+键盘上的 <kbd>3 PgDn</kbd>。手机或遥控器上的 <kbd>3 DEF</kbd>
+@@ core/src/keyboard/key.rs:1054
+键盘上的 <kbd>4 ←</kbd>。手机或遥控器上的 <kbd>4 GHI</kbd>
+@@ core/src/keyboard/key.rs:1056
+键盘上的 <kbd>5</kbd>。手机或遥控器上的 <kbd>5 JKL</kbd>
+@@ core/src/keyboard/key.rs:1058
+键盘上的 <kbd>6 →</kbd>。手机或遥控器上的 <kbd>6 MNO</kbd>
+@@ core/src/keyboard/key.rs:1060
+键盘上的 <kbd>7 Home</kbd>。手机或遥控器上的 <kbd>7 PQRS</kbd> 或
+<kbd>7 PRS</kbd>
+@@ core/src/keyboard/key.rs:1063
+键盘上的 <kbd>8 ↑</kbd>。手机或遥控器上的 <kbd>8 TUV</kbd>
+@@ core/src/keyboard/key.rs:1065
+键盘上的 <kbd>9 PgUp</kbd>。手机或遥控器上的 <kbd>9 WXYZ</kbd> 或
+<kbd>9 WXY</kbd>
+@@ core/src/keyboard/key.rs:1068
+=
+@@ core/src/keyboard/key.rs:1070
+见于 Microsoft Natural Keyboard。
+@@ core/src/keyboard/key.rs:1072
+<kbd>C</kbd> 或 <kbd>A</kbd>（All Clear，全部清除）。也用于
+<kbd>Clear</kbd> 键与 <kbd>NumLock</kbd> 键分开的数字小键盘。在 Mac 上，
+数字小键盘的 <kbd>Clear</kbd> 键被编码为 [`NumLock`]。
+@@ core/src/keyboard/key.rs:1078
+<kbd>C</kbd>（Clear Entry，清除输入）
+@@ core/src/keyboard/key.rs:1080
+<kbd>,</kbd>（千位分隔符）。在千位分隔符为 “.” 的区域
+（例如巴西），该键可能产生 <kbd>.</kbd>。
+@@ core/src/keyboard/key.rs:1083
+<kbd>. Del</kbd>。在小数分隔符为 “,” 的区域（例如
+巴西），该键可能产生 <kbd>,</kbd>。
+@@ core/src/keyboard/key.rs:1086
+=
+@@ core/src/keyboard/key.rs:1089
+=
+@@ core/src/keyboard/key.rs:1091
+手机或遥控设备上的 <kbd>#</kbd>。该键通常位于
+<kbd>9</kbd> 键的下方、<kbd>0</kbd> 键的右侧。
+@@ core/src/keyboard/key.rs:1094
+<kbd>M</kbd> 把当前输入加到存储器中保存的值上。
+@@ core/src/keyboard/key.rs:1096
+<kbd>M</kbd> 清除存储器中保存的值。
+@@ core/src/keyboard/key.rs:1098
+<kbd>M</kbd> 用存储器中保存的值替换当前输入。
+@@ core/src/keyboard/key.rs:1100
+<kbd>M</kbd> 用当前输入替换存储器中保存的值。
+@@ core/src/keyboard/key.rs:1102
+<kbd>M</kbd> 从存储器中保存的值里减去当前输入。
+@@ core/src/keyboard/key.rs:1104
+键盘上的 <kbd>&ast;</kbd>。用于提供数学运算
+（<kbd>+</kbd>、<kbd>-</kbd>、<kbd>&ast;</kbd> 和 <kbd>/</kbd>）的数字小键盘。
+
+手机和遥控器上的 <kbd>&ast;</kbd> 键请使用 `NumpadStar`。
+@@ core/src/keyboard/key.rs:1109
+<kbd>(</kbd> 见于 Microsoft Natural Keyboard。
+@@ core/src/keyboard/key.rs:1111
+<kbd>)</kbd> 见于 Microsoft Natural Keyboard。
+@@ core/src/keyboard/key.rs:1113
+手机或遥控设备上的 <kbd>&ast;</kbd>。
+
+该键通常位于 <kbd>7</kbd> 键的下方、
+<kbd>0</kbd> 键的左侧。
+
+数字小键盘上的 <kbd>&ast;</kbd> 键请使用
+<kbd>"NumpadMultiply"</kbd>。
+@@ core/src/keyboard/key.rs:1121
+=
+@@ core/src/keyboard/key.rs:1123
+<kbd>Esc</kbd> 或 <kbd>⎋</kbd>
+@@ core/src/keyboard/key.rs:1125
+<kbd>Fn</kbd> 通常是一个硬件按键，不会产生单独的代码。
+@@ core/src/keyboard/key.rs:1127
+<kbd>FLock</kbd> 或 <kbd>FnLock</kbd>。功能锁定键。见于 Microsoft
+Natural Keyboard。
+@@ core/src/keyboard/key.rs:1130
+<kbd>PrtScr SysRq</kbd> 或 <kbd>Print Screen</kbd>
+@@ core/src/keyboard/key.rs:1132
+=
+@@ core/src/keyboard/key.rs:1134
+=
+@@ core/src/keyboard/key.rs:1136
+某些笔记本电脑把这个键放在 <kbd>↑</kbd> 键的左侧。
+
+它也是 Android 上的“返回”按钮（三角形）。
+@@ core/src/keyboard/key.rs:1141
+某些笔记本电脑把这个键放在 <kbd>↑</kbd> 键的右侧。
+@@ core/src/keyboard/key.rs:1143
+Android 上的“主页”按钮。
+@@ core/src/keyboard/key.rs:1148
+<kbd>Eject</kbd> 或 <kbd>⏏</kbd>。在某些 Apple 键盘上，该键位于
+功能键区。
+@@ core/src/keyboard/key.rs:1151
+在键盘上有时标为 <kbd>My Computer</kbd>
+@@ core/src/keyboard/key.rs:1153
+在键盘上有时标为 <kbd>Calculator</kbd>
+@@ core/src/keyboard/key.rs:1161
+在某些 Apple 键盘上，该键位于功能键区，取代了
+<kbd>Eject</kbd> 键。
+@@ core/src/keyboard/key.rs:1169
+旧式修饰键。在某些场合也称为 “Super”。
+@@ core/src/keyboard/key.rs:1171
+旧式修饰键。
+@@ core/src/keyboard/key.rs:1177
+见于 Sun 的 USB 键盘。
+@@ core/src/keyboard/key.rs:1179
+见于 Sun 的 USB 键盘。
+@@ core/src/keyboard/key.rs:1181
+见于 Sun 的 USB 键盘。
+@@ core/src/keyboard/key.rs:1183
+见于 Sun 的 USB 键盘。
+@@ core/src/keyboard/key.rs:1185
+见于 Sun 的 USB 键盘。
+@@ core/src/keyboard/key.rs:1187
+见于 Sun 的 USB 键盘。
+@@ core/src/keyboard/key.rs:1189
+见于 Sun 的 USB 键盘。
+@@ core/src/keyboard/key.rs:1191
+见于 Sun 的 USB 键盘。
+@@ core/src/keyboard/key.rs:1193
+见于 Sun 的 USB 键盘。
+@@ core/src/keyboard/key.rs:1195
+用于某些日语文字处理键盘上专用的 <kbd>ひらがな</kbd> 键。
+@@ core/src/keyboard/key.rs:1197
+用于某些日语文字处理键盘上专用的 <kbd>カタカナ</kbd> 键。
+@@ core/src/keyboard/key.rs:1199
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1202
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1205
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1208
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1211
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1214
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1217
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1220
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1223
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1226
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1229
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1232
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1235
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1238
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1241
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1244
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1247
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1250
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1253
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1256
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1259
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1262
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1265
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1268
+通用功能键。
+通常位于键盘顶部。
+@@ core/src/keyboard/key.rs:1271
+通用功能键。
+@@ core/src/keyboard/key.rs:1273
+通用功能键。
+@@ core/src/keyboard/key.rs:1275
+通用功能键。
+@@ core/src/keyboard/key.rs:1277
+通用功能键。
+@@ core/src/keyboard/key.rs:1279
+通用功能键。
+@@ core/src/keyboard/key.rs:1281
+通用功能键。
+@@ core/src/keyboard/key.rs:1283
+通用功能键。
+@@ core/src/keyboard/key.rs:1285
+通用功能键。
+@@ core/src/keyboard/key.rs:1287
+通用功能键。
+@@ core/src/keyboard/key.rs:1289
+通用功能键。
+@@ core/src/keyboard/key.rs:1291
+通用功能键。
+@@ core/src/keyboard/key.rs:1295
+包含平台原生的物理按键标识符。
+
+具体的值因平台而异（这也是它按平台划分变体的原因
+之一），但这些值主要与按键在键盘上的物理位置相关。
+
+这个枚举主要用于在 Winit 没有把某个原生物理按键标识符映射到
+有意义的 [`Code`] 变体时保存原始键码。遇到我们尚未
+映射的标识符时，你仍然可以借助它像使用 [`Code`] 那样：
+
+- 正确匹配按键按下和释放事件。
+- 在非 Web 平台上，支持通过界面把快捷键绑定到几乎任意按键。
+@@ core/src/keyboard/key.rs:1308
+无法识别的代码。
+@@ core/src/keyboard/key.rs:1310
+Android 的“扫描码”（scancode）。
+@@ core/src/keyboard/key.rs:1312
+macOS 的“扫描码”（scancode）。
+@@ core/src/keyboard/key.rs:1314
+Windows 的“扫描码”（scancode）。
+@@ core/src/keyboard/key.rs:1316
+XKB 的“键码”（keycode）。
+@@ core/src/keyboard/key.rs:1320
+表示物理按键的位置。
+
+这个类型是 [`Code`] 的超集，额外包含一个 [`Unidentified`][Self::Unidentified]
+变体。
+@@ core/src/keyboard/key.rs:1326
+已知的按键代码
+@@ core/src/keyboard/key.rs:1328
+当按键无法转换为 [`Code`] 时使用这个变体
+
+此时会提供原生键码（如果有），这样你就可以通过对 [`Physical`] 按键
+求哈希，更可靠地匹配按键按下和释放事件。也可以用它
+为非标准按键设置快捷键，但这样的快捷键只适用于特定平台。

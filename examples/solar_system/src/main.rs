@@ -1,9 +1,21 @@
+//! 一个带动画的太阳系。
+//!
+//! 这个示例展示了如何使用带变换的 `Canvas` 部件，
+//! 在不同的坐标系中绘图。
+//!
+//! 灵感来自 MDN 文档[1]中的示例。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! An animated solar system.
 //!
 //! This example showcases how to use a `Canvas` widget with transforms to draw
 //! using different coordinate systems.
 //!
 //! Inspired by the example found in the MDN docs[1].
+//!
+//! </details>
 //!
 //! [1]: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_animations#An_animated_solar_system
 use iced::backend;

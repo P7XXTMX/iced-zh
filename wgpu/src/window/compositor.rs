@@ -1,4 +1,11 @@
+//! 把窗口与渲染器连接起来。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Connect a window with a renderer.
+//!
+//! </details>
 use crate::core::Color;
 use crate::core::backend;
 use crate::core::renderer;
@@ -7,7 +14,14 @@ use crate::graphics::compositor;
 use crate::graphics::{self, Antialiasing, Shell, Viewport};
 use crate::{Engine, Renderer};
 
+/// 由 `wgpu` 驱动的 iced 窗口图形后端。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A window graphics backend for iced powered by `wgpu`.
+///
+/// </details>
 pub struct Compositor {
     instance: wgpu::Instance,
     adapter: wgpu::Adapter,
@@ -17,19 +31,54 @@ pub struct Compositor {
     settings: Settings,
 }
 
+/// 合成器错误。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A compositor error.
+///
+/// </details>
 #[derive(Debug, Clone, thiserror::Error)]
 pub enum Error {
+    /// 表面创建失败。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The surface creation failed.
+    ///
+    /// </details>
     #[error("the surface creation failed: {0}")]
     SurfaceCreationFailed(#[from] wgpu::CreateSurfaceError),
+    /// 表面不兼容。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The surface is not compatible.
+    ///
+    /// </details>
     #[error("the surface is not compatible")]
     IncompatibleSurface,
+    /// 没有找到符合所请求选项的适配器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// No adapter was found for the options requested.
+    ///
+    /// </details>
     #[error("no adapter was found for the options requested: {0:?}")]
     NoAdapterFound(String),
+    /// 没有任何设备请求成功。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// No device request succeeded.
+    ///
+    /// </details>
     #[error("no device request succeeded: {0:?}")]
     RequestDeviceFailed(Vec<(wgpu::Limits, wgpu::RequestDeviceError)>),
 }
@@ -44,9 +93,18 @@ impl From<Error> for backend::Error {
 }
 
 impl Compositor {
+    /// 使用给定的 [`Settings`] 请求一个新的 [`Compositor`]。
+    ///
+    /// 如果找不到兼容的图形适配器，返回 `None`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Requests a new [`Compositor`] with the given [`Settings`].
     ///
     /// Returns `None` if no compatible graphics adapter could be found.
+    ///
+    /// </details>
     pub async fn request(
         settings: Settings,
         display: impl compositor::Display,
@@ -166,6 +224,7 @@ impl Compositor {
         });
 
         // Request SHADER_F16 only if the adapter supports it (e.g., not available in WebGL2)
+        // 只有适配器支持时才请求 SHADER_F16（例如 WebGL2 中不可用）
         let required_features = if adapter.features().contains(wgpu::Features::SHADER_F16) {
             wgpu::Features::SHADER_F16
         } else {
@@ -216,7 +275,14 @@ impl Compositor {
     }
 }
 
+/// 使用给定的 [`Settings`] 和窗口创建一个 [`Compositor`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a [`Compositor`] with the given [`Settings`] and window.
+///
+/// </details>
 pub async fn new(
     settings: Settings,
     display: impl compositor::Display,
@@ -226,7 +292,14 @@ pub async fn new(
     Compositor::request(settings, display, compatible_window, shell).await
 }
 
+/// 使用给定的 [`Compositor`] 呈现给定的图元。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Presents the given primitives with the given [`Compositor`].
+///
+/// </details>
 pub fn present(
     renderer: &mut Renderer,
     surface: &mut wgpu::Surface<'static>,
@@ -248,6 +321,7 @@ pub fn present(
             );
 
             // Present the frame
+            // 呈现这一帧
             on_pre_present();
             renderer.engine.queue.present(frame);
 
@@ -358,25 +432,64 @@ impl graphics::Compositor for Compositor {
     }
 }
 
+/// [`Compositor`] 的设置。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The settings of a [`Compositor`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Settings {
+    /// [`Renderer`] 的呈现模式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The present mode of the [`Renderer`].
+    ///
+    /// </details>
     ///
     /// [`Renderer`]: crate::Renderer
     pub present_mode: wgpu::PresentMode,
 
+    /// 要使用的图形后端。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The graphics backends to use.
+    ///
+    /// </details>
     pub backends: wgpu::Backends,
 
+    /// 图形适配器的功耗偏好。
+    ///
+    /// 默认情况下，它是 [`backend::PowerPreference::None`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The power-usage preference for graphics adapters.
     ///
     /// By default, it is [`backend::PowerPreference::None`].
+    ///
+    /// </details>
     pub power_preference: backend::PowerPreference,
 
+    /// 用于三角形图元的抗锯齿策略。
+    ///
+    /// 默认情况下，它是 `None`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The antialiasing strategy that will be used for triangle primitives.
     ///
     /// By default, it is `None`.
+    ///
+    /// </details>
     pub antialiasing: Option<Antialiasing>,
 }
 
@@ -419,6 +532,22 @@ impl From<backend::Settings> for Settings {
     }
 }
 
+/// 从当前的环境配置中获取 [`wgpu::PresentMode`]
+/// （如果已设置）。
+///
+/// 可以通过设置 `ICED_PRESENT_MODE` 环境变量来改变
+/// 这个函数的返回值。可用的值有：
+///
+/// - `vsync` → [`wgpu::PresentMode::AutoVsync`]
+/// - `no_vsync` → [`wgpu::PresentMode::AutoNoVsync`]
+/// - `immediate` → [`wgpu::PresentMode::Immediate`]
+/// - `fifo` → [`wgpu::PresentMode::Fifo`]
+/// - `fifo_relaxed` → [`wgpu::PresentMode::FifoRelaxed`]
+/// - `mailbox` → [`wgpu::PresentMode::Mailbox`]
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Obtains a [`wgpu::PresentMode`] from the current environment
 /// configuration, if set.
 ///
@@ -431,6 +560,8 @@ impl From<backend::Settings> for Settings {
 /// - `fifo` → [`wgpu::PresentMode::Fifo`]
 /// - `fifo_relaxed` → [`wgpu::PresentMode::FifoRelaxed`]
 /// - `mailbox` → [`wgpu::PresentMode::Mailbox`]
+///
+/// </details>
 pub fn present_mode_from_env() -> Option<wgpu::PresentMode> {
     let present_mode = std::env::var("ICED_PRESENT_MODE").ok()?;
 

@@ -1,4 +1,11 @@
+//! 用于制作动画视图的部件。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A widget to make animated views.
+//!
+//! </details>
 use std::hash::{DefaultHasher, Hash, Hasher};
 
 use crate::core::animation::{Animation, Float};
@@ -11,16 +18,45 @@ use crate::core::time::Instant;
 use crate::core::widget::{self, Operation, Tree, tree};
 use crate::core::{self, Event, Length, Rectangle, Shell, Size, Vector, Widget};
 
+/// [`Transition`] 的逻辑。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The logic of a [`Transition`].
+///
+/// </details>
 pub trait Program: 'static {
+    /// [`Program`] 进行动画的值的类型。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The type of value that the [`Program`] animates.
+    ///
+    /// </details>
     type Value: Copy + 'static;
 
+    /// 在给定的时刻，让 [`Program`] 从当前状态过渡到
+    /// 给定的值。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Transitions the [`Program`] from its current state towards the given value at
     /// the given time.
+    ///
+    /// </details>
     fn go(&mut self, value: Self::Value, now: Instant);
 
+    /// 如果 [`Program`] 当前正在进行中，返回 true。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns true if the [`Program`] is currently in progress.
+    ///
+    /// </details>
     fn is_animating(&self, now: Instant) -> bool;
 }
 
@@ -39,7 +75,14 @@ where
     }
 }
 
+/// 可以用来为其内容添加动画的部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that can be used to animate its contents.
+///
+/// </details>
 pub struct Transition<'a, Message, W, P>
 where
     P: Program,
@@ -59,12 +102,24 @@ impl<'a, Message, W, P> Transition<'a, Message, W, P>
 where
     P: Program,
 {
+    /// 创建一个新的 [`Transition`]。
+    ///
+    /// `init` 闭包用于初始化动画。
+    ///
+    /// `view` 闭包会收到动画和一个 [`Instant`]，可以用来对值进行插值。
+    /// 在到达给定的 `value` 之前，它每一帧都会被调用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Transition`].
     ///
     /// The `init` closure will be used to initialize an animation.
     ///
     /// The `view` closure will receive the animation and an [`Instant`], which can be used for interpolating values.
     /// This will be called every frame until the given `value` is reached.
+    ///
+    /// </details>
     pub fn new(
         init: impl Fn() -> P + 'a,
         value: P::Value,
@@ -83,25 +138,52 @@ where
         }
     }
 
+    /// 设置 [`Transition`] 的 [`widget::Id`]。
+    ///
+    /// 之后可以使用这个 [`widget::Id`] 通过 [`reset`] 重置 [`Animation`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`widget::Id`] of the [`Transition`].
     ///
     /// The [`widget::Id`] can subsequently be used to reset the [`Animation`] via [`reset`].
+    ///
+    /// </details>
     pub fn id(mut self, id: impl Into<widget::Id>) -> Self {
         self.id = Some(id.into());
         self
     }
 
+    /// 设置 [`Transition`] 部件的键，用于保持连续性。
+    ///
+    /// 改变键会重置 [`Animation`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the key of the [`Transition`] widget for continuity.
     ///
     /// Changing the key will reset the [`Animation`].
+    ///
+    /// </details>
     pub fn key(mut self, key: impl Hash) -> Self {
         self.key = Key::new(key);
         self
     }
 
+    /// 设置 [`Transition`] 完成动画时要产生的消息。
+    ///
+    /// 注意：如果 [`Animation`] 被设置为无限循环，这条消息永远不会产生！
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when the [`Transition`] has finished animating.
     ///
     /// Note that if an [`Animation`] is set to loop forever, the message will never be produced!
+    ///
+    /// </details>
     pub fn on_finish(self, on_finish: Message) -> Self
     where
         Message: Clone + 'a,
@@ -109,9 +191,18 @@ where
         self.on_finish_maybe(on_finish)
     }
 
+    /// 如果为 [`Some`]，设置 [`Transition`] 完成动画时要产生的消息。
+    ///
+    /// 注意：如果 [`Animation`] 被设置为无限循环，这条消息永远不会产生！
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when the [`Transition`] has finished animating, if [`Some`].
     ///
     /// Note that if an [`Animation`] is set to loop forever, the message will never be produced!
+    ///
+    /// </details>
     pub fn on_finish_maybe(mut self, on_finish: impl Into<Option<Message>>) -> Self
     where
         Message: Clone + 'a,
@@ -123,6 +214,20 @@ where
         self
     }
 
+    /// 设置 [`Transition`] 完成动画时要产生的消息。
+    ///
+    /// 它与 [`Transition::on_finish`] 类似，但使用闭包来产生
+    /// 消息。
+    ///
+    /// 这个闭包只会在 [`Transition`] 真正完成动画时被调用，
+    /// 因此，如果创建结果消息的开销较大，这个方法可以用来
+    /// 减少开销。
+    ///
+    /// 注意：如果 [`Animation`] 被设置为无限循环，这条消息永远不会产生！
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when the [`Transition`] has finished animating.
     ///
     /// This is analogous to [`Transition::on_finish`], but using a closure to produce
@@ -133,6 +238,8 @@ where
     /// message is slow.
     ///
     /// Note that if an [`Animation`] is set to loop forever, the message will never be produced!
+    ///
+    /// </details>
     pub fn on_finish_with(mut self, on_finish: impl Fn() -> Message + 'a) -> Self {
         self.on_finish = Some(Box::new(on_finish));
         self
@@ -366,7 +473,14 @@ impl Key {
 
 struct ShouldReset(bool);
 
+/// 重置 [`Transition`] 的 [`Animation`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Reset the [`Animation`] of a [`Transition`].
+///
+/// </details>
 pub fn reset<Message>(id: impl Into<widget::Id>) -> iced_runtime::Task<Message>
 where
     Message: iced_runtime::futures::MaybeSend + 'static,
@@ -375,7 +489,14 @@ where
     iced_runtime::task::widget(reset_raw(id)).discard()
 }
 
+/// 用于重置 [`Transition`] 的 [`Animation`] 的 [`Operation`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An [`Operation`] to reset the [`Animation`] of a [`Transition`].
+///
+/// </details>
 pub fn reset_raw(id: impl Into<widget::Id>) -> impl Operation {
     struct Reset(widget::Id);
 

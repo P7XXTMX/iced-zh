@@ -1,3 +1,24 @@
+//! 把元素粘在视口上！
+//!
+//! [`Sticky`] 会在其内容本该离开视野时让它们保持可见，
+//! 例如当它们被滚动出
+//! [`Scrollable`](crate::Scrollable) 时。只要内容的任意一条边
+//! 超出可见边界，它们就会被移到可见边界内的一个 [`overlay`] 中，
+//! 从而停留在视口的边缘。
+//!
+//! 在被粘住期间，内容保持原有的布局：它们
+//! 只是浮动到可见边界内的一个新位置。
+//!
+//! 当内容的边到达其父级的边时，它们会保持
+//! 附着在父级的边上：保留原有的边界，并改为被裁剪到
+//! 可见边界。
+//!
+//! 一旦内容的父级离开了可见边界，它们就会
+//! 停止浮动并随父级一起滚动。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Stick elements to the viewport!
 //!
 //! [`Sticky`] keeps its contents visible when they would otherwise go out of
@@ -16,7 +37,9 @@
 //! Once the parent of the contents has gone out of the visible bounds, they
 //! stop floating and scroll with it.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; pub use iced_widget::core::Length::Fill; }
 //! # use iced::widget::Widget;
@@ -44,6 +67,31 @@ use crate::core::widget;
 use crate::core::window;
 use crate::core::{Event, Layout, Length, Point, Rectangle, Shell, Size, Vector, Widget};
 
+/// 让其内容保持在视野内的部件。
+///
+/// 当 [`Sticky`] 部件的内容本该离开视野时（例如
+/// 当它们被滚动出 [`Scrollable`](crate::Scrollable) 时），
+/// 它们会被移到一个 [`overlay`] 中，该覆盖层位于父级的
+/// [`layout.bounds`](Layout::bounds) 与视口的交集之内，从而
+/// 在视口的边缘保持可见。
+///
+/// 只要内容的任意一条边超出可见边界，它们就会开始浮动，
+/// 并且始终被限制在可见边界内，
+/// 从而停留在其中。
+///
+/// 在被粘住期间，内容保持原有的布局：它们
+/// 只是浮动到一个新位置。
+///
+/// 当内容的边到达其父级的边时，它们会保持
+/// 附着在父级的边上：保留原有的边界，并改为被裁剪到
+/// 可见边界。
+///
+/// 一旦内容的父级离开了可见边界，它们就会
+/// 停止浮动并随父级一起滚动。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that keeps its contents in view.
 ///
 /// When the contents of a [`Sticky`] widget would go out of view (for
@@ -66,7 +114,9 @@ use crate::core::{Event, Layout, Length, Point, Rectangle, Shell, Size, Vector, 
 /// Once the parent of the contents has gone out of the visible bounds, they
 /// stop floating and scroll with it.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; pub use iced_widget::core::Length::Fill; }
 /// # use iced::widget::Widget;
@@ -90,7 +140,14 @@ pub struct Sticky<W> {
 }
 
 impl<W> Sticky<W> {
+    /// 使用给定的内容创建一个新的 [`Sticky`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Sticky`] with the given content.
+    ///
+    /// </details>
     pub fn new(content: W) -> Self {
         Self { content }
     }
@@ -172,7 +229,7 @@ where
             if is_stuck != state.is_stuck {
                 state.is_stuck = is_stuck;
                 shell.invalidate_overlay();
-                return; // Avoid propagating a stale redraw
+                return; // Avoid propagating a stale redraw（避免传播过期的重绘）
             }
         }
 
@@ -293,6 +350,22 @@ where
     }
 }
 
+/// 计算内容沿某个轴的位置，使其粘在
+/// 可见边界和父级边界之内。
+///
+/// `position` 和 `size` 是内容沿该轴的自然位置和大小，
+/// `viewport` 和 `viewport_size` 描述可见
+/// 边界，`parent` 描述父级的边界。
+///
+/// 返回的位置让内容同时位于可见边界
+/// 和父级边界之内。如果做不到这一点（因为
+/// 内容比两者的交集更大），内容会改为
+/// 附着在父级的边上，从而保留
+/// 原有的边界。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Computes the position of the contents along one axis, stuck inside the
 /// visible bounds and the bounds of their parent.
 ///
@@ -305,6 +378,8 @@ where
 /// contents are larger than their intersection, the contents are kept
 /// attached to the edge of the parent instead, so that they keep their
 /// original bounds.
+///
+/// </details>
 fn stuck_axis(
     position: f32,
     size: f32,
@@ -323,9 +398,11 @@ fn stuck_axis(
         position.clamp(min, max)
     } else if parent_max < viewport {
         // The contents are attached to the upper edge of the parent
+        // 内容附着在父级的上边缘
         parent_max
     } else {
         // The contents are attached to the lower edge of the parent
+        // 内容附着在父级的下边缘
         parent_min
     }
 }

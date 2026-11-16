@@ -1,25 +1,67 @@
+/// 二维向量。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A 2D vector.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Vector<T = f32> {
+    /// [`Vector`] 的 X 分量
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The X component of the [`Vector`]
+    ///
+    /// </details>
     pub x: T,
 
+    /// [`Vector`] 的 Y 分量
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The Y component of the [`Vector`]
+    ///
+    /// </details>
     pub y: T,
 }
 
 impl<T> Vector<T> {
+    /// 使用给定的分量创建一个新的 [`Vector`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Vector`] with the given components.
+    ///
+    /// </details>
     pub const fn new(x: T, y: T) -> Self {
         Self { x, y }
     }
 }
 
 impl Vector {
+    /// 零 [`Vector`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The zero [`Vector`].
+    ///
+    /// </details>
     pub const ZERO: Self = Self::new(0.0, 0.0);
 
+    /// 对 [`Vector`] 进行四舍五入。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Rounds the [`Vector`].
+    ///
+    /// </details>
     pub fn round(self) -> Self {
         Self {
             x: self.x.round(),
@@ -27,8 +69,16 @@ impl Vector {
         }
     }
 
+    /// 计算一个逻辑 [`Vector`]，使得对它应用给定的
+    /// `scale_factor` 之后，结果恰好是取整后的值。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Computes the logical [`Vector`] that ends up rounded
     /// after the given `scale_factor` is applied to it.
+    ///
+    /// </details>
     pub fn hint(self, scale_factor: f32) -> Self {
         (self * scale_factor).round() / scale_factor
     }

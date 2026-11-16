@@ -1,5 +1,13 @@
+//! 把一个部件显示在另一个部件之上，但仅当底层部件
+//! 处于悬停状态时才显示。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Displays a widget on top of another one, only when the base widget is
 //! hovered.
+//!
+//! </details>
 
 use crate::core;
 use crate::core::layout::{self, Layout};
@@ -12,11 +20,22 @@ use crate::core::widget::{Meta, Operation};
 use crate::core::window;
 use crate::core::{Event, Length, Rectangle, Shell, Size, Vector, Widget};
 
+/// 在自身之上显示另一个部件的部件。
+///
+/// 它的工作方式与 [`stack`](crate::Stack) 类似，但只有当
+/// 光标位于底层部件上时才会显示顶层。它可以用来
+/// 减少视觉上的杂乱。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that displays another widget on top of it.
 ///
 /// This works analogously to a [`stack`](crate::Stack), but it will only
 /// display the layer on top when the cursor is over the base. It can be
 /// useful for removing visual clutter.
+///
+/// </details>
 pub struct Hover<W, V> {
     base: W,
     top: V,
@@ -26,7 +45,14 @@ pub struct Hover<W, V> {
 }
 
 impl<W, V> Hover<W, V> {
+    /// 使用给定的底层部件和顶层部件创建一个新的 [`Hover`] 部件。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Hover`] widget with the given base and top widgets.
+    ///
+    /// </details>
     pub fn new(base: W, top: V) -> Self {
         Self {
             base,
@@ -187,6 +213,7 @@ where
             );
 
             // Ignore redraw requests of invisible content
+            // 忽略不可见内容的重绘请求
             if !is_visible {
                 Shell::replace_redraw_request(shell, redraw_request);
             }

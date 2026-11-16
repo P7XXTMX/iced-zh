@@ -1,4 +1,11 @@
+//! 使用内置部件的布局测试。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Layout tests with the built-in widgets.
+//!
+//! </details>
 use iced_widget::core::Length::{Fill, FillPortion};
 use iced_widget::core::layout;
 use iced_widget::core::widget::{self, Widget};
@@ -32,6 +39,8 @@ fn layout_fill_max() {
 fn layout_fill_max_combined() {
     // The fixed element gets laid out first, then the bounded element, and finally
     // the unbounded fluid one.
+    // 先布局固定元素，然后是有界元素，最后是
+    // 无界的流式元素。
     assert_layout_eq(
         row![
             space().height(10).width(Fill),
@@ -54,6 +63,8 @@ fn layout_fill_max_combined() {
 fn layout_fill_max_nested() {
     // A nested row with bounded contents is laid out first over other fluid
     // elements, which get the leftovers.
+    // 内容有界的嵌套行先于其他流式元素布局，
+    // 其他流式元素获得剩余空间。
     assert_layout_eq(
         row![
             space().height(10).width(Fill),
@@ -81,6 +92,8 @@ fn layout_fill_max_nested() {
 fn layout_fill_max_nested_and_bounded() {
     // If the bounded constraints do not activate, the nested row behaves like
     // another fluid element.
+    // 如果有界约束没有生效，嵌套行的行为就和
+    // 另一个流式元素一样。
     assert_layout_eq(
         row![
             space().height(10).width(Fill),
@@ -112,6 +125,8 @@ fn layout_fill_max_nested_and_bounded() {
 fn layout_fill_min_bounded() {
     // Natural share is 300 each; min(400) is laid out first
     // and the remaining 200 flows to the first element.
+    // 自然份额各为 300；min(400) 先布局，
+    // 剩下的 200 流向第一个元素。
     assert_layout_eq(
         row![
             space().height(10).width(Fill),
@@ -130,6 +145,8 @@ fn layout_fill_min_bounded() {
 fn layout_fill_min_bounded_distribution() {
     // Like the previous case, but the remaining 200 is distributed by the
     // two fluid elements.
+    // 与上一个用例类似，但剩下的 200 由
+    // 两个流式元素分配。
     assert_layout_eq(
         row![
             space().height(10).width(Fill),
@@ -154,6 +171,9 @@ fn layout_fill_min_nested() {
     // The share is 250, but the first element takes 260 and the nested row gets 240.
     // The 240 is shared as 120, but the second element takes 220 and the first fluid
     // gets the rest (20).
+    // 份额是 250，但第一个元素占用 260，嵌套行得到 240。
+    // 这 240 按 120 平分，但第二个元素占用 220，第一个流式元素
+    // 得到剩余部分（20）。
     assert_layout_eq(
         row![
             space().height(10).width(Fill.min(260)),
@@ -183,6 +203,9 @@ fn layout_fill_min_max() {
     // The share is 250, but the first element takes 260 and the nested row gets 240.
     // The 240 is shared as 120, but the second element can only take 10 and the first
     // one gets the rest (230).
+    // 份额是 250，但第一个元素占用 260，嵌套行得到 240。
+    // 这 240 按 120 平分，但第二个元素只能占用 10，第一个
+    // 元素得到剩余部分（230）。
     assert_layout_eq(
         row![
             space().height(10).width(Fill.min(260)),
@@ -386,8 +409,16 @@ fn layout_fill_min_max_takes_leftover_space() {
     );
 }
 
+/// 部件及其子元素的预期几何信息，位置
+/// 相对于父级。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The expected geometry of a widget and its children, with positions
 /// relative to the parent.
+///
+/// </details>
 #[derive(Debug, PartialEq)]
 struct Node {
     x: f32,

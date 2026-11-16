@@ -90,6 +90,7 @@ impl Cache {
         let id = handle.id();
 
         // TODO: Reuse `cosmic-text` font database
+        // 待办：复用 `cosmic-text` 的字体数据库
         #[cfg(feature = "svg-text")]
         if self.fontdb.is_none() {
             let mut fontdb = usvg::fontdb::Database::new();
@@ -174,6 +175,8 @@ impl Cache {
 
             // SVG rendering can panic on malformed or complex vectors.
             // We catch panics to prevent crashes and continue gracefully.
+            // 遇到格式错误或过于复杂的矢量图时，SVG 渲染可能会 panic。
+            // 我们捕获 panic，以防止崩溃并优雅地继续运行。
             let render = panic::catch_unwind(panic::AssertUnwindSafe(|| {
                 resvg::render(tree, transform, &mut image.as_mut());
             }));
@@ -184,6 +187,7 @@ impl Cache {
 
             if let Some([r, g, b, _]) = key.color {
                 // Apply color filter
+                // 应用颜色滤镜
                 for pixel in bytemuck::cast_slice_mut::<u8, u32>(image.data_mut()) {
                     *pixel = bytemuck::cast(
                         tiny_skia::ColorU8::from_rgba(b, g, r, (*pixel >> 24) as u8).premultiply(),
@@ -191,6 +195,7 @@ impl Cache {
                 }
             } else {
                 // Swap R and B channels for `softbuffer` presentation
+                // 交换 R 和 B 通道，以便通过 `softbuffer` 呈现
                 for pixel in bytemuck::cast_slice_mut::<u8, u32>(image.data_mut()) {
                     *pixel = *pixel & 0xFF00_FF00
                         | ((0x0000_00FF & *pixel) << 16)

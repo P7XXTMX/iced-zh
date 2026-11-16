@@ -1,4 +1,11 @@
+//! 访问剪贴板。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Access the clipboard.
+//!
+//! </details>
 use crate::core::clipboard::{Content, Error, Kind};
 
 pub use platform::*;
@@ -16,8 +23,16 @@ mod platform {
     use std::sync::{Arc, Mutex};
     use std::thread;
 
+    /// 用于在应用程序内部和应用程序之间
+    /// 短期存储和传输数据的缓冲区。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A buffer for short-term storage and transfer within and between
     /// applications.
+    ///
+    /// </details>
     pub struct Clipboard {
         state: State,
     }
@@ -30,7 +45,14 @@ mod platform {
     }
 
     impl Clipboard {
+        /// 为给定的窗口创建一个新的 [`Clipboard`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Creates a new [`Clipboard`] for the given window.
+        ///
+        /// </details>
         pub fn new() -> Self {
             let clipboard = arboard::Clipboard::new();
 
@@ -44,7 +66,14 @@ mod platform {
             Clipboard { state }
         }
 
+        /// 以文本形式读取 [`Clipboard`] 当前的内容。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Reads the current content of the [`Clipboard`] as text.
+        ///
+        /// </details>
         pub fn read(
             &self,
             kind: Kind,
@@ -91,7 +120,14 @@ mod platform {
             });
         }
 
+        /// 把给定的文本内容写入 [`Clipboard`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Writes the given text contents to the [`Clipboard`].
+        ///
+        /// </details>
         pub fn write(
             &mut self,
             content: Content,
@@ -152,26 +188,56 @@ mod platform {
 }
 
 // TODO: Wasm support
+// 待办：Wasm 支持
 #[cfg(target_arch = "wasm32")]
 mod platform {
     use super::*;
 
+    /// 用于在应用程序内部和应用程序之间
+    /// 短期存储和传输数据的缓冲区。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A buffer for short-term storage and transfer within and between
     /// applications.
+    ///
+    /// </details>
     pub struct Clipboard;
 
     impl Clipboard {
+        /// 为给定的窗口创建一个新的 [`Clipboard`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Creates a new [`Clipboard`] for the given window.
+        ///
+        /// </details>
         pub fn new() -> Self {
             Self
         }
 
+        /// 以文本形式读取 [`Clipboard`] 当前的内容。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Reads the current content of the [`Clipboard`] as text.
+        ///
+        /// </details>
         pub fn read(&self, _kind: Kind, callback: impl FnOnce(Result<Content, Error>)) {
             callback(Err(Error::ClipboardUnavailable));
         }
 
+        /// 把给定的文本内容写入 [`Clipboard`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Writes the given text contents to the [`Clipboard`].
+        ///
+        /// </details>
         pub fn write(&mut self, _content: Content, callback: impl FnOnce(Result<(), Error>)) {
             callback(Err(Error::ClipboardUnavailable));
         }

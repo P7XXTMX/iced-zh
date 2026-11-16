@@ -1,4 +1,11 @@
+//! 查询或更新部件的内部状态。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Query or update internal widget state.
+//!
+//! </details>
 pub mod focusable;
 pub mod scrollable;
 pub mod text;
@@ -16,21 +23,55 @@ use std::any::Any;
 use std::fmt;
 use std::sync::Arc;
 
+/// 一段可以遍历应用程序部件树的逻辑，
+/// 用于查询或更新某些部件状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A piece of logic that can traverse the widget tree of an application in
 /// order to query or update some widget state.
+///
+/// </details>
 pub trait Operation<T = ()>: Send {
+    /// 请求继续遍历部件树，以便继续操作。
+    ///
+    /// [`Operation`] 可以调用给定的 `operate` 闭包，
+    /// 把控制权交还给部件树并继续遍历。如果
+    /// 没有调用该闭包，请求遍历的那个部件的子部件
+    /// 将被跳过。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Requests further traversal of the widget tree to keep operating.
     ///
     /// The provided `operate` closure may be called by an [`Operation`]
     /// to return control to the widget tree and keep traversing it. If
     /// the closure is not called, the children of the widget asking for
     /// traversal will be skipped.
+    ///
+    /// </details>
     fn traverse(&mut self, operate: &mut dyn FnMut(&mut dyn Operation<T>));
 
+    /// 对包含其他部件的部件进行操作。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Operates on a widget that contains other widgets.
+    ///
+    /// </details>
     fn container(&mut self, _id: Option<&Id>, _bounds: Rectangle, _viewport: &Rectangle) {}
 
+    /// 对可以滚动的部件进行操作。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Operates on a widget that can be scrolled.
+    ///
+    /// </details>
     fn scrollable(
         &mut self,
         _id: Option<&Id>,
@@ -41,19 +82,54 @@ pub trait Operation<T = ()>: Send {
     ) {
     }
 
+    /// 对可以获得焦点的部件进行操作。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Operates on a widget that can be focused.
+    ///
+    /// </details>
     fn focusable(&mut self, _id: Option<&Id>, _bounds: Rectangle, _state: &mut dyn Focusable) {}
 
+    /// 对具有文本输入的部件进行操作。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Operates on a widget that has text input.
+    ///
+    /// </details>
     fn text_input(&mut self, _id: Option<&Id>, _bounds: Rectangle, _state: &mut dyn TextInput) {}
 
+    /// 对包含文本的部件进行操作。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Operates on a widget that contains some text.
+    ///
+    /// </details>
     fn text(&mut self, _id: Option<&Id>, _bounds: Rectangle, _state: &mut dyn Text) {}
 
+    /// 对带有某种状态的自定义部件进行操作。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Operates on a custom widget with some state.
+    ///
+    /// </details>
     fn custom(&mut self, _id: Option<&Id>, _bounds: Rectangle, _state: &mut dyn Any) {}
 
+    /// 结束 [`Operation`] 并返回它的 [`Outcome`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Finishes the [`Operation`] and returns its [`Outcome`].
+    ///
+    /// </details>
     fn finish(&self) -> Outcome<T> {
         Outcome::None
     }
@@ -104,15 +180,43 @@ where
     }
 }
 
+/// [`Operation`] 的结果。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The result of an [`Operation`].
+///
+/// </details>
 pub enum Outcome<T> {
+    /// [`Operation`] 没有产生结果。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Operation`] produced no result.
+    ///
+    /// </details>
     None,
 
+    /// [`Operation`] 产生了某个结果。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Operation`] produced some result.
+    ///
+    /// </details>
     Some(T),
 
+    /// [`Operation`] 之后需要接着执行另一个 [`Operation`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Operation`] needs to be followed by another [`Operation`].
+    ///
+    /// </details>
     Chain(Box<dyn Operation<T>>),
 }
 
@@ -129,26 +233,66 @@ where
     }
 }
 
+/// 应用于状态变化的动画，由
+/// [`Operation`] 请求。
+///
+/// 有些部件既可以立即应用状态变化，也可以带
+/// 动画地应用；对这些部件的操作接受一个 [`Animation`]
+/// 来选择使用哪一种。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The animation to apply to a state change, as requested by an
 /// [`Operation`].
 ///
 /// Some widgets can apply a state change either immediately or with an
 /// animation; operations on those widgets take an [`Animation`] to select
 /// which.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Animation {
+    /// 使用部件的默认动画。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Use the default animation of the widget.
+    ///
+    /// </details>
     #[default]
     Auto,
 
+    /// 立即应用变化。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Apply the change immediately.
+    ///
+    /// </details>
     Instant,
 
+    /// 以动画方式过渡到新状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Animate the change towards the new state.
+    ///
+    /// </details>
     Smooth,
 }
 
+/// 把 [`Operation`] 包装进一个黑盒，擦除它的返回类型。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Wraps the [`Operation`] in a black box, erasing its returning type.
+///
+/// </details>
 pub fn black_box<'a, T, O>(operation: &'a mut dyn Operation<T>) -> impl Operation<O> + 'a
 where
     T: 'a,
@@ -207,7 +351,14 @@ where
     BlackBox { operation }
 }
 
+/// 使用给定的函数映射 [`Operation`] 的输出。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Maps the output of an [`Operation`] using the given function.
+///
+/// </details>
 pub fn map<A, B>(
     operation: impl Operation<A>,
     f: impl Fn(A) -> B + Send + Sync + 'static,
@@ -339,8 +490,16 @@ where
     }
 }
 
+/// 把 [`Operation`] 的输出与给定的函数串联起来，
+/// 构建一个新的 [`Operation`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Chains the output of an [`Operation`] with the provided function to
 /// build a new [`Operation`].
+///
+/// </details>
 pub fn then<A, B, O>(
     operation: impl Operation<A> + 'static,
     next: impl Fn(A) -> O + Send + Sync + 'static,
@@ -418,8 +577,16 @@ where
     }
 }
 
+/// 产生一个 [`Operation`]，它把给定的 [`Operation`] 应用到
+/// 具有给定 [`Id`] 的容器的子部件上。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Produces an [`Operation`] that applies the given [`Operation`] to the
 /// children of a container with the given [`Id`].
+///
+/// </details>
 pub fn scope<T: 'static>(target: Id, operation: impl Operation<T> + 'static) -> impl Operation<T> {
     struct ScopedOperation<Message> {
         target: Id,

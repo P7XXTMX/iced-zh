@@ -60,7 +60,14 @@ impl<T: bytemuck::Pod> Buffer<T> {
         }
     }
 
+    /// 返回已写入的字节数。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the size of the written bytes.
+    ///
+    /// </details>
     pub fn write(
         &mut self,
         encoder: &mut wgpu::CommandEncoder,
@@ -72,6 +79,7 @@ impl<T: bytemuck::Pod> Buffer<T> {
         let mut bytes_written = 0;
 
         // Split write into multiple chunks if necessary
+        // 必要时把写入拆分成多个块
         while bytes_written + MAX_WRITE_SIZE < bytes.len() {
             belt.write_buffer(
                 encoder,
@@ -86,11 +94,14 @@ impl<T: bytemuck::Pod> Buffer<T> {
 
         // There will always be some bytes left, since the previous
         // loop guarantees `bytes_written < bytes.len()`
+        // 总会剩下一些字节，因为前面的
+        // 循环保证了 `bytes_written < bytes.len()`
         let bytes_left = ((bytes.len() - bytes_written) as u64)
             .try_into()
             .expect("non-empty write");
 
         // Write them
+        // 写入它们
         belt.write_buffer(
             encoder,
             &self.raw,

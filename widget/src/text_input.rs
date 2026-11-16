@@ -1,6 +1,13 @@
+//! 文本输入框显示可以填入文本的字段。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Text inputs display fields that can be filled with text.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # use iced::widget::Widget;
@@ -46,9 +53,16 @@ use crate::core::{
     Size, Theme, Widget,
 };
 
+/// 可以填入文本的字段。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A field that can be filled with text.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # use iced::widget::Widget;
@@ -100,7 +114,14 @@ where
     last_status: Option<Status>,
 }
 
+/// [`TextInput`] 的默认 [`Padding`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default [`Padding`] of a [`TextInput`].
+///
+/// </details>
 pub const DEFAULT_PADDING: Padding = Padding::new(5.0);
 
 impl<'a, Message, Theme> TextInput<'a, Message, Theme>
@@ -108,8 +129,16 @@ where
     Message: Clone,
     Theme: Catalog,
 {
+    /// 使用给定的占位符和当前值创建一个新的
+    /// [`TextInput`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`TextInput`] with the given placeholder and
     /// its current value.
+    ///
+    /// </details>
     pub fn new(
         placeholder: impl text::IntoFragment<'a>,
         value: impl text::IntoFragment<'a>,
@@ -135,65 +164,138 @@ where
         }
     }
 
+    /// 设置 [`TextInput`] 的 [`widget::Id`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`widget::Id`] of the [`TextInput`].
+    ///
+    /// </details>
     pub fn id(mut self, id: impl Into<widget::Id>) -> Self {
         self.id = Some(id.into());
         self
     }
 
+    /// 把 [`TextInput`] 转换为安全的密码输入框。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Converts the [`TextInput`] into a secure password input.
+    ///
+    /// </details>
     pub fn secure(mut self, is_secure: bool) -> Self {
         self.is_secure = is_secure;
         self
     }
 
+    /// 设置在 [`TextInput`] 中输入文本时
+    /// 应该产生的消息。
+    ///
+    /// 如果没有调用这个方法，[`TextInput`] 会被禁用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that should be produced when some text is typed into
     /// the [`TextInput`].
     ///
     /// If this method is not called, the [`TextInput`] will be disabled.
+    ///
+    /// </details>
     pub fn on_input(mut self, on_input: impl Fn(String) -> Message + 'a) -> Self {
         self.on_input = Some(Box::new(on_input));
         self
     }
 
+    /// 如果为 `Some`，设置在 [`TextInput`] 中输入文本时
+    /// 应该产生的消息。
+    ///
+    /// 如果为 `None`，[`TextInput`] 会被禁用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that should be produced when some text is typed into
     /// the [`TextInput`], if `Some`.
     ///
     /// If `None`, the [`TextInput`] will be disabled.
+    ///
+    /// </details>
     pub fn on_input_maybe(mut self, on_input: Option<impl Fn(String) -> Message + 'a>) -> Self {
         self.on_input = on_input.map(|f| Box::new(f) as _);
         self
     }
 
+    /// 设置 [`TextInput`] 获得焦点并且按下回车键时
+    /// 应该产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that should be produced when the [`TextInput`] is
     /// focused and the enter key is pressed.
+    ///
+    /// </details>
     pub fn on_submit(mut self, message: Message) -> Self {
         self.on_submit = Some(message);
         self
     }
 
+    /// 如果为 `Some`，设置 [`TextInput`] 获得焦点并且
+    /// 按下回车键时应该产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that should be produced when the [`TextInput`] is
     /// focused and the enter key is pressed, if `Some`.
+    ///
+    /// </details>
     pub fn on_submit_maybe(mut self, on_submit: Option<Message>) -> Self {
         self.on_submit = on_submit;
         self
     }
 
+    /// 设置向 [`TextInput`] 中粘贴文本时
+    /// 应该产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that should be produced when some text is pasted into
     /// the [`TextInput`].
+    ///
+    /// </details>
     pub fn on_paste(mut self, on_paste: impl Fn(String) -> Message + 'a) -> Self {
         self.on_paste = Some(Box::new(on_paste));
         self
     }
 
+    /// 如果为 `Some`，设置向 [`TextInput`] 中粘贴文本时
+    /// 应该产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that should be produced when some text is pasted into
     /// the [`TextInput`], if `Some`.
+    ///
+    /// </details>
     pub fn on_paste_maybe(mut self, on_paste: Option<impl Fn(String) -> Message + 'a>) -> Self {
         self.on_paste = on_paste.map(|f| Box::new(f) as _);
         self
     }
 
+    /// 设置 [`TextInput`] 的 [`Font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Font`] of the [`TextInput`].
+    ///
+    /// </details>
     ///
     /// [`Font`]: crate::core::Font
     pub fn font(mut self, font: Font) -> Self {
@@ -201,45 +303,96 @@ where
         self
     }
 
+    /// 设置 [`TextInput`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`TextInput`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`TextInput`] 的 [`Padding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Padding`] of the [`TextInput`].
+    ///
+    /// </details>
     pub fn padding<P: Into<Padding>>(mut self, padding: P) -> Self {
         self.padding = padding.into();
         self
     }
 
+    /// 设置 [`TextInput`] 的文本字号。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the text size of the [`TextInput`].
+    ///
+    /// </details>
     pub fn size(mut self, size: impl Into<Pixels>) -> Self {
         self.size = Some(size.into());
         self
     }
 
+    /// 设置 [`TextInput`] 的 [`text::LineHeight`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`text::LineHeight`] of the [`TextInput`].
+    ///
+    /// </details>
     pub fn line_height(mut self, line_height: impl Into<text::LineHeight>) -> Self {
         self.line_height = Some(line_height.into());
         self
     }
 
+    /// 设置 [`TextInput`] 的水平对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the horizontal alignment of the [`TextInput`].
+    ///
+    /// </details>
     pub fn align_x(mut self, alignment: impl Into<text::Alignment>) -> Self {
         self.alignment = alignment.into();
         self
     }
 
+    /// 设置 [`TextInput`] 的多行行为。
+    ///
+    /// `None` 表示作为单行输入框。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the multiline behavior of the [`TextInput`].
     ///
     /// `None` will behave as a single line input.
+    ///
+    /// </details>
     pub fn multiline(mut self, wrapping: Option<text::Wrapping>) -> Self {
         self.multiline = wrapping;
         self
     }
 
+    /// 设置 [`TextInput`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`TextInput`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme, Status) -> Style + 'a) -> Self
     where
@@ -249,7 +402,14 @@ where
         self
     }
 
+    /// 设置 [`TextInput`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`TextInput`].
+    ///
+    /// </details>
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
         self.class = class.into();
@@ -450,7 +610,14 @@ where
     }
 }
 
+/// [`TextInput`] 的状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The state of a [`TextInput`].
+///
+/// </details>
 struct State<R: text::Renderer> {
     input: text::Input<R>,
     value: String,
@@ -462,7 +629,14 @@ fn state<Renderer: text::Renderer + 'static>(tree: &mut Tree) -> &mut State<Rend
 }
 
 impl<R: text::Renderer> State<R> {
+    /// 创建一个新的 [`State`]，表示一个未获得焦点的 [`TextInput`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`State`], representing an unfocused [`TextInput`].
+    ///
+    /// </details>
     fn new() -> Self {
         Self {
             input: text::Input::new(),
@@ -516,52 +690,173 @@ impl<R: text::Renderer> operation::TextInput for State<R> {
     }
 }
 
+/// [`TextInput`] 可能的交互状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The possible status of a [`TextInput`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
+    /// [`TextInput`] 可以交互。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`TextInput`] can be interacted with.
+    ///
+    /// </details>
     Active,
+    /// [`TextInput`] 正处于悬停状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`TextInput`] is being hovered.
+    ///
+    /// </details>
     Hovered,
+    /// [`TextInput`] 已获得焦点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`TextInput`] is focused.
+    ///
+    /// </details>
     Focused {
+        /// [`TextInput`] 在获得焦点的同时是否处于悬停状态。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Whether the [`TextInput`] is hovered, while focused.
+        ///
+        /// </details>
         is_hovered: bool,
     },
+    /// [`TextInput`] 无法交互。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`TextInput`] cannot be interacted with.
+    ///
+    /// </details>
     Disabled,
 }
 
+/// 文本输入框的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of a text input.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Style {
+    /// 文本输入框的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Background`] of the text input.
+    ///
+    /// </details>
     pub background: Background,
+    /// 文本输入框的 [`Border`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Border`] of the text input.
+    ///
+    /// </details>
     pub border: Border,
+    /// 文本输入框占位符的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of the placeholder of the text input.
+    ///
+    /// </details>
     pub placeholder: Color,
+    /// 文本输入框值的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of the value of the text input.
+    ///
+    /// </details>
     pub value: Color,
+    /// 文本输入框选区的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of the selection of the text input.
+    ///
+    /// </details>
     pub selection: Color,
 }
 
+/// [`TextInput`] 的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`TextInput`].
+///
+/// </details>
 pub trait Catalog: Sized {
+    /// [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of the [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by the [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> Self::Class<'a>;
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(&self, class: &Self::Class<'_>, status: Status) -> Style;
 }
 
+/// [`TextInput`] 的样式函数。
+///
+/// 它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for a [`TextInput`].
 ///
 /// This is just a boxed closure: `Fn(&Theme, Status) -> Style`.
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme, Status) -> Style + 'a>;
 
 impl Catalog for Theme {
@@ -576,7 +871,14 @@ impl Catalog for Theme {
     }
 }
 
+/// [`TextInput`] 的默认样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default style of a [`TextInput`].
+///
+/// </details>
 pub fn default(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
 

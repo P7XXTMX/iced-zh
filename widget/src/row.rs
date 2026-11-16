@@ -1,4 +1,11 @@
+//! 水平分布内容。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Distribute content horizontally.
+//!
+//! </details>
 use crate::core::alignment::{self, Alignment};
 use crate::core::layout::{self, Layout};
 use crate::core::mouse;
@@ -7,9 +14,16 @@ use crate::core::renderer;
 use crate::core::widget::{Meta, Operation, Tree, tree};
 use crate::core::{Event, Length, Padding, Pixels, Rectangle, Shell, Size, Vector, Widget};
 
+/// 水平分布其内容的容器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A container that distributes its contents horizontally.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # use iced::widget::Widget;
@@ -40,17 +54,38 @@ pub struct Row<W> {
 }
 
 impl<W> Row<W> {
+    /// 创建一个空的 [`Row`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates an empty [`Row`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::from_vec(Vec::new())
     }
 
+    /// 使用给定的容量创建一个 [`Row`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Row`] with the given capacity.
+    ///
+    /// </details>
     pub fn with_capacity(capacity: usize) -> Self {
         Self::from_vec(Vec::with_capacity(capacity))
     }
 
+    /// 使用给定的部件创建一个 [`Row`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Row`] with the given widgets.
+    ///
+    /// </details>
     pub fn with_children(children: impl IntoIterator<Item = W>) -> Self
     where
         W: Meta,
@@ -60,6 +95,17 @@ impl<W> Row<W> {
         Self::with_capacity(iterator.size_hint().0).extend(iterator)
     }
 
+    /// 根据一个已分配的 [`Vec`] 创建一个 [`Row`]。
+    ///
+    /// 请注意，[`Row`] 不会检查这个 [`Vec`]，这意味着
+    /// 它不会自动适应其内容的尺寸策略。
+    ///
+    /// 如果任何子元素使用 [`Length::Fill`] 策略，你需要
+    /// 相应地调用 [`Row::width`] 或 [`Row::height`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Row`] from an already allocated [`Vec`].
     ///
     /// Keep in mind that the [`Row`] will not inspect the [`Vec`], which means
@@ -67,6 +113,8 @@ impl<W> Row<W> {
     ///
     /// If any of the children have a [`Length::Fill`] strategy, you will need to
     /// call [`Row::width`] or [`Row::height`] accordingly.
+    ///
+    /// </details>
     pub fn from_vec(children: Vec<W>) -> Self {
         Self {
             spacing: 0.0,
@@ -79,48 +127,102 @@ impl<W> Row<W> {
         }
     }
 
+    /// 设置元素 _之间_ 的水平间距。
+    ///
+    /// iced 中不存在针对单个元素的自定义外边距。你应该改用
+    /// 这个方法！它虽然不那么灵活，但有助于让元素之间的间距
+    /// 保持一致。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the horizontal spacing _between_ elements.
     ///
     /// Custom margins per element do not exist in iced. You should use this
     /// method instead! While less flexible, it helps you keep spacing between
     /// elements consistent.
+    ///
+    /// </details>
     pub fn spacing(mut self, amount: impl Into<Pixels>) -> Self {
         self.spacing = amount.into().0;
         self
     }
 
+    /// 设置 [`Row`] 的 [`Padding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Padding`] of the [`Row`].
+    ///
+    /// </details>
     pub fn padding<P: Into<Padding>>(mut self, padding: P) -> Self {
         self.padding = padding.into();
         self
     }
 
+    /// 设置 [`Row`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Row`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Row`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Row`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置 [`Row`] 内容的垂直对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the vertical alignment of the contents of the [`Row`] .
+    ///
+    /// </details>
     pub fn align_y(mut self, align: impl Into<alignment::Vertical>) -> Self {
         self.align = Alignment::from(align.into());
         self
     }
 
+    /// 设置 [`Row`] 的内容在溢出时是否应该
+    /// 被裁剪。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets whether the contents of the [`Row`] should be clipped on
     /// overflow.
+    ///
+    /// </details>
     pub fn clip(mut self, clip: bool) -> Self {
         self.clip = clip;
         self
     }
 
+    /// 向 [`Row`] 添加一个 [`Widget`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Adds a [`Widget`] to the [`Row`].
+    ///
+    /// </details>
     pub fn push(mut self, child: W) -> Self
     where
         W: Meta,
@@ -132,7 +234,14 @@ impl<W> Row<W> {
         self
     }
 
+    /// 用给定的子元素扩展 [`Row`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Extends the [`Row`] with the given children.
+    ///
+    /// </details>
     pub fn extend(self, children: impl IntoIterator<Item = W>) -> Self
     where
         W: Meta,
@@ -140,9 +249,18 @@ impl<W> Row<W> {
         children.into_iter().fold(self, Self::push)
     }
 
+    /// 把 [`Row`] 变成一个 [`Wrapping`] 行。
+    ///
+    /// [`Row`] 原有的对齐方式会在换行后的每一行中保留。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Turns the [`Row`] into a [`Wrapping`] row.
     ///
     /// The original alignment of the [`Row`] is preserved per row wrapped.
+    ///
+    /// </details>
     pub fn wrap(self) -> Wrapping<W> {
         Wrapping {
             row: self,
@@ -324,12 +442,24 @@ where
     }
 }
 
+/// 会对其内容进行换行的 [`Row`]。
+///
+/// 先创建一个 [`Row`]，然后调用 [`Row::wrap`]，
+/// 即可得到一个会对其内容进行换行的 [`Row`]。
+///
+/// [`Row`] 原有的对齐方式会在换行后的每一行中保留。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`Row`] that wraps its contents.
 ///
 /// Create a [`Row`] first, and then call [`Row::wrap`] to
 /// obtain a [`Row`] that wraps its contents.
 ///
 /// The original alignment of the [`Row`] is preserved per row wrapped.
+///
+/// </details>
 pub struct Wrapping<W> {
     row: Row<W>,
     vertical_spacing: Option<f32>,
@@ -337,13 +467,27 @@ pub struct Wrapping<W> {
 }
 
 impl<W> Wrapping<W> {
+    /// 设置各行 _之间_ 的垂直间距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the vertical spacing _between_ lines.
+    ///
+    /// </details>
     pub fn vertical_spacing(mut self, amount: impl Into<Pixels>) -> Self {
         self.vertical_spacing = Some(amount.into().0);
         self
     }
 
+    /// 设置换行 [`Row`] 的水平对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the horizontal alignment of the wrapping [`Row`].
+    ///
+    /// </details>
     pub fn align_x(mut self, align_x: impl Into<alignment::Horizontal>) -> Self {
         self.align_x = align_x.into();
         self

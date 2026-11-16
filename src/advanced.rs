@@ -1,13 +1,34 @@
+//! 使用自定义部件等高级概念。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Leverage advanced concepts like custom widgets.
+//!
+//! </details>
 pub mod subscription {
+    //! 编写你自己的订阅。
+    //!
+    //! <details>
+    //! <summary>显示英文原文</summary>
+    //!
     //! Write your own subscriptions.
+    //!
+    //! </details>
     pub use crate::runtime::futures::subscription::{
         Event, EventStream, Hasher, MacOS, PlatformSpecific, Recipe, from_recipe, into_recipes,
     };
 }
 
 pub mod widget {
+    //! 创建自定义部件并对它们执行操作。
+    //!
+    //! <details>
+    //! <summary>显示英文原文</summary>
+    //!
     //! Create custom widgets and operate on them.
+    //!
+    //! </details>
     pub use crate::core::widget::*;
     pub use crate::runtime::task::widget as operate;
 }

@@ -7,11 +7,22 @@ use rustc_hash::FxHashMap;
 
 use std::hash::Hasher as _;
 
+/// 订阅流的注册表。
+///
+/// 如果你的应用程序不断返回一个 [`Subscription`]，
+/// 就可以用 [`Tracker`] 跟踪各个配方，并让它们的
+/// 执行保持存活。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A registry of subscription streams.
 ///
 /// If you have an application that continuously returns a [`Subscription`],
 /// you can use a [`Tracker`] to keep track of the different recipes and keep
 /// its executions alive.
+///
+/// </details>
 ///
 /// [`Subscription`]: crate::Subscription
 #[derive(Debug, Default)]
@@ -26,13 +37,40 @@ pub struct Execution {
 }
 
 impl Tracker {
+    /// 创建一个新的空 [`Tracker`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new empty [`Tracker`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self {
             subscriptions: FxHashMap::default(),
         }
     }
 
+    /// 用给定的 [`Subscription`] 更新 [`Tracker`]。
+    ///
+    /// 一个 [`Subscription`] 可能导致新的流被派生，或旧的流
+    /// 被关闭。
+    ///
+    /// [`Tracker`] 会在对这个方法的多次调用之间跟踪
+    /// 这些流：
+    ///
+    /// - 如果给定的 [`Subscription`] 包含一个当前没有在运行的新 [`Recipe`]，
+    ///   它会派生一个新的流并让它保持存活。
+    /// - 反之，如果某个 [`Recipe`] 正在执行，而给定的
+    ///   [`Subscription`] 已不再包含它，那么
+    ///   [`Tracker`] 会关闭并丢弃相应的流。
+    ///
+    /// 它返回一组需要被派生的 future，用来落实
+    /// [`Tracker`] 的这些变更。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Updates the [`Tracker`] with the given [`Subscription`].
     ///
     /// A [`Subscription`] can cause new streams to be spawned or old streams
@@ -49,6 +87,8 @@ impl Tracker {
     ///
     /// It returns a list of futures that need to be spawned to materialize
     /// the [`Tracker`] changes.
+    ///
+    /// </details>
     ///
     /// [`Recipe`]: crate::subscription::Recipe
     /// [`Subscription`]: crate::Subscription
@@ -83,6 +123,7 @@ impl Tracker {
             let (cancel, mut canceled) = futures::channel::oneshot::channel();
 
             // TODO: Use bus if/when it supports async
+            // 待办：如果（或等到）bus 支持异步，就改用它
             let (event_sender, event_receiver) = futures::channel::mpsc::channel(100);
 
             let mut receiver = receiver.clone();
@@ -122,6 +163,18 @@ impl Tracker {
         futures
     }
 
+    /// 向当前存活的订阅广播一个事件。
+    ///
+    /// 订阅的 [`Recipe::stream`] 总是接收一个事件流
+    /// 作为输入。某些订阅可以用这个流来监听
+    /// 外壳事件。
+    ///
+    /// 这个方法会把给定的事件发布到当前打开的所有
+    /// 订阅流。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Broadcasts an event to the subscriptions currently alive.
     ///
     /// A subscription's [`Recipe::stream`] always receives a stream of events
@@ -130,6 +183,8 @@ impl Tracker {
     ///
     /// This method publishes the given event to all the subscription streams
     /// currently open.
+    ///
+    /// </details>
     ///
     /// [`Recipe::stream`]: crate::subscription::Recipe::stream
     pub fn broadcast(&mut self, event: Event) {

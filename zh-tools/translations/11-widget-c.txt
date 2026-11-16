@@ -1,0 +1,1803 @@
+@@ widget/src/sensor.rs:1
+在内容进入和离开视野时生成消息。
+@@ widget/src/sensor.rs:12
+在其内容进入和离开视野时可以生成消息的部件。
+
+它甚至可以在给定的距离处提前通知你！
+@@ widget/src/sensor.rs:26
+使用给定的内容创建一个新的 [`Sensor`] 部件。
+@@ widget/src/sensor.rs:44
+设置内容进入视野时要产生的消息。
+
+闭包会收到内容在那一刻的 [`Size`]。
+@@ widget/src/sensor.rs:52
+设置内容在视野内改变 [`Size`] 时要产生的消息。
+
+闭包会收到内容的新 [`Size`]。
+@@ widget/src/sensor.rs:63
+设置内容离开视野时要产生的消息。
+@@ widget/src/sensor.rs:69
+设置 [`Sensor`] 部件的键，用于保持连续性。
+
+如果键发生变化，[`Sensor`] 部件会再次触发。
+@@ widget/src/sensor.rs:87
+设置 [`Sensor`] 的键，用于保持连续性；使用引用。
+
+如果键发生变化，[`Sensor`] 会再次触发。
+@@ widget/src/sensor.rs:106
+设置以 [`Pixels`] 为单位的距离，用于在内容进入视野之前
+提前触发。
+
+这非常适合在用户察觉之前，在幕后惰性加载
+一个很长的可滚动区域中的条目！
+@@ widget/src/sensor.rs:116
+设置在内容显示或隐藏之后，触发 [`on_show`] 或
+[`on_hide`] 事件之前要等待的时间。
+
+与 [`key`] 结合使用时，可以用来对键的变化进行防抖。
+@@ widget/src/sensor.rs:330
+部件的键。
+
+通常你不需要关心这个特质。
+@@ widget/src/sensor.rs:334
+键的拥有所有权的版本。
+@@ widget/src/sensor.rs:337
+返回键的拥有所有权的版本。
+@@ widget/src/sensor.rs:340
+把键与给定的拥有所有权的版本进行比较。
+@@ widget/src/space.rs:1
+在元素之间添加显式的间距。
+@@ widget/src/space.rs:8
+创建一个新的 [`Space`] 部件，填满可用的
+水平空间。
+
+可以用来分隔 [`Row`](crate::Row) 中的部件。
+@@ widget/src/space.rs:16
+创建一个新的 [`Space`] 部件，填满可用的
+垂直空间。
+
+可以用来分隔 [`Column`](crate::Column) 中的部件。
+@@ widget/src/space.rs:24
+一定大小的空白空间。
+
+如果你想用空白填充一些空间，它会很有用。
+@@ widget/src/space.rs:34
+创建一个没有大小的空白 [`Space`]。
+@@ widget/src/space.rs:42
+设置 [`Space`] 的宽度。
+@@ widget/src/space.rs:48
+设置 [`Space`] 的高度。
+@@ widget/src/shader.rs:1
+用于 wgpu 应用程序的自定义着色器部件。
+@@ widget/src/shader.rs:21
+可以使用 Iced 的 `wgpu` 后端渲染自定义着色器的部件。
+
+必须使用一个 [`Program`] 来初始化，它描述了部件的内部状态，
+以及它的 [`Program::Primitive`] 如何绘制。
+@@ widget/src/shader.rs:33
+创建一个新的自定义 [`Shader`]。
+@@ widget/src/shader.rs:43
+设置自定义 [`Shader`] 的 `width`。
+@@ widget/src/shader.rs:49
+设置自定义 [`Shader`] 的 `height`。
+@@ widget/src/shader/program.rs:6
+[`Shader`] 部件的状态和逻辑。
+
+[`Program`] 可以修改 [`Shader`] 部件的内部状态，
+并为应用程序产生消息。
+@@ widget/src/shader/program.rs:13
+[`Program`] 的内部状态。
+@@ widget/src/shader/program.rs:16
+这个 [`Program`] 可以绘制的图元类型。
+@@ widget/src/shader/program.rs:19
+更新 [`Program`] 的内部 [`State`]。可以用来根据鼠标及其他事件
+反映状态变化。你可以返回一个 [`Action`] 来发布消息、请求
+重绘或捕获事件。
+
+默认情况下，这个方法返回 `None`。
+@@ widget/src/shader/program.rs:36
+绘制 [`Primitive`]。
+@@ widget/src/shader/program.rs:46
+返回 [`Program`] 当前的鼠标交互。
+
+即使光标位置超出了 [`Shader`] 的程序的边界，
+返回的交互仍然会生效。
+@@ widget/src/stack.rs:1
+在其他内容之上显示内容。
+@@ widget/src/stack.rs:9
+把子元素层叠显示的容器。
+
+第一个 [`Widget`] 决定 [`Stack`] 的固有 [`Size`]，并
+作为基础图层显示。之后的每个 [`Widget`] 都会
+渲染在上方；各自位于独立的图层。
+
+你可以使用 [`push_under`](Self::push_under) 把一个 [`Widget`] 压入
+当前 [`Stack`] 的下方，而不影响它的固有 [`Size`]。
+
+请记住，过多的层叠通常会带来糟糕的用户体验，
+还会引入一定的渲染开销。请节制地使用这个部件！
+@@ widget/src/stack.rs:29
+创建一个空的 [`Stack`]。
+@@ widget/src/stack.rs:34
+使用给定的容量创建一个 [`Stack`]。
+@@ widget/src/stack.rs:39
+使用给定的部件创建一个 [`Stack`]。
+@@ widget/src/stack.rs:49
+从一个已经分配好的 [`Vec`] 创建一个 [`Stack`]。
+@@ widget/src/stack.rs:60
+设置 [`Stack`] 的宽度。
+@@ widget/src/stack.rs:66
+设置 [`Stack`] 的高度。
+@@ widget/src/stack.rs:72
+在 [`Stack`] 的顶部添加一个部件。
+@@ widget/src/stack.rs:84
+在 [`Stack`] 的下方添加一个部件。
+@@ widget/src/stack.rs:91
+使用给定的子元素扩展 [`Stack`]。
+@@ widget/src/stack.rs:99
+设置 [`Stack`] 是否应该裁剪溢出的内容。
+
+它在呈现时有轻微的性能开销。
+
+默认设置为 `false`。
+@@ widget/src/slider.rs:1
+滑块让用户通过移动指示器来设置一个值。
+@@ widget/src/slider.rs:3
+示例
+@@ widget/src/slider.rs:48
+一个水平条和一个手柄，用于从一个取值范围中
+选择单个值。
+
+[`Slider`] 会尝试填满其容器的水平空间。
+
+[`Slider`] 的数值范围是泛型的，步长默认
+为 1 个单位。
+
+注意：在底层，值会与 f64 相互转换，因此只有能用 f64 精确表示的值
+才能通过滑块选中。不过在这样的量级下，滑块本身的精度
+很可能已经低于 f64 表示所损失的精度。
+@@ widget/src/slider.rs:60
+示例
+@@ widget/src/slider.rs:111
+[`Slider`] 的默认高度。
+@@ widget/src/slider.rs:114
+创建一个新的 [`Slider`]。
+
+它需要：
+  * 一个由可能取值构成的闭区间
+  * [`Slider`] 的当前值
+  * 一个在 [`Slider`] 被拖动时调用的函数。
+    它接收 [`Slider`] 的新值，并且必须产生一个
+    `Message`。
+@@ widget/src/slider.rs:153
+设置 [`Slider`] 可选的默认值。
+
+如果设置了，按住 ctrl 或 command 点击时 [`Slider`] 会重置为这个值。
+@@ widget/src/slider.rs:161
+设置 [`Slider`] 的释放消息。
+它在鼠标从滑块上松开时被调用。
+
+通常，这条消息产生时，用户与滑块的交互已经结束。
+如果你需要根据滑块的结果启动一个长时间运行的任务，而
+默认的 on_change 消息可能产生过多事件，这会很有用。
+@@ widget/src/slider.rs:172
+设置 [`Slider`] 的宽度。
+@@ widget/src/slider.rs:178
+设置 [`Slider`] 的高度。
+@@ widget/src/slider.rs:184
+设置 [`Slider`] 的步长。
+@@ widget/src/slider.rs:190
+设置 [`Slider`] 可选的“shift”步长。
+
+如果设置了，按住 shift 键时会使用这个值作为步长。
+@@ widget/src/slider.rs:198
+设置 [`Slider`] 的样式。
+@@ widget/src/slider.rs:208
+设置 [`Slider`] 的样式类。
+@@ widget/src/slider.rs:511
+待修复：在 Windows 上回退到 `Pointer`
+参见 https://github.com/rust-windowing/winit/issues/1043
+@@ widget/src/slider.rs:536
+[`Slider`] 可能的交互状态。
+@@ widget/src/slider.rs:539
+[`Slider`] 可以交互。
+@@ widget/src/slider.rs:541
+[`Slider`] 正处于悬停状态。
+@@ widget/src/slider.rs:543
+[`Slider`] 正在被拖动。
+@@ widget/src/slider.rs:547
+滑块的外观。
+@@ widget/src/slider.rs:550
+滑块轨道的颜色。
+@@ widget/src/slider.rs:552
+滑块的 [`Handle`] 的外观。
+@@ widget/src/slider.rs:557
+把 [`Style`] 的 [`HandleShape`] 改为具有给定半径的
+圆形。
+@@ widget/src/slider.rs:567
+滑块轨道的外观
+@@ widget/src/slider.rs:570
+滑块轨道的背景。
+@@ widget/src/slider.rs:572
+滑块轨道的线条宽度。
+@@ widget/src/slider.rs:574
+轨道的边框。
+@@ widget/src/slider.rs:578
+滑块手柄的外观。
+@@ widget/src/slider.rs:581
+手柄的形状。
+@@ widget/src/slider.rs:583
+手柄的 [`Background`]。
+@@ widget/src/slider.rs:585
+手柄的边框宽度。
+@@ widget/src/slider.rs:587
+手柄的边框 [`Color`]。
+@@ widget/src/slider.rs:591
+滑块手柄的形状。
+@@ widget/src/slider.rs:594
+圆形手柄。
+@@ widget/src/slider.rs:596
+圆的半径。
+@@ widget/src/slider.rs:599
+矩形形状。
+@@ widget/src/slider.rs:601
+矩形的宽度。
+@@ widget/src/slider.rs:603
+矩形各个角的边框半径。
+@@ widget/src/slider.rs:608
+[`Slider`] 的主题样式目录。
+@@ widget/src/slider.rs:610
+[`Catalog`] 的样式类。
+@@ widget/src/slider.rs:613
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/slider.rs:616
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/slider.rs:620
+[`Slider`] 的样式函数。
+@@ widget/src/slider.rs:635
+[`Slider`] 的默认样式。
+@@ widget/src/svg.rs:1
+Svg 部件在你的应用程序中显示矢量图形。
+@@ widget/src/svg.rs:3
+示例
+@@ widget/src/svg.rs:33
+矢量图形图像。
+
+[`Svg`] 图像可以平滑地调整大小而不损失任何质量。
+
+[`Svg`] 图像在调整大小时可能有相当大的渲染开销，
+尤其是当它们很复杂的时候。
+@@ widget/src/svg.rs:40
+示例
+@@ widget/src/svg.rs:73
+从给定的 [`Handle`] 创建一个新的 [`Svg`]。
+@@ widget/src/svg.rs:87
+创建一个新的 [`Svg`]，显示给定路径处的
+文件内容。
+@@ widget/src/svg.rs:94
+设置 [`Svg`] 的宽度。
+@@ widget/src/svg.rs:101
+设置 [`Svg`] 的高度。
+@@ widget/src/svg.rs:108
+设置 [`Svg`] 的 [`ContentFit`]。
+
+默认为 [`ContentFit::Contain`]
+@@ widget/src/svg.rs:119
+设置 [`Svg`] 的样式。
+@@ widget/src/svg.rs:129
+设置 [`Svg`] 的样式类。
+@@ widget/src/svg.rs:137
+对 [`Svg`] 应用给定的 [`Rotation`]。
+@@ widget/src/svg.rs:143
+设置 [`Svg`] 的不透明度。
+
+它应该在 [0.0, 1.0] 范围内——`0.0` 表示完全透明，
+`1.0` 表示完全不透明。
+@@ widget/src/svg.rs:168
+底层图像的原始宽高
+@@ widget/src/svg.rs:172
+svg 旋转后的大小
+@@ widget/src/svg.rs:175
+在 `Shrink` 收缩之前可供部件使用的大小
+@@ widget/src/svg.rs:178
+图像适配到上述边界后未裁剪的大小
+@@ widget/src/svg.rs:181
+如果有要求，把部件收缩到适合调整大小后的图像
+@@ widget/src/svg.rs:270
+[`Svg`] 可能的交互状态。
+@@ widget/src/svg.rs:273
+[`Svg`] 处于空闲状态。
+@@ widget/src/svg.rs:275
+[`Svg`] 正处于悬停状态。
+@@ widget/src/svg.rs:279
+[`Svg`] 的外观。
+@@ widget/src/svg.rs:282
+[`Svg`] 的 [`Color`] 滤镜。
+
+适合用来给符号图标着色。
+
+`None` 保留原始颜色。
+@@ widget/src/svg.rs:290
+[`Svg`] 的主题样式目录。
+@@ widget/src/svg.rs:292
+[`Catalog`] 的样式类。
+@@ widget/src/svg.rs:295
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/svg.rs:298
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/svg.rs:314
+[`Svg`] 的样式函数。
+
+它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+@@ widget/src/sticky.rs:1
+把元素粘在视口上！
+
+[`Sticky`] 会在其内容本该离开视野时让它们保持可见，
+例如当它们被滚动出
+[`Scrollable`](crate::Scrollable) 时。只要内容的任意一条边
+超出可见边界，它们就会被移到可见边界内的一个 [`overlay`] 中，
+从而停留在视口的边缘。
+
+在被粘住期间，内容保持原有的布局：它们
+只是浮动到可见边界内的一个新位置。
+
+当内容的边到达其父级的边时，它们会保持
+附着在父级的边上：保留原有的边界，并改为被裁剪到
+可见边界。
+
+一旦内容的父级离开了可见边界，它们就会
+停止浮动并随父级一起滚动。
+@@ widget/src/sticky.rs:19
+示例
+@@ widget/src/sticky.rs:47
+让其内容保持在视野内的部件。
+
+当 [`Sticky`] 部件的内容本该离开视野时（例如
+当它们被滚动出 [`Scrollable`](crate::Scrollable) 时），
+它们会被移到一个 [`overlay`] 中，该覆盖层位于父级的
+[`layout.bounds`](Layout::bounds) 与视口的交集之内，从而
+在视口的边缘保持可见。
+
+只要内容的任意一条边超出可见边界，它们就会开始浮动，
+并且始终被限制在可见边界内，
+从而停留在其中。
+
+在被粘住期间，内容保持原有的布局：它们
+只是浮动到一个新位置。
+
+当内容的边到达其父级的边时，它们会保持
+附着在父级的边上：保留原有的边界，并改为被裁剪到
+可见边界。
+
+一旦内容的父级离开了可见边界，它们就会
+停止浮动并随父级一起滚动。
+@@ widget/src/sticky.rs:69
+示例
+@@ widget/src/sticky.rs:93
+使用给定的内容创建一个新的 [`Sticky`]。
+@@ widget/src/sticky.rs:175
+避免传播过期的重绘
+@@ widget/src/sticky.rs:296
+计算内容沿某个轴的位置，使其粘在
+可见边界和父级边界之内。
+
+`position` 和 `size` 是内容沿该轴的自然位置和大小，
+`viewport` 和 `viewport_size` 描述可见
+边界，`parent` 描述父级的边界。
+
+返回的位置让内容同时位于可见边界
+和父级边界之内。如果做不到这一点（因为
+内容比两者的交集更大），内容会改为
+附着在父级的边上，从而保留
+原有的边界。
+@@ widget/src/sticky.rs:325
+内容附着在父级的上边缘
+@@ widget/src/sticky.rs:328
+内容附着在父级的下边缘
+@@ widget/src/table.rs:1
+显示表格。
+@@ widget/src/table.rs:13
+使用给定的列和行创建一个新的 [`Table`]。
+
+列可以使用 [`column()`] 函数创建，而行可以是任意
+遍历某种数据类型 `T` 的迭代器。
+@@ widget/src/table.rs:28
+使用给定的表头和视图函数创建一个新的 [`Column`]。
+
+视图函数会为 [`Table`] 中的每一行调用一次，并且必须
+产生对应单元格的内容。
+@@ widget/src/table.rs:49
+以网格形式直观呈现按列和行分布的数据。
+@@ widget/src/table.rs:75
+使用给定的列和行创建一个新的 [`Table`]。
+
+列可以使用 [`column()`] 函数创建，而行可以是任意
+遍历某种数据类型 `T` 的迭代器。
+@@ widget/src/table.rs:129
+设置 [`Table`] 的宽度。
+@@ widget/src/table.rs:135
+设置 [`Table`] 单元格的内边距。
+@@ widget/src/table.rs:142
+设置 [`Table`] 单元格的水平内边距。
+@@ widget/src/table.rs:148
+设置 [`Table`] 单元格的垂直内边距。
+@@ widget/src/table.rs:154
+设置 [`Table`] 单元格之间分隔线的粗细。
+@@ widget/src/table.rs:161
+设置 [`Table`] 单元格之间水平分隔线的粗细。
+@@ widget/src/table.rs:167
+设置 [`Table`] 单元格之间垂直分隔线的粗细。
+@@ widget/src/table.rs:242
+第一遍
+布局非流式单元格
+@@ widget/src/table.rs:297
+第二遍
+布局流式单元格，使用第一遍得到的度量作为限制
+@@ widget/src/table.rs:391
+第三遍
+定位每个单元格
+@@ widget/src/table.rs:584
+带有表头的一组数据的纵向呈现。
+@@ widget/src/table.rs:594
+设置 [`Column`] 的宽度。
+@@ widget/src/table.rs:600
+设置 [`Column`] 水平轴上的对齐方式。
+@@ widget/src/table.rs:606
+设置 [`Column`] 垂直轴上的对齐方式。
+@@ widget/src/table.rs:613
+[`Table`] 的外观。
+@@ widget/src/table.rs:616
+单元格之间水平分隔线的背景颜色。
+@@ widget/src/table.rs:618
+单元格之间垂直分隔线的背景颜色。
+@@ widget/src/table.rs:622
+[`Table`] 的主题样式目录。
+@@ widget/src/table.rs:624
+[`Catalog`] 的样式类。
+@@ widget/src/table.rs:627
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/table.rs:630
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/table.rs:634
+[`Table`] 的样式函数。
+@@ widget/src/table.rs:655
+[`Table`] 的默认样式。
+@@ widget/src/text.rs:1
+绘制文本并与之交互。
+@@ widget/src/text.rs:9
+一段文本。
+@@ widget/src/text.rs:11
+示例
+@@ widget/src/themer.rs:13
+把任意 `Theme` 应用到其内容上的部件。
+
+这个部件可以用来在一个应用程序中使用多种 `Theme`
+类型。
+@@ widget/src/themer.rs:25
+创建一个空的 [`Themer`]，把给定的 `Theme`
+应用到提供的 `content` 上。
+@@ widget/src/themer.rs:36
+设置 [`Themer`] 的默认文本 [`Color`]。
+@@ widget/src/themer.rs:42
+设置 [`Themer`] 的 [`Background`]。
+@@ widget/src/text/rich.rs:19
+一段 [`Rich`] 文本。
+@@ widget/src/text/rich.rs:47
+创建一个新的空 [`Rich`] 文本。
+@@ widget/src/text/rich.rs:68
+使用给定的文本片段创建一个新的 [`Rich`] 文本。
+@@ widget/src/text/rich.rs:76
+设置 [`Rich`] 文本的默认字号。
+@@ widget/src/text/rich.rs:82
+设置 [`Rich`] 文本的默认 [`LineHeight`]。
+@@ widget/src/text/rich.rs:88
+设置 [`Rich`] 文本的默认字体。
+@@ widget/src/text/rich.rs:94
+设置 [`Rich`] 文本边界的宽度。
+@@ widget/src/text/rich.rs:100
+设置 [`Rich`] 文本边界的高度。
+@@ widget/src/text/rich.rs:106
+让 [`Rich`] 文本在水平和垂直方向上都居中。
+@@ widget/src/text/rich.rs:112
+设置 [`Rich`] 文本的 [`alignment::Horizontal`]。
+@@ widget/src/text/rich.rs:118
+设置 [`Rich`] 文本的 [`alignment::Vertical`]。
+@@ widget/src/text/rich.rs:124
+设置 [`Rich`] 文本的 [`Wrapping`] 策略。
+@@ widget/src/text/rich.rs:130
+设置 [`Rich`] 文本的 [`Ellipsis`] 策略。
+@@ widget/src/text/rich.rs:136
+设置 [`Rich`] 文本中的链接被点击时
+要产生的消息。
+
+如果 [`Rich`] 文本的片段中不包含链接，你可能需要用
+`on_link_click(never)` 调用这个方法，以便编译器推断出
+正确的 `Link` 泛型类型。
+@@ widget/src/text/rich.rs:147
+设置 [`Rich`] 文本是否可以被选中。
+
+默认为 `false`。
+@@ widget/src/text/rich.rs:155
+设置 [`Rich`] 文本的默认样式。
+@@ widget/src/text/rich.rs:165
+设置 [`Rich`] 文本的默认 [`Color`]。
+@@ widget/src/text/rich.rs:173
+如果为 `Some`，设置 [`Rich`] 文本的默认 [`Color`]。
+@@ widget/src/text/rich.rs:186
+设置 [`Rich`] 文本的默认样式类。
+@@ widget/src/text/rich.rs:293
+水平内边距属于片段的开头和结尾，
+而不属于它的每一行
+@@ widget/src/tooltip.rs:1
+工具提示在某个元素被悬停时，在其上方显示一条提示信息。
+
+默认情况下，工具提示会立即显示，不过可以通过
+[`Tooltip::delay`] 调整。
+@@ widget/src/tooltip.rs:6
+示例
+@@ widget/src/tooltip.rs:37
+用于在一个部件上方显示另一个部件的元素。
+@@ widget/src/tooltip.rs:39
+示例
+@@ widget/src/tooltip.rs:70
+创建一个新的 [`Tooltip`]。
+
+默认情况下，[`Tooltip`] 的位置为 [`Position::Auto`]，
+它会把工具提示放在被悬停元素可用空间最多的
+那一侧。
+@@ widget/src/tooltip.rs:88
+设置 [`Tooltip`] 的 [`Position`]。
+
+默认情况下，[`Tooltip`] 的位置为 [`Position::Auto`]，
+它会把工具提示放在被悬停元素可用空间最多的
+那一侧。
+@@ widget/src/tooltip.rs:98
+设置内容与其 [`Tooltip`] 之间的间隙。
+@@ widget/src/tooltip.rs:104
+设置 [`Tooltip`] 显示之前的延迟。
+
+设置为 [`Duration::ZERO`] 则立即显示。
+@@ widget/src/tooltip.rs:112
+设置 [`Tooltip`] 是否被限制在视口之内。
+@@ widget/src/tooltip.rs:130
+工具提示的内容可能已经改变，因此缓存的布局
+（如果有）不再有效
+@@ widget/src/tooltip.rs:306
+如果工具提示的布局已被 `Widget::diff` 置为无效，
+则（重新）计算它
+@@ widget/src/tooltip.rs:389
+工具提示的位置。
+@@ widget/src/tooltip.rs:452
+工具提示的内容是直接绘制的；由用户负责
+为它设置样式。
+@@ widget/src/toggler.rs:1
+开关让用户通过拨动一个切换钮来做出二元选择。
+@@ widget/src/toggler.rs:3
+示例
+@@ widget/src/toggler.rs:47
+开关部件。
+@@ widget/src/toggler.rs:49
+示例
+@@ widget/src/toggler.rs:102
+[`Toggler`] 的默认大小。
+@@ widget/src/toggler.rs:105
+创建一个新的 [`Toggler`]。
+
+它需要：
+  * 一个布尔值，描述 [`Toggler`] 是否处于选中状态
+  * [`Toggler`] 的一个可选标签
+  * 一个在 [`Toggler`] 被切换时调用的函数。它
+    会收到 [`Toggler`] 的新状态，并且必须产生一个
+    `Message`。
+@@ widget/src/toggler.rs:132
+设置 [`Toggler`] 的标签。
+@@ widget/src/toggler.rs:138
+设置用户切换 [`Toggler`] 时
+应该产生的消息。
+
+如果没有调用这个方法，[`Toggler`] 会被禁用。
+@@ widget/src/toggler.rs:147
+如果为 `Some`，设置用户切换 [`Toggler`] 时
+应该产生的消息。
+
+如果为 `None`，[`Toggler`] 会被禁用。
+@@ widget/src/toggler.rs:156
+设置 [`Toggler`] 的大小。
+@@ widget/src/toggler.rs:162
+设置 [`Toggler`] 的宽度。
+@@ widget/src/toggler.rs:168
+设置 [`Toggler`] 的文本字号。
+@@ widget/src/toggler.rs:174
+设置 [`Toggler`] 的文本 [`text::LineHeight`]。
+@@ widget/src/toggler.rs:180
+设置 [`Toggler`] 文本的水平对齐方式
+@@ widget/src/toggler.rs:186
+设置 [`Toggler`] 的 [`text::Shaping`] 策略。
+@@ widget/src/toggler.rs:192
+设置 [`Toggler`] 的 [`text::Wrapping`] 策略。
+@@ widget/src/toggler.rs:198
+设置 [`Toggler`] 与文本之间的间距。
+@@ widget/src/toggler.rs:204
+设置 [`Toggler`] 文本的 [`Font`]
+@@ widget/src/toggler.rs:212
+设置 [`Toggler`] 的样式。
+@@ widget/src/toggler.rs:222
+设置 [`Toggler`] 的样式类。
+@@ widget/src/toggler.rs:254
+树的子节点是轨道和标签；它们只
+携带各自的几何信息，因此不需要状态。
+@@ widget/src/toggler.rs:439
+尽量把切换钮对齐到像素网格
+@@ widget/src/toggler.rs:477
+[`Toggler`] 可能的交互状态。
+@@ widget/src/toggler.rs:480
+[`Toggler`] 可以交互。
+@@ widget/src/toggler.rs:482
+表示 [`Toggler`] 是否处于开启状态。
+@@ widget/src/toggler.rs:485
+[`Toggler`] 正处于悬停状态。
+@@ widget/src/toggler.rs:487
+表示 [`Toggler`] 是否处于开启状态。
+@@ widget/src/toggler.rs:490
+[`Toggler`] 已被禁用。
+@@ widget/src/toggler.rs:492
+表示 [`Toggler`] 是否处于开启状态。
+@@ widget/src/toggler.rs:497
+开关的外观。
+@@ widget/src/toggler.rs:500
+开关的背景 [`Color`]。
+@@ widget/src/toggler.rs:502
+开关背景边框的宽度。
+@@ widget/src/toggler.rs:504
+开关背景边框的 [`Color`]。
+@@ widget/src/toggler.rs:506
+开关的前景 [`Color`]。
+@@ widget/src/toggler.rs:508
+开关前景边框的宽度。
+@@ widget/src/toggler.rs:510
+开关前景边框的 [`Color`]。
+@@ widget/src/toggler.rs:512
+开关的文本 [`Color`]。
+@@ widget/src/toggler.rs:514
+开关的边框半径。
+
+如果为 `None`，开关会是完全圆润的。
+@@ widget/src/toggler.rs:518
+背景与切换钮之间的间隔比例，相对于高度。
+@@ widget/src/toggler.rs:522
+[`Toggler`] 的主题样式目录。
+@@ widget/src/toggler.rs:524
+[`Catalog`] 的样式类。
+@@ widget/src/toggler.rs:527
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/toggler.rs:530
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/toggler.rs:533
+全局的选区 [`Color`]。
+@@ widget/src/toggler.rs:537
+[`Toggler`] 的样式函数。
+
+它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+@@ widget/src/toggler.rs:558
+[`Toggler`] 的默认样式。
+@@ widget/src/transition.rs:1
+用于制作动画视图的部件。
+@@ widget/src/transition.rs:14
+[`Transition`] 的逻辑。
+@@ widget/src/transition.rs:16
+[`Program`] 进行动画的值的类型。
+@@ widget/src/transition.rs:19
+在给定的时刻，让 [`Program`] 从当前状态过渡到
+给定的值。
+@@ widget/src/transition.rs:23
+如果 [`Program`] 当前正在进行中，返回 true。
+@@ widget/src/transition.rs:42
+可以用来为其内容添加动画的部件。
+@@ widget/src/transition.rs:62
+创建一个新的 [`Transition`]。
+
+`init` 闭包用于初始化动画。
+
+`view` 闭包会收到动画和一个 [`Instant`]，可以用来对值进行插值。
+在到达给定的 `value` 之前，它每一帧都会被调用。
+@@ widget/src/transition.rs:86
+设置 [`Transition`] 的 [`widget::Id`]。
+
+之后可以使用这个 [`widget::Id`] 通过 [`reset`] 重置 [`Animation`]。
+@@ widget/src/transition.rs:94
+设置 [`Transition`] 部件的键，用于保持连续性。
+
+改变键会重置 [`Animation`]。
+@@ widget/src/transition.rs:102
+设置 [`Transition`] 完成动画时要产生的消息。
+
+注意：如果 [`Animation`] 被设置为无限循环，这条消息永远不会产生！
+@@ widget/src/transition.rs:112
+如果为 [`Some`]，设置 [`Transition`] 完成动画时要产生的消息。
+
+注意：如果 [`Animation`] 被设置为无限循环，这条消息永远不会产生！
+@@ widget/src/transition.rs:126
+设置 [`Transition`] 完成动画时要产生的消息。
+
+它与 [`Transition::on_finish`] 类似，但使用闭包来产生
+消息。
+
+这个闭包只会在 [`Transition`] 真正完成动画时被调用，
+因此，如果创建结果消息的开销较大，这个方法可以用来
+减少开销。
+
+注意：如果 [`Animation`] 被设置为无限循环，这条消息永远不会产生！
+@@ widget/src/transition.rs:369
+重置 [`Transition`] 的 [`Animation`]。
+@@ widget/src/transition.rs:378
+用于重置 [`Transition`] 的 [`Animation`] 的 [`Operation`]。
+@@ widget/src/vertical_slider.rs:1
+滑块让用户通过移动指示器来设置一个值。
+@@ widget/src/vertical_slider.rs:3
+示例
+@@ widget/src/vertical_slider.rs:47
+一个垂直条和一个手柄，用于从一个取值范围中
+选择单个值。
+
+[`VerticalSlider`] 会尝试填满其容器的垂直空间。
+
+[`VerticalSlider`] 的数值范围是泛型的，步长默认
+为 1 个单位。
+
+注意：在底层，值会与 f64 相互转换，因此只有能用 f64 精确表示的值
+才能通过滑块选中。不过在这样的量级下，滑块本身的精度
+很可能已经低于 f64 表示所损失的精度。
+@@ widget/src/vertical_slider.rs:59
+示例
+@@ widget/src/vertical_slider.rs:110
+[`VerticalSlider`] 的默认宽度。
+@@ widget/src/vertical_slider.rs:113
+创建一个新的 [`VerticalSlider`]。
+
+它需要：
+  * 一个由可能取值构成的闭区间
+  * [`VerticalSlider`] 的当前值
+  * 一个在 [`VerticalSlider`] 被拖动时调用的函数。
+    它接收 [`VerticalSlider`] 的新值，并且必须产生一个
+    `Message`。
+@@ widget/src/vertical_slider.rs:152
+设置 [`VerticalSlider`] 可选的默认值。
+
+如果设置了，按住 ctrl 或 command 点击时 [`VerticalSlider`] 会重置为这个值。
+@@ widget/src/vertical_slider.rs:160
+设置 [`VerticalSlider`] 的释放消息。
+它在鼠标从滑块上松开时被调用。
+
+通常，这条消息产生时，用户与滑块的交互已经结束。
+如果你需要根据滑块的结果启动一个长时间运行的任务，而
+默认的 on_change 消息可能产生过多事件，这会很有用。
+@@ widget/src/vertical_slider.rs:171
+设置 [`VerticalSlider`] 的宽度。
+@@ widget/src/vertical_slider.rs:177
+设置 [`VerticalSlider`] 的高度。
+@@ widget/src/vertical_slider.rs:183
+设置 [`VerticalSlider`] 的步长。
+@@ widget/src/vertical_slider.rs:189
+设置 [`VerticalSlider`] 可选的“shift”步长。
+
+如果设置了，按住 shift 键时会使用这个值作为步长。
+@@ widget/src/vertical_slider.rs:197
+设置 [`VerticalSlider`] 的样式。
+@@ widget/src/vertical_slider.rs:207
+设置 [`VerticalSlider`] 的样式类。
+@@ widget/src/vertical_slider.rs:508
+待修复：在 Windows 上回退到 `Pointer`
+参见 https://github.com/rust-windowing/winit/issues/1043
+@@ widget/src/text_input.rs:1
+文本输入框显示可以填入文本的字段。
+@@ widget/src/text_input.rs:3
+示例
+@@ widget/src/text_input.rs:49
+可以填入文本的字段。
+@@ widget/src/text_input.rs:51
+示例
+@@ widget/src/text_input.rs:103
+[`TextInput`] 的默认 [`Padding`]。
+@@ widget/src/text_input.rs:111
+使用给定的占位符和当前值创建一个新的
+[`TextInput`]。
+@@ widget/src/text_input.rs:138
+设置 [`TextInput`] 的 [`widget::Id`]。
+@@ widget/src/text_input.rs:144
+把 [`TextInput`] 转换为安全的密码输入框。
+@@ widget/src/text_input.rs:150
+设置在 [`TextInput`] 中输入文本时
+应该产生的消息。
+
+如果没有调用这个方法，[`TextInput`] 会被禁用。
+@@ widget/src/text_input.rs:159
+如果为 `Some`，设置在 [`TextInput`] 中输入文本时
+应该产生的消息。
+
+如果为 `None`，[`TextInput`] 会被禁用。
+@@ widget/src/text_input.rs:168
+设置 [`TextInput`] 获得焦点并且按下回车键时
+应该产生的消息。
+@@ widget/src/text_input.rs:175
+如果为 `Some`，设置 [`TextInput`] 获得焦点并且
+按下回车键时应该产生的消息。
+@@ widget/src/text_input.rs:182
+设置向 [`TextInput`] 中粘贴文本时
+应该产生的消息。
+@@ widget/src/text_input.rs:189
+如果为 `Some`，设置向 [`TextInput`] 中粘贴文本时
+应该产生的消息。
+@@ widget/src/text_input.rs:196
+设置 [`TextInput`] 的 [`Font`]。
+@@ widget/src/text_input.rs:204
+设置 [`TextInput`] 的宽度。
+@@ widget/src/text_input.rs:210
+设置 [`TextInput`] 的 [`Padding`]。
+@@ widget/src/text_input.rs:216
+设置 [`TextInput`] 的文本字号。
+@@ widget/src/text_input.rs:222
+设置 [`TextInput`] 的 [`text::LineHeight`]。
+@@ widget/src/text_input.rs:228
+设置 [`TextInput`] 的水平对齐方式。
+@@ widget/src/text_input.rs:234
+设置 [`TextInput`] 的多行行为。
+
+`None` 表示作为单行输入框。
+@@ widget/src/text_input.rs:242
+设置 [`TextInput`] 的样式。
+@@ widget/src/text_input.rs:252
+设置 [`TextInput`] 的样式类。
+@@ widget/src/text_input.rs:453
+[`TextInput`] 的状态。
+@@ widget/src/text_input.rs:465
+创建一个新的 [`State`]，表示一个未获得焦点的 [`TextInput`]。
+@@ widget/src/text_input.rs:519
+[`TextInput`] 可能的交互状态。
+@@ widget/src/text_input.rs:522
+[`TextInput`] 可以交互。
+@@ widget/src/text_input.rs:524
+[`TextInput`] 正处于悬停状态。
+@@ widget/src/text_input.rs:526
+[`TextInput`] 已获得焦点。
+@@ widget/src/text_input.rs:528
+[`TextInput`] 在获得焦点的同时是否处于悬停状态。
+@@ widget/src/text_input.rs:531
+[`TextInput`] 无法交互。
+@@ widget/src/text_input.rs:535
+文本输入框的外观。
+@@ widget/src/text_input.rs:538
+文本输入框的 [`Background`]。
+@@ widget/src/text_input.rs:540
+文本输入框的 [`Border`]。
+@@ widget/src/text_input.rs:542
+文本输入框占位符的 [`Color`]。
+@@ widget/src/text_input.rs:544
+文本输入框值的 [`Color`]。
+@@ widget/src/text_input.rs:546
+文本输入框选区的 [`Color`]。
+@@ widget/src/text_input.rs:550
+[`TextInput`] 的主题样式目录。
+@@ widget/src/text_input.rs:552
+[`Catalog`] 的样式类。
+@@ widget/src/text_input.rs:555
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/text_input.rs:558
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/text_input.rs:562
+[`TextInput`] 的样式函数。
+
+它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+@@ widget/src/text_input.rs:579
+[`TextInput`] 的默认样式。
+@@ widget/src/text_editor.rs:1
+文本编辑器显示一个用于编辑文本的多行文本输入框。
+@@ widget/src/text_editor.rs:3
+示例
+@@ widget/src/text_editor.rs:59
+多行文本输入框。
+@@ widget/src/text_editor.rs:61
+示例
+@@ widget/src/text_editor.rs:120
+使用给定的 [`Content`] 创建一个新的 [`TextEditor`]。
+@@ widget/src/text_editor.rs:147
+使用给定的语法为 [`TextEditor`] 进行高亮。
+@@ widget/src/text_editor.rs:190
+设置 [`TextEditor`] 的 [`Id`](widget::Id)。
+@@ widget/src/text_editor.rs:196
+设置 [`TextEditor`] 的占位符。
+@@ widget/src/text_editor.rs:202
+设置 [`TextEditor`] 的宽度。
+@@ widget/src/text_editor.rs:208
+设置 [`TextEditor`] 的高度。
+@@ widget/src/text_editor.rs:214
+设置在 [`TextEditor`] 中执行某个动作时
+应该产生的消息。
+
+如果没有调用这个方法，[`TextEditor`] 会被禁用。
+@@ widget/src/text_editor.rs:223
+设置 [`TextEditor`] 的 [`Font`]。
+@@ widget/src/text_editor.rs:231
+设置 [`TextEditor`] 的文本字号。
+@@ widget/src/text_editor.rs:237
+设置 [`TextEditor`] 的 [`text::LineHeight`]。
+@@ widget/src/text_editor.rs:243
+设置 [`TextEditor`] 的 [`Padding`]。
+@@ widget/src/text_editor.rs:249
+设置 [`TextEditor`] 的 [`Wrapping`] 策略。
+@@ widget/src/text_editor.rs:255
+使用给定的 [`text::Parser`] 和 [`text::Highlighter`]
+为 [`TextEditor`] 进行高亮。
+@@ widget/src/text_editor.rs:282
+设置在按键时产生按键绑定的闭包。
+
+可用的绑定列表见 [`Binding`]。
+@@ widget/src/text_editor.rs:293
+设置 [`TextEditor`] 的样式。
+@@ widget/src/text_editor.rs:303
+设置 [`TextEditor`] 的样式类。
+@@ widget/src/text_editor.rs:613
+[`TextEditor`] 的内容。
+@@ widget/src/text_editor.rs:629
+创建一个空的 [`Content`]。
+@@ widget/src/text_editor.rs:634
+使用给定的文本创建一个 [`Content`]。
+@@ widget/src/text_editor.rs:641
+对 [`Content`] 执行一个 [`Action`]。
+@@ widget/src/text_editor.rs:648
+移动当前光标，使其与给定的光标一致。
+@@ widget/src/text_editor.rs:655
+返回 [`Content`] 当前的光标位置。
+@@ widget/src/text_editor.rs:660
+返回 [`Content`] 的行数。
+@@ widget/src/text_editor.rs:665
+返回给定索引处那一行的文本（如果存在）。
+@@ widget/src/text_editor.rs:676
+返回一个遍历 [`Content`] 中各行文本的迭代器。
+@@ widget/src/text_editor.rs:684
+返回 [`Content`] 的文本。
+@@ widget/src/text_editor.rs:689
+返回 [`Content`] 中被选中的文本。
+@@ widget/src/text_editor.rs:694
+返回 [`Content`] 中用于分隔各行的 [`LineEnding`] 种类。
+@@ widget/src/text_editor.rs:699
+返回 [`Content`] 是否为空。
+@@ widget/src/text_editor.rs:737
+[`TextEditor`] 可能的交互状态。
+@@ widget/src/text_editor.rs:740
+[`TextEditor`] 可以交互。
+@@ widget/src/text_editor.rs:742
+[`TextEditor`] 正处于悬停状态。
+@@ widget/src/text_editor.rs:744
+[`TextEditor`] 已获得焦点。
+@@ widget/src/text_editor.rs:746
+[`TextEditor`] 在获得焦点的同时是否处于悬停状态。
+@@ widget/src/text_editor.rs:749
+[`TextEditor`] 无法交互。
+@@ widget/src/text_editor.rs:753
+文本输入框的外观。
+@@ widget/src/text_editor.rs:756
+文本输入框的 [`Background`]。
+@@ widget/src/text_editor.rs:758
+文本输入框的 [`Border`]。
+@@ widget/src/text_editor.rs:760
+文本输入框占位符的 [`Color`]。
+@@ widget/src/text_editor.rs:762
+文本输入框值的 [`Color`]。
+@@ widget/src/text_editor.rs:764
+文本输入框选区的 [`Color`]。
+@@ widget/src/text_editor.rs:768
+[`TextEditor`] 的主题样式目录。
+@@ widget/src/text_editor.rs:770
+[`Catalog`] 的样式类。
+@@ widget/src/text_editor.rs:773
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/text_editor.rs:776
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/text_editor.rs:780
+[`TextEditor`] 的样式函数。
+@@ widget/src/text_editor.rs:795
+[`TextEditor`] 的默认样式。
+@@ widget/tests/layout.rs:1
+使用内置部件的布局测试。
+@@ widget/tests/layout.rs:33
+先布局固定元素，然后是有界元素，最后是
+无界的流式元素。
+@@ widget/tests/layout.rs:55
+内容有界的嵌套行先于其他流式元素布局，
+其他流式元素获得剩余空间。
+@@ widget/tests/layout.rs:82
+如果有界约束没有生效，嵌套行的行为就和
+另一个流式元素一样。
+@@ widget/tests/layout.rs:113
+自然份额各为 300；min(400) 先布局，
+剩下的 200 流向第一个元素。
+@@ widget/tests/layout.rs:131
+与上一个用例类似，但剩下的 200 由
+两个流式元素分配。
+@@ widget/tests/layout.rs:154
+份额是 250，但第一个元素占用 260，嵌套行得到 240。
+这 240 按 120 平分，但第二个元素占用 220，第一个流式元素
+得到剩余部分（20）。
+@@ widget/tests/layout.rs:183
+份额是 250，但第一个元素占用 260，嵌套行得到 240。
+这 240 按 120 平分，但第二个元素只能占用 10，第一个
+元素得到剩余部分（230）。
+@@ widget/tests/layout.rs:389
+部件及其子元素的预期几何信息，位置
+相对于父级。
+@@ widget/tests/component.rs:1
+针对带有覆盖层的 [`Component`] 的测试。
+@@ widget/tests/component.rs:19
+视图为按钮上的 [`tooltip`](tooltip) 的 [`Component`]。
+@@ widget/tests/component.rs:42
+把光标移到按钮上：工具提示打开
+@@ widget/tests/component.rs:49
+工具提示的覆盖层现在是用户界面的一部分
+@@ widget/tests/component.rs:55
+工具提示不会挡住按钮：点击按钮仍然会转发
+组件的消息
+@@ widget/tests/markdown.rs:1
+针对 [`iced_widget::markdown`] 解析器的测试：一次性的
+[`parse`] 和 [`sections`] 函数，以及增量式的
+[`Content::push_str`] 方法——无论分块如何，它都必须收敛到一次性的
+[`Content::parse`] 结果。
+@@ widget/tests/markdown.rs:12
+很长的无序列表。
+@@ widget/tests/markdown.rs:19
+很长的有序列表。
+@@ widget/tests/markdown.rs:28
+任务列表。
+@@ widget/tests/markdown.rs:35
+嵌套列表。
+@@ widget/tests/markdown.rs:42
+松散列表（列表项之间有空行）。
+@@ widget/tests/markdown.rs:49
+包含多个段落的列表项。
+@@ widget/tests/markdown.rs:56
+被其他条目包围的列表。
+@@ widget/tests/markdown.rs:63
+代码块后面跟着一个列表。
+@@ widget/tests/markdown.rs:70
+如果某个引用的定义被元数据块吞掉，那么在该块
+仍未闭合时借助它解析出的链接必须
+不再解析。
+@@ widget/tests/markdown.rs:79
+同时定义在被吞掉的元数据块之内和
+之外的引用，会解析为块外的定义，与一次性
+解析的行为一致。
+@@ widget/tests/markdown.rs:89
+引用块中的列表，后面跟着另一个列表。
+@@ widget/tests/markdown.rs:96
+看起来像 setext 标题下划线的列表项。
+@@ widget/tests/markdown.rs:103
+包含一个链接和一张图片的列表项。
+@@ widget/tests/markdown.rs:110
+以竖线结尾的列表项（类似表格）。
+@@ widget/tests/markdown.rs:117
+单个非常长的列表项。
+@@ widget/tests/markdown.rs:124
+损坏的引用链接，在引用（定义在列表之后）
+到达后得到解析。
+@@ widget/tests/markdown.rs:132
+损坏的引用链接，在同一个列表的两个列表项之间
+得到解析。
+@@ widget/tests/markdown.rs:140
+表格，逐词流式推入。
+@@ widget/tests/markdown.rs:147
+同一行上的一张图片和一个引用链接；随着这一行增长，
+图片不能重复出现。
+@@ widget/tests/markdown.rs:155
+同一行上的多张图片和一个段落；这些图片和
+段落共享同一个源区域，随着这一行增长，
+图片不能重复出现。
+@@ widget/tests/markdown.rs:164
+只有图片的一行，后面跟着更多内容。
+@@ widget/tests/markdown.rs:171
+同一行上文本后面跟着一张图片；文本不能被
+吸收进图片的替代文本中。
+@@ widget/tests/markdown.rs:179
+在使用之前定义的引用。
+@@ widget/tests/markdown.rs:186
+内容之后的元数据块不应该打断流程。
+@@ widget/tests/markdown.rs:193
+同时包含多种结构，逐块、逐词和
+逐字符流式推入。
+@@ widget/tests/markdown.rs:223
+向一个很长的列表推入新的列表项必须保持低开销：`push_str`
+只重新解析最后一个列表项，因此每次推入的耗时不会随
+列表增长。
+@@ widget/tests/markdown.rs:235
+最后 200 次推入占总耗时的比例必须很小：
+如果每次推入都进行 O(n) 的重新解析，它们会占去大部分时间。
+@@ widget/tests/markdown.rs:250
+逐词推入一个包含许多代码块的大文档，
+必须保持快速，并收敛到一次性解析的结果。
+
+如果没有按块的高亮器缓存，每次推入都会重新高亮这些块
+（或整个文档）：对于这个测试夹具，
+在启用 `highlighter` 特性的 debug 构建中大约需要 90 秒
+（release 构建约 10 秒）。时间预算必须覆盖最慢的 CI 运行器
+（debug、`highlighter`：约 6 秒）并留有余量，同时要远
+低于无缓存时的耗时，这样一旦退化为每次推入都重新高亮
+每个块，测试仍然会失败。
+@@ widget/tests/markdown.rs:297
+与 CommonMark 一样，第一个定义生效；推入发生时，
+第二个定义仍在增长（尚未
+结束）。
+@@ widget/tests/markdown.rs:312
+在图片所在的段落完成之前，就已经为图片创建了小节；
+因此重新解析的范围必须覆盖整行。
+@@ widget/tests/markdown.rs:319
+紧跟在列表项之后的分隔线，中间没有空行：
+分隔线结束了列表，增量解析必须同时保留
+列表和分隔线。
+@@ widget/tests/markdown.rs:329
+紧跟在列表行之后的引用定义，中间没有空
+行，会被吸收进列表项（惰性续行）；
+其后的列表不能丢失。
+@@ widget/tests/markdown.rs:339
+被吸收进引用块内列表项（惰性
+续行）的引用定义，内嵌了一个指向它所定义标签的链接；这个链接
+必须按一次性解析的语义解析：与 CommonMark 一样，
+该标签的第一个定义生效。
+@@ widget/tests/markdown.rs:350
+跨越重新解析窗口起点的列表：当它的
+最后一行正在被推入时，这一行是一个结束列表的
+独立段落；当它变成列表项时，列表不能被拆成
+两个。
+@@ widget/tests/markdown.rs:366
+流开头的元数据块一旦闭合，就会被
+解析器吞掉；在此之前，第一行是一条暂定的分隔线，
+因此随着块的增长，必须重新解析整个块。
+@@ widget/tests/markdown.rs:380
+不是元数据块：第二行是空行，因此第一
+行是一条分隔线
+@@ widget/tests/markdown.rs:383
+未闭合：`---` 是一条分隔线，块保持未闭合状态
+@@ widget/tests/markdown.rs:390
+流中间的元数据块一旦闭合，同样会被
+解析器吞掉：在此之前，它的起始行是一条暂定的
+分隔线，因此随着块的增长，必须从它开始的位置
+重新解析整个块。
+@@ widget/tests/markdown.rs:396
+在空行之后，以及在列表项之后（没有空行）
+@@ widget/tests/markdown.rs:413
+块后面跟着一个列表：这个列表不能与
+暂定的分隔线合并
+@@ widget/tests/markdown.rs:488
+标题按顺序作为各自小节的第一个元素
+产出
+@@ widget/tests/markdown.rs:497
+正文按顺序划分所有非标题条目
+@@ widget/tests/markdown.rs:518
+在一组生成的文档上，用三种分块方案对增量解析的
+收敛性进行模糊测试，并在每次推入之后检查
+与一次性解析的等价性。
+@@ widget/tests/markdown.rs:524
+用于生成模糊测试文档的块。
+@@ widget/tests/markdown.rs:558
+确定性的伪随机数生成器。
+@@ widget/tests/markdown.rs:571
+要进行模糊测试的文档：四个收敛性问题的复现用例，以及
+一组由 `BLOCKS` 生成的确定性文档。
+@@ widget/tests/markdown.rs:580
+位于文档开头的元数据块
+@@ widget/tests/markdown.rs:582
+位于文档中间的元数据块，分别在
+空行之后和列表项之后（没有空行），包括已闭合
+和未闭合的情况
+@@ widget/tests/markdown.rs:612
+断言使用不同的分块方案增量解析 `full`，
+都会收敛到一次性解析的结果。
+@@ widget/tests/markdown.rs:664
+断言两个迭代器以相同的顺序产出完全相同的 [`Item`]
+引用。
+@@ widget/tests/markdown.rs:681
+[`sections`] 产出的小节，预期恰好有 `N` 个。
+@@ widget/tests/lazy.rs:1
+针对 [`lazy`] 部件的测试。
+@@ widget/tests/lazy.rs:8
+一个行，包含一个缓存内容填满主轴的 [`lazy`] 子元素，
+后面跟着一段静态文本。
+
+`lazy` 子元素必须在每一帧都报告它的 `Fill` 大小提示，这样
+行才会把它作为流式条目布局，静态文本才能保持其固有
+宽度。如果提示过期（即新创建的 [`Lazy`] 值的
+默认 `Fit` 提示），缓存的内容会作为静态条目
+以整个可用宽度布局，静态文本则被压缩为零。
+@@ widget/tests/lazy.rs:25
+断言静态文本保持非零的固有宽度，这只有在
+`lazy` 内容的 `Fill` 提示被报告给行时才会发生。
+@@ widget/tests/lazy.rs:38
+行是 UI 的根：两个子元素应该共享整个
+窗口宽度（1024，模拟器的默认大小）。
+@@ widget/tests/lazy.rs:57
+使用相同的依赖重建 UI：缓存的元素被复用，
+但 `Lazy` 部件的值是从头重新创建的。
+@@ widget/tests/lazy.rs:68
+使用新的依赖重建 UI：缓存的元素被替换。
+@@ widget/tests/pane_grid.rs:1
+针对 [`PaneGrid`] 的冒烟测试。
+@@ widget/tests/pane_grid.rs:14
+包含两个窗格的网格，从上到下分割。
+@@ widget/tests/pane_grid.rs:57
+水平分割把窗格从上到下排列
+@@ widget/tests/pane_grid.rs:68
+每个窗格的主体位于其标题栏下方
+@@ widget/tests/pane_grid.rs:102
+在远离标题文本的位置，通过标题栏拾取第一个窗格：
+标题栏除了其内容和控件之外都是拾取区域
+@@ widget/tests/pane_grid.rs:132
+把窗格放到第二个窗格的中心
+@@ widget/tests/opaque.rs:1
+针对 `Opaque` 部件的行为测试。
+
+这些测试直接驱动 `Widget`特质（使用空渲染器 `()`），以
+验证 `Opaque` 默认会捕获鼠标按键的按下，并且
+只有在启用了 `capture_scroll` 标志且光标位于其边界之内时，
+才会捕获滚轮事件。
+@@ widget/tests/opaque.rs:19
+[`WheelSpy`] 收到滚轮事件时发布的
+消息。
+@@ widget/tests/opaque.rs:23
+测试视口的大小。
+@@ widget/tests/opaque.rs:26
+在给定位置按下左键。
+@@ widget/tests/opaque.rs:34
+在给定位置的滚轮事件。
+@@ widget/tests/opaque.rs:44
+包裹一个 50x50 `space` 的 `Opaque`，可以选择是否捕获滚轮。
+@@ widget/tests/opaque.rs:55
+构建状态树并为部件计算（初始）布局。
+@@ widget/tests/opaque.rs:70
+让单个事件经过部件，并返回产生的事件
+状态和已发布消息的总线。
+@@ widget/tests/opaque.rs:92
+收集总线上发布的消息。
+@@ widget/tests/opaque.rs:97
+一个 50x50 的部件，收到滚轮事件时
+发布 [`WHEEL_SEEN`]。
+@@ widget/tests/opaque.rs:145
+50x50 的内容占据 (0, 0) .. (50, 50)；在其内部按下。
+@@ widget/tests/opaque.rs:191
+在很远的地方滚动：位于 opaque 的边界之外。
+@@ widget/tests/opaque.rs:207
+这个标志不能干扰默认的鼠标按下捕获。
+@@ widget/tests/opaque.rs:220
+这个标志不能吞掉被包裹内容的事件：即使事件随后被捕获，
+侦测部件仍然会收到滚动。
+@@ widget/tests/popover.rs:1
+针对 `popover` 部件的行为测试。
+
+这些测试直接驱动 `Widget` 和 `Overlay`特质（使用空
+渲染器 `()`），以验证弹出层只在
+其 `popover` 参数为 `Some`（打开）时显示覆盖层，为 `None`
+（关闭）时则不显示；验证基底是一个普通元素；并验证当用户
+在其边界之外点击时，弹出层会通过 `on_close` 处理函数
+通知应用程序。
+@@ widget/tests/popover.rs:20
+请求关闭时弹出层产生的消息。
+@@ widget/tests/popover.rs:23
+测试视口的大小。
+@@ widget/tests/popover.rs:26
+测试窗口的大小。
+@@ widget/tests/popover.rs:29
+在给定位置按下左键。
+@@ widget/tests/popover.rs:37
+在给定位置的滚轮事件。
+@@ widget/tests/popover.rs:47
+带有 50x50 基底和 80x80 弹出内容（当 `open` 时）的弹出层，并带有
+`on_close` 处理函数。
+@@ widget/tests/popover.rs:53
+同一个弹出层，但作为具体类型，这样它的构建器方法
+（例如 `capture_scroll`）仍然可以访问。
+@@ widget/tests/popover.rs:64
+构建状态树并为部件计算（初始）布局。
+@@ widget/tests/popover.rs:79
+返回部件当前是否产生覆盖层。
+@@ widget/tests/popover.rs:96
+让单个事件经过（打开的）弹出层覆盖层，并返回
+产生的事件状态和已发布消息的总线。
+@@ widget/tests/popover.rs:126
+收集总线上发布的消息。
+@@ widget/tests/popover.rs:138
+基底是一个普通的 50x50 元素：弹出层不会给它加上
+内边距或任何其他样式。
+@@ widget/tests/popover.rs:149
+`button` 基底在悬停时报告 `Pointer` 交互，
+弹出层把它委托给基底（基底是一个普通元素）。
+@@ widget/tests/popover.rs:160
+悬停在基底上会报告基底的交互（`Pointer`，和
+`button` 一样）。
+@@ widget/tests/popover.rs:204
+在很远的地方按下：位于基底和弹出层之外。
+@@ widget/tests/popover.rs:220
+基底占据 (0, 0) .. (50, 50)。按下它不能请求
+关闭：基底对自己的行为负责。
+@@ widget/tests/popover.rs:236
+弹出层出现在基底下方（Position::Bottom），因此它大致
+占据 (0, 50) .. (80, 130)。点击位于弹出层内部的一点。
+@@ widget/tests/popover.rs:249
+没有 `on_close` 处理函数的弹出层在外部被点击时，
+不会发布任何消息。
+@@ widget/tests/popover.rs:272
+弹出内容大致占据 (0, 50) .. (80, 130)；在其内部按下。
+@@ widget/tests/void.rs:1
+针对从容器中过滤掉“空”（即 `None`）子元素的测试。
+@@ widget/tests/void.rs:14
+`column!["Hello", Some(button)]` 保留两个子元素。
+@@ widget/tests/void.rs:22
+`"Hello"` 和按钮都保留了下来。
+@@ widget/tests/void.rs:26
+`None` 子元素会从列中完全过滤掉：它不占用
+布局槽位，也不贡献间距。
+@@ widget/tests/void.rs:35
+只有 `"Hello"` 保留了下来。
+@@ widget/tests/void.rs:39
+`row!` 的行为相同。
+@@ widget/tests/void.rs:47
+只有 `"Hello"` 和普通的 `space()` 保留了下来。
+@@ widget/tests/sticky.rs:1
+针对 `sticky` 部件的测试。
+@@ widget/tests/sticky.rs:66
+处理一个重绘帧，把可滚动区域当前的偏移量提交为
+放置其内容时使用的平移量。
+@@ widget/tests/sticky.rs:82
+断言粘性内容显示在具有预期边界的覆盖层上，
+或者根本没有显示在覆盖层上。
+@@ widget/tests/sticky.rs:113
+覆盖层对其边界内的光标作出反应
+@@ widget/tests/sticky.rs:119
+……而对边界之外的光标不作反应
+@@ widget/tests/sticky.rs:140
+粘性内容在视野内，因此它们不会显示在
+覆盖层上。
+@@ widget/tests/sticky.rs:152
+向下滚动一点：粘性内容部分超出了
+可见边界，因此它们显示在覆盖层上，位于可见边界之内。
+@@ widget/tests/sticky.rs:169
+向下滚动，让粘性内容离开视野：它们
+显示在覆盖层上，位于可见边界之内。
+@@ widget/tests/sticky.rs:193
+滚动一点：粘性内容在下边缘超出了可见边界，
+因此它们显示在覆盖层上，固定在下边缘。
+@@ widget/tests/sticky.rs:205
+滚动越过粘性内容：它们显示在覆盖层上，
+固定在上边缘。
+@@ widget/tests/sticky.rs:217
+粘性内容会被限制，使它们的边永远不会超出
+可见边界，即使它们比视口更大。
+@@ widget/tests/sticky.rs:237
+向下滚动，让粘性内容超出可见边界：
+覆盖层被限制，2000px 宽的内容
+以 1024px 的宽度显示。
+@@ widget/tests/sticky.rs:262
+向下滚动：粘性内容超出了可见边界，但
+它们的父级仍然可见，因此它们显示在覆盖层上，
+固定在上边缘。
+@@ widget/tests/sticky.rs:272
+向下滚动，直到内容的下边缘到达其父级的
+下边缘：内容保持原位不动。
+@@ widget/tests/sticky.rs:281
+继续向下滚动：内容附着在其父级的
+下边缘：它们保留原有的边界，并改为被裁剪到
+可见边界。
+@@ widget/tests/sticky.rs:291
+向下滚动，直到父级离开可见边界：
+内容被释放，并随父级一起滚动。
+@@ widget/tests/sticky.rs:304
+向右滚动，让粘性内容离开视野：它们
+显示在覆盖层上，位于可见边界之内。
+@@ widget/tests/sticky.rs:318
+`pick_list` 产生的消息。
+@@ widget/tests/sticky.rs:344
+向下滚动，让粘性内容超出可见边界。
+@@ widget/tests/sticky.rs:351
+处理一帧，让滚动被提交，粘性
+内容浮动在可见边界的顶部。
+@@ widget/tests/sticky.rs:355
+在 pick_list 的浮动位置（可见边界的
+顶部）点击它。
+@@ widget/tests/sticky.rs:359
+菜单显示在浮动的 pick_list 下方，位于
+可见边界之内，而不是在它原来的、已滚出视野的位置。
+@@ widget/tests/sticky.rs:368
+把光标移到选项上，并从浮动的菜单中
+选中它。
+@@ widget/tests/scrollable.rs:1
+针对 `scrollable` 部件的集成测试。
+
+这些测试通过 `Simulator` 驱动部件，并通过
+`on_scroll` 通知观察它的行为：不会发布多余的视口，
+因此消息的数量也告诉我们平滑滚动动画
+用了多少帧。
+@@ widget/tests/scrollable.rs:25
+模拟动画的一帧。
+@@ widget/tests/scrollable.rs:28
+滚轮每滚动一行的距离（以像素为单位）。
+
+使用默认渲染器创建一个 [`Simulator`]，并根据提供的元素
+推断消息类型。
+@@ widget/tests/scrollable.rs:41
+需要与 `scrollable` 模块中私有的 `WHEEL_PX_PER_LINE` 常量
+保持同步。
+@@ widget/tests/scrollable.rs:45
+给定行数的滚轮事件所滚动的距离
+（以像素为单位）。
+@@ widget/tests/scrollable.rs:51
+具有给定内容高度和视口高度的 `Scrollable`，每次滚动时
+发布它的视口。
+@@ widget/tests/scrollable.rs:61
+被测 [`element`] 的 [`Id`]。
+@@ widget/tests/scrollable.rs:64
+步进给定数量的帧，并让实时时钟始终领先于
+合成的帧时间线。
+
+`Simulator` 使用实时时钟为滚轮事件打时间戳，因此如果
+合成的帧时刻跑到了它前面，滚轮事件就会被
+观察为发生在动画时间线的“过去”。每一帧都休眠
+可以保证两条时间线保持一致。
+@@ widget/tests/scrollable.rs:85
+向下滚动两行
+@@ widget/tests/scrollable.rs:88
+逐帧让动画稳定下来
+@@ widget/tests/scrollable.rs:102
+滚轮事件不能已经移动了偏移量：第一条
+通知仍然报告原始位置
+@@ widget/tests/scrollable.rs:114
+滚动必须是渐进的：它用了好几帧才稳定下来
+@@ widget/tests/scrollable.rs:124
+……并且它必须恰好稳定在目标位置（两行）
+@@ widget/tests/scrollable.rs:127
+在滚动稳定之前，通知都把动画报告为
+进行中
+@@ widget/tests/scrollable.rs:146
+向下滚动两行
+@@ widget/tests/scrollable.rs:149
+不需要任何帧：只有一条通知，已完全滚动到位，
+就在滚轮事件本身上——并且没有动画
+@@ widget/tests/scrollable.rs:164
+向下滚动 120 像素
+@@ widget/tests/scrollable.rs:167
+高精度滚动会立即应用，即使
+平滑滚动默认是启用的——并且没有动画
+@@ widget/tests/scrollable.rs:182
+向下滚动一行
+@@ widget/tests/scrollable.rs:185
+逐帧让动画稳定下来
+@@ widget/tests/scrollable.rs:199
+偏移量必须单调地接近目标
+@@ widget/tests/scrollable.rs:216
+……并且它必须恰好稳定在目标位置（一行）
+@@ widget/tests/scrollable.rs:225
+向下滚动一行……
+@@ widget/tests/scrollable.rs:228
+……经过几帧之后（保持实际时间与动画的
+时间线一致）……
+@@ widget/tests/scrollable.rs:233
+……新的滚轮移动必须累加到待处理的目标上，而不是替换它
+@@ widget/tests/scrollable.rs:236
+逐帧让动画稳定下来
+@@ widget/tests/scrollable.rs:248
+偏移量不能向后滚动
+@@ widget/tests/scrollable.rs:260
+两次移动的全部距离都已滚动完毕
+@@ widget/tests/scrollable.rs:266
+给定行数的滚轮移动稳定下来所需的
+消息数量（即滚动的帧数）。
+@@ widget/tests/scrollable.rs:288
+不会发布多余的视口，因此消息的数量告诉
+我们动画用了多少帧
+@@ widget/tests/scrollable.rs:299
+距离越长，动画越短（越干脆）
+@@ widget/tests/scrollable.rs:319
+向下滚动……
+@@ widget/tests/scrollable.rs:322
+……经过几帧之后（保持实际时间与动画的
+时间线一致）……
+@@ widget/tests/scrollable.rs:327
+……新的滚轮移动会重新设定动画的目标
+@@ widget/tests/scrollable.rs:330
+……然后动画逐帧继续
+@@ widget/tests/scrollable.rs:342
+滚轮事件本身不会发布新的视口（偏移量
+还没有移动），因此：
+- `offsets[2]` 和 `offsets[3]` 是原动画的
+  最后两帧，而
+- `offsets[4]` 是重新设定目标后的动画的第一帧
+@@ widget/tests/scrollable.rs:350
+重新设定目标后的动画必须保持原动画的速度：
+它不能从静止状态重新开始
+@@ widget/tests/scrollable.rs:358
+……并且它恰好稳定在目标位置（一行半）
+@@ widget/tests/scrollable.rs:367
+向下滚动……
+@@ widget/tests/scrollable.rs:370
+……经过几帧之后（保持实际时间与动画的
+时间线一致）……
+@@ widget/tests/scrollable.rs:375
+……然后用户向上滚动，越过了当前位置
+@@ widget/tests/scrollable.rs:378
+……然后动画逐帧继续
+@@ widget/tests/scrollable.rs:390
+滚轮事件本身不会发布新的视口（偏移量
+还没有移动），因此：
+- `offsets[3]` 是原动画的最后一帧，而
+- `offsets[4]` 是重新设定目标后的动画的第一帧
+@@ widget/tests/scrollable.rs:395
+重新设定目标后的动画必须先继续向下移动（带着之前的
+动量），然后才掉头向上
+@@ widget/tests/scrollable.rs:402
+……并且它恰好稳定回到原始位置
+@@ widget/tests/scrollable.rs:411
+开始一次平滑滚动……
+@@ widget/tests/scrollable.rs:422
+……然后一次高精度滚动到达：它必须立即
+应用，并取消待处理的平滑滚动
+@@ widget/tests/scrollable.rs:426
+再多等待一段时间让它稳定
+@@ widget/tests/scrollable.rs:438
+恰好四条通知：滚轮事件（位于原始
+位置）、平滑滚动的两帧，以及立即应用的
+高精度滚动——此后再没有其他通知
+@@ widget/tests/scrollable.rs:443
+高精度滚动把偏移量恰好移动了它的增量
+@@ widget/tests/scrollable.rs:446
+在高精度滚动取消平滑滚动之前，通知都把
+平滑滚动报告为进行中
+@@ widget/tests/scrollable.rs:453
+内容可以完全容纳：没有可滚动的内容
+@@ widget/tests/scrollable.rs:467
+没有发布任何消息：偏移量从未移动过
+@@ widget/tests/scrollable.rs:491
+逐帧让动画稳定下来
+@@ widget/tests/scrollable.rs:500
+操作的时间被回拨了一个标称帧：绘制的第一
+帧必须已经显示出进度
+@@ widget/tests/scrollable.rs:507
+滚动必须是渐进的：它用了好几帧才稳定下来
+@@ widget/tests/scrollable.rs:513
+……并且它必须恰好稳定在目标位置（两行）
+@@ widget/tests/scrollable.rs:516
+在滚动稳定之前，通知都把动画报告为
+进行中
+@@ widget/tests/scrollable.rs:553
+偏移量必须在第一帧就位于目标位置，中间
+没有动画
+@@ widget/tests/scrollable.rs:566
+启用平滑滚动（默认）时，`Auto` 解析为
+平滑滚动
+@@ widget/tests/scrollable.rs:597
+……而禁用平滑滚动时，它解析为立即
+滚动
+@@ widget/tests/scrollable.rs:653
+100% 的吸附必须恰好稳定在内容的末尾
+@@ widget/tests/scrollable.rs:665
+开始一次一行的平滑滚动……
+@@ widget/tests/scrollable.rs:677
+……并在它仍在运行时再加一行
+@@ widget/tests/scrollable.rs:692
+增量必须累加到待处理的目标上
+@@ widget/tests/scrollable.rs:700
+开始一次一行的平滑滚动……
+@@ widget/tests/scrollable.rs:712
+……然后在它仍在运行时滚动到一个绝对目标
+@@ widget/tests/scrollable.rs:730
+绝对目标必须替换待处理的目标，而不是累加
+@@ widget/tests/scrollable.rs:734
+对内容坐标的一次观察，由一帧之内的某一遍
+（`update` 或 `draw`）所见。
+@@ widget/tests/scrollable.rs:743
+一个子部件，记录它在 `update` 和 `draw` 中
+收到的 `cursor` 和 `viewport`，以便我们断言这两遍
+在一帧之内是一致的。
+@@ widget/tests/scrollable.rs:816
+平滑滚动在每个重绘帧都会移动内容；在
+每一帧之内，内容的 `update` 和 `draw` 必须观察到相同的
+平移量
+@@ widget/tests/scrollable.rs:824
+一帧：`RedrawRequested` 更新遍和绘制遍
+@@ widget/tests/scrollable.rs:847
+在下一次重绘之前，给动画一帧的时间
+@@ widget/tests/scrollable.rs:867
+逐帧让动画稳定下来
+@@ widget/tests/scrollable.rs:871
+在保留状态的同时让内容增长，就像应用程序收到新
+消息时那样
+@@ widget/tests/scrollable.rs:875
+吸附的（相对）偏移量必须重新解析到新的末尾
+@@ widget/tests/scrollable.rs:905
+动画进行几帧之后，让内容增长
+@@ widget/tests/scrollable.rs:910
+让重新设定目标后的动画稳定下来
+@@ widget/tests/scrollable.rs:918
+动画必须把目标重新设定为新的末尾，而不是稳定在过期的末尾
+@@ widget/tests/scrollable.rs:925
+……并且偏移量在此过程中绝不能向后移动
+@@ widget/tests/scrollable.rs:948
+动画进行几帧之后，用滚轮向上滚动一行
+@@ widget/tests/scrollable.rs:954
+让重新设定目标后的动画稳定下来：待处理的终点（末尾，
+2800 px）减去一行（120 px）
+@@ widget/tests/scrollable.rs:958
+吸附必须已被滚轮的绝对目标替换：
+内容增长不再移动偏移量
+@@ widget/tests/scrollable.rs:979
+使用立即（绝对）偏移量滚动到末尾
+@@ widget/tests/scrollable.rs:991
+让立即滚动发出通知
+@@ widget/tests/scrollable.rs:995
+平滑地吸附到末尾：没有什么可以做动画的，但偏移量
+仍然必须变为相对的（吸附的）
+@@ widget/tests/scrollable.rs:1008
+让内容增长：吸附的偏移量必须把滚动固定在末尾
+@@ widget/tests/scrollable.rs:1039
+内容没有溢出，因此没有什么可以做动画的；
+吸附的（相对）偏移量仍然必须被应用
+@@ widget/tests/scrollable.rs:1044
+一旦内容溢出，吸附的偏移量必须把滚动固定
+在末尾
+@@ widget/tests/scrollable.rs:1061
+具有给定大小的内容和 1024 × 200 视口的 `Scrollable`，
+因此内容在两个轴上都会溢出。
+@@ widget/tests/scrollable.rs:1086
+把水平滚动固定在末尾（立即）
+@@ widget/tests/scrollable.rs:1101
+平滑地把垂直滚动吸附到末尾：水平偏移量
+必须保持它的吸附状态
+@@ widget/tests/scrollable.rs:1115
+让内容变宽：水平吸附的偏移量必须跟随
+新的右边缘（3000 − 1024），而不是停留在旧的右边缘（976）
+@@ widget/tests/scrollable.rs:1136
+把水平滚动固定在末尾（立即）
+@@ widget/tests/scrollable.rs:1151
+把垂直滚动块（右边缘，10 px 宽）向下拖动一段距离。
+在当前偏移量下，滚动块位于轨道的顶部，因此
+在那里抓住它
+@@ widget/tests/scrollable.rs:1170
+让内容变宽
+@@ widget/tests/scrollable.rs:1181
+拖动必须已经生效，移动了垂直滚动
+@@ widget/tests/scrollable.rs:1187
+拖动必须已经把垂直偏移量固化下来：内容
+增长之后，它仍然停在拖动结束时的位置
+@@ widget/tests/scrollable.rs:1194
+……而水平方向的吸附状态跟随新的右边缘
+@@ widget/tests/scrollable.rs:1201
+填满模拟器窗口的 `Scrollable`，其内容具有
+给定的高度。
+@@ widget/tests/scrollable.rs:1242
+一次平滑滚动操作
+@@ widget/tests/scrollable.rs:1253
+一次立即滚动操作
+@@ widget/tests/scrollable.rs:1267
+一次平滑吸附操作
+@@ widget/tests/scrollable.rs:1304
+把垂直滚动块（右边缘，10 px 宽）向下拖动一段距离。
+在当前偏移量下，滚动块位于轨道的顶部，因此
+在那里抓住它
+@@ widget/tests/scrollable.rs:1352
+在内容上按下鼠标中键，然后把光标移到
+可滚动区域下方，以自动向下滚动
+@@ widget/tests/scrollable.rs:1383
+第一条通知报告初始布局
+@@ widget/tests/scrollable.rs:1394
+内容增长时报告 `Content`
+@@ widget/tests/scrollable.rs:1405
+调整窗口大小时报告 `Resize`
+@@ widget/tests/scrollable.rs:1421
+平滑地吸附到末尾：动画的目标是一个相对偏移量，
+因此 Y 轴在动画仍在进行时就已处于吸附状态
+@@ widget/tests/scrollable.rs:1447
+已稳定：偏移量本身现在是相对的
+@@ widget/tests/scrollable.rs:1466
+滚轮的目标是一个绝对偏移量
+@@ widget/tests/scrollable.rs:1491
+─── 轨道（track）交互 ───
+
+对于视口宽度为 1024 的 `element`，垂直滚动条的轨道占据
+x ∈ [1014, 1024)。在内容顶部时，滚动块占据
+y ∈ [0, 13.33)，因此在 y = 60 处的点击落在轨道上，位于滚动块下方。
+
+视口高 200、内容高 3000 时，轨道的翻页步长为
+`0.875 * 200 = 175` px，自动滚动速度为 `175 * 20 = 3500` px/s，
+最大偏移量为 `3000 − 200 = 2800` px。在 y = 60 处点击轨道，
+会一直滚动到滚动块的下边缘到达指针位置，即滚动到
+偏移量 `700`；在 y = 150 处，则滚动到偏移量 `2050`。
+@@ widget/tests/scrollable.rs:1503
+快速点击轨道（按下并松开）恰好滚动一页，并带有
+与滚轮滚动相同的渐进缓动。
+@@ widget/tests/scrollable.rs:1509
+渲染一帧，让滚动块在按下之前位于
+当前偏移量对应的位置
+@@ widget/tests/scrollable.rs:1548
+第一条通知是按下之前的内容（没有动画）；
+滚动通知在稳定之前都处于动画中
+@@ widget/tests/scrollable.rs:1566
+禁用平滑滚动时，快速点击轨道会立即滚动一页，
+没有进行中的动画。
+@@ widget/tests/scrollable.rs:1572
+渲染一帧，让滚动块在按下之前位于
+当前偏移量对应的位置
+@@ widget/tests/scrollable.rs:1602
+按住轨道会在按压延迟之后让滚动块朝指针自动滚动，
+并在滚动块的前缘到达指针时停止。
+@@ widget/tests/scrollable.rs:1608
+渲染一帧，让滚动块在按下之前位于
+当前偏移量对应的位置
+@@ widget/tests/scrollable.rs:1618
+按住按键不放：超过 250 ms 的按压延迟之后，自动滚动
+让滚动块朝指针滑动，并在它的下边缘位于
+y = 60（偏移量 700）时停止
+@@ widget/tests/scrollable.rs:1644
+按住轨道期间，移动指针会让自动滚动的目标
+随之移动，因此滚动块会继续朝新位置滑动。
+@@ widget/tests/scrollable.rs:1650
+渲染一帧，让滚动块在按下之前位于
+当前偏移量对应的位置
+@@ widget/tests/scrollable.rs:1660
+一直按住，直到自动滚动稳定在第一个停止点（滚动块位于 y = 60，
+偏移量 700）
+@@ widget/tests/scrollable.rs:1664
+保持按键按下的同时向下拖动指针：目标
+移动到 y = 150（偏移量 2050），自动滚动恢复
+@@ widget/tests/scrollable.rs:1693
+镜像的滚动条（`Anchor::End`）同样会让滚动块朝
+指针滚动：滚动块位于轨道底部时，按下
+它上方的轨道会让它向上滑动，并在其上边缘到达指针时停止。
+@@ widget/tests/scrollable.rs:1700
+渲染一帧，让滚动块在按下之前位于
+当前偏移量对应的位置：使用 `Anchor::End` 时，在
+内容顶部，滚动块位于轨道的底部
+（y ∈ [186.67, 200)），因此 y = 60 位于它上方的轨道上
+@@ widget/tests/scrollable.rs:1712
+按住会让滚动块朝指针向上滑动；它在
+上边缘位于 y = 60 时停止，即偏移量 1900
+@@ widget/tests/scrollable.rs:1737
+按住轨道的自动滚动在水平轴上同样有效，让
+滚动块朝指针滑动，直到它的边缘到达指针。
+@@ widget/tests/scrollable.rs:1743
+渲染一帧，让滚动块在按下之前位于
+当前偏移量对应的位置
+@@ widget/tests/scrollable.rs:1748
+水平轨道占据 y ∈ [190, 200)；在内容的起始位置，
+滚动块占据 x ∈ [0, 349.5)，因此 x = 768 位于轨道上，在
+滚动块的右侧
+@@ widget/tests/scrollable.rs:1756
+按住会让滚动块朝指针向右滑动；它在
+右边缘位于 x = 768 时停止，即偏移量 1226
+@@ widget/tests/scrollable.rs:1781
+按住 `Shift` 点击轨道是一次“跳转点击”：滚动块会跳转
+（没有动画），使其中心位于指针下方，然后
+表现得像一个被抓住的滚动块。
+@@ widget/tests/scrollable.rs:1788
+渲染一帧，让滚动块在按下之前位于
+当前偏移量对应的位置
+@@ widget/tests/scrollable.rs:1802
+跳转是立即的：不需要更多的帧，滚动块
+以指针为中心（偏移量 800），没有进行中的动画
+@@ widget/tests/scrollable.rs:1820
+启用 `click_to_scroll` 时，普通的轨道点击是一次“跳转点击”：
+滚动块会跳转（没有动画），使其中心位于
+指针下方，然后表现得像一个被抓住的滚动块。
+@@ widget/tests/scrollable.rs:1827
+渲染一帧，让滚动块在按下之前位于
+当前偏移量对应的位置
+@@ widget/tests/scrollable.rs:1838
+跳转是立即的：不需要更多的帧，滚动块
+以指针为中心（偏移量 800），没有进行中的动画
+@@ widget/tests/scrollable.rs:1856
+启用 `click_to_scroll` 时，按住 `Shift` 点击轨道是一次翻页
+按压：快速按下并松开恰好滚动一页，并带有
+与滚轮滚动相同的渐进缓动。
+@@ widget/tests/scrollable.rs:1863
+渲染一帧，让滚动块在按下之前位于
+当前偏移量对应的位置
+@@ widget/tests/scrollable.rs:1945
+向下滚动两行（240 px）；处理函数消费了这条通知，
+转而把部件滚动到 1000 px
+@@ widget/tests/scrollable.rs:1949
+让 `Action::ScrollTo` 在接下来的几帧中生效
+@@ widget/tests/scrollable.rs:1958
+滚轮自身的通知（240 px）没有被发布，唯一的
+消息是处理函数请求的移动到 1000 px

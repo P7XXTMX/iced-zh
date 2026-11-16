@@ -451,6 +451,7 @@ fn empty_message(message: &str) -> impl Widget<Message> {
 }
 
 // Fonts
+// 字体
 
 fn icon(unicode: char) -> Text<'static> {
     text(unicode.to_string())
@@ -476,6 +477,7 @@ fn subtle(theme: &Theme) -> text::Style {
 }
 
 // Persistence
+// 持久化
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct SavedState {
     input_value: String,
@@ -538,6 +540,7 @@ impl SavedState {
         }
 
         // This is a simple way to save at most twice every second
+        // 这是一种让保存频率不超过每秒两次的简单方法
         tokio::time::sleep(milliseconds(500)).await;
 
         Ok(())

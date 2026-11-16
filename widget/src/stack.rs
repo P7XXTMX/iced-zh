@@ -1,4 +1,11 @@
+//! 在其他内容之上显示内容。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Display content on top of other content.
+//!
+//! </details>
 use crate::core::layout;
 use crate::core::mouse;
 use crate::core::overlay;
@@ -6,6 +13,21 @@ use crate::core::renderer;
 use crate::core::widget::{Meta, Operation, Tree};
 use crate::core::{Event, Layout, Length, Rectangle, Shell, Size, Vector, Widget};
 
+/// 把子元素层叠显示的容器。
+///
+/// 第一个 [`Widget`] 决定 [`Stack`] 的固有 [`Size`]，并
+/// 作为基础图层显示。之后的每个 [`Widget`] 都会
+/// 渲染在上方；各自位于独立的图层。
+///
+/// 你可以使用 [`push_under`](Self::push_under) 把一个 [`Widget`] 压入
+/// 当前 [`Stack`] 的下方，而不影响它的固有 [`Size`]。
+///
+/// 请记住，过多的层叠通常会带来糟糕的用户体验，
+/// 还会引入一定的渲染开销。请节制地使用这个部件！
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A container that displays children on top of each other.
 ///
 /// The first [`Widget`] dictates the intrinsic [`Size`] of a [`Stack`] and
@@ -17,6 +39,8 @@ use crate::core::{Event, Layout, Length, Rectangle, Shell, Size, Vector, Widget}
 ///
 /// Keep in mind that too much layering will normally produce bad UX as well as
 /// introduce certain rendering overhead. Use this widget sparingly!
+///
+/// </details>
 pub struct Stack<W> {
     width: Length,
     height: Length,
@@ -26,17 +50,38 @@ pub struct Stack<W> {
 }
 
 impl<W> Stack<W> {
+    /// 创建一个空的 [`Stack`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates an empty [`Stack`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::from_vec(Vec::new())
     }
 
+    /// 使用给定的容量创建一个 [`Stack`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Stack`] with the given capacity.
+    ///
+    /// </details>
     pub fn with_capacity(capacity: usize) -> Self {
         Self::from_vec(Vec::with_capacity(capacity))
     }
 
+    /// 使用给定的部件创建一个 [`Stack`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Stack`] with the given widgets.
+    ///
+    /// </details>
     pub fn with_children(children: impl IntoIterator<Item = W>) -> Self
     where
         W: Meta,
@@ -46,7 +91,14 @@ impl<W> Stack<W> {
         Self::with_capacity(iterator.size_hint().0).extend(iterator)
     }
 
+    /// 从一个已经分配好的 [`Vec`] 创建一个 [`Stack`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Stack`] from an already allocated [`Vec`].
+    ///
+    /// </details>
     pub fn from_vec(children: Vec<W>) -> Self {
         Self {
             width: Length::Fit,
@@ -57,19 +109,40 @@ impl<W> Stack<W> {
         }
     }
 
+    /// 设置 [`Stack`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Stack`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Stack`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Stack`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 在 [`Stack`] 的顶部添加一个部件。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Adds a widget on top of the [`Stack`].
+    ///
+    /// </details>
     pub fn push(mut self, child: W) -> Self
     where
         W: Meta,
@@ -81,14 +154,28 @@ impl<W> Stack<W> {
         self
     }
 
+    /// 在 [`Stack`] 的下方添加一个部件。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Adds a widget under the [`Stack`].
+    ///
+    /// </details>
     pub fn push_under(mut self, child: W) -> Self {
         self.children.insert(0, child);
         self.base_layer += 1;
         self
     }
 
+    /// 使用给定的子元素扩展 [`Stack`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Extends the [`Stack`] with the given children.
+    ///
+    /// </details>
     pub fn extend(self, children: impl IntoIterator<Item = W>) -> Self
     where
         W: Meta,
@@ -96,11 +183,22 @@ impl<W> Stack<W> {
         children.into_iter().fold(self, Self::push)
     }
 
+    /// 设置 [`Stack`] 是否应该裁剪溢出的内容。
+    ///
+    /// 它在呈现时有轻微的性能开销。
+    ///
+    /// 默认设置为 `false`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets whether the [`Stack`] should clip overflowing content.
     ///
     /// It has a slight performance overhead during presentation.
     ///
     /// By default, it is set to `false`.
+    ///
+    /// </details>
     pub fn clip(mut self, clip: bool) -> Self {
         self.clip = clip;
         self

@@ -6,6 +6,17 @@ use crate::widget;
 use crate::widget::tree::{self, Tree};
 use crate::{Event, Layout, Length, Rectangle, Shell, Size, Vector, Widget};
 
+/// 通用的 [`Widget`]。
+///
+/// 它可以用来构建可组合的用户界面，而不会在
+/// **视图逻辑**中泄露实现细节。
+///
+/// 如果你有任意一个 [`Widget`]，都应该可以用 [`Widget::boxed`](Widget::_boxed)
+/// 把它转换成 [`Element`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A generic [`Widget`].
 ///
 /// It is useful to build composable user interfaces that do not leak
@@ -13,12 +24,21 @@ use crate::{Event, Layout, Length, Rectangle, Shell, Size, Vector, Widget};
 ///
 /// If you have any [`Widget`], you should be able to use [`Widget::boxed`](Widget::_boxed)
 /// to turn it into an [`Element`].
+///
+/// </details>
 pub struct Element<'a, Message, Theme, Renderer> {
     widget: Box<dyn Widget<Message, Theme, Renderer> + 'a>,
 }
 
 impl<'a, Message, Theme, Renderer> Element<'a, Message, Theme, Renderer> {
+    /// 创建一个包含给定 [`Widget`] 的新 [`Element`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Element`] containing the given [`Widget`].
+    ///
+    /// </details>
     pub(super) fn new(widget: impl Widget<Message, Theme, Renderer> + 'a) -> Self {
         Self {
             widget: Box::new(widget),

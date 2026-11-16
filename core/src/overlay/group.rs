@@ -5,7 +5,14 @@ use crate::renderer;
 use crate::widget;
 use crate::{Event, Shell};
 
+/// 嵌套覆盖层的容器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A container of nested overlays.
+///
+/// </details>
 pub struct Group<'a, Message, Theme, Renderer> {
     children: Vec<overlay::Element<'a, Message, Theme, Renderer>>,
 }
@@ -24,17 +31,34 @@ fn sort_overlays<'a, Message, Theme, Renderer>(
 }
 
 impl<'a, Message, Theme, Renderer> Group<'a, Message, Theme, Renderer> {
+    /// 为给定的覆盖层创建一个 [`Group`] 容器。
+    ///
+    /// 覆盖层按照它们的
+    /// [`index`](crate::Overlay::index) 排序。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Group`] container for the given overlays.
     ///
     /// The overlays are sorted by their
     /// [`index`](crate::Overlay::index).
+    ///
+    /// </details>
     pub fn new(mut children: Vec<overlay::Element<'a, Message, Theme, Renderer>>) -> Self {
         sort_overlays(&mut children);
 
         Self { children }
     }
 
+    /// 使用关联的 `Renderer` 绘制 [`Group`] 覆盖层。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Draws the [`Group`] overlay using the associated `Renderer`.
+    ///
+    /// </details>
     pub fn draw(
         &mut self,
         renderer: &mut Renderer,
@@ -51,6 +75,7 @@ impl<'a, Message, Theme, Renderer> Group<'a, Message, Theme, Renderer> {
         ) {
             for element in children {
                 // TODO: Get rid of cursor argument in `draw`
+                // 待办：去掉 `draw` 中的 cursor 参数
                 let is_over = cursor.position().is_some_and(|cursor_position| {
                     let nested = element.as_overlay_mut().overlay(renderer);
 
@@ -84,7 +109,14 @@ impl<'a, Message, Theme, Renderer> Group<'a, Message, Theme, Renderer> {
         recurse(&mut self.children, renderer, theme, style, cursor);
     }
 
+    /// 对 [`Group`] 覆盖层应用一个 [`widget::Operation`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Applies a [`widget::Operation`] to the [`Group`] overlay.
+    ///
+    /// </details>
     pub fn operate(&mut self, renderer: &Renderer, operation: &mut dyn widget::Operation) {
         fn recurse<Message, Theme, Renderer>(
             children: &mut [overlay::Element<'_, Message, Theme, Renderer>],
@@ -109,7 +141,14 @@ impl<'a, Message, Theme, Renderer> Group<'a, Message, Theme, Renderer> {
         recurse(&mut self.children, renderer, operation);
     }
 
+    /// 处理运行时的 [`Event`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Processes a runtime [`Event`].
+    ///
+    /// </details>
     pub fn update(
         &mut self,
         event: &Event,
@@ -174,7 +213,14 @@ impl<'a, Message, Theme, Renderer> Group<'a, Message, Theme, Renderer> {
         let _ = recurse(&mut self.children, event, cursor, renderer, shell);
     }
 
+    /// 返回 [`Group`] 覆盖层当前的 [`mouse::Interaction`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current [`mouse::Interaction`] of the [`Group`] overlay.
+    ///
+    /// </details>
     pub fn mouse_interaction(
         &mut self,
         cursor: mouse::Cursor,

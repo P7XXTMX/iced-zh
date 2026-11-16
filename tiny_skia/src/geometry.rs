@@ -196,6 +196,7 @@ impl geometry::frame::Backend for Frame {
             };
 
             // TODO: Honor layering!
+            // 待办：遵循图层顺序！
             self.text.push(Text::Cached {
                 content: text.content,
                 bounds,

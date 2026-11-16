@@ -1,4 +1,11 @@
+//! 把 [`winit`] 类型转换为 [`iced_runtime`] 类型，以及反向转换。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Convert [`winit`] types into [`iced_runtime`] types, and viceversa.
+//!
+//! </details>
 //!
 //! [`winit`]: https://github.com/rust-windowing/winit
 //! [`iced_runtime`]: https://github.com/iced-rs/iced/tree/master/runtime
@@ -10,7 +17,14 @@ use crate::core::touch;
 use crate::core::window;
 use crate::core::{Event, Point, Size};
 
+/// 把 [`window::Settings`] 转换为 `winit` 的 `WindowAttributes`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts some [`window::Settings`] into some `WindowAttributes` from `winit`.
+///
+/// </details>
 pub fn window_attributes(
     settings: window::Settings,
     title: &str,
@@ -145,7 +159,14 @@ pub fn window_attributes(
     attributes
 }
 
+/// 把 winit 窗口事件转换为 iced 事件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a winit window event into an iced event.
+///
+/// </details>
 pub fn window_event(
     event: winit::event::WindowEvent,
     scale_factor: f32,
@@ -200,6 +221,7 @@ pub fn window_event(
             }
         },
         // Ignore keyboard presses/releases during window focus/unfocus
+        // 忽略窗口获得或失去焦点期间的按键按下和释放
         WindowEvent::KeyboardInput { is_synthetic, .. } if is_synthetic => None,
         WindowEvent::KeyboardInput { event, .. } => Some(Event::Keyboard({
             let key = {
@@ -212,6 +234,7 @@ pub fn window_event(
                 #[cfg(target_arch = "wasm32")]
                 {
                     // TODO: Fix inconsistent API on Wasm
+                    // 待办：修复 Wasm 上不一致的 API
                     event.logical_key.clone()
                 }
             };
@@ -228,6 +251,7 @@ pub fn window_event(
                 #[cfg(target_arch = "wasm32")]
                 {
                     // TODO: Fix inconsistent API on Wasm
+                    // 待办：修复 Wasm 上不一致的 API
                     event.text
                 }
             }
@@ -309,7 +333,14 @@ pub fn window_event(
     }
 }
 
+/// 把 [`window::Level`] 转换为 [`winit`] 的窗口层级。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a [`window::Level`] into a [`winit`] window level.
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 pub fn window_level(level: window::Level) -> winit::window::WindowLevel {
@@ -320,7 +351,14 @@ pub fn window_level(level: window::Level) -> winit::window::WindowLevel {
     }
 }
 
+/// 针对给定的显示器，把 [`window::Position`] 转换为 [`winit`] 的逻辑位置。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a [`window::Position`] into a [`winit`] logical position for a given monitor.
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 pub fn position(
@@ -387,7 +425,14 @@ pub fn position(
     }
 }
 
+/// 把 [`window::Mode`] 转换为 [`winit`] 的全屏模式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a [`window::Mode`] into a [`winit`] fullscreen mode.
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 pub fn fullscreen(
@@ -400,7 +445,14 @@ pub fn fullscreen(
     }
 }
 
+/// 把 [`window::Mode`] 转换为可见性标志。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a [`window::Mode`] into a visibility flag.
+///
+/// </details>
 pub fn visible(mode: window::Mode) -> bool {
     match mode {
         window::Mode::Windowed | window::Mode::Fullscreen => true,
@@ -408,7 +460,14 @@ pub fn visible(mode: window::Mode) -> bool {
     }
 }
 
+/// 把 [`winit`] 的全屏模式转换为 [`window::Mode`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a [`winit`] fullscreen mode into a [`window::Mode`].
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 pub fn mode(mode: Option<winit::window::Fullscreen>) -> window::Mode {
@@ -418,7 +477,14 @@ pub fn mode(mode: Option<winit::window::Fullscreen>) -> window::Mode {
     }
 }
 
+/// 把 [`winit`] 的窗口主题转换为 [`theme::Mode`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a [`winit`] window theme into a [`theme::Mode`].
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 pub fn theme_mode(theme: winit::window::Theme) -> theme::Mode {
@@ -428,7 +494,14 @@ pub fn theme_mode(theme: winit::window::Theme) -> theme::Mode {
     }
 }
 
+/// 把 [`theme::Mode`] 转换为窗口主题。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a [`theme::Mode`] into a window theme.
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 pub fn window_theme(mode: theme::Mode) -> Option<winit::window::Theme> {
@@ -439,7 +512,14 @@ pub fn window_theme(mode: theme::Mode) -> Option<winit::window::Theme> {
     }
 }
 
+/// 把 [`mouse::Interaction`] 转换为 [`winit`] 的光标图标。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a [`mouse::Interaction`] into a [`winit`] cursor icon.
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 pub fn mouse_interaction(interaction: mouse::Interaction) -> Option<winit::window::CursorIcon> {
@@ -479,7 +559,14 @@ pub fn mouse_interaction(interaction: mouse::Interaction) -> Option<winit::windo
     Some(icon)
 }
 
+/// 把 [`winit`] 的 `MouseButton` 转换为 [`iced`] 的鼠标按钮。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a `MouseButton` from [`winit`] to an [`iced`] mouse button.
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 /// [`iced`]: https://github.com/iced-rs/iced/tree/0.12
@@ -494,8 +581,16 @@ pub fn mouse_button(mouse_button: winit::event::MouseButton) -> mouse::Button {
     }
 }
 
+/// 把 [`winit`] 的 `ModifiersState` 转换为 [`iced`] 的修饰键
+/// 状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts some `ModifiersState` from [`winit`] to an [`iced`] modifiers
 /// state.
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 /// [`iced`]: https://github.com/iced-rs/iced/tree/0.12
@@ -510,14 +605,28 @@ pub fn modifiers(modifiers: winit::keyboard::ModifiersState) -> keyboard::Modifi
     result
 }
 
+/// 把物理光标位置转换为逻辑 `Point`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a physical cursor position into a logical `Point`.
+///
+/// </details>
 pub fn cursor_position(position: winit::dpi::PhysicalPosition<f64>, scale_factor: f32) -> Point {
     let logical_position = position.to_logical(f64::from(scale_factor));
 
     Point::new(logical_position.x, logical_position.y)
 }
 
+/// 把 [`winit`] 的 `Touch` 转换为 [`iced`] 的触摸事件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a `Touch` from [`winit`] to an [`iced`] touch event.
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 /// [`iced`]: https://github.com/iced-rs/iced/tree/0.12
@@ -537,7 +646,14 @@ pub fn touch_event(touch: winit::event::Touch, scale_factor: f32) -> touch::Even
     }
 }
 
+/// 把 [`winit`] 的 `Key` 转换为 [`iced`] 的按键。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a `Key` from [`winit`] to an [`iced`] key.
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 /// [`iced`]: https://github.com/iced-rs/iced/tree/0.12
@@ -860,7 +976,14 @@ pub fn key(key: winit::keyboard::Key) -> keyboard::Key {
     }
 }
 
+/// 把 [`winit`] 的 `PhysicalKey` 转换为 [`iced`] 的物理按键。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a `PhysicalKey` from [`winit`] to an [`iced`] physical key.
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 /// [`iced`]: https://github.com/iced-rs/iced/tree/0.12
@@ -877,7 +1000,14 @@ pub fn physical_key(physical_key: winit::keyboard::PhysicalKey) -> keyboard::key
     }
 }
 
+/// 把 [`winit`] 的 `KeyCode` 转换为 [`iced`] 的键码。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a `KeyCode` from [`winit`] to an [`iced`] key code.
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 /// [`iced`]: https://github.com/iced-rs/iced/tree/0.12
@@ -1083,7 +1213,14 @@ pub fn key_code(key_code: winit::keyboard::KeyCode) -> Option<keyboard::key::Cod
     })
 }
 
+/// 把 [`winit`] 的 `NativeKeyCode` 转换为 [`iced`] 的原生键码。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts a `NativeKeyCode` from [`winit`] to an [`iced`] native key code.
+///
+/// </details>
 ///
 /// [`winit`]: https://github.com/rust-windowing/winit
 /// [`iced`]: https://github.com/iced-rs/iced/tree/0.12
@@ -1101,7 +1238,14 @@ pub fn native_key_code(
     }
 }
 
+/// 把 [`UserAttention`] 转换为 `winit` 中对应的类型。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts some [`UserAttention`] into its `winit` counterpart.
+///
+/// </details>
 ///
 /// [`UserAttention`]: window::UserAttention
 pub fn user_attention(user_attention: window::UserAttention) -> winit::window::UserAttentionType {
@@ -1111,7 +1255,14 @@ pub fn user_attention(user_attention: window::UserAttention) -> winit::window::U
     }
 }
 
+/// 把 [`window::Direction`] 转换为 [`winit::window::ResizeDirection`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts some [`window::Direction`] into a [`winit::window::ResizeDirection`].
+///
+/// </details>
 pub fn resize_direction(resize_direction: window::Direction) -> winit::window::ResizeDirection {
     match resize_direction {
         window::Direction::North => winit::window::ResizeDirection::North,
@@ -1125,16 +1276,32 @@ pub fn resize_direction(resize_direction: window::Direction) -> winit::window::R
     }
 }
 
+/// 把 [`window::Icon`] 转换为 `winit` 中对应的类型。
+///
+/// 如果转换过程中出错，返回 `None`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts some [`window::Icon`] into its `winit` counterpart.
 ///
 /// Returns `None` if there is an error during the conversion.
+///
+/// </details>
 pub fn icon(icon: window::Icon) -> Option<winit::window::Icon> {
     let (pixels, size) = icon.into_raw();
 
     winit::window::Icon::from_rgba(pixels, size.width, size.height).ok()
 }
 
+/// 把 [`input_method::Purpose`] 转换为 `winit` 中对应的类型。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Converts some [`input_method::Purpose`] into its `winit` counterpart.
+///
+/// </details>
 pub fn ime_purpose(purpose: input_method::Purpose) -> winit::window::ImePurpose {
     match purpose {
         input_method::Purpose::Normal => winit::window::ImePurpose::Normal,

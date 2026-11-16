@@ -1,4 +1,11 @@
+//! 实现你自己的事件循环来驱动用户界面。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Implement your own event loop to drive a user interface.
+//!
+//! </details>
 use crate::core::event::{self, Event};
 use crate::core::keyboard;
 use crate::core::layout;
@@ -14,6 +21,16 @@ use crate::core::{
     Clipboard, InputMethod, Layout, Point, Rectangle, Shell, Size, Vector, Widget, Window,
 };
 
+/// 一组具有特定 [`Layout`] 的可交互图形元素。
+///
+/// 它可以被更新和绘制。
+///
+/// Iced 尽量不规定你该如何编写事件循环。如何在你的系统中
+/// 使用这个类型，完全由你决定。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A set of interactive graphical elements with a specific [`Layout`].
 ///
 /// It can be updated and drawn.
@@ -21,9 +38,21 @@ use crate::core::{
 /// Iced tries to avoid dictating how to write your event loop. You are in
 /// charge of using this type in your system in any way you want.
 ///
-/// # Example
+/// </details>
+///
+/// <a id="example"></a>
+///
+/// # 示例（Example）
+/// [`integration`] 示例使用 [`UserInterface`] 把 Iced 集成到一个
+/// 已有的图形应用程序中。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The [`integration`] example uses a [`UserInterface`] to integrate Iced in an
 /// existing graphical application.
+///
+/// </details>
 ///
 /// [`integration`]: https://github.com/iced-rs/iced/tree/master/examples/integration
 pub struct UserInterface<'a, Message, Theme, Renderer> {
@@ -41,15 +70,36 @@ where
     Theme: 'a,
     Renderer: crate::core::Renderer + 'a,
 {
+    /// 为一个 [`Widget`] 构建用户界面。
+    ///
+    /// 如果使用从上一个 [`UserInterface`] 实例取得的 [`Cache`]，
+    /// 它可以避免昂贵的计算。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Builds a user interface for a [`Widget`].
     ///
     /// It is able to avoid expensive computations when using a [`Cache`]
     /// obtained from a previous instance of a [`UserInterface`].
     ///
-    /// # Example
+    /// </details>
+    ///
+    /// <a id="example-1"></a>
+    ///
+    /// # 示例（Example）
+    /// 假设我们想为[之前编写的计数器示例](index.html#usage)
+    /// 构建一个 [`UserInterface`]。下面是搭建应用程序循环的
+    /// 一种朴素做法：
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Imagine we want to build a [`UserInterface`] for
     /// [the counter example that we previously wrote](index.html#usage). Here
     /// is naive way to set up our application loop:
+    ///
+    /// </details>
     ///
     /// ```no_run
     /// # mod iced_wgpu {
@@ -70,6 +120,7 @@ where
     /// use iced_wgpu::Renderer;
     ///
     /// // Initialization
+    /// // 初始化
     /// let mut counter = Counter::new();
     /// let mut cache = user_interface::Cache::new();
     /// let mut renderer = Renderer::default();
@@ -78,10 +129,13 @@ where
     /// let mut window_size = Size::new(1024.0, 768.0);
     ///
     /// // Application loop
+    /// // 应用程序循环
     /// loop {
     ///     // Process system events here...
+    ///     // 在这里处理系统事件……
     ///
     ///     // Build the user interface
+    ///     // 构建用户界面
     ///     let user_interface = UserInterface::build(
     ///         counter.view(),
     ///         window_size,
@@ -90,9 +144,11 @@ where
     ///     );
     ///
     ///     // Update and draw the user interface here...
+    ///     // 在这里更新并绘制用户界面……
     ///     // ...
     ///
     ///     // Obtain the cache for the next iteration
+    ///     // 取得用于下一次迭代的缓存
     ///     cache = user_interface.into_cache();
     /// }
     /// ```
@@ -127,14 +183,32 @@ where
         }
     }
 
+    /// 处理给定的每一个 [`Event`]，以此更新 [`UserInterface`]。
+    ///
+    /// 它返回因用户交互而可能产生的__消息__。
+    /// 你应该把这些消息交给你的__更新逻辑__。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Updates the [`UserInterface`] by processing each provided [`Event`].
     ///
     /// It returns __messages__ that may have been produced as a result of user
     /// interactions. You should feed these to your __update logic__.
     ///
-    /// # Example
+    /// </details>
+    ///
+    /// # 示例（Example）
+    /// 让我们补全[上一个示例](#example)，使我们的
+    /// [计数器](index.html#usage)能够改变状态：
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Let's allow our [counter](index.html#usage) to change state by
     /// completing [the previous example](#example):
+    ///
+    /// </details>
     ///
     /// ```no_run
     /// # mod iced_wgpu {
@@ -164,11 +238,13 @@ where
     /// let mut cursor = mouse::Cursor::default();
     ///
     /// // Initialize our event storage
+    /// // 初始化我们的事件存储
     /// let mut events = Vec::new();
     /// let mut messages = shell::Bus::new();
     ///
     /// loop {
     ///     // Obtain system events...
+    ///     // 获取系统事件……
     ///
     ///     let mut user_interface = UserInterface::build(
     ///         counter.view(),
@@ -178,6 +254,7 @@ where
     ///     );
     ///
     ///     // Update the user interface
+    ///     // 更新用户界面
     ///     let (state, event_statuses) = user_interface.update(
     ///         &window,
     ///         &waker,
@@ -190,6 +267,7 @@ where
     ///     cache = user_interface.into_cache();
     ///
     ///     // Process the produced messages
+    ///     // 处理产生的消息
     ///     for (message, _receipt) in messages.drain() {
     ///         counter.update(message);
     ///     }
@@ -475,16 +553,34 @@ where
         )
     }
 
+    /// 使用给定的 [`Renderer`] 绘制 [`UserInterface`]。
+    ///
+    /// 它返回当前的 [`mouse::Interaction`]。你应该据此在你的系统中
+    /// 更新鼠标光标的图标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Draws the [`UserInterface`] with the provided [`Renderer`].
     ///
     /// It returns the current [`mouse::Interaction`]. You should update the
     /// icon of the mouse cursor accordingly in your system.
     ///
+    /// </details>
+    ///
     /// [`Renderer`]: crate::core::Renderer
     ///
-    /// # Example
+    /// # 示例（Example）
+    /// [补全上一个示例](#example-1)之后，我们终于可以绘制
+    /// 我们的[计数器](index.html#usage)了：
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// We can finally draw our [counter](index.html#usage) by
     /// [completing the last example](#example-1):
+    ///
+    /// </details>
     ///
     /// ```no_run
     /// # mod iced_wgpu {
@@ -520,6 +616,7 @@ where
     ///
     /// loop {
     ///     // Obtain system events...
+    ///     // 获取系统事件……
     ///
     ///     let mut user_interface = UserInterface::build(
     ///         counter.view(),
@@ -529,6 +626,7 @@ where
     ///     );
     ///
     ///     // Update the user interface
+    ///     // 更新用户界面
     ///     let event_statuses = user_interface.update(
     ///         &window,
     ///         &waker,
@@ -539,6 +637,7 @@ where
     ///     );
     ///
     ///     // Draw the user interface
+    ///     // 绘制用户界面
     ///     let mouse_interaction = user_interface.draw(&mut renderer, &theme, &renderer::Style::default(), cursor);
     ///
     ///     cache = user_interface.into_cache();
@@ -548,7 +647,9 @@ where
     ///     }
     ///
     ///     // Update mouse cursor icon...
+    ///     // 更新鼠标光标图标……
     ///     // Flush rendering operations...
+    ///     // 刷新渲染操作……
     /// }
     /// ```
     pub fn draw(
@@ -599,7 +700,14 @@ where
         }
     }
 
+    /// 对 [`UserInterface`] 应用一个 [`widget::Operation`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Applies a [`widget::Operation`] to the [`UserInterface`].
+    ///
+    /// </details>
     pub fn operate(&mut self, renderer: &Renderer, operation: &mut dyn widget::Operation) {
         let viewport = Rectangle::with_size(self.bounds);
         let layout = Layout::new(self.state.size);
@@ -625,8 +733,16 @@ where
         }
     }
 
+    /// 使用给定的边界重新布局，并返回一个新的
+    /// [`UserInterface`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Relayouts and returns a new  [`UserInterface`] using the provided
     /// bounds.
+    ///
+    /// </details>
     pub fn relayout(self, bounds: Size, renderer: &mut Renderer) -> Self {
         Self::build(
             self.root,
@@ -640,8 +756,16 @@ where
         )
     }
 
+    /// 取出 [`UserInterface`] 的 [`Cache`]，这个过程会
+    /// 消耗该用户界面。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Extract the [`Cache`] of the [`UserInterface`], consuming it in the
     /// process.
+    ///
+    /// </details>
     pub fn into_cache(self) -> Cache {
         Cache {
             state: self.state,
@@ -651,7 +775,14 @@ where
     }
 }
 
+/// 某个特定 [`UserInterface`] 的可复用数据。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Reusable data of a specific [`UserInterface`].
+///
+/// </details>
 #[derive(Debug)]
 pub struct Cache {
     state: widget::Tree,
@@ -660,10 +791,20 @@ pub struct Cache {
 }
 
 impl Cache {
+    /// 创建一个空的 [`Cache`]。
+    ///
+    /// 在构建第一个 [`UserInterface`] 之前，你应该用它来
+    /// 初始化 [`Cache`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates an empty [`Cache`].
     ///
     /// You should use this to initialize a [`Cache`] before building your first
     /// [`UserInterface`].
+    ///
+    /// </details>
     pub fn new() -> Cache {
         Cache {
             state: widget::Tree::empty(),
@@ -679,36 +820,122 @@ impl Default for Cache {
     }
 }
 
+/// 更新 [`UserInterface`] 之后得到的状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The resulting state after updating a [`UserInterface`].
+///
+/// </details>
 #[derive(Debug)]
 pub enum State {
+    /// [`UserInterface`] 已过时，需要重新构建。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`UserInterface`] is outdated and needs to be rebuilt.
+    ///
+    /// </details>
     Outdated,
 
+    /// [`UserInterface`] 是最新的，无需重新构建即可
+    /// 复用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`UserInterface`] is up-to-date and can be reused without
     /// rebuilding.
+    ///
+    /// </details>
     Updated {
+        /// 用户界面当前的 [`mouse::Interaction`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The current [`mouse::Interaction`] of the user interface.
+        ///
+        /// </details>
         mouse_interaction: mouse::Interaction,
+        /// 描述何时应当重绘的 [`window::RedrawRequest`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The [`window::RedrawRequest`] describing when a redraw should be performed.
+        ///
+        /// </details>
         redraw_request: window::RedrawRequest,
+        /// 用户界面当前的 [`InputMethod`] 策略。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The current [`InputMethod`] strategy of the user interface.
+        ///
+        /// </details>
         input_method: InputMethod,
+        /// 用户界面产生的一组 [`Clipboard`] 请求。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The set of [`Clipboard`] requests that the user interface has produced.
+        ///
+        /// </details>
         clipboard: Clipboard,
+        /// [`UserInterface`] 经历的 [`Change`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The [`Change`] that the [`UserInterface`] experienced.
+        ///
+        /// </details>
         change: Change,
     },
 }
 
+/// [`UserInterface`] 在更新过程中经历的
+/// 变化。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The change experienced by a [`UserInterface`] while being
 /// updated.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Change {
+    /// 没有任何内容失效：[`UserInterface`] 没有变化。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Nothing was invalidated: the [`UserInterface`] is unchanged.
+    ///
+    /// </details>
     None,
+    /// 只有应用程序的覆盖层被重新创建。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Only the application overlays were recreated.
+    ///
+    /// </details>
     Overlay,
+    /// 应用程序的布局被重新计算。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The application layout was recomputed.
+    ///
+    /// </details>
     Layout,
 }

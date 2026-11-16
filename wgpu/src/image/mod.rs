@@ -120,22 +120,31 @@ impl Pipeline {
                     step_mode: wgpu::VertexStepMode::Instance,
                     attributes: &wgpu::vertex_attr_array!(
                         // Center
+                        // 中心
                         0 => Float32x2,
                         // Clip bounds
+                        // 裁剪边界
                         1 => Float32x4,
                         // Border radius
+                        // 边框半径
                         2 => Float32x4,
                         // Tile
+                        // 平铺
                         3 => Float32x4,
                         // Rotation
+                        // 旋转
                         4 => Float32,
                         // Opacity
+                        // 不透明度
                         5 => Float32,
                         // Atlas position
+                        // 图集位置
                         6 => Float32x2,
                         // Atlas scale
+                        // 图集缩放
                         7 => Float32x2,
                         // Layer
+                        // 图层
                         8 => Sint32,
                     ),
                 })],
@@ -235,6 +244,9 @@ impl State {
                     // `bounds` and `clip_bounds` can have negative coordinates,
                     // as content can be scrolled out of view; they are clipped
                     // by the pass's scissor afterwards.
+                    // `bounds` 和 `clip_bounds` 可以有负坐标，
+                    // 因为内容可能被滚动到视野之外；之后它们会被
+                    // 渲染通道的裁剪矩形裁剪掉。
                     let bounds = nudge::round(*bounds * scale);
                     let clip_bounds = nudge::round(*clip_bounds * scale);
 
@@ -287,6 +299,9 @@ impl State {
                     // `bounds` and `clip_bounds` can have negative coordinates,
                     // as content can be scrolled out of view; they are clipped
                     // by the pass's scissor afterwards.
+                    // `bounds` 和 `clip_bounds` 可以有负坐标，
+                    // 因为内容可能被滚动到视野之外；之后它们会被
+                    // 渲染通道的裁剪矩形裁剪掉。
                     let bounds = nudge::round(*bounds * scale);
                     let clip_bounds = nudge::round(*clip_bounds * scale);
 

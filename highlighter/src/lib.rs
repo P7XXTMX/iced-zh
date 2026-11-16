@@ -1,4 +1,11 @@
+//! iced 的语法高亮器。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A syntax highlighter for iced.
+//!
+//! </details>
 use iced_core as core;
 
 use crate::core::Code;
@@ -14,7 +21,14 @@ static SYNTAXES: LazyLock<parsing::SyntaxSet> = LazyLock::new(two_face::syntax::
 
 const LINES_PER_SNAPSHOT: usize = 50;
 
+/// 语法解析器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A syntax parser.
+///
+/// </details>
 #[derive(Debug)]
 pub struct Parser {
     syntax: &'static parsing::SyntaxReference,
@@ -22,14 +36,31 @@ pub struct Parser {
     current_line: usize,
 }
 
+/// 遍历一行中各个高亮区域的迭代器。
+///
+/// 每一项是行内的一个字符范围，以及
+/// 该区域对应的 [`Code`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An iterator over the highlighted regions of a line.
 ///
 /// Each item is a character range within the line, paired with
 /// the [`Code`] of the region.
+///
+/// </details>
 pub type CodeIterator<'a> = Box<dyn Iterator<Item = (Range<usize>, Code)> + 'a>;
 
 impl Parser {
+    /// 使用给定的 [`Settings`] 创建一个新的 [`Parser`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Parser`] with the given [`Settings`].
+    ///
+    /// </details>
     pub fn new(settings: &Settings) -> Self {
         let syntax = SYNTAXES
             .find_syntax_by_token(&settings.token)
@@ -45,18 +76,34 @@ impl Parser {
         }
     }
 
+    /// 使用给定的 [`Settings`] 更新解析器，
+    /// 并从第一行重新开始解析。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Updates the parser with the given [`Settings`],
     /// restarting it from the first line.
+    ///
+    /// </details>
     pub fn update(&mut self, new_settings: &Settings) {
         self.syntax = SYNTAXES
             .find_syntax_by_token(&new_settings.token)
             .unwrap_or_else(|| SYNTAXES.find_syntax_plain_text());
 
         // Restart the parser
+        // 重启解析器
         self.change_line(0);
     }
 
+    /// 更改解析器当前所在的行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Changes the line the parser is currently on.
+    ///
+    /// </details>
     pub fn change_line(&mut self, line: usize) {
         let snapshot = line / LINES_PER_SNAPSHOT;
 
@@ -78,7 +125,14 @@ impl Parser {
         self.caches.push((parser, stack));
     }
 
+    /// 高亮给定的行，返回一个 [`CodeIterator`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Highlights the given line, returning a [`CodeIterator`].
+    ///
+    /// </details>
     pub fn parse_line(&mut self, line: &str) -> CodeIterator<'_> {
         if self.current_line / LINES_PER_SNAPSHOT >= self.caches.len() {
             let (parser, stack) = self.caches.last().expect("Caches must not be empty");
@@ -94,7 +148,14 @@ impl Parser {
         Box::new(code_iterator(ops, line, stack))
     }
 
+    /// 返回解析器当前所在的行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the line the parser is currently on.
+    ///
+    /// </details>
     pub fn current_line(&self) -> usize {
         self.current_line
     }
@@ -148,9 +209,18 @@ fn code_iterator<'a>(
     })
 }
 
+/// 流式语法解析器。
+///
+/// 它可以高效地高亮一个不可变的词法单元流。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A streaming syntax parser.
 ///
 /// It can efficiently highlight an immutable stream of tokens.
+///
+/// </details>
 #[derive(Debug)]
 pub struct Stream {
     syntax: &'static parsing::SyntaxReference,
@@ -160,7 +230,14 @@ pub struct Stream {
 }
 
 impl Stream {
+    /// 创建一个新的 [`Stream`] 解析器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Stream`] parser.
+    ///
+    /// </details>
     pub fn new(settings: &Settings) -> Self {
         let syntax = SYNTAXES
             .find_syntax_by_token(&settings.token)
@@ -177,7 +254,14 @@ impl Stream {
         }
     }
 
+    /// 从上一次提交的位置开始高亮给定的行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Highlights the given line from the last commit.
+    ///
+    /// </details>
     pub fn parse_line(&mut self, line: &str) -> impl Iterator<Item = (Range<usize>, Code)> + '_ {
         self.state = self.commit.0.clone();
         self.stack = self.commit.1.clone();
@@ -186,12 +270,26 @@ impl Stream {
         code_iterator(ops, line, &mut self.stack)
     }
 
+    /// 提交上一次高亮的行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Commits the last highlighted line.
+    ///
+    /// </details>
     pub fn commit(&mut self) {
         self.commit = (self.state.clone(), self.stack.clone());
     }
 
+    /// 重置 [`Stream`] 解析器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Resets the [`Stream`] parser.
+    ///
+    /// </details>
     pub fn reset(&mut self) {
         self.state = parsing::ParseState::new(self.syntax);
         self.stack = parsing::ScopeStack::new();
@@ -199,20 +297,47 @@ impl Stream {
     }
 }
 
+/// [`Parser`] 的设置。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The settings of a [`Parser`].
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub struct Settings {
+    /// 要高亮的文件的扩展名或语言名称。
+    ///
+    /// [`Parser`] 会根据这个标记自动确定
+    /// 高亮所用的语法。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The extension of the file or the name of the language to highlight.
     ///
     /// The [`Parser`] will use the token to automatically determine
     /// the grammar to use for highlighting.
+    ///
+    /// </details>
     pub token: String,
 }
 
+/// 作用域族及其对应的类别。
+///
+/// 各个族按从最具体到最不具体的顺序排列，例如
+/// `entity.name.function` 优先于 `entity.name`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The scope families and their classes.
 ///
 /// The families are listed most specific first, so that e.g.
 /// `entity.name.function` wins over `entity.name`.
+///
+/// </details>
 static FAMILIES: LazyLock<Vec<(parsing::Scope, Code)>> = LazyLock::new(|| {
     [
         ("meta.path", Code::Path),
@@ -242,12 +367,24 @@ static FAMILIES: LazyLock<Vec<(parsing::Scope, Code)>> = LazyLock::new(|| {
     .collect()
 });
 
+/// 对一个高亮区域的作用域栈进行分类。
+///
+/// 从最具体的作用域（最后一个）向最不具体的作用域
+/// （第一个）遍历整个栈；第一个匹配到某个族的作用域
+/// 决定类别。如果没有任何作用域匹配，该区域
+/// 归类为 [`Code::Other`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Classifies the scope stack of a highlighted region.
 ///
 /// The stack is walked from the most specific scope (last) to the
 /// least specific (first); the first scope that matches a family
 /// determines the class. If no scope matches, the region is
 /// classified as [`Code::Other`].
+///
+/// </details>
 fn scope_from_stack(stack: &[parsing::Scope]) -> Code {
     for scope in stack.iter().rev() {
         for (family, class) in FAMILIES.iter() {
@@ -299,7 +436,14 @@ impl Iterator for ScopeRangeIterator {
 mod tests {
     use super::*;
 
+    /// 根据以点分隔的作用域名称构建作用域栈。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Builds a scope stack from dotted scope names.
+    ///
+    /// </details>
     fn stack(names: &[&str]) -> Vec<parsing::Scope> {
         names
             .iter()
@@ -370,6 +514,7 @@ mod tests {
     #[test]
     fn the_most_specific_scope_wins() {
         // An escape sequence inside a string is a constant, not a string.
+        // 字符串内的转义序列是常量，而不是字符串。
         let names = [
             "source.rust",
             "string.quoted.double",
@@ -379,6 +524,7 @@ mod tests {
         assert_eq!(scope_from_stack(&stack(&names)), Code::Constant);
 
         // A comment marker is punctuation, even inside a comment.
+        // 注释标记属于标点，即使它位于注释内部。
         let names = [
             "source.rust",
             "comment.line",
@@ -392,6 +538,8 @@ mod tests {
     fn the_walk_continues_to_shallower_scopes() {
         // The leaf scope is unmatched, so the classification falls back
         // to the next scope in the stack.
+        // 叶子作用域没有匹配，因此分类会回退到
+        // 栈中的下一个作用域。
         let names = ["source.rust", "string.quoted.double", "meta.embedded"];
 
         assert_eq!(scope_from_stack(&stack(&names)), Code::String);
@@ -407,6 +555,8 @@ mod tests {
 
         // A family must match whole scope atoms: `stringify` is not a
         // `string`.
+        // 族必须匹配完整的作用域原子：`stringify` 不是
+        // `string`。
         assert_eq!(
             scope_from_stack(&stack(&["source.rust", "stringify.call"])),
             Code::Other

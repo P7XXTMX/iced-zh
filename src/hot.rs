@@ -1,6 +1,15 @@
+//! 为 [`Program`] 添加热重载支持的装饰器。
+//!
+//! 这个模块仅在启用 `hot` 特性时可用。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Decorates a [`Program`] with hot reloading support.
 //!
 //! This module is only available when the `hot` feature is enabled.
+//!
+//! </details>
 use crate::core::Widget;
 use crate::program::Program;
 use crate::theme;
@@ -9,16 +18,33 @@ use crate::{Preset, Settings, Subscription, Task};
 
 use iced_debug as debug;
 
+/// 一个 [`Program`] 装饰器，使内部的程序可以热重载。
+///
+/// 程序的所有逻辑都被包装在 [`iced_debug::hot`] 中，
+/// 因此可以在程序运行时进行热补丁。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`Program`] decorator that makes the inner program hot-reloadable.
 ///
 /// All the logic of the program is wrapped in [`iced_debug::hot`],
 /// so that it can be hot-patched while the program is running.
+///
+/// </details>
 pub struct Hot<P: Program> {
     program: P,
 }
 
 impl<P: Program> Hot<P> {
+    /// 为给定的 [`Program`] 包装上热重载支持。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Wraps the given [`Program`] with hot reloading support.
+    ///
+    /// </details>
     pub fn new(program: P) -> Self {
         Self { program }
     }

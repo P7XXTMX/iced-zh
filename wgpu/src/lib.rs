@@ -1,3 +1,21 @@
+//! 用于 [Iced] 的 [`wgpu`] 渲染器。
+//!
+//! ![Iced 生态系统的原生路径](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/native.png?raw=true)
+//!
+//! [`wgpu`] 支持大多数现代图形后端：Vulkan、Metal、DX11 和
+//! DX12（OpenGL 和 WebGL 仍在开发中）。此外，它还将支持
+//! 即将到来的 [WebGPU API]。
+//!
+//! 目前，`iced_wgpu` 支持以下图元：
+//! - 文本，使用 [`glyphon`] 渲染。
+//! - 四边形或矩形，带圆角边框和纯色背景。
+//! - 裁剪区域，可用于实现可滚动区域或隐藏溢出的内容。
+//! - 图像和 SVG，从内存或文件系统加载。
+//! - 三角形网格，可用于自由绘制几何图形。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A [`wgpu`] renderer for [Iced].
 //!
 //! ![The native path of the Iced ecosystem](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/native.png?raw=true)
@@ -12,6 +30,8 @@
 //! - Clip areas, useful to implement scrollables or hide overflowing content.
 //! - Images and SVG, loaded from memory or the file system.
 //! - Meshes of triangles, useful to draw geometry freely.
+//!
+//! </details>
 //!
 //! [Iced]: https://github.com/iced-rs/iced
 //! [`wgpu`]: https://github.com/gfx-rs/wgpu-rs
@@ -66,7 +86,14 @@ use crate::graphics::mesh;
 use crate::graphics::text::{Editor, Paragraph};
 use crate::graphics::{Shell, Viewport};
 
+/// 用于 [`iced`] 的 [`wgpu`] 图形渲染器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`wgpu`] graphics renderer for [`iced`].
+///
+/// </details>
 ///
 /// [`wgpu`]: https://github.com/gfx-rs/wgpu-rs
 /// [`iced`]: https://github.com/iced-rs/iced
@@ -86,6 +113,7 @@ pub struct Renderer {
     image: image::State,
 
     // TODO: Centralize all the image feature handling
+    // 待办：集中处理所有图像特性相关的逻辑
     #[cfg(any(feature = "svg", feature = "image"))]
     image_cache: std::cell::RefCell<image::Cache>,
 
@@ -113,6 +141,9 @@ impl Renderer {
             // TODO: Resize belt smartly (?)
             // It would be great if the `StagingBelt` API exposed methods
             // for introspection to detect when a resize may be worth it.
+            // 待办：智能地调整 belt 的大小（？）
+            // 如果 `StagingBelt` API 能暴露一些内省方法，
+            // 用来检测何时值得调整大小，那就太好了。
             staging_belt: wgpu::util::StagingBelt::new(
                 engine.device.clone(),
                 buffer::MAX_WRITE_SIZE as u64,
@@ -122,10 +153,20 @@ impl Renderer {
         }
     }
 
+    /// 记录把当前图元绘制到目标纹理视图的命令。
+    ///
+    /// 提交得到的 [`wgpu::CommandEncoder`] 时，
+    /// 必须调用 [`finish`](Self::finish) 和 [`recall`](Self::recall)。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Record commands that draw the current primitives to the target texture view.
     ///
     /// You must call [`finish`](Self::finish) and [`recall`](Self::recall) when submitting
     /// the resulting [`wgpu::CommandEncoder`].
+    ///
+    /// </details>
     pub fn draw(
         &mut self,
         clear_color: Option<Color>,
@@ -147,6 +188,7 @@ impl Renderer {
         self.text.trim();
 
         // TODO: Provide window id (?)
+        // 待办：提供窗口 id（？）
         self.engine.trim();
 
         #[cfg(any(feature = "svg", feature = "image"))]
@@ -173,9 +215,18 @@ impl Renderer {
         submission
     }
 
+    /// 把当前表面渲染到一个离屏缓冲区。
+    ///
+    /// 返回纹理数据的 RGBA 字节。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Renders the current surface to an offscreen buffer.
     ///
     /// Returns RGBA bytes of the texture data.
+    ///
+    /// </details>
     pub fn screenshot(&mut self, viewport: &Viewport, background_color: Color) -> Vec<u8> {
         #[derive(Clone, Copy, Debug)]
         struct BufferDimensions {
@@ -638,6 +689,17 @@ impl Renderer {
         });
     }
 
+    /// 让当前已映射的缓冲区做好用于提交的准备。
+    ///
+    /// 通常，只有在直接调用 [`Renderer::draw`]、
+    /// 而不是依赖 [`Renderer::present`] 时，才需要这个方法。
+    ///
+    /// 必须在把 [`Renderer::draw`] 得到的 [`wgpu::CommandEncoder`]
+    /// 提交到 [`wgpu::Queue`] _之前_ 调用这个方法。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Prepares currently mapped buffers for use in a submission.
     ///
     /// Usually, this method is only needed if you are calling [`Renderer::draw`] directly,
@@ -645,10 +707,23 @@ impl Renderer {
     ///
     /// You must call this method _before_ submitting the resulting [`wgpu::CommandEncoder`]
     /// of [`Renderer::draw`] to a [`wgpu::Queue`].
+    ///
+    /// </details>
     pub fn finish(&mut self) {
         self.staging_belt.finish();
     }
 
+    /// 收回所有已关闭的缓冲区以便复用。
+    ///
+    /// 通常，只有在直接调用 [`Renderer::draw`]、
+    /// 而不是依赖 [`Renderer::present`] 提交到 [`wgpu::Queue`] 时，才需要这个方法。
+    ///
+    /// 必须在把 [`Renderer::draw`] 得到的 [`wgpu::CommandEncoder`]
+    /// 提交到 [`wgpu::Queue`] _之后_ 调用这个方法。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Recalls all of the closed buffers back to be reused.
     ///
     /// Usually, this method is only needed if you are calling [`Renderer::draw`] directly,
@@ -656,6 +731,8 @@ impl Renderer {
     ///
     /// You must call this method _after_ submitting the resulting [`wgpu::CommandEncoder`]
     /// of [`Renderer::draw`] to a [`wgpu::Queue`].
+    ///
+    /// </details>
     pub fn recall(&mut self) {
         self.staging_belt.recall();
     }

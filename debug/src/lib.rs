@@ -442,6 +442,8 @@ mod hot {
 
         // The `move` here is important. Hotpatching will not work
         // otherwise.
+        // 这里的 `move` 很重要，否则热补丁
+        // 无法生效。
         let mut f = cargo_hot::subsecond::HotFn::current(move || {
             f.take().expect("Hot function is stale")()
         });

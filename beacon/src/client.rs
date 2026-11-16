@@ -123,6 +123,7 @@ async fn run(
 
     let command_sender = {
         // Discard by default
+        // 默认丢弃
         let (sender, _receiver) = mpsc::channel(1);
 
         Arc::new(Mutex::new(sender))
@@ -212,12 +213,24 @@ async fn run(
     }
 }
 
+/// 返回当前环境中 beacon 服务器的地址。
+///
+/// 如果定义了 `ICED_BEACON_SERVER_ADDRESS` 环境变量，
+/// 则返回它的值。
+///
+/// 否则返回默认的本地服务器地址。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Returns the address of the beacon server in this environment.
 ///
 /// The value of the `ICED_BEACON_SERVER_ADDRESS` env variable will
 /// be returned, if defined.
 ///
 /// Otherwise, a default local server address will be returned.
+///
+/// </details>
 pub fn server_address_from_env() -> String {
     const DEFAULT_ADDRESS: &str = "127.0.0.1:9167";
 

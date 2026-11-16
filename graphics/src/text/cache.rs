@@ -1,4 +1,11 @@
+//! 缓存文本。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Cache text.
+//!
+//! </details>
 use crate::core::{Font, Size};
 use crate::text;
 
@@ -6,7 +13,14 @@ use rustc_hash::{FxHashMap, FxHashSet, FxHasher};
 use std::collections::hash_map;
 use std::hash::{Hash, Hasher};
 
+/// 最近使用过的文本片段的存储。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A store of recently used sections of text.
+///
+/// </details>
 #[derive(Debug, Default)]
 pub struct Cache {
     entries: FxHashMap<KeyHash, Entry>,
@@ -15,17 +29,38 @@ pub struct Cache {
 }
 
 impl Cache {
+    /// 创建一个新的空 [`Cache`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new empty [`Cache`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// 获取具有给定 [`KeyHash`] 的文本 [`Entry`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Gets the text [`Entry`] with the given [`KeyHash`].
+    ///
+    /// </details>
     pub fn get(&self, key: &KeyHash) -> Option<&Entry> {
         self.entries.get(key)
     }
 
+    /// 如果 [`Cache`] 中尚不存在对应的文本 [`Entry`]，就分配一个。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Allocates a text [`Entry`] if it is not already present in the [`Cache`].
+    ///
+    /// </details>
     pub fn allocate(
         &mut self,
         font_system: &mut cosmic_text::FontSystem,
@@ -86,9 +121,18 @@ impl Cache {
         (hash, self.entries.get_mut(&hash).unwrap())
     }
 
+    /// 修剪 [`Cache`]。
+    ///
+    /// 这会清除自上一次 `trim` 以来未被使用过的文本片段。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Trims the [`Cache`].
     ///
     /// This will clear the sections of text that have not been used since the last `trim`.
+    ///
+    /// </details>
     pub fn trim(&mut self) {
         self.entries
             .retain(|key, _| self.recently_used.contains(key));
@@ -100,26 +144,96 @@ impl Cache {
     }
 }
 
+/// 表示一段文本的缓存键。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A cache key representing a section of text.
+///
+/// </details>
 #[derive(Debug, Clone, Copy)]
 pub struct Key<'a> {
+    /// 文本的内容。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The content of the text.
+    ///
+    /// </details>
     pub content: &'a str,
+    /// 文本的大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The size of the text.
+    ///
+    /// </details>
     pub size: f32,
+    /// 文本的行高。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The line height of the text.
+    ///
+    /// </details>
     pub line_height: f32,
+    /// 文本的 [`Font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Font`] of the text.
+    ///
+    /// </details>
     pub font: Font,
+    /// 文本的边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The bounds of the text.
+    ///
+    /// </details>
     pub bounds: Size,
+    /// 文本的整形策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The shaping strategy of the text.
+    ///
+    /// </details>
     pub shaping: text::Shaping,
+    /// 文本的对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The alignment of the text.
+    ///
+    /// </details>
     pub align_x: text::Alignment,
+    /// 文本的换行策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The wrapping strategy of the text.
+    ///
+    /// </details>
     pub wrapping: text::Wrapping,
+    /// 文本的省略策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The ellipsis strategy of the text.
+    ///
+    /// </details>
     pub ellipsis: text::Ellipsis,
 }
 
@@ -138,14 +252,42 @@ impl Key<'_> {
     }
 }
 
+/// [`Key`] 的哈希值。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The hash of a [`Key`].
+///
+/// </details>
 pub type KeyHash = u64;
 
+/// 缓存条目。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A cache entry.
+///
+/// </details>
 #[derive(Debug)]
 pub struct Entry {
+    /// 文本缓冲区，可直接用于绘制。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The buffer of text, ready for drawing.
+    ///
+    /// </details>
     pub buffer: cosmic_text::Buffer,
+    /// 文本的最小边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The minimum bounds of the text.
+    ///
+    /// </details>
     pub min_bounds: Size,
 }

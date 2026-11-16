@@ -1,3 +1,13 @@
+//! Markdown 部件可以解析并显示 Markdown。
+//!
+//! 你可以启用 `highlighter` 特性，为代码块提供
+//! 语法高亮。
+//!
+//! 目前只支持 [`Item`] 的各个变体。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Markdown widgets can parse and display Markdown.
 //!
 //! You can enable the `highlighter` feature for syntax highlighting
@@ -5,7 +15,9 @@
 //!
 //! Only the variants of [`Item`] are currently supported.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::{Renderer, Widget}; pub use iced_widget::core::*; }
 //! #
@@ -69,38 +81,112 @@ use std::sync::Arc;
 pub use core::text::{Highlight, Highlighter};
 pub use pulldown_cmark::HeadingLevel;
 
+/// 表示 Markdown 文档中某个 [URI] 的 [`String`]
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`String`] representing a [URI] in a Markdown document
+///
+/// </details>
 ///
 /// [URI]: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
 pub type Uri = String;
 
+/// 一段已解析的 Markdown。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A bunch of Markdown that has been parsed.
+///
+/// </details>
 #[derive(Debug, Default)]
 pub struct Content {
+    /// 到目前为止累积的原始 Markdown，由所有的
+    /// 条目和区段共享。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The raw Markdown accumulated so far, shared between all the
     /// items and sections.
+    ///
+    /// </details>
     raw: String,
+    /// 解析后的输出。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The parsed output.
+    ///
+    /// </details>
     items: Vec<Item>,
+    /// 当该条目是最后一个条目时，需要重新解析的源文本的
+    /// 起点：条目的起点；如果它是列表，则是其最后一个
+    /// 列表项的起点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The start of the source that is re-parsed when the item is the
     /// last one: the start of the item, or the start of its last
     /// bullet, when it is a list.
+    ///
+    /// </details>
     starts: Vec<usize>,
+    /// 条目源文本真正的起点；对于列表来说是整个列表的
+    /// 起点，而不像 `starts` 那样是其最后一个列表项的
+    /// 起点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The true start of the item's source; for a list, the start of
     /// the list, unlike `starts`, which is the start of its last
     /// bullet.
+    ///
+    /// </details>
     base: Vec<usize>,
+    /// 下一次推入时将被重新解析的源文本的
+    /// 起点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The start of the source that will be re-parsed on the next
     /// push.
+    ///
+    /// </details>
     window: usize,
+    /// 上一次推入时是否存在尚未确定的元数据块；
+    /// 如果存在，重新解析会从该块的起点开始，
+    /// 这样一旦该块闭合，它就会被解析器吞掉
+    /// （或者被重新解析为它最终所是的分隔线）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Whether a not-yet-settled metadata block was live on the last
     /// push; when it was, the re-parse starts at the start of the
     /// block, so that the block is swallowed by the parser once it is
     /// closed (or re-parsed as the rule it turned out to be).
+    ///
+    /// </details>
     pending_block: bool,
+    /// 尚未确定的元数据块的起点（如果有）；
+    /// 重新解析从这里开始，这样整个块（例如一条暂定的分隔线
+    /// 及其内容）会作为一个整体被重新解析。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The start of the not-yet-settled metadata block, if any; the
     /// re-parse starts there, so that the block (a tentative rule and
     /// its content, for instance) is re-parsed as a whole.
+    ///
+    /// </details>
     pending_block_start: Option<usize>,
     incomplete: HashMap<usize, Section>,
     state: State,
@@ -108,37 +194,101 @@ pub struct Content {
 
 #[derive(Debug)]
 struct Section {
+    /// 当某个引用变得可用或发生变化时，需要重新解析的
+    /// 源文本的起点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The start of the source to re-parse when a reference becomes
     /// available or changes.
+    ///
+    /// </details>
     start: usize,
+    /// 需要重新解析的源文本的终点；如果该条目仍然是
+    /// 最后一个，则为 `None`，这样源文本还可以继续增长。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The end of the source to re-parse; `None` if the item is still
     /// the last one, so that the source can still grow.
+    ///
+    /// </details>
     end: Option<usize>,
     broken_links: HashSet<String>,
+    /// 该条目上一次被重新解析时已解析的引用，
+    /// 以及它们当时的目标地址。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The references that were resolved when the item was last
     /// re-parsed, along with their destination at that time.
+    ///
+    /// </details>
     references: HashMap<String, String>,
+    /// 该条目在源文本重新解析结果中的索引。
+    ///
+    /// 一个源文本区域可以产生不止一个条目（例如一张图像和
+    /// 它所属的段落）；这是本区段所指向的那个条目的
+    /// 索引。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The index of the item in the re-parse of the source.
     ///
     /// A source region can produce more than one item (an image and
     /// the paragraph it belongs to, for instance); this is the index
     /// of the item that this section refers to.
+    ///
+    /// </details>
     item: usize,
 }
 
 impl Content {
+    /// 创建一个新的空 [`Content`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new empty [`Content`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// 通过解析给定的 Markdown 创建新的 [`Content`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates some new [`Content`] by parsing the given Markdown.
+    ///
+    /// </details>
     pub fn parse(markdown: &str) -> Self {
         let mut content = Self::new();
         content.push_str(markdown);
         content
     }
 
+    /// 向 [`Content`] 推入更多 Markdown；增量解析！
+    ///
+    /// 当你有很长的 Markdown 流时，这尤其有用；例如
+    /// 大文件或可能很长的回复。
+    ///
+    /// 每次调用只会重新解析最后一个条目；并且，当最后一个
+    /// 条目是列表时，只会重新解析它的最后一个列表项，这样向
+    /// 长列表推入新的列表项时开销依然很低。
+    ///
+    /// 随着流的增长，结果会收敛到一次性解析整个流
+    /// 所得到的结果。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Pushes more Markdown into the [`Content`]; parsing incrementally!
     ///
     /// This is specially useful when you have long streams of Markdown; like
@@ -150,6 +300,8 @@ impl Content {
     ///
     /// The result converges to the one obtained by parsing the whole
     /// stream at once, as the stream grows.
+    ///
+    /// </details>
     pub fn push_str(&mut self, markdown: &str) {
         if markdown.is_empty() {
             return;
@@ -164,6 +316,13 @@ impl Content {
         // starts at the start of the block: it is swallowed by the
         // parser once it is closed, and its first line (a tentative
         // rule) must be re-parsed with it.
+        // 需要重新解析的文本：从最后一个条目（如果它是列表，
+        // 则是其最后一个列表项）的源文本起点开始，直到
+        // 末尾。除非存在尚未确定的元数据块（或者
+        // 上一次推入时存在），这种情况下重新解析
+        // 从该块的起点开始：一旦该块闭合，它就会被
+        // 解析器吞掉，而它的第一行（一条暂定的
+        // 分隔线）必须和它一起被重新解析。
         let block_live = self
             .pending_block_start
             .map(|start| Self::metadata_block_live(&self.raw[start..]))
@@ -171,6 +330,9 @@ impl Content {
         // A not-yet-settled metadata block that was live on the last
         // push is now settled: the references registered while it was
         // open are swallowed by it, so they must be dropped.
+        // 上一次推入时存在的尚未确定的元数据块现在
+        // 已经确定：在它打开期间注册的引用
+        // 被它吞掉了，因此必须丢弃这些引用。
         let block_closed = self.pending_block && !block_live;
         let mut input_start = if self.pending_block || block_live {
             self.pending_block_start.unwrap_or(self.window)
@@ -188,6 +350,16 @@ impl Content {
         // previous item's start so that this collapse is re-evaluated
         // (and the re-parse yields the merged item, not a trailing
         // paragraph or list).
+        // 当最后一个条目是列表，而前一个条目是列表
+        // 或引用块时，随着更多内容流入，最后的列表可能成为
+        // 前一个条目最后一个列表项的惰性延续：
+        // 例如，`2. two\n-` 中的空无序列表，在第二个短横线
+        // 到来时会变成编号项的 `--` 延续；
+        // 同样，引用块中的列表之外的 `-` 也会变成
+        // 被引用列表项的延续。因此从前一个条目的
+        // 起点开始重新解析，以便重新评估这种合并
+        // （并让重新解析产生合并后的条目，而不是一个尾随的
+        // 段落或列表）。
         if !self.pending_block
             && !block_live
             && let [.., prev, last] = self.items.as_slice()
@@ -208,11 +380,18 @@ impl Content {
         // the text that will be re-parsed (an image and the paragraph
         // it belongs to, for instance); they will be re-parsed as
         // well.
+        // 弹出最后一个条目，以及源文本落在即将被重新解析的
+        // 文本范围内的条目（例如一张图像和它所属的
+        // 段落）；它们也会被重新
+        // 解析。
         let last = self.items.pop();
         let _ = self.starts.pop();
         // The true start of the source of the last item, if any; it
         // is the start of the merged list, when the last item is a
         // list.
+        // 最后一个条目源文本真正的起点（如果有）；
+        // 当最后一个条目是列表时，它是合并后列表的
+        // 起点。
         let old_last_base = self.base.pop();
         while self
             .starts
@@ -225,6 +404,7 @@ impl Content {
         }
 
         // Re-parse the last item and the new text
+        // 重新解析最后一个条目和新的文本
         let mut items: Vec<_> = parse_with(&mut self.state, input, input_start).collect();
 
         // We only re-parse the last bullet of a list, so merge the
@@ -234,6 +414,13 @@ impl Content {
         // bullet); when it re-parsed the whole list, the re-parsed
         // list already contains all the bullets, and merging would
         // duplicate them.
+        // 我们只重新解析列表的最后一个列表项，因此要把
+        // 重新解析得到的列表合并进旧列表，保留已经解析过的
+        // 列表项。这只适用于重新解析确实是从列表起点之后
+        // （即其最后一个列表项处）开始的情况；
+        // 如果重新解析的是整个列表，重新解析得到的
+        // 列表已经包含所有列表项，合并反而会
+        // 让它们重复。
         let last_is_list = matches!(last.as_ref(), Some(Item::List { .. }));
         let mut merged = false;
         if let Some(Item::List { start, bullets, .. }) = last
@@ -242,6 +429,7 @@ impl Content {
             && old_last_base.is_some_and(|base| input_start > base)
         {
             // The last bullet of the old list was re-parsed
+            // 旧列表的最后一个列表项已被重新解析
             let mut bullets = bullets;
             let _ = bullets.pop();
             bullets.extend(mem::take(new));
@@ -257,6 +445,15 @@ impl Content {
             // The re-parse must not start after a not-yet-settled
             // metadata block opener (kept in `input_start`), or the
             // block would be dropped; use the earliest of the two.
+            // 重新解析最后一个列表项的结果不再是
+            // 列表（例如该列表项变成了分隔线或
+            // 标题），因此无法合并进旧列表：
+            // 改为从整个列表的起点开始重新解析，
+            // 让它的源文本被完整地重新解析。
+            //
+            // 重新解析不能从尚未确定的元数据块开头标记
+            // （保存在 `input_start` 中）之后开始，否则
+            // 该块会被丢掉；因此取两者中较早的位置。
             let base = old_last_base.expect("a list has a base").min(input_start);
             let tail = &self.raw[base..];
             let trimmed = tail.trim_end();
@@ -278,6 +475,13 @@ impl Content {
             // from the start of the previous list, so that the list
             // is not split in two; the parser decides whether the
             // two regions are one list.
+            // 重新解析产生了一个列表，它的起点正是旧的
+            // 最后一个条目（例如一个单独的段落）原来所在的位置，
+            // 并且紧跟在前一个列表之后：该段落变成了
+            // 延续前一个列表的列表项。因此从前一个列表的
+            // 起点开始重新解析，以免列表被
+            // 拆成两个；由解析器来判断这
+            // 两个区域是否属于同一个列表。
             let tail = &self.raw[base..];
             let trimmed = tail.trim_end();
             input = if trimmed.ends_with('|') {
@@ -292,6 +496,7 @@ impl Content {
                 input_start = base;
                 items = reparsed;
                 // The previous list is covered by the re-parse
+                // 前一个列表已被重新解析覆盖
                 let _ = self.items.pop();
                 let _ = self.starts.pop();
                 let _ = self.base.pop();
@@ -301,6 +506,9 @@ impl Content {
         // The start of the most recent `---` or `+++` rule produced
         // by the re-parse, if any; it is a tentative metadata block
         // opener.
+        // 重新解析产生的最近一条 `---` 或 `+++` 分隔线的
+        // 起点（如果有）；它是一个暂定的元数据块
+        // 开头标记。
         let mut newest_rule_start: Option<usize> = None;
 
         if items.is_empty() {
@@ -309,10 +517,17 @@ impl Content {
             // instance), so the last item was replaced by it; the
             // next push re-parses from the start of the new last
             // item.
+            // 新的文本没有产生任何条目（例如它补全了
+            // 一个引用定义或一个元数据块），
+            // 因此最后一个条目被它取代了；
+            // 下一次推入会从新的最后一个条目的起点
+            // 开始重新解析。
             self.window = self.starts.last().copied().unwrap_or(input_start);
         } else {
             // Remember the start of the source of each re-parsed
             // item.
+            // 记住每个被重新解析的条目的源文本
+            // 起点。
             let starts: Vec<usize> = items
                 .iter()
                 .map(|(_, start, _)| input_start + *start)
@@ -323,6 +538,9 @@ impl Content {
                 // The merged list is anchored at the start of the
                 // whole list, unlike `start`, which is the start of
                 // its last bullet.
+                // 合并后的列表锚定在整个列表的
+                // 起点，而不像 `start` 那样是
+                // 其最后一个列表项的起点。
                 let base = if i == 0 && merged {
                     old_last_base.expect("a merged list has a base")
                 } else {
@@ -331,17 +549,25 @@ impl Content {
 
                 if !broken_links.is_empty() {
                     // The index of the item once it is pushed
+                    // 该条目被推入后的索引
                     let index = self.items.len();
 
                     // The next item can cover this one (a paragraph
                     // and the image it contains, for instance); in
                     // that case, the source to re-parse spans both.
+                    // 下一个条目可能覆盖当前条目（例如一个段落
+                    // 和它包含的图像）；在这种情况下，
+                    // 需要重新解析的源文本会横跨两者。
                     let covers = starts.get(i + 1).is_some_and(|next| *next <= start);
 
                     // The source to re-parse starts at the start of
                     // the covered group, if any, and ends where the
                     // item after the group starts; it grows with the
                     // source while the group is the last one.
+                    // 需要重新解析的源文本从被覆盖的那组条目的起点
+                    // （如果有）开始，到该组之后的条目的起点
+                    // 结束；当该组是最后一组时，它会随着
+                    // 源文本一起增长。
                     let (section_start, end) = if covers {
                         (starts[i + 1], starts.get(i + 2).copied())
                     } else {
@@ -350,6 +576,8 @@ impl Content {
 
                     // A bullet that was not re-parsed can have broken
                     // links of its own, so they need to be kept
+                    // 没有被重新解析的列表项可能有它自己的
+                    // 断开的链接，因此需要保留它们
                     match self.incomplete.entry(index) {
                         Entry::Occupied(mut entry) => {
                             let section = entry.get_mut();
@@ -358,6 +586,10 @@ impl Content {
                             // not covered when the section was
                             // created, and its paragraph is now
                             // re-parsed as well)
+                            // 几何范围可能发生变化（创建该区段时
+                            // 这个条目还没有被覆盖，
+                            // 而现在它所在的段落也会被
+                            // 重新解析）
                             section.start = section_start;
                             section.end = end;
                         }
@@ -368,6 +600,12 @@ impl Content {
                             // paragraph it belongs to, for instance);
                             // remember the index of the one this
                             // section refers to.
+                            // 重新解析该区段的源文本，会产生
+                            // 落在该区段范围内的条目
+                            // （例如一张图像和它所属的
+                            // 段落）；
+                            // 记住本区段所指向的那个条目的
+                            // 索引。
                             let item = starts
                                 .iter()
                                 .take(i)
@@ -390,6 +628,10 @@ impl Content {
                     // block opener; remember where it starts so that
                     // the block is re-parsed as a whole when it is
                     // closed.
+                    // `---` 或 `+++` 分隔线是一个暂定的元数据
+                    // 块开头标记；记住它的起点，这样
+                    // 当该块闭合时，它会作为一个整体被
+                    // 重新解析。
                     newest_rule_start = Some(start);
                 }
 
@@ -404,6 +646,9 @@ impl Content {
         // Remember the tentative metadata block opener, if any, so
         // that the block is re-parsed as a whole as it grows, and
         // swallowed by the parser once it is closed.
+        // 记住暂定的元数据块开头标记（如果有），这样
+        // 该块在增长时会作为一个整体被重新解析，
+        // 并在闭合后被解析器吞掉。
         self.pending_block_start = newest_rule_start;
         self.pending_block = newest_rule_start
             .map(|start| Self::metadata_block_live(&self.raw[start..]))
@@ -413,21 +658,32 @@ impl Content {
         // settled: the references registered while it was open are
         // swallowed by it, so recompute the references from the whole
         // source, as the one-shot parse does.
+        // 上一次推入时打开的元数据块现在已经
+        // 确定：在它打开期间注册的引用
+        // 被它吞掉了，因此要像一次性解析那样，
+        // 根据整个源文本重新计算引用。
         if block_closed {
             self.recompute_references();
         }
 
         // The sections whose item is not the last one anymore have
         // a fixed source range
+        // 对应条目不再是最后一个条目的区段，
+        // 其源文本范围已经固定
         self.fix_section_ends();
 
         // The sections whose broken links became resolvable, or
         // whose references changed, are re-parsed
+        // 断开的链接变得可以解析的区段，或者
+        // 引用发生变化的区段，会被重新解析
         self.resolve_sections();
 
         // The images are those present in the items; recompute them,
         // as an image parsed while a metadata block was still open
         // can be swallowed by it once the block is closed.
+        // 图像就是各条目中存在的那些图像；需要重新计算它们，
+        // 因为在元数据块仍然打开时解析出的图像，
+        // 可能在该块闭合后被它吞掉。
         self.state.images = self
             .items
             .iter()
@@ -438,6 +694,19 @@ impl Content {
             .collect();
     }
 
+    /// 如果源文本以一个尚未确定的元数据块开头，
+    /// 返回 `true`：第一行是完整的 `---` 或
+    /// `+++` 定界符，第二行不是空行
+    /// （否则第一行就是一条分隔线），并且该块
+    /// 尚未闭合。
+    ///
+    /// 当这样的块存在时，它的第一行是一条暂定的
+    /// 分隔线，一旦该块闭合就会被解析器吞掉，因此
+    /// 重新解析必须覆盖整个块。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns `true` if the source starts with a metadata block that
     /// is not settled yet: the first line is a complete `---` or
     /// `+++` delimiter, the second line is not a blank one
@@ -447,14 +716,18 @@ impl Content {
     /// While such a block is live, its first line is a tentative
     /// rule that the parser swallows once the block is closed, so
     /// the re-parse has to cover the block as a whole.
+    ///
+    /// </details>
     fn metadata_block_live(source: &str) -> bool {
         // The first line, which must be complete
+        // 第一行，它必须是完整的
         let (first, rest) = match source.find('\n') {
             Some(end) => (&source[..end], &source[end + 1..]),
             None => return false,
         };
 
         // The delimiter line
+        // 定界符行
         let first = first.trim_end();
         if first != "---" && first != "+++" {
             return false;
@@ -463,6 +736,9 @@ impl Content {
         // The second line: a blank one makes the first line a rule,
         // not a metadata block; an incomplete one could still be
         // the start of a block
+        // 第二行：如果是空行，第一行就是一条分隔线，
+        // 而不是元数据块；如果是不完整的行，它仍然可能是
+        // 一个块的开头
         let Some(second_end) = rest.find('\n') else {
             return true;
         };
@@ -473,6 +749,8 @@ impl Content {
 
         // The block is closed by a `---` or `...` line, or a `+++`
         // line, when it is delimited by `+++`
+        // 该块由一行 `---` 或 `...` 闭合；如果它是用 `+++`
+        // 定界的，则由一行 `+++` 闭合
         let closed = rest.lines().any(|line| {
             let line = line.trim_end();
             if first == "+++" {
@@ -485,8 +763,16 @@ impl Content {
         !closed
     }
 
+    /// 如果从 `start` 开始的那一行是完整的
+    /// `---` 或 `+++` 元数据块定界符，返回 `true`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns `true` if the line starting at `start` is a complete
     /// `---` or `+++` metadata block delimiter.
+    ///
+    /// </details>
     fn metadata_delimiter(source: &str, start: usize) -> bool {
         let line = &source[start..];
         let end = line.find('\n').unwrap_or(line.len());
@@ -494,6 +780,17 @@ impl Content {
         line == "---" || line == "+++"
     }
 
+    /// 重新解析整个源文本，并用一次性解析得到的
+    /// 引用定义替换现有的引用定义。
+    ///
+    /// 在元数据块仍然打开时注册的引用，
+    /// 会在该块确定后被它吞掉，因此它不应该
+    /// 再用于解析链接；重新解析整个源文本会丢弃它，
+    /// 就像一次性解析那样。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Re-parses the whole source and replaces the reference
     /// definitions with those of the one-shot parse.
     ///
@@ -501,6 +798,8 @@ impl Content {
     /// is swallowed by it once the block is settled, so it must not
     /// resolve links any more; re-parsing the whole source drops it,
     /// like the one-shot parse does.
+    ///
+    /// </details>
     fn recompute_references(&mut self) {
         let parser = pulldown_cmark::Parser::new_ext(&self.raw, options());
         let definitions = parser.reference_definitions();
@@ -516,9 +815,18 @@ impl Content {
         );
     }
 
+    /// 结束那些对应条目不再是最后一个条目的区段：
+    /// 它们的源文本范围现在已经固定，终点就是下一个
+    /// 条目的起点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Ends the sections whose item is not the last one anymore:
     /// their source range is now fixed, and it ends where the next
     /// item starts.
+    ///
+    /// </details>
     fn fix_section_ends(&mut self) {
         if self.incomplete.is_empty() {
             return;
@@ -530,6 +838,10 @@ impl Content {
                 // paragraph and the image it contains), so the end
                 // is the first start that is strictly after the
                 // section's start
+                // 下一个条目可能覆盖该区段的条目（一个
+                // 段落和它包含的图像），因此终点
+                // 是严格位于该区段起点之后的
+                // 第一个起点
                 section.end = self.starts[*index + 1..]
                     .iter()
                     .copied()
@@ -538,9 +850,18 @@ impl Content {
         }
     }
 
+    /// 重新解析那些断开的链接变得可以解析、
+    /// 或者引用的目标地址发生变化的区段；
+    /// 不再有任何内容需要监视的区段会被丢弃。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Re-parses the sections whose broken links became resolvable,
     /// or whose references changed destination; the sections that
     /// are left with nothing to watch are dropped.
+    ///
+    /// </details>
     fn resolve_sections(&mut self) {
         if self.incomplete.is_empty() {
             return;
@@ -549,10 +870,12 @@ impl Content {
         self.incomplete.retain(|index, section| {
             if self.items.len() <= *index {
                 // The section's item is gone
+                // 该区段的条目已经不存在了
                 return false;
             }
 
             // A link becomes resolvable...
+            // 某个链接变得可以解析……
             let mut newly_resolved = Vec::new();
             section.broken_links.retain(|link| {
                 if self.state.references.contains_key(link) {
@@ -566,6 +889,9 @@ impl Content {
             // ...or the destination of a resolved reference changes,
             // or the reference is dropped (its definition swallowed
             // by a metadata block, for instance)
+            // ……或者某个已解析引用的目标地址发生了变化，
+            // 或者该引用被丢弃（例如它的定义被
+            // 元数据块吞掉）
             let needs_reparse = !newly_resolved.is_empty()
                 || section.references.iter().any(|(link, dest)| {
                     match self.state.references.get(link) {
@@ -595,6 +921,9 @@ impl Content {
                     // Track the references that were resolved by the
                     // re-parse, so that a later change of their
                     // destination triggers a new re-parse
+                    // 跟踪重新解析时已解析的引用，
+                    // 这样它们的目标地址之后发生变化时
+                    // 会触发新的重新解析
                     for link in newly_resolved {
                         if let Some(dest) = self.state.references.get(&link)
                             && !broken_links.contains(&link)
@@ -619,28 +948,70 @@ impl Content {
             }
 
             // The section is kept while something is left to watch
+            // 只要还有内容需要监视，就保留该区段
             !section.broken_links.is_empty() || !section.references.is_empty()
         });
     }
 
+    /// 返回可供渲染的 Markdown 条目。
+    ///
+    /// 你可以使用 [`view`] 把它们转换为 [`Widget`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the Markdown items, ready to be rendered.
     ///
     /// You can use [`view`] to turn them into a [`Widget`].
+    ///
+    /// </details>
     pub fn items(&self) -> &[Item] {
         &self.items
     }
 
+    /// 返回 [`Content`] 中出现的 Markdown 图像的 URL。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the URLs of the Markdown images present in the [`Content`].
+    ///
+    /// </details>
     pub fn images(&self) -> &HashSet<Uri> {
         &self.state.images
     }
 
+    /// 返回原始 Markdown。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the raw Markdown.
+    ///
+    /// </details>
     pub fn raw(&self) -> &str {
         &self.raw
     }
 }
 
+/// 按 [`Item::Heading`] 对给定的 Markdown [`Item`] 进行分组。
+///
+/// 返回的迭代器为每个分组产生一个 `(Option<&Item>, &[Item])`
+/// 二元组，不会克隆任何 [`Item`]：
+///
+/// * 第一个元素是开启该分组的标题（如果有）。对于
+///   出现在第一个标题之前的那组条目（如果存在），
+///   它是 [`None`]；
+/// * 第二个元素是跟在该标题之后的条目切片，直到
+///   下一个标题为止（不包含下一个标题）。
+///
+/// 给定切片中的每个条目都恰好被产生一次：标题
+/// 作为它所开启的分组的第一个元素返回，其他每个
+/// 条目则属于它之前最近一个标题之后的切片。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Groups the given Markdown [`Item`]s by [`Item::Heading`].
 ///
 /// The returned iterator yields a `(Option<&Item>, &[Item])` pair for each
@@ -656,7 +1027,9 @@ impl Content {
 /// returned as the first element of the group it starts, and every other
 /// item is part of the slice that follows the last heading before it.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```
 /// use iced_widget::markdown;
 ///
@@ -678,13 +1051,31 @@ pub fn sections<'a>(
     items: &'a [Item],
 ) -> impl Iterator<Item = (Option<&'a Item>, &'a [Item])> + 'a {
     struct Sections<'a> {
+        /// 正在被分组的条目。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The items being grouped.
+        ///
+        /// </details>
         items: &'a [Item],
+        /// 下一个分组第一个条目的索引。
+        ///
+        /// 它总是某个标题的索引，只有最开始的那个
+        /// 分组例外，此时它可以指向任意条目（第一个
+        /// 标题之前的内容）。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The index of the first item of the next group.
         ///
         /// This is always the index of a heading, except for the very first
         /// group, where it may point at any item (the content before the
         /// first heading).
+        ///
+        /// </details>
         start: usize,
     }
 
@@ -699,6 +1090,7 @@ pub fn sections<'a>(
             }
 
             // The heading of the current group, if any
+            // 当前分组的标题（如果有）
             let heading = if matches!(items[*start], Item::Heading(..)) {
                 Some(*start)
             } else {
@@ -707,12 +1099,15 @@ pub fn sections<'a>(
 
             // The body of the group: the items after the heading, if any, up to
             // the next heading
+            // 分组的正文：标题（如果有）之后、直到下一个标题
+            // 为止的条目
             let body_start = heading.map_or(*start, |heading| heading + 1);
             let next_heading = (body_start..items.len())
                 .find(|&index| matches!(items[index], Item::Heading(..)))
                 .unwrap_or(items.len());
 
             // The next group starts at the next heading, if any
+            // 下一个分组从下一个标题（如果有）开始
             *start = next_heading;
 
             Some((
@@ -725,70 +1120,247 @@ pub fn sections<'a>(
     Sections { items, start: 0 }
 }
 
+/// Markdown 条目。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A Markdown item.
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub enum Item {
+    /// 标题。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A heading.
+    ///
+    /// </details>
     Heading(pulldown_cmark::HeadingLevel, Text),
+    /// 段落。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A paragraph.
+    ///
+    /// </details>
     Paragraph(Text),
+    /// 代码块。
+    ///
+    /// 你可以启用 `highlighter` 特性来获得语法高亮。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A code block.
     ///
     /// You can enable the `highlighter` feature for syntax highlighting.
+    ///
+    /// </details>
     CodeBlock {
+        /// 代码块的语言（如果有）。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The language of the code block, if any.
+        ///
+        /// </details>
         language: Option<String>,
+        /// 代码块的原始代码。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The raw code of the code block.
+        ///
+        /// </details>
         code: String,
+        /// 代码块中带样式的文本行。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The styled lines of text in the code block.
+        ///
+        /// </details>
         lines: Vec<Text>,
     },
+    /// 列表。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A list.
+    ///
+    /// </details>
     List {
+        /// 列表的起始编号，如果它是有序列表的话。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The first number of the list, if it is ordered.
+        ///
+        /// </details>
         start: Option<u64>,
+        /// 列表的各项。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The items of the list.
+        ///
+        /// </details>
         bullets: Vec<Bullet>,
     },
+    /// 图像。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// An image.
+    ///
+    /// </details>
     Image {
+        /// 图像的目标 URL。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The destination URL of the image.
+        ///
+        /// </details>
         url: Uri,
+        /// 图像的标题。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The title of the image.
+        ///
+        /// </details>
         title: String,
+        /// 图像的替代文本。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The alternative text of the image.
+        ///
+        /// </details>
         alt: Text,
     },
+    /// 引用块。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A quote.
+    ///
+    /// </details>
     Quote(Vec<Item>),
+    /// 水平分隔线。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A horizontal separator.
+    ///
+    /// </details>
     Rule,
+    /// 表格。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A table.
+    ///
+    /// </details>
     Table {
+        /// 表格的列。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The columns of the table.
+        ///
+        /// </details>
         columns: Vec<Column>,
+        /// 表格的行。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The rows of the table.
+        ///
+        /// </details>
         rows: Vec<Row>,
     },
 }
 
+/// 表格的列。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The column of a table.
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct Column {
+    /// 列的表头。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The header of the column.
+    ///
+    /// </details>
     pub header: Vec<Item>,
+    /// 列的对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The alignment of the column.
+    ///
+    /// </details>
     pub alignment: pulldown_cmark::Alignment,
 }
 
+/// 表格的行。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The row of a table.
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct Row {
+    /// 行中的单元格。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The cells of the row.
+    ///
+    /// </details>
     cells: Vec<Vec<Item>>,
 }
 
+/// 一段已解析的 Markdown 文本。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A bunch of parsed Markdown text.
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct Text {
     spans: Vec<Span>,
@@ -805,10 +1377,20 @@ impl Text {
         }
     }
 
+    /// 返回可直接用于给定样式的 [`rich_text()`] 文本片段（span）。
+    ///
+    /// 此方法会替你进行缓存。只有当提供的 [`Settings`]
+    /// 或 [`Catalog`] 发生变化时，它才会重新分配。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the [`rich_text()`] spans ready to be used for the given style.
     ///
     /// This method performs caching for you. It will only reallocate if the [`Settings`]
     /// or the [`Catalog`] provided changes.
+    ///
+    /// </details>
     pub fn spans<Theme: Catalog>(
         &self,
         settings: Settings,
@@ -925,19 +1507,61 @@ impl Span {
     }
 }
 
+/// 列表的项。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The item of a list.
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub enum Bullet {
+    /// 简单的列表项。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A simple bullet point.
+    ///
+    /// </details>
     Point {
+        /// 列表项的内容。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The contents of the bullet point.
+        ///
+        /// </details>
         items: Vec<Item>,
     },
+    /// 任务项。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A task.
+    ///
+    /// </details>
     Task {
+        /// 任务项的内容。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The contents of the task.
+        ///
+        /// </details>
         items: Vec<Item>,
+        /// 任务是否已完成。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Whether the task is done or not.
+        ///
+        /// </details>
         done: bool,
     },
 }
@@ -956,9 +1580,16 @@ impl Bullet {
     }
 }
 
+/// 解析给定的 Markdown 内容。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Parse the given Markdown content.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::{Renderer, Widget}; pub use iced_widget::core::*; }
 /// #
@@ -1004,30 +1635,76 @@ pub fn parse(markdown: &str) -> impl Iterator<Item = Item> + '_ {
 
 #[derive(Debug, Default)]
 struct State {
+    /// 在本次解析之后，下一次将被重新解析的源文本的
+    /// 起点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The start of the source that will be re-parsed next, after the
     /// current parse.
+    ///
+    /// </details>
     window: Option<usize>,
+    /// 引用定义，把标签映射到它的目标地址。
+    ///
+    /// 和 CommonMark 一样，同一标签以第一个定义为准。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The reference definitions, mapping a label to its destination.
     ///
     /// The first definition of a label wins, like in CommonMark.
+    ///
+    /// </details>
     references: HashMap<String, String>,
+    /// 这些标签在 `references` 中的目标地址来自
+    /// 最后一行的定义，而该行尚未结束、
+    /// 仍可能增长；它们的目标地址会在每次推入时更新，
+    /// 直到该行结束。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The labels whose destination in `references` comes from the
     /// definition of the last line, which is not terminated yet and
     /// can still grow; their destination is updated on each push,
     /// until the line is terminated.
+    ///
+    /// </details>
     references_staged: HashSet<String>,
     images: HashSet<Uri>,
+    /// 最近几次重新解析中出现的代码块的高亮器，
+    /// 以代码块源文本在外层流中的起点作为键。
+    ///
+    /// 高亮器只会被同一个代码块（相同的
+    /// 源文本起点和语言）复用，这样在重新解析一个仍在增长的
+    /// 代码块时，它的行缓存依然有效。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The highlighters of the code blocks seen in the last re-parses,
     /// keyed by the start of the block's source in the outer stream.
     ///
     /// A highlighter is only reused for the same code block (the same
     /// source start and language), so that its line cache stays valid
     /// across the re-parses of a block that is still growing.
+    ///
+    /// </details>
     #[cfg(feature = "highlighter")]
     parsers: HashMap<usize, code::Parser>,
 }
 
+/// 解析器使用的选项。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The options used by the parser.
+///
+/// </details>
 fn options() -> pulldown_cmark::Options {
     pulldown_cmark::Options::ENABLE_YAML_STYLE_METADATA_BLOCKS
         | pulldown_cmark::Options::ENABLE_PLUSES_DELIMITED_METADATA_BLOCKS
@@ -1036,6 +1713,20 @@ fn options() -> pulldown_cmark::Options {
         | pulldown_cmark::Options::ENABLE_TASKLISTS
 }
 
+/// 把一次解析得到的引用定义并入 `references`，
+/// 和 CommonMark 一样，同一标签保留第一个定义。
+///
+/// 最后一行的定义在该行尚未结束时
+/// 仍可能增长，因此它的目标地址会在每次推入时更新，
+/// 直到该行结束；正在增长的标签记录在
+/// `growing_refs` 中。
+///
+/// `markdown` 是本次解析的源文本，`definitions` 是其中的
+/// 引用定义。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Absorbs the reference definitions of a parse into `references`,
 /// keeping the first definition of a label, like in CommonMark.
 ///
@@ -1046,6 +1737,8 @@ fn options() -> pulldown_cmark::Options {
 ///
 /// `markdown` is the source of the parse, and `definitions` are its
 /// reference definitions.
+///
+/// </details>
 fn absorb_references(
     markdown: &str,
     definitions: &pulldown_cmark::RefDefs<'_>,
@@ -1062,10 +1755,13 @@ fn absorb_references(
             }
         } else if growing_refs.contains(&name) {
             // The map's value is the growing one: update it
+            // 映射中的值就是正在增长的那个：更新它
             let _ = references.insert(name, dest);
         } else if !references.contains_key(&name) {
             // No terminated definition wins: the growing value is
             // provisional
+            // 没有已结束的定义胜出：正在增长的值只是
+            // 临时的
             let _ = growing_refs.insert(name.clone());
             let _ = references.insert(name, dest);
         }
@@ -1091,7 +1787,14 @@ fn parse_with<'a>(
     struct List {
         start: Option<u64>,
         bullets: Vec<Bullet>,
+        /// 列表最后一项的起点（如果有）。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The start of the last item of the list, if any.
+        ///
+        /// </details>
         last_item_start: Option<usize>,
     }
 
@@ -1101,6 +1804,12 @@ fn parse_with<'a>(
     // The broken links are reported before the items that contain them
     // are produced, so the links are attributed to an item by their
     // span.
+    // 解析器报告的断开的链接，以及它们在输入中的
+    // 范围。
+    //
+    // 断开的链接会在包含它们的条目产生之前
+    // 被报告，因此要根据范围把这些链接归属到
+    // 对应的条目。
     let broken_links = Rc::new(RefCell::new(Vec::new()));
 
     let mut spans = Vec::new();
@@ -1169,6 +1878,8 @@ fn parse_with<'a>(
 
             // Attribute the broken links whose span falls within the
             // source of the item
+            // 把范围落在该条目源文本之内的
+            // 断开的链接归属给它
             let mut links = HashSet::new();
             for (span, reference) in RefCell::borrow(&broken_links).iter() {
                 if source.contains(&span.start) {
@@ -1185,6 +1896,11 @@ fn parse_with<'a>(
     // parse. A later definition that falls within the input wins
     // within the input, so, when known, prefer the global
     // definition.
+    // 引用式的链接或图像，按其标签在整个文档中的
+    // 第一个定义来解析，和一次性解析
+    // 一样。落在输入范围内的较晚定义在输入内部
+    // 会胜出，因此在已知的情况下，优先使用全局的
+    // 定义。
     let resolve_reference = |state: &mut State,
                              link_type: pulldown_cmark::LinkType,
                              id: &str,
@@ -1208,6 +1924,7 @@ fn parse_with<'a>(
     let parser = parser.into_offset_iter();
 
     // We want to keep the `spans` capacity
+    // 我们希望保留 `spans` 的容量
     #[allow(clippy::drain_collect)]
     parser.filter_map(move |(event, source)| match event {
         pulldown_cmark::Event::Start(tag) => match tag {
@@ -1307,6 +2024,10 @@ fn parse_with<'a>(
                     // key that identifies the block across re-parses,
                     // so that the highlighter's line cache is only
                     // reused for the same block.
+                    // 代码块在外层流中的起点；它是在多次
+                    // 重新解析之间标识该代码块的键，
+                    // 这样高亮器的行缓存只会被
+                    // 同一个代码块复用。
                     let key = _offset + source.start;
                     let state = state.borrow_mut();
                     let language = language.split(',').next().unwrap_or_default();
@@ -1435,6 +2156,9 @@ fn parse_with<'a>(
                 // A list is re-parsed only from the start of its last
                 // item, so that adding new items to a long list does not
                 // require re-parsing the whole list.
+                // 列表只从它最后一项的起点开始重新解析，
+                // 这样向长列表添加新项时就不需要
+                // 重新解析整个列表。
                 if produced.is_some()
                     && let Some(start) = last_item_start
                 {
@@ -1464,6 +2188,9 @@ fn parse_with<'a>(
                 // A top-level image is re-parsed from the start of the
                 // line that contains it, as the rest of the line can
                 // change how the image is parsed.
+                // 顶层图像从包含它的那一行的起点开始
+                // 重新解析，因为该行的其余部分可能
+                // 改变图像的解析方式。
                 if let Some(start) = paragraph_start.filter(|_| produced.is_some()) {
                     state.borrow_mut().window = Some(start);
                 }
@@ -1632,46 +2359,163 @@ fn parse_with<'a>(
     })
 }
 
+/// 控制 [`view`] 中 Markdown 渲染方式的配置。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Configuration controlling Markdown rendering in [`view`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Settings {
+    /// 应用于普通文本的 [`Font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Font`] to be applied to basic text.
+    ///
+    /// </details>
     pub font: Font,
+    /// 应用于行内代码的 [`Font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Font`] to be applied to inline code.
+    ///
+    /// </details>
     pub inline_code_font: Font,
+    /// 应用于代码块的 [`Font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Font`] to be applied to code blocks.
+    ///
+    /// </details>
     pub code_block_font: Font,
+    /// 基础行高。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The base line height.
+    ///
+    /// </details>
     pub line_height: LineHeight,
+    /// 基础文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The base text size.
+    ///
+    /// </details>
     pub text_size: Pixels,
+    /// 代码块使用的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size used in code blocks.
+    ///
+    /// </details>
     pub code_block_size: Pixels,
+    /// 行内代码使用的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size used in inline code.
+    ///
+    /// </details>
     pub inline_code_size: Pixels,
+    /// 1 级标题的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size of level 1 heading.
+    ///
+    /// </details>
     pub h1_size: Pixels,
+    /// 2 级标题的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size of level 2 heading.
+    ///
+    /// </details>
     pub h2_size: Pixels,
+    /// 3 级标题的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size of level 3 heading.
+    ///
+    /// </details>
     pub h3_size: Pixels,
+    /// 4 级标题的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size of level 4 heading.
+    ///
+    /// </details>
     pub h4_size: Pixels,
+    /// 5 级标题的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size of level 5 heading.
+    ///
+    /// </details>
     pub h5_size: Pixels,
+    /// 6 级标题的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size of level 6 heading.
+    ///
+    /// </details>
     pub h6_size: Pixels,
+    /// 元素之间使用的间距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The spacing to be used between elements.
+    ///
+    /// </details>
     pub spacing: Pixels,
 }
 
 impl Settings {
+    /// 使用给定的基础文本大小（以 [`Pixels`] 为单位）创建新的 [`Settings`]。
+    ///
+    /// 各级标题会自动调整。具体来说，
+    /// 第一级是基础大小的 1.5 倍，第二级是
+    /// 1.25 倍，第三级是 1.125 倍，其余各级
+    /// 使用基础大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates new [`Settings`] with the given base text size in [`Pixels`].
     ///
     /// Heading levels will be adjusted automatically. Specifically,
     /// the first level will be 1.5 times the base size, the second
     /// 1.25 times, the third 1.125 times, and the remaining levels
     /// will use the base size.
+    ///
+    /// </details>
     pub fn with_text_size(text_size: impl Into<Pixels>) -> Self {
         let text_size = text_size.into();
         let line_height = LineHeight::default();
@@ -1694,7 +2538,14 @@ impl Settings {
         }
     }
 
+    /// 设置 [`Settings`] 的 [`LineHeight`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`LineHeight`] of the [`Settings`].
+    ///
+    /// </details>
     pub fn line_height(self, line_height: impl Into<LineHeight>) -> Self {
         let line_height = line_height.into();
 
@@ -1712,11 +2563,20 @@ impl Default for Settings {
     }
 }
 
+/// 显示一组 Markdown 条目。
+///
+/// 你可以通过 [`parse`] 获得这些条目。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Display a bunch of Markdown items.
 ///
 /// You can obtain the items with [`parse`].
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::{Renderer, Widget}; pub use iced_widget::core::*; }
 /// #
@@ -1776,10 +2636,20 @@ where
     .boxed()
 }
 
+/// 运行 [`view`]，但使用自定义的 [`Viewer`] 把 [`Item`] 转换为部件。
+///
+/// 如果你想自定义某些 Markdown 元素的外观，
+/// 这会很有用。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Runs [`view`] but with a custom [`Viewer`] to turn an [`Item`] into a widget.
 ///
 /// This is useful if you want to customize the look of certain Markdown
 /// elements.
+///
+/// </details>
 pub fn view_with<'a, Message, Theme, Renderer>(
     items: &'a [Item],
     settings: impl Into<Settings>,
@@ -1793,7 +2663,14 @@ where
     self::items(viewer, settings.into(), items)
 }
 
+/// 使用给定的 [`Viewer`] 显示一个 [`Item`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays an [`Item`] using the given [`Viewer`].
+///
+/// </details>
 pub fn item<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -1829,7 +2706,14 @@ where
     }
 }
 
+/// 使用默认外观显示标题。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a heading using the default look.
+///
+/// </details>
 pub fn heading<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -1885,7 +2769,14 @@ where
     )
 }
 
+/// 使用默认外观显示段落。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a paragraph using the default look.
+///
+/// </details>
 pub fn paragraph<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -1904,8 +2795,16 @@ where
         .selectable(true)
 }
 
+/// 使用默认外观显示无序列表，并为每个
+/// 列表项调用 [`Viewer`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays an unordered list using the default look and
 /// calling the [`Viewer`] for each bullet point item.
+///
+/// </details>
 pub fn unordered_list<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -1946,8 +2845,16 @@ where
     .padding(padding::left(settings.text_size.0))
 }
 
+/// 使用默认外观显示有序列表，并为每个
+/// 编号项调用 [`Viewer`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays an ordered list using the default look and
 /// calling the [`Viewer`] for each numbered item.
+///
+/// </details>
 pub fn ordered_list<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -1982,7 +2889,14 @@ where
     .spacing(settings.spacing / 2.0)
 }
 
+/// 使用默认外观显示代码块。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a code block using the default look.
+///
+/// </details>
 pub fn code_block<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -2017,7 +2931,14 @@ where
     .class(Theme::code_block())
 }
 
+/// 使用默认外观显示引用块。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a quote using the default look.
+///
+/// </details>
 pub fn quote<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -2041,7 +2962,14 @@ where
     .class(Theme::quote())
 }
 
+/// 使用默认外观显示分隔线。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a rule using the default look.
+///
+/// </details>
 pub fn rule<'a, Message, Theme, Renderer>() -> impl Widget<Message, Theme, Renderer> + 'a
 where
     Message: 'a,
@@ -2051,7 +2979,14 @@ where
     rule::horizontal(2)
 }
 
+/// 使用默认外观显示表格。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a table using the default look.
+///
+/// </details>
 pub fn table<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -2098,7 +3033,14 @@ where
     )
 }
 
+/// 使用默认外观显示一列条目。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a column of items with the default look.
+///
+/// </details>
 pub fn items<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -2126,10 +3068,20 @@ where
     .spacing(settings.spacing * 1.5)
 }
 
+/// 用于显示 Markdown [`Item`] 的视图策略。
+///
+/// [`Viewer`] 负责把每个 [`Item`] 转换为部件。它
+/// 还提供渲染所用的 [`Theme`] 和 [`text::Highlighter`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A view strategy to display a Markdown [`Item`].
 ///
 /// A [`Viewer`] is in charge of turning each [`Item`] into a widget. It
 /// also provides the [`Theme`] and [`text::Highlighter`] used for rendering.
+///
+/// </details>
 pub trait Viewer<'a, Message, Theme = crate::Theme, Renderer = crate::Renderer>
 where
     Self: Sized + 'a,
@@ -2137,18 +3089,48 @@ where
     Theme: Catalog + 'a,
     Renderer: core::text::Renderer + 'a,
 {
+    /// 用于为 Markdown 元素设置样式的 [`Theme`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Theme`] used for styling the Markdown elements.
+    ///
+    /// </details>
     fn theme(&self) -> &Theme;
 
+    /// 用于高亮 [`Code`] 区域的 [`text::Highlighter`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`text::Highlighter`] used for highligthing [`Code`] regions.
+    ///
+    /// </details>
     fn highlighter(&self) -> &dyn text::Highlighter<Code, Theme>;
 
+    /// 当带有给定 [`Uri`] 的链接被点击时产生一条消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Produces a message when a link is clicked with the given [`Uri`].
+    ///
+    /// </details>
     fn on_link_click(url: Uri) -> Message;
 
+    /// 显示图像。
+    ///
+    /// 默认情况下，它会显示一个带有图像标题的容器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays an image.
     ///
     /// By default, it will show a container with the image title.
+    ///
+    /// </details>
     fn image(
         &self,
         settings: Settings,
@@ -2167,9 +3149,18 @@ where
         .class(Theme::code_block())
     }
 
+    /// 显示标题。
+    ///
+    /// 默认情况下，它调用 [`heading`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays a heading.
     ///
     /// By default, it calls [`heading`].
+    ///
+    /// </details>
     fn heading(
         &self,
         settings: Settings,
@@ -2179,9 +3170,18 @@ where
         heading(self, settings, level, text, Self::on_link_click)
     }
 
+    /// 显示段落。
+    ///
+    /// 默认情况下，它调用 [`paragraph`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays a paragraph.
     ///
     /// By default, it calls [`paragraph`].
+    ///
+    /// </details>
     fn paragraph(
         &self,
         settings: Settings,
@@ -2190,9 +3190,18 @@ where
         paragraph(self, settings, text, Self::on_link_click)
     }
 
+    /// 显示代码块。
+    ///
+    /// 默认情况下，它调用 [`code_block`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays a code block.
     ///
     /// By default, it calls [`code_block`].
+    ///
+    /// </details>
     fn code_block(
         &self,
         settings: Settings,
@@ -2206,9 +3215,18 @@ where
         code_block(self, settings, lines, Self::on_link_click)
     }
 
+    /// 显示无序列表。
+    ///
+    /// 默认情况下，它调用 [`unordered_list`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays an unordered list.
     ///
     /// By default, it calls [`unordered_list`].
+    ///
+    /// </details>
     fn unordered_list(
         &self,
         settings: Settings,
@@ -2217,9 +3235,18 @@ where
         unordered_list(self, settings, bullets)
     }
 
+    /// 显示有序列表。
+    ///
+    /// 默认情况下，它调用 [`ordered_list`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays an ordered list.
     ///
     /// By default, it calls [`ordered_list`].
+    ///
+    /// </details>
     fn ordered_list(
         &self,
         settings: Settings,
@@ -2229,9 +3256,18 @@ where
         ordered_list(self, settings, start, bullets)
     }
 
+    /// 显示引用块。
+    ///
+    /// 默认情况下，它调用 [`quote`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays a quote.
     ///
     /// By default, it calls [`quote`].
+    ///
+    /// </details>
     fn quote(
         &self,
         settings: Settings,
@@ -2240,16 +3276,34 @@ where
         quote(self, settings, contents)
     }
 
+    /// 显示分隔线。
+    ///
+    /// 默认情况下，它调用 [`rule`](self::rule())。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays a rule.
     ///
     /// By default, it calls [`rule`](self::rule()).
+    ///
+    /// </details>
     fn rule(&self) -> impl Widget<Message, Theme, Renderer> + 'a {
         rule()
     }
 
+    /// 显示表格。
+    ///
+    /// 默认情况下，它调用 [`table`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays a table.
     ///
     /// By default, it calls [`table`].
+    ///
+    /// </details>
     fn table(
         &self,
         settings: Settings,
@@ -2260,14 +3314,28 @@ where
     }
 }
 
+/// 默认的 [`Viewer`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default [`Viewer`].
+///
+/// </details>
 pub struct DefaultViewer<'a, Theme> {
     theme: Theme,
     highlighter: Option<Box<dyn text::Highlighter<Code, Theme> + 'a>>,
 }
 
 impl<'a, Theme> DefaultViewer<'a, Theme> {
+    /// 使用给定的 [`Theme`] 创建一个新的 [`DefaultViewer`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`DefaultViewer`] with the given [`Theme`].
+    ///
+    /// </details>
     pub fn new(theme: Theme) -> Self {
         Self {
             theme,
@@ -2275,7 +3343,14 @@ impl<'a, Theme> DefaultViewer<'a, Theme> {
         }
     }
 
+    /// 为 [`DefaultViewer`] 设置自定义的 [`text::Highlighter`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets a custom [`text::Highlighter`] for the [`DefaultViewer`].
+    ///
+    /// </details>
     pub fn highlighter(mut self, highlighter: impl text::Highlighter<Code, Theme> + 'a) -> Self {
         self.highlighter = Some(Box::new(highlighter));
         self
@@ -2302,7 +3377,14 @@ where
     }
 }
 
+/// Markdown 条目的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of Markdown items.
+///
+/// </details>
 pub trait Catalog:
     container::Catalog
     + scrollable::Catalog
@@ -2313,35 +3395,107 @@ pub trait Catalog:
     + Clone
     + PartialEq
 {
+    /// [`Catalog`] 的唯一标识符。
+    ///
+    /// 当主题变化时，它会被用来使文本片段的样式失效。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The unique identifier of the [`Catalog`].
     ///
     /// This will be used to invalidate span styling when a theme changes.
+    ///
+    /// </details>
     fn id(&self) -> &str;
 
+    /// 链接的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of some link.
+    ///
+    /// </details>
     fn link_color(&self) -> Color;
 
+    /// 行内代码的 [`InlineCode`] 样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`InlineCode`] style of some inline code.
+    ///
+    /// </details>
     fn code(&self) -> InlineCode;
 
+    /// 代码块的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The styling class of a code block.
+    ///
+    /// </details>
     fn code_block<'a>() -> <Self as container::Catalog>::Class<'a>;
 
+    /// 引用块的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The styling class of a quote.
+    ///
+    /// </details>
     fn quote<'a>() -> <Self as container::Catalog>::Class<'a>;
 
+    /// 用于高亮代码的默认 [`text::Highlighter`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default [`text::Highlighter`] to use to highlight code.
+    ///
+    /// </details>
     fn highlighter(&self) -> &dyn text::Highlighter<Code, Self>;
 }
 
+/// 行内代码的样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The style of some inline code.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct InlineCode {
+    /// 应用在代码四周的 [`Padding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Padding`] to apply around the code.
+    ///
+    /// </details>
     pub padding: Padding,
+    /// 代码的 [`Highlight`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Highlight`] of the code.
+    ///
+    /// </details>
     pub highlight: Highlight,
+    /// 代码的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of the code.
+    ///
+    /// </details>
     pub color: Color,
 }
 

@@ -1,4 +1,11 @@
+//! 针对 `sticky` 部件的测试。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Tests for the `sticky` widget.
+//!
+//! </details>
 use iced_widget::core::layout;
 use iced_widget::core::mouse;
 use iced_widget::core::shell;
@@ -63,8 +70,16 @@ fn scroll(element: &mut impl Widget<Never, Theme, ()>, tree: &mut widget::Tree, 
     frame(element, tree);
 }
 
+/// 处理一个重绘帧，把可滚动区域当前的偏移量提交为
+/// 放置其内容时使用的平移量。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Processes a redraw frame, committing the scrollable's current offsets as
 /// the translation its contents are placed with.
+///
+/// </details>
 fn frame(element: &mut impl Widget<Never, Theme, ()>, tree: &mut widget::Tree) {
     let mut messages = shell::Bus::new();
 
@@ -79,8 +94,16 @@ fn frame(element: &mut impl Widget<Never, Theme, ()>, tree: &mut widget::Tree) {
     );
 }
 
+/// 断言粘性内容显示在具有预期边界的覆盖层上，
+/// 或者根本没有显示在覆盖层上。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Asserts that the sticky contents are displayed on an overlay with the
 /// expected bounds, or not displayed on an overlay at all.
+///
+/// </details>
 fn assert_overlay_bounds(
     element: &mut impl Widget<Never, Theme, ()>,
     tree: &mut widget::Tree,
@@ -111,12 +134,14 @@ fn assert_overlay_bounds(
     let overlay = &overlay.as_overlay();
 
     // The overlay reacts to the cursor inside its bounds
+    // 覆盖层对其边界内的光标作出反应
     assert_eq!(
         overlay.mouse_interaction(mouse::Cursor::Available(bounds.center()), &()),
         mouse::Interaction::Idle
     );
 
     // ...and not outside of them
+    // ……而对边界之外的光标不作反应
     for position in [
         Point::new(bounds.x - 1.0, bounds.center_y()),
         Point::new(bounds.x + bounds.width + 1.0, bounds.center_y()),
@@ -139,6 +164,8 @@ fn sticky_in_view() {
 
     // The sticky contents are in view, so they are not displayed on an
     // overlay.
+    // 粘性内容在视野内，因此它们不会显示在
+    // 覆盖层上。
     assert_overlay_bounds(&mut element, &mut tree, None);
 }
 
@@ -151,6 +178,8 @@ fn sticky_partially_out_of_view() {
 
     // Scroll down a little: the sticky contents are partially out of the
     // visible bounds, so they are displayed on an overlay, inside them.
+    // 向下滚动一点：粘性内容部分超出了
+    // 可见边界，因此它们显示在覆盖层上，位于可见边界之内。
     scroll(&mut element, &mut tree, 0.0, 30.0);
     assert_overlay_bounds(
         &mut element,
@@ -168,6 +197,8 @@ fn sticky_out_of_view() {
 
     // Scroll down, so that the sticky contents go out of view: they are
     // displayed on an overlay, inside the visible bounds.
+    // 向下滚动，让粘性内容离开视野：它们
+    // 显示在覆盖层上，位于可见边界之内。
     scroll(&mut element, &mut tree, 0.0, 100.0);
     assert_overlay_bounds(
         &mut element,
@@ -192,6 +223,8 @@ fn sticky_pinned_to_nearest_edge() {
 
     // Scroll a little: the sticky contents are out of the visible bounds on
     // the bottom edge, so they are displayed on an overlay, pinned to it.
+    // 滚动一点：粘性内容在下边缘超出了可见边界，
+    // 因此它们显示在覆盖层上，固定在下边缘。
     scroll(&mut element, &mut tree, 0.0, 30.0);
     assert_overlay_bounds(
         &mut element,
@@ -204,6 +237,8 @@ fn sticky_pinned_to_nearest_edge() {
 
     // Scroll past the sticky contents: they are displayed on an overlay,
     // pinned to the top edge.
+    // 滚动越过粘性内容：它们显示在覆盖层上，
+    // 固定在上边缘。
     scroll(&mut element, &mut tree, 0.0, 1060.0);
     assert_overlay_bounds(
         &mut element,
@@ -216,6 +251,8 @@ fn sticky_pinned_to_nearest_edge() {
 fn sticky_clamped_to_visible_bounds() {
     // The sticky contents are clamped so that their edges never go out of
     // the visible bounds, even when they are larger than the viewport.
+    // 粘性内容会被限制，使它们的边永远不会超出
+    // 可见边界，即使它们比视口更大。
     let mut element = scrollable(
         column![
             sticky(container("Header").width(2000).height(50)),
@@ -237,6 +274,9 @@ fn sticky_clamped_to_visible_bounds() {
     // Scroll down, so that the sticky contents go out of the visible bounds:
     // the overlay is clamped, and the 2000px-wide contents are displayed
     // with a width of 1024px.
+    // 向下滚动，让粘性内容超出可见边界：
+    // 覆盖层被限制，2000px 宽的内容
+    // 以 1024px 的宽度显示。
     scroll(&mut element, &mut tree, 0.0, 100.0);
     assert_overlay_bounds(
         &mut element,
@@ -262,6 +302,9 @@ fn sticky_stays_attached_to_parent_bounds() {
     // Scroll down: the sticky contents are out of the visible bounds, but
     // their parent is still visible, so they are displayed on an overlay,
     // pinned to the top edge.
+    // 向下滚动：粘性内容超出了可见边界，但
+    // 它们的父级仍然可见，因此它们显示在覆盖层上，
+    // 固定在上边缘。
     scroll(&mut element, &mut tree, 0.0, 600.0);
     assert_overlay_bounds(
         &mut element,
@@ -271,6 +314,8 @@ fn sticky_stays_attached_to_parent_bounds() {
 
     // Scroll down until the bottom edge of the contents reaches the bottom
     // edge of their parent: the contents simply stay put.
+    // 向下滚动，直到内容的下边缘到达其父级的
+    // 下边缘：内容保持原位不动。
     scroll(&mut element, &mut tree, 0.0, 750.0);
     assert_overlay_bounds(
         &mut element,
@@ -281,6 +326,9 @@ fn sticky_stays_attached_to_parent_bounds() {
     // Scroll down further: the contents are attached to the bottom edge of
     // their parent: they keep their original bounds, and are clipped to the
     // visible bounds instead.
+    // 继续向下滚动：内容附着在其父级的
+    // 下边缘：它们保留原有的边界，并改为被裁剪到
+    // 可见边界。
     scroll(&mut element, &mut tree, 0.0, 770.0);
     assert_overlay_bounds(
         &mut element,
@@ -290,6 +338,8 @@ fn sticky_stays_attached_to_parent_bounds() {
 
     // Scroll down until the parent has gone out of the visible bounds: the
     // contents are released and scroll with it.
+    // 向下滚动，直到父级离开可见边界：
+    // 内容被释放，并随父级一起滚动。
     scroll(&mut element, &mut tree, 0.0, 900.0);
     assert_overlay_bounds(&mut element, &mut tree, None);
 }
@@ -303,6 +353,8 @@ fn sticky_out_of_view_horizontally() {
 
     // Scroll to the right, so that the sticky contents go out of view: they
     // are displayed on an overlay, inside the visible bounds.
+    // 向右滚动，让粘性内容离开视野：它们
+    // 显示在覆盖层上，位于可见边界之内。
     scroll(&mut element, &mut tree, 100.0, 0.0);
     assert_overlay_bounds(
         &mut element,
@@ -315,7 +367,14 @@ fn sticky_out_of_view_horizontally() {
 fn sticky_pick_list_menu_opens_at_floating_position() -> Result<(), iced_test::Error> {
     use iced_test::simulator::{self, Simulator};
 
+    /// `pick_list` 产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The messages produced by the `pick_list`.
+    ///
+    /// </details>
     #[derive(Debug, Clone, PartialEq, Eq)]
     enum Message {
         Opened,
@@ -342,6 +401,7 @@ fn sticky_pick_list_menu_opens_at_floating_position() -> Result<(), iced_test::E
         Simulator::with_size(Settings::default(), VIEWPORT.size(), view);
 
     // Scroll down, so that the sticky contents go out of the visible bounds.
+    // 向下滚动，让粘性内容超出可见边界。
     ui.point_at(VIEWPORT.center());
     let _ = ui.scroll(mouse::ScrollDelta::Pixels {
         x: 0.0,
@@ -350,14 +410,20 @@ fn sticky_pick_list_menu_opens_at_floating_position() -> Result<(), iced_test::E
 
     // Process a frame, so that the scroll is committed and the sticky
     // contents float at the top of the visible bounds.
+    // 处理一帧，让滚动被提交，粘性
+    // 内容浮动在可见边界的顶部。
     ui.draw(&Theme::Dark);
 
     // Click the pick_list at its floating position, at the top of the
     // visible bounds.
+    // 在 pick_list 的浮动位置（可见边界的
+    // 顶部）点击它。
     let _ = ui.click("One")?;
 
     // The menu is displayed below the floating pick_list, inside the
     // visible bounds, not at its original, scrolled-out position.
+    // 菜单显示在浮动的 pick_list 下方，位于
+    // 可见边界之内，而不是在它原来的、已滚出视野的位置。
     let option = ui.find("Three").expect("the menu option should be found");
     let visible = option
         .visible_bounds()
@@ -367,6 +433,8 @@ fn sticky_pick_list_menu_opens_at_floating_position() -> Result<(), iced_test::E
 
     // Move the cursor over the option, and select it from the floating
     // menu.
+    // 把光标移到选项上，并从浮动的菜单中
+    // 选中它。
     ui.point_at(visible.center());
     let _ = ui.simulate(simulator::click());
 

@@ -3,28 +3,70 @@ use crate::Vector;
 use num_traits::{Float, Num};
 use std::fmt;
 
+/// 二维的点。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A 2D point.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Point<T = f32> {
+    /// X 坐标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The X coordinate.
+    ///
+    /// </details>
     pub x: T,
 
+    /// Y 坐标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The Y coordinate.
+    ///
+    /// </details>
     pub y: T,
 }
 
 impl Point {
+    /// 原点（即位于 (0, 0) 的 [`Point`]）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The origin (i.e. a [`Point`] at (0, 0)).
+    ///
+    /// </details>
     pub const ORIGIN: Self = Self::new(0.0, 0.0);
 }
 
 impl<T> Point<T> {
+    /// 使用给定的坐标创建一个新的 [`Point`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Point`] with the given coordinates.
+    ///
+    /// </details>
     pub const fn new(x: T, y: T) -> Self {
         Self { x, y }
     }
 
+    /// 计算到另一个 [`Point`] 的距离。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Computes the distance to another [`Point`].
+    ///
+    /// </details>
     pub fn distance(&self, to: Self) -> T
     where
         T: Float,
@@ -129,7 +171,14 @@ where
 }
 
 impl Point<f32> {
+    /// 对 [`Point`] 的坐标进行四舍五入。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Rounds the [`Point`] coordinates.
+    ///
+    /// </details>
     pub fn round(self) -> Self {
         Point {
             x: self.x.round(),
@@ -137,7 +186,14 @@ impl Point<f32> {
         }
     }
 
+    /// 把 [`Point`] 吸附到 __无符号__ 整数坐标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Snaps the [`Point`] to __unsigned__ integer coordinates.
+    ///
+    /// </details>
     pub fn snap(self) -> Point<u32> {
         Point {
             x: self.x.round() as u32,

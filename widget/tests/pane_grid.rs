@@ -1,4 +1,11 @@
+//! 针对 [`PaneGrid`] 的冒烟测试。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Smoke tests for [`PaneGrid`].
+//!
+//! </details>
 //!
 //! [`PaneGrid`]: iced_widget::pane_grid::PaneGrid
 use iced_test::Simulator;
@@ -11,7 +18,14 @@ enum Message {
     PaneDragged(pane_grid::DragEvent),
 }
 
+/// 包含两个窗格的网格，从上到下分割。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A grid with two panes, split from top to bottom.
+///
+/// </details>
 fn new_panes() -> (pane_grid::State<u8>, pane_grid::Pane, pane_grid::Pane) {
     let (mut panes, first) = pane_grid::State::new(1);
 
@@ -55,6 +69,7 @@ fn panes_are_laid_out_and_found() {
     }
 
     // A horizontal split arranges the panes from top to bottom
+    // 水平分割把窗格从上到下排列
     assert!(
         second_title.bounds().y > first_title.bounds().y,
         "second pane should be below the first"
@@ -66,6 +81,7 @@ fn panes_are_laid_out_and_found() {
     );
 
     // The body of each pane is placed below its title bar
+    // 每个窗格的主体位于其标题栏下方
     assert!(
         first_body.bounds().y > first_title.bounds().y,
         "first pane body should be below its title bar"
@@ -101,6 +117,8 @@ fn dragging_a_title_bar_publishes_picked_and_dropped_events() {
 
     // Pick up the first pane by its title bar, away from the title text:
     // the title bar is a pick area except for its contents and controls
+    // 在远离标题文本的位置，通过标题栏拾取第一个窗格：
+    // 标题栏除了其内容和控件之外都是拾取区域
     let first_title = simulator.find("Pane 1").expect("find first pane title");
     let pick_position = core::Point::new(
         first_title.bounds().x + first_title.bounds().width + 50.0,
@@ -130,6 +148,7 @@ fn dragging_a_title_bar_publishes_picked_and_dropped_events() {
     }
 
     // Drop the pane over the center of the second one
+    // 把窗格放到第二个窗格的中心
     let second_title = simulator.find("Pane 2").expect("find second pane title");
     let drop_position = core::Point::new(
         size.width / 2.0,

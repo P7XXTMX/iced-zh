@@ -1,4 +1,11 @@
+//! 对图像进行缩放和平移。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Zoom and pan on an image.
+//!
+//! </details>
 use crate::core::border;
 use crate::core::image::{self, FilterMethod};
 use crate::core::layout;
@@ -11,7 +18,14 @@ use crate::core::{
     Vector, Widget,
 };
 
+/// 显示图像的框，支持放大 / 缩小和平移。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A frame that displays an image with the ability to zoom in/out and pan.
+///
+/// </details>
 pub struct Viewer<Handle> {
     padding: f32,
     width: Length,
@@ -25,7 +39,14 @@ pub struct Viewer<Handle> {
 }
 
 impl<Handle> Viewer<Handle> {
+    /// 使用给定的 [`State`] 创建一个新的 [`Viewer`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Viewer`] with the given [`State`].
+    ///
+    /// </details>
     pub fn new<T: Into<Handle>>(handle: T) -> Self {
         Viewer {
             handle: handle.into(),
@@ -40,56 +61,119 @@ impl<Handle> Viewer<Handle> {
         }
     }
 
+    /// 设置 [`Viewer`] 的 [`FilterMethod`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`FilterMethod`] of the [`Viewer`].
+    ///
+    /// </details>
     pub fn filter_method(mut self, filter_method: image::FilterMethod) -> Self {
         self.filter_method = filter_method;
         self
     }
 
+    /// 设置 [`Viewer`] 的 [`ContentFit`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`ContentFit`] of the [`Viewer`].
+    ///
+    /// </details>
     pub fn content_fit(mut self, content_fit: ContentFit) -> Self {
         self.content_fit = content_fit;
         self
     }
 
+    /// 设置 [`Viewer`] 的内边距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the padding of the [`Viewer`].
+    ///
+    /// </details>
     pub fn padding(mut self, padding: impl Into<Pixels>) -> Self {
         self.padding = padding.into().0;
         self
     }
 
+    /// 设置 [`Viewer`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Viewer`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Viewer`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Viewer`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置应用于 [`Viewer`] 图像的最大缩放比例。
+    ///
+    /// 默认为 `10.0`
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the max scale applied to the image of the [`Viewer`].
     ///
     /// Default is `10.0`
+    ///
+    /// </details>
     pub fn max_scale(mut self, max_scale: f32) -> Self {
         self.max_scale = max_scale;
         self
     }
 
+    /// 设置应用于 [`Viewer`] 图像的最小缩放比例。
+    ///
+    /// 默认为 `0.25`
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the min scale applied to the image of the [`Viewer`].
     ///
     /// Default is `0.25`
+    ///
+    /// </details>
     pub fn min_scale(mut self, min_scale: f32) -> Self {
         self.min_scale = min_scale;
         self
     }
 
+    /// 设置 [`Viewer`] 的图像在放大 / 缩小时
+    /// 每次缩放的百分比。
+    ///
+    /// 默认为 `0.10`
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the percentage the image of the [`Viewer`] will be scaled by
     /// when zoomed in / out.
     ///
     /// Default is `0.10`
+    ///
+    /// </details>
     pub fn scale_step(mut self, scale_step: f32) -> Self {
         self.scale_step = scale_step;
         self
@@ -120,17 +204,21 @@ where
 
     fn layout(&mut self, tree: &mut Tree, renderer: &Renderer, limits: &layout::Limits) {
         // The raw w/h of the underlying image
+        // 底层图像的原始宽 / 高
         let image_size = renderer.measure_image(&self.handle).unwrap_or_default();
 
         let image_size = Size::new(image_size.width as f32, image_size.height as f32);
 
         // The size to be available to the widget prior to `Shrink`ing
+        // 在进行 `Shrink` 之前，部件可用的尺寸
         let raw_size = limits.resolve(self.width, self.height, image_size);
 
         // The uncropped size of the image when fit to the bounds above
+        // 图像适配到上述边界时的未裁剪尺寸
         let full_size = self.content_fit.fit(image_size, raw_size);
 
         // Shrink the widget to fit the resized image, if requested
+        // 如果有要求，把部件收缩到与调整后的图像相适应
         let final_size = Size {
             width: match self.width {
                 Length::Shrink => f32::min(raw_size.width, full_size.width),
@@ -343,7 +431,14 @@ where
     }
 }
 
+/// [`Viewer`] 的本地状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The local state of a [`Viewer`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy)]
 pub struct State {
     scale: f32,
@@ -364,13 +459,28 @@ impl Default for State {
 }
 
 impl State {
+    /// 创建一个新的 [`State`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`State`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         State::default()
     }
 
+    /// 根据 [`Viewer`] 及其图像的边界，返回 [`State`]
+    /// 当前的偏移量。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current offset of the [`State`], given the bounds
     /// of the [`Viewer`] and its image.
+    ///
+    /// </details>
     fn offset(&self, bounds: Rectangle, image_size: Size) -> Vector {
         let hidden_width = (image_size.width - bounds.width / 2.0).max(0.0).round();
 
@@ -382,15 +492,31 @@ impl State {
         )
     }
 
+    /// 返回光标当前是否被 [`Viewer`] 抓取。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns if the cursor is currently grabbed by the [`Viewer`].
+    ///
+    /// </details>
     pub fn is_cursor_grabbed(&self) -> bool {
         self.cursor_grabbed_at.is_some()
     }
 }
 
+/// 根据 [`Viewer`] 的边界，返回底层图像的
+/// 边界。会应用缩放，并保持原始的
+/// 宽高比。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Returns the bounds of the underlying image, given the bounds of
 /// the [`Viewer`]. Scaling will be applied and original aspect ratio
 /// will be respected.
+///
+/// </details>
 pub fn scaled_image_size<Renderer>(
     renderer: &Renderer,
     handle: &<Renderer as image::Renderer>::Handle,

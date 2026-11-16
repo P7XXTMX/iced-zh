@@ -1,3 +1,19 @@
+//! 基于 [`winit`] 的 Iced 窗口外壳。
+//!
+//! ![Iced 生态系统的原生路径](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/native.png?raw=true)
+//!
+//! `iced_winit` 在 [`iced_runtime`] 之上提供了一些方便的抽象，
+//! 帮助你在使用 [`winit`] 时快速上手开发。
+//!
+//! 它暴露了一个与渲染器无关的 [`Program`]特质，实现它之后
+//! 只需一次简单的调用就能运行。是否使用这个特质是可选的。
+//!
+//! 此外，对于决定自行实现事件循环的用户，
+//! 还提供了 [`conversion`] 模块。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A windowing shell for Iced, on top of [`winit`].
 //!
 //! ![The native path of the Iced ecosystem](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/native.png?raw=true)
@@ -10,6 +26,8 @@
 //!
 //! Additionally, a [`conversion`] module is available for users that decide to
 //! implement a custom event loop.
+//!
+//! </details>
 //!
 //! [`iced_runtime`]: https://github.com/iced-rs/iced/tree/master/runtime
 //! [`winit`]: https://github.com/rust-windowing/winit
@@ -66,7 +84,14 @@ use std::mem::ManuallyDrop;
 use std::slice;
 use std::sync::Arc;
 
+/// 使用所提供的设置运行一个 [`Program`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Runs a [`Program`] with the provided settings.
+///
+/// </details>
 pub fn run<P>(program: P) -> Result<(), Error>
 where
     P: Program + 'static,
@@ -217,6 +242,10 @@ where
             // On Windows, we emulate an `AboutToWait` event after every `Resized` event
             // since the event loop does not resume during resize interaction.
             // More details: https://github.com/rust-windowing/winit/issues/3272
+            // 待办：不再需要时移除
+            // 在 Windows 上，我们在每个 `Resized` 事件之后模拟一个 `AboutToWait` 事件，
+            // 因为在调整大小的交互过程中事件循环不会恢复运行。
+            // 详情见上面的链接
             #[cfg(target_os = "windows")]
             {
                 if is_move_or_resize {
@@ -326,6 +355,9 @@ where
                                 // On macOS, the `position` in `WindowAttributes` represents the "inner"
                                 // position of the window; while on other platforms it's the "outer" position.
                                 // We fix the inconsistency on macOS by positioning the window after creation.
+                                // 在 macOS 上，`WindowAttributes` 里的 `position` 表示窗口的“内部”
+                                // 位置；而在其他平台上它是“外部”位置。
+                                // 我们通过在创建窗口之后再设置位置来修正 macOS 上的这种不一致。
                                 #[cfg(target_os = "macos")]
                                 let mut window_attributes = window_attributes;
 
@@ -530,6 +562,7 @@ async fn run_instance<P>(
 
     'next_event: loop {
         // Empty the queue if possible
+        // 尽可能清空队列
         let event = if let Ok(event) = event_receiver.try_recv() {
             Some(event)
         } else {
@@ -584,6 +617,9 @@ async fn run_instance<P>(
                             // HACK! Send a proxy event on completion to trigger
                             // a runtime re-poll
                             // TODO: Send compositor through proxy (?)
+                            // 取巧做法！完成时发送一个代理事件，以触发
+                            // 运行时重新轮询
+                            // 待办：通过代理发送合成器（？）
                             {
                                 let (sender, _receiver) = oneshot::channel();
 
@@ -757,6 +793,7 @@ async fn run_instance<P>(
                         let frame_time = Instant::now();
 
                         // Window was resized between redraws
+                        // 窗口在两次重绘之间被调整了大小
                         if window.surface_version != window.state.surface_version() {
                             window.configure_surface(current_compositor);
                             window.reanchor(frame_time);
@@ -837,6 +874,8 @@ async fn run_instance<P>(
                                 for action in actions {
                                     // Defer all window actions to avoid compositor
                                     // race conditions while redrawing
+                                    // 推迟所有窗口动作，以避免重绘时出现
+                                    // 合成器竞态条件
                                     if let Action::Window(_) = action {
                                         proxy.send_action(action);
                                         continue;
@@ -863,6 +902,7 @@ async fn run_instance<P>(
 
                                 for (window_id, window) in window_manager.iter_mut() {
                                     // We are already redrawing this window
+                                    // 我们已经在重绘这个窗口了
                                     if window_id == id {
                                         continue;
                                     }
@@ -878,6 +918,7 @@ async fn run_instance<P>(
                                 window = window_manager.get_mut(id).unwrap();
 
                                 // Window scale factor changed during a redraw request
+                                // 窗口的缩放因子在处理重绘请求期间发生了变化
                                 if logical_size != window.state.logical_size() {
                                     logical_size = window.state.logical_size();
 
@@ -949,12 +990,14 @@ async fn run_instance<P>(
                             Err(error) => match error {
                                 compositor::SurfaceError::OutOfMemory => {
                                     // This is an unrecoverable error.
+                                    // 这是一个无法恢复的错误。
                                     panic!("{error:?}");
                                 }
                                 compositor::SurfaceError::Occluded => {
                                     present_span.finish();
 
                                     // Do nothing and wait for window to become visible again
+                                    // 什么也不做，等待窗口重新变为可见
                                 }
                                 compositor::SurfaceError::Timeout => {
                                     present_span.finish();
@@ -968,6 +1011,8 @@ async fn run_instance<P>(
 
                                     // Recreate at most once a second, and do not request a redraw in
                                     // between, so a surface that keeps failing cannot spin the loop.
+                                    // 最多每秒重建一次，并且在此期间不请求重绘，
+                                    // 这样一个持续失败的表面就不会让循环空转。
                                     let due = matches!(error, compositor::SurfaceError::Outdated)
                                         || window
                                             .surface_error_at
@@ -1208,7 +1253,14 @@ async fn run_instance<P>(
     let _ = ManuallyDrop::into_inner(user_interfaces);
 }
 
+/// 为 [`Program`] 构建某个窗口的 [`UserInterface`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Builds a window's [`UserInterface`] for the [`Program`].
+///
+/// </details>
 fn build_user_interface<'a, P: Program>(
     program: &'a program::Instance<P>,
     cache: user_interface::Cache,
@@ -1252,6 +1304,7 @@ where
                 let mut context = futures::task::Context::from_waker(waker);
 
                 // Run immediately available actions synchronously (e.g. widget operations)
+                // 同步运行立即可用的动作（例如部件操作）
                 loop {
                     match runtime.enter(|| stream.poll_next_unpin(&mut context)) {
                         futures::task::Poll::Ready(Some(Action::Output(output))) => {
@@ -1676,6 +1729,7 @@ fn run_action<'a, P, C>(
                 };
 
                 // Recreate renderers and relayout all windows
+                // 重新创建渲染器并重新布局所有窗口
                 for (id, window) in window_manager.iter_mut() {
                     window.renderer = compositor.create_renderer(*renderer_settings);
 
@@ -1711,6 +1765,7 @@ fn run_action<'a, P, C>(
             }
 
             // Redraw all windows
+            // 重绘所有窗口
             for (_, window) in window_manager.iter_mut() {
                 window.raw.request_redraw();
             }
@@ -1718,6 +1773,7 @@ fn run_action<'a, P, C>(
         Action::Image(action) => match action {
             image::Action::Allocate(handle, sender) => {
                 // TODO: Shared image cache in compositor
+                // 待办：在合成器中共享图像缓存
                 if let Some((_id, window)) = window_manager.iter_mut().next() {
                     window.renderer.allocate_image(&handle, move |allocation| {
                         let _ = sender.send(allocation);
@@ -1800,7 +1856,14 @@ fn run_action<'a, P, C>(
     }
 }
 
+/// 为每个窗口构建用户界面。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Build the user interface for every window.
+///
+/// </details>
 pub fn build_user_interfaces<'a, P: Program, C>(
     program: &'a program::Instance<P>,
     window_manager: &mut window::Manager<P, C>,
@@ -1853,8 +1916,16 @@ where
         .collect()
 }
 
+/// 如果所提供的事件应该导致 [`Program`] 退出，
+/// 返回 true。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Returns true if the provided event should cause a [`Program`] to
 /// exit.
+///
+/// </details>
 pub fn user_force_quit(
     event: &winit::event::WindowEvent,
     _modifiers: winit::keyboard::ModifiersState,

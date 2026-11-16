@@ -1,6 +1,15 @@
+//! 用于 GUI 编程的异步任务，灵感来自 Elm。
+//!
+//! ![Iced 生态系统的基础](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/foundations.png?raw=true)
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Asynchronous tasks for GUI programming, inspired by Elm.
 //!
 //! ![The foundations of the Iced ecosystem](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/foundations.png?raw=true)
+//!
+//! </details>
 #![doc(
     html_logo_url = "https://raw.githubusercontent.com/iced-rs/iced/9ab6923e943f784985e9ef9ca28b10278297225d/docs/logo.svg"
 )]
@@ -26,22 +35,52 @@ pub use subscription::Subscription;
 
 #[cfg(not(target_arch = "wasm32"))]
 mod platform {
+    /// 装箱的静态 future。
+    ///
+    /// - 在原生平台上，它需要满足 `Send` 约束。
+    /// - 在 Web 平台上，它不需要满足 `Send` 约束。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A boxed static future.
     ///
     /// - On native platforms, it needs a `Send` requirement.
     /// - On the Web platform, it does not need a `Send` requirement.
+    ///
+    /// </details>
     pub type BoxFuture<T> = futures::future::BoxFuture<'static, T>;
 
+    /// 装箱的静态流。
+    ///
+    /// - 在原生平台上，它需要满足 `Send` 约束。
+    /// - 在 Web 平台上，它不需要满足 `Send` 约束。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A boxed static stream.
     ///
     /// - On native platforms, it needs a `Send` requirement.
     /// - On the Web platform, it does not need a `Send` requirement.
+    ///
+    /// </details>
     pub type BoxStream<T> = futures::stream::BoxStream<'static, T>;
 
+    /// 将一个流装箱。
+    ///
+    /// - 在原生平台上，它需要满足 `Send` 约束。
+    /// - 在 Web 平台上，它不需要满足 `Send` 约束。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Boxes a stream.
     ///
     /// - On native platforms, it needs a `Send` requirement.
     /// - On the Web platform, it does not need a `Send` requirement.
+    ///
+    /// </details>
     pub fn boxed_stream<T, S>(stream: S) -> BoxStream<T>
     where
         S: futures::Stream<Item = T> + Send + 'static,
@@ -52,22 +91,52 @@ mod platform {
 
 #[cfg(target_arch = "wasm32")]
 mod platform {
+    /// 装箱的静态 future。
+    ///
+    /// - 在原生平台上，它需要满足 `Send` 约束。
+    /// - 在 Web 平台上，它不需要满足 `Send` 约束。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A boxed static future.
     ///
     /// - On native platforms, it needs a `Send` requirement.
     /// - On the Web platform, it does not need a `Send` requirement.
+    ///
+    /// </details>
     pub type BoxFuture<T> = futures::future::LocalBoxFuture<'static, T>;
 
+    /// 装箱的静态流。
+    ///
+    /// - 在原生平台上，它需要满足 `Send` 约束。
+    /// - 在 Web 平台上，它不需要满足 `Send` 约束。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A boxed static stream.
     ///
     /// - On native platforms, it needs a `Send` requirement.
     /// - On the Web platform, it does not need a `Send` requirement.
+    ///
+    /// </details>
     pub type BoxStream<T> = futures::stream::LocalBoxStream<'static, T>;
 
+    /// 将一个流装箱。
+    ///
+    /// - 在原生平台上，它需要满足 `Send` 约束。
+    /// - 在 Web 平台上，它不需要满足 `Send` 约束。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Boxes a stream.
     ///
     /// - On native platforms, it needs a `Send` requirement.
     /// - On the Web platform, it does not need a `Send` requirement.
+    ///
+    /// </details>
     pub fn boxed_stream<T, S>(stream: S) -> BoxStream<T>
     where
         S: futures::Stream<Item = T> + 'static,

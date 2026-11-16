@@ -4,7 +4,14 @@ use crate::core::{Rectangle, Size, Vector};
 
 use std::any::Any;
 
+/// 选择过程中产生的通用部件匹配结果。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A generic widget match produced during selection.
+///
+/// </details>
 #[allow(missing_docs)]
 #[derive(Debug, Clone, PartialEq)]
 pub enum Target {
@@ -45,7 +52,14 @@ pub enum Target {
 }
 
 impl Target {
+    /// 返回 [`Target`] 的布局边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the layout bounds of the [`Target`].
+    ///
+    /// </details>
     pub fn bounds(&self) -> Rectangle {
         match self {
             Target::Container { bounds, .. }
@@ -57,7 +71,14 @@ impl Target {
         }
     }
 
+    /// 返回 [`Target`] 的可见边界，以屏幕坐标表示。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the visible bounds of the [`Target`], in screen coordinates.
+    ///
+    /// </details>
     pub fn visible_bounds(&self) -> Option<Rectangle> {
         match self {
             Target::Container { visible_bounds, .. }
@@ -152,9 +173,18 @@ impl Bounded for Target {
     }
 }
 
+/// 一个选择候选项。
+///
+/// 它会被传给 [`Selector::select`](crate::Selector::select)。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A selection candidate.
 ///
 /// This is provided to [`Selector::select`](crate::Selector::select).
+///
+/// </details>
 #[allow(missing_docs)]
 #[derive(Clone)]
 pub enum Candidate<'a> {
@@ -198,7 +228,14 @@ pub enum Candidate<'a> {
 }
 
 impl<'a> Candidate<'a> {
+    /// 返回 [`Candidate`] 的部件 [`Id`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the widget [`Id`] of the [`Candidate`].
+    ///
+    /// </details>
     pub fn id(&self) -> Option<&'a Id> {
         match self {
             Candidate::Container { id, .. }
@@ -210,7 +247,14 @@ impl<'a> Candidate<'a> {
         }
     }
 
+    /// 返回 [`Candidate`] 的布局边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the layout bounds of the [`Candidate`].
+    ///
+    /// </details>
     pub fn bounds(&self) -> Rectangle {
         match self {
             Candidate::Container { bounds, .. }
@@ -222,7 +266,14 @@ impl<'a> Candidate<'a> {
         }
     }
 
+    /// 返回 [`Candidate`] 的可见边界，以屏幕坐标表示。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the visible bounds of the [`Candidate`], in screen coordinates.
+    ///
+    /// </details>
     pub fn visible_bounds(&self) -> Option<Rectangle> {
         match self {
             Candidate::Container { visible_bounds, .. }
@@ -235,19 +286,50 @@ impl<'a> Candidate<'a> {
     }
 }
 
+/// 有界类型同时具有布局边界和可见边界。
+///
+/// 这个特质让我们可以针对 [`Selector`](crate::Selector) 的
+/// [`Output`](crate::Selector::Output) 编写泛型代码。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A bounded type has both layout bounds and visible bounds.
 ///
 /// This trait lets us write generic code over the [`Output`](crate::Selector::Output)
 /// of a [`Selector`](crate::Selector).
+///
+/// </details>
 pub trait Bounded: std::fmt::Debug {
+    /// 返回布局边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the layout bounds.
+    ///
+    /// </details>
     fn bounds(&self) -> Rectangle;
 
+    /// 返回可见边界，以屏幕坐标表示。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the visible bounds, in screen coordinates.
+    ///
+    /// </details>
     fn visible_bounds(&self) -> Option<Rectangle>;
 }
 
+/// 一个文本匹配结果。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A text match.
+///
+/// </details>
 #[allow(missing_docs)]
 #[derive(Debug, Clone, PartialEq)]
 pub enum Text {
@@ -264,14 +346,28 @@ pub enum Text {
 }
 
 impl Text {
+    /// 返回 [`Text`] 的布局边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the layout bounds of the [`Text`].
+    ///
+    /// </details>
     pub fn bounds(&self) -> Rectangle {
         match self {
             Text::Raw { bounds, .. } | Text::Input { bounds, .. } => *bounds,
         }
     }
 
+    /// 返回 [`Text`] 的可见边界，以屏幕坐标表示。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the visible bounds of the [`Text`], in screen coordinates.
+    ///
+    /// </details>
     pub fn visible_bounds(&self) -> Option<Rectangle> {
         match self {
             Text::Raw { visible_bounds, .. } | Text::Input { visible_bounds, .. } => {

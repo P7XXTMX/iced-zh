@@ -1,0 +1,1437 @@
+@@ wgpu/src/buffer.rs:63
+返回已写入的字节数。
+@@ wgpu/src/buffer.rs:74
+必要时把写入拆分成多个块
+@@ wgpu/src/buffer.rs:87
+总会剩下一些字节，因为前面的
+循环保证了 `bytes_written < bytes.len()`
+@@ wgpu/src/buffer.rs:93
+写入它们
+@@ wgpu/src/geometry.rs:1
+构建并绘制几何图形。
+@@ wgpu/src/geometry.rs:95
+用于绘制几何图形的帧。
+@@ wgpu/src/geometry.rs:108
+使用给定的裁剪边界创建一个新的 [`Frame`]。
+@@ wgpu/src/color.rs:25
+用于 16 字节对齐的填充字段。
+参见上面的链接
+@@ wgpu/src/lib.rs:1
+用于 [Iced] 的 [`wgpu`] 渲染器。
+
+![Iced 生态系统的原生路径](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/native.png?raw=true)
+
+[`wgpu`] 支持大多数现代图形后端：Vulkan、Metal、DX11 和
+DX12（OpenGL 和 WebGL 仍在开发中）。此外，它还将支持
+即将到来的 [WebGPU API]。
+
+目前，`iced_wgpu` 支持以下图元：
+- 文本，使用 [`glyphon`] 渲染。
+- 四边形或矩形，带圆角边框和纯色背景。
+- 裁剪区域，可用于实现可滚动区域或隐藏溢出的内容。
+- 图像和 SVG，从内存或文件系统加载。
+- 三角形网格，可用于自由绘制几何图形。
+@@ wgpu/src/lib.rs:69
+用于 [`iced`] 的 [`wgpu`] 图形渲染器。
+@@ wgpu/src/lib.rs:88
+待办：集中处理所有图像特性相关的逻辑
+@@ wgpu/src/lib.rs:113
+待办：智能地调整 belt 的大小（？）
+如果 `StagingBelt` API 能暴露一些内省方法，
+用来检测何时值得调整大小，那就太好了。
+@@ wgpu/src/lib.rs:125
+记录把当前图元绘制到目标纹理视图的命令。
+
+提交得到的 [`wgpu::CommandEncoder`] 时，
+必须调用 [`finish`](Self::finish) 和 [`recall`](Self::recall)。
+@@ wgpu/src/lib.rs:149
+待办：提供窗口 id（？）
+@@ wgpu/src/lib.rs:176
+把当前表面渲染到一个离屏缓冲区。
+
+返回纹理数据的 RGBA 字节。
+@@ wgpu/src/lib.rs:641
+让当前已映射的缓冲区做好用于提交的准备。
+
+通常，只有在直接调用 [`Renderer::draw`]、
+而不是依赖 [`Renderer::present`] 时，才需要这个方法。
+
+必须在把 [`Renderer::draw`] 得到的 [`wgpu::CommandEncoder`]
+提交到 [`wgpu::Queue`] _之前_ 调用这个方法。
+@@ wgpu/src/lib.rs:652
+收回所有已关闭的缓冲区以便复用。
+
+通常，只有在直接调用 [`Renderer::draw`]、
+而不是依赖 [`Renderer::present`] 提交到 [`wgpu::Queue`] 时，才需要这个方法。
+
+必须在把 [`Renderer::draw`] 得到的 [`wgpu::CommandEncoder`]
+提交到 [`wgpu::Queue`] _之后_ 调用这个方法。
+@@ wgpu/src/primitive.rs:1
+绘制自定义图元。
+@@ wgpu/src/primitive.rs:10
+一批图元。
+@@ wgpu/src/primitive.rs:13
+让 [`Primitive`] 能够被渲染的一组方法。
+@@ wgpu/src/primitive.rs:15
+这个 [`Primitive`] 的共享渲染器。
+
+通常，它会包含一些 [`wgpu`] 状态，例如
+渲染管线、缓冲区和纹理。
+
+这个 [`Primitive`] 类型的所有实例都共享同一个
+[`Renderer`]。
+@@ wgpu/src/primitive.rs:24
+处理 [`Primitive`]，可以在这里分配 GPU 缓冲区。
+@@ wgpu/src/primitive.rs:34
+在给定的 [`wgpu::RenderPass`] 中绘制 [`Primitive`]。
+
+只要可能，就应该优先实现它而不是 [`render`](Self::render)，
+因为复用已有的渲染通道应该比新开一个
+高效得多。
+
+所提供的渲染通道的视口和裁剪矩形分别被设置为
+[`Primitive`] 的边界和裁剪边界。
+
+如果你有复杂的合成需求，可以在这里返回 `false`，
+从而改用 [`render`](Self::render)。
+
+默认情况下，它什么也不做并返回 `false`。
+@@ wgpu/src/primitive.rs:51
+使用给定的 [`wgpu::CommandEncoder`] 渲染 [`Primitive`]。
+
+只有在 [`draw`](Self::draw) 返回 `false` 时才会调用它。
+
+默认情况下，它什么也不做。
+@@ wgpu/src/primitive.rs:66
+图形 [`Primitive`] 的管线。
+@@ wgpu/src/primitive.rs:68
+创建 [`Primitive`] 的 [`Pipeline`]。
+
+它只会被调用一次，即第一次遇到使用这种
+[`Pipeline`] 的 [`Primitive`] 时。
+@@ wgpu/src/primitive.rs:76
+清理 [`Pipeline`] 中缓存的数据。
+
+通常会在一帧结束时调用它。
+@@ wgpu/src/primitive.rs:162
+某个具体 [`Primitive`] 的实例。
+@@ wgpu/src/primitive.rs:164
+[`Instance`] 的边界。
+@@ wgpu/src/primitive.rs:167
+要渲染的 [`Primitive`]。
+@@ wgpu/src/primitive.rs:172
+使用给定的 [`Primitive`] 创建一个新的 [`Instance`]。
+@@ wgpu/src/primitive.rs:181
+能够绘制自定义图元的渲染器。
+@@ wgpu/src/primitive.rs:183
+绘制一个自定义图元。
+@@ wgpu/src/primitive.rs:187
+存储用户提供的自定义类型。
+@@ wgpu/src/primitive.rs:194
+如果 `Storage` 包含类型 `T`，返回 `true`。
+@@ wgpu/src/primitive.rs:199
+把数据 `T` 插入 [`Storage`]。
+@@ wgpu/src/primitive.rs:204
+如果 [`Storage`] 中存在类型为 `T` 的数据，返回它的引用。
+@@ wgpu/src/primitive.rs:211
+如果 [`Storage`] 中存在类型为 `T` 的数据，返回它的可变引用。
+@@ wgpu/src/primitive.rs:218
+清理 [`Storage`] 中所有管线的缓存。
+@@ wgpu/src/nudge.rs:1
+把坐标吸附到物理像素网格。
+@@ wgpu/src/nudge.rs:3
+为什么需要微调
+@@ wgpu/src/nudge.rs:5
+吸附的目的是让图元的边缘落在像素网格上，
+渲染成清晰、完全不透明的像素，而不是抗锯齿的接缝（参见
+[`CRISP`]）。但是 `round` 的判定边界（半像素）在浮点运算下
+并不稳定：一个本应恰好落在半像素上的坐标
+（例如 2 倍缩放下的 `5.25` 逻辑像素，
+即 `10.5` 物理像素）算出来可能略小一点（例如 `10.4998`），
+这时普通的 `round` 会向下取整。于是这条边就离开了网格，
+出现吸附本来要消除的抗锯齿接缝，并且与干净地算出同一边界的
+相邻图元相差一个像素。
+
+而且半像素在 UI 中很常见，并不是极端情况：居中和
+等分空间在布局中随处可见，而 `.25` 逻辑像素
+在 2 倍缩放下恰好落在物理半像素上。
+
+在取整之前把每条边微调 [`NUDGE`]，就把判定边界下移
+到了 `.499`：任何比半像素小不超过 `0.001` 的坐标现在都会向上
+取整到网格上，因此浮点噪声不再能把一条
+半像素边缘从网格上分离出去。离边界更远的坐标
+不受影响。
+@@ wgpu/src/nudge.rs:25
+一致性
+@@ wgpu/src/nudge.rs:27
+同样的约定（取整之前微调 [`NUDGE`]）也用于
+`quad` 顶点着色器（参见 `shader/quad/snap.wgsl`），以及
+CPU 一侧对这些坐标的每一处吸附（四边形、三角形、
+图像和文本通道的裁剪（scissor）边界）。两者绝不能出现分歧，
+否则裁剪边界可能与它所裁剪的已吸附边缘相差一个像素。
+@@ wgpu/src/nudge.rs:36
+把坐标吸附到像素网格时施加的微调量。
+
+有了它，恰好落在半像素边界下方一点的坐标
+会向上取整。
+
+它必须与 `shader/quad/snap.wgsl` 中的 `nudge`
+保持同步。
+@@ wgpu/src/nudge.rs:45
+把 `bounds` 吸附到物理像素网格。
+
+它使用与 `quad` 顶点着色器相同的取整约定
+（参见 `shader/quad/snap.wgsl`）：每条边在取整之前先微调 [`NUDGE`]，
+这样恰好落在半像素边界下方一点的坐标
+会向上取整。
+
+这保证了裁剪（scissor）边界与在其中绘制的 [`Quad`] 图元
+吸附后的边缘完全对齐。
+
+不足一个像素的结果会被 [`Rectangle::snap`] 自身拒绝。
+@@ wgpu/src/nudge.rs:62
+把 `bounds` 吸附到物理像素网格，并保留带符号的坐标。
+
+它使用与 [`snap`] 相同的“先微调再取整”约定，但保留
+浮点坐标，因此负值会被保留，而不是
+被饱和到零。
+
+它适用于可以合理地超出视口左上角的坐标，
+例如滚动到视野之外的内容的边界：
+这些内容之后会被其周围环境裁剪掉。
+@@ wgpu/src/nudge.rs:81
+滚动到视口上方、离开视野的图像在吸附时必须保留
+负的位置；把它饱和到原点会让它
+卡在可滚动区域的上边缘。
+@@ wgpu/src/nudge.rs:94
+落在半像素边界下方一点点的坐标必须向上取整
+到网格上，与 `quad` 顶点着色器一致。
+@@ wgpu/src/nudge.rs:100
+没有微调时，普通的 `round` 会偏差一个像素：
+@@ wgpu/src/nudge.rs:103
+有了微调，边界处向上取整，与 GPU 一致：
+@@ wgpu/src/nudge.rs:107
+`snap` 会把负坐标饱和到零，因此它只能
+用于已知位于视口之内的边界，例如
+裁剪矩形。
+@@ wgpu/src/quad.rs:17
+四边形的属性。
+@@ wgpu/src/quad.rs:21
+[`Quad`] 的位置。
+@@ wgpu/src/quad.rs:24
+[`Quad`] 的大小。
+@@ wgpu/src/quad.rs:27
+[`Quad`] 的边框颜色，使用 __线性 RGB__。
+@@ wgpu/src/quad.rs:30
+[`Quad`] 的边框半径。
+@@ wgpu/src/quad.rs:33
+[`Quad`] 的边框宽度。
+@@ wgpu/src/quad.rs:36
+[`Quad`] 的阴影颜色。
+@@ wgpu/src/quad.rs:39
+[`Quad`] 的阴影偏移。
+@@ wgpu/src/quad.rs:42
+[`Quad`] 的阴影模糊半径。
+@@ wgpu/src/quad.rs:45
+[`Quad`] 是否应该吸附到像素网格。
+@@ wgpu/src/quad.rs:235
+一起渲染的一组 [`Quad`]。
+@@ wgpu/src/quad.rs:238
+[`Layer`] 的纯色四边形。
+@@ wgpu/src/quad.rs:241
+[`Layer`] 的渐变四边形。
+@@ wgpu/src/quad.rs:244
+[`Layer`] 的四边形顺序。
+@@ wgpu/src/quad.rs:248
+[`Layer`] 的四边形顺序；以（四边形类型，数量）元组的形式存储。
+@@ wgpu/src/quad.rs:252
+如果 [`Quads`] 中没有任何类型的四边形，返回 true。
+@@ wgpu/src/quad.rs:257
+把一个带有给定 `Background` 类型的 [`Quad`] 添加到四边形 [`Layer`]。
+@@ wgpu/src/quad.rs:305
+四边形的种类。
+@@ wgpu/src/quad.rs:307
+纯色四边形
+@@ wgpu/src/quad.rs:309
+渐变四边形
+@@ wgpu/src/quad.rs:326
+uniform 必须按其最大的成员对齐，
+这里用到了按 16 对齐的 mat4x4<f32>，所以按 16 对齐
+@@ wgpu/src/image/atlas.rs:50
+在 GL 后端上我们从 2 个图层开始，以帮助 wgpu 判断出
+这个纹理是 `GL_TEXTURE_2D_ARRAY` 而不是 `GL_TEXTURE_2D`
+（参见上面的链接）
+@@ wgpu/src/image/atlas.rs:122
+必要时，我们在分配之后扩大内部纹理
+@@ wgpu/src/image/atlas.rs:180
+如果纹理大小刚好合适，就分配一整个图层
+@@ wgpu/src/image/atlas.rs:205
+把大纹理拆分到多个图层上
+@@ wgpu/src/image/atlas.rs:238
+尝试在已有的图层上分配
+@@ wgpu/src/image/atlas.rs:267
+创建带有图集分配器的新图层
+@@ wgpu/src/image/atlas.rs:280
+内存用完了（？）
+@@ wgpu/src/image/atlas.rs:319
+WebGPU 要求：
+  BufferCopyView.layout.bytes_per_row % wgpu::COPY_BYTES_PER_ROW_ALIGNMENT == 0
+所以我们把宽度向上取整到 wgpu::COPY_BYTES_PER_ROW_ALIGNMENT 的
+下一个倍数，以此计算 bytes_per_row。
+@@ wgpu/src/image/atlas.rs:342
+复制图像的各行
+@@ wgpu/src/image/atlas.rs:351
+需要时在两侧添加填充
+@@ wgpu/src/image/atlas.rs:365
+在顶部和底部添加填充
+@@ wgpu/src/image/atlas.rs:372
+顶部
+@@ wgpu/src/image/atlas.rs:377
+底部
+@@ wgpu/src/image/atlas.rs:382
+四个角
+@@ wgpu/src/image/atlas.rs:384
+左上
+@@ wgpu/src/image/atlas.rs:389
+右上
+@@ wgpu/src/image/atlas.rs:394
+左下
+@@ wgpu/src/image/atlas.rs:399
+右下
+@@ wgpu/src/image/atlas.rs:409
+复制实际的图像
+@@ wgpu/src/image/atlas.rs:448
+在 GL 后端上，如果 layers.len() 是 6 的倍数，我们需要帮助 wgpu 判断出这个纹理
+仍然是 `GL_TEXTURE_2D_ARRAY`，而不是 `GL_TEXTURE_CUBE_MAP` 或 `GL_TEXTURE_CUBE_ARRAY`。
+这会在 GL 上多分配一些用不到的内存，但总好过
+图集无法增长到超过 6 的倍数！
+（参见上面的链接）
+@@ wgpu/src/window.rs:1
+在窗口上显示渲染结果。
+@@ wgpu/src/quad/solid.rs:8
+用纯色填充的四边形。
+@@ wgpu/src/quad/solid.rs:12
+四边形的背景颜色数据。
+@@ wgpu/src/quad/solid.rs:15
+[`Solid`] 的 [`Quad`] 数据。
+@@ wgpu/src/quad/solid.rs:98
+颜色
+@@ wgpu/src/quad/solid.rs:100
+位置
+@@ wgpu/src/quad/solid.rs:102
+大小
+@@ wgpu/src/quad/solid.rs:104
+边框颜色
+@@ wgpu/src/quad/solid.rs:106
+边框半径
+@@ wgpu/src/quad/solid.rs:108
+边框宽度
+@@ wgpu/src/quad/solid.rs:110
+阴影颜色
+@@ wgpu/src/quad/solid.rs:112
+阴影偏移
+@@ wgpu/src/quad/solid.rs:114
+阴影模糊半径
+@@ wgpu/src/quad/solid.rs:116
+吸附
+@@ wgpu/src/image/cache.rs:186
+待办：并发
+@@ wgpu/src/image/cache.rs:225
+待办：Wasm 的并发支持
+@@ wgpu/src/image/cache.rs:262
+待办：并发
+@@ wgpu/src/image/cache.rs:279
+待办：并发
+@@ wgpu/src/image/cache.rs:365
+待办：Wasm 的并发支持
+@@ wgpu/src/image/cache.rs:368
+同步加载 RGBA 句柄，因为开销非常小
+@@ wgpu/src/quad/gradient.rs:8
+用插值颜色填充的四边形。
+@@ wgpu/src/quad/gradient.rs:12
+四边形的背景渐变数据。
+@@ wgpu/src/quad/gradient.rs:15
+[`Gradient`] 的 [`Quad`] 数据。
+@@ wgpu/src/quad/gradient.rs:110
+颜色 1-2
+@@ wgpu/src/quad/gradient.rs:112
+颜色 3-4
+@@ wgpu/src/quad/gradient.rs:114
+颜色 5-6
+@@ wgpu/src/quad/gradient.rs:116
+颜色 7-8
+@@ wgpu/src/quad/gradient.rs:118
+偏移 1-8
+@@ wgpu/src/quad/gradient.rs:120
+方向
+@@ wgpu/src/quad/gradient.rs:122
+位置
+@@ wgpu/src/quad/gradient.rs:124
+缩放
+@@ wgpu/src/quad/gradient.rs:126
+边框颜色
+@@ wgpu/src/quad/gradient.rs:128
+边框半径
+@@ wgpu/src/quad/gradient.rs:130
+边框宽度
+@@ wgpu/src/quad/gradient.rs:132
+阴影颜色
+@@ wgpu/src/quad/gradient.rs:134
+阴影偏移
+@@ wgpu/src/quad/gradient.rs:136
+阴影模糊半径
+@@ wgpu/src/quad/gradient.rs:138
+吸附
+@@ wgpu/src/image/mod.rs:122
+中心
+@@ wgpu/src/image/mod.rs:124
+裁剪边界
+@@ wgpu/src/image/mod.rs:126
+边框半径
+@@ wgpu/src/image/mod.rs:128
+平铺
+@@ wgpu/src/image/mod.rs:130
+旋转
+@@ wgpu/src/image/mod.rs:132
+不透明度
+@@ wgpu/src/image/mod.rs:134
+图集位置
+@@ wgpu/src/image/mod.rs:136
+图集缩放
+@@ wgpu/src/image/mod.rs:138
+图层
+@@ wgpu/src/image/mod.rs:235
+`bounds` 和 `clip_bounds` 可以有负坐标，
+因为内容可能被滚动到视野之外；之后它们会被
+渲染通道的裁剪矩形裁剪掉。
+@@ wgpu/src/image/mod.rs:287
+`bounds` 和 `clip_bounds` 可以有负坐标，
+因为内容可能被滚动到视野之外；之后它们会被
+渲染通道的裁剪矩形裁剪掉。
+@@ wgpu/src/text.rs:94
+跟踪活跃的上传
+@@ wgpu/src/text.rs:163
+只有字形发生变化时才清理
+@@ wgpu/src/text.rs:239
+只有当图集可能被多次上传共享时，
+我们才需要担心字形
+互相争抢的问题。
+@@ wgpu/src/text.rs:360
+如果图集无法增长，那就没有任何保证了。
+我们不会 panic，而只是祈祷结果
+多少还能看……
+@@ wgpu/src/text.rs:615
+这是一个取巧的做法！凭经验、不明就里地得出
+它试图微调经过 hinting 的文本，以改善光栅化效果
+@@ wgpu/src/image/raster.rs:11
+缓存中与某个图像句柄对应的条目
+@@ wgpu/src/image/raster.rs:14
+位于主机端的图像数据
+@@ wgpu/src/image/raster.rs:16
+存储条目
+@@ wgpu/src/image/raster.rs:79
+只有新条目进入 `Cache` 时才清理
+@@ wgpu/src/image/raster.rs:87
+保留活跃的分配
+@@ wgpu/src/triangle.rs:1
+绘制三角形网格。
+@@ wgpu/src/triangle.rs:364
+统计我们需要处理的顶点和索引的总数
+@@ wgpu/src/triangle.rs:367
+然后确保当前的属性缓冲区足够大，必要时调整大小。
+我们目前没有使用这些函数的返回值，因为我们还没有
+计算网格差异的机制，也不知道对大多数用例来说那样做是否
+性能更好。因此（暂时）我们每一帧都会写入 GPU 数据。
+@@ wgpu/src/triangle.rs:583
+uniform 值必须按 256 对齐；
+参见：[`wgpu::Limits`] 的 `min_uniform_buffer_offset_alignment`。
+@@ wgpu/src/triangle.rs:717
+位置
+@@ wgpu/src/triangle.rs:719
+颜色
+@@ wgpu/src/triangle.rs:851
+位置
+@@ wgpu/src/triangle.rs:853
+颜色 1-2
+@@ wgpu/src/triangle.rs:855
+颜色 3-4
+@@ wgpu/src/triangle.rs:857
+颜色 5-6
+@@ wgpu/src/triangle.rs:859
+颜色 7-8
+@@ wgpu/src/triangle.rs:861
+偏移
+@@ wgpu/src/triangle.rs:863
+方向
+@@ wgpu/src/image/vector.rs:13
+缓存中与某个 svg 句柄对应的条目
+@@ wgpu/src/image/vector.rs:15
+已解析的 svg
+@@ wgpu/src/image/vector.rs:17
+svg 未找到或解析失败
+@@ wgpu/src/image/vector.rs:22
+视口的宽度和高度
+@@ wgpu/src/image/vector.rs:35
+缓存 svg 的矢量数据和光栅数据
+@@ wgpu/src/image/vector.rs:50
+加载 svg
+@@ wgpu/src/image/vector.rs:56
+待办：复用 `cosmic-text` 的字体数据库
+@@ wgpu/src/image/vector.rs:93
+加载 svg 并上传光栅数据
+@@ wgpu/src/image/vector.rs:109
+待办：优化！
+目前 SVG 的大小一变，我们就重新光栅化它。这非常
+慢。像 `pathfinder` 这样的 GPU 光栅化器可能表现更好。
+要是能平滑地调整 `svg` 示例的大小就好了。
+@@ wgpu/src/image/vector.rs:122
+待办：优化！
+目前 SVG 的大小一变，我们就重新光栅化它。这非常
+慢。像 `pathfinder` 这样的 GPU 光栅化器可能表现更好。
+要是能平滑地调整 `svg` 示例的大小就好了。
+@@ wgpu/src/image/vector.rs:148
+遇到格式错误或过于复杂的矢量图时，SVG 渲染可能会 panic。
+我们捕获 panic 以避免崩溃，并平稳地继续运行。
+@@ wgpu/src/image/vector.rs:188
+加载 svg 并上传光栅数据
+@@ wgpu/src/window/compositor.rs:1
+把窗口与渲染器连接起来。
+@@ wgpu/src/window/compositor.rs:10
+由 `wgpu` 驱动的 iced 窗口图形后端。
+@@ wgpu/src/window/compositor.rs:20
+合成器错误。
+@@ wgpu/src/window/compositor.rs:23
+表面创建失败。
+@@ wgpu/src/window/compositor.rs:26
+表面不兼容。
+@@ wgpu/src/window/compositor.rs:29
+没有找到符合所请求选项的适配器。
+@@ wgpu/src/window/compositor.rs:32
+没有任何设备请求成功。
+@@ wgpu/src/window/compositor.rs:47
+使用给定的 [`Settings`] 请求一个新的 [`Compositor`]。
+
+如果找不到兼容的图形适配器，返回 `None`。
+@@ wgpu/src/window/compositor.rs:168
+只有适配器支持时才请求 SHADER_F16（例如 WebGL2 中不可用）
+@@ wgpu/src/window/compositor.rs:219
+使用给定的 [`Settings`] 和窗口创建一个 [`Compositor`]。
+@@ wgpu/src/window/compositor.rs:229
+使用给定的 [`Compositor`] 呈现给定的图元。
+@@ wgpu/src/window/compositor.rs:250
+呈现这一帧
+@@ wgpu/src/window/compositor.rs:361
+[`Compositor`] 的设置。
+@@ wgpu/src/window/compositor.rs:364
+[`Renderer`] 的呈现模式。
+@@ wgpu/src/window/compositor.rs:369
+要使用的图形后端。
+@@ wgpu/src/window/compositor.rs:372
+图形适配器的功耗偏好。
+
+默认情况下，它是 [`backend::PowerPreference::None`]。
+@@ wgpu/src/window/compositor.rs:377
+用于三角形图元的抗锯齿策略。
+
+默认情况下，它是 `None`。
+@@ wgpu/src/window/compositor.rs:422
+从当前的环境配置中获取 [`wgpu::PresentMode`]
+（如果已设置）。
+
+可以通过设置 `ICED_PRESENT_MODE` 环境变量来改变
+这个函数的返回值。可用的值有：
+
+- `vsync` → [`wgpu::PresentMode::AutoVsync`]
+- `no_vsync` → [`wgpu::PresentMode::AutoNoVsync`]
+- `immediate` → [`wgpu::PresentMode::Immediate`]
+- `fifo` → [`wgpu::PresentMode::Fifo`]
+- `fifo_relaxed` → [`wgpu::PresentMode::FifoRelaxed`]
+- `mailbox` → [`wgpu::PresentMode::Mailbox`]
+@@ wgpu/src/triangle/msaa.rs:235
+用于 16 字节对齐的填充字段。
+参见上面的链接
+@@ wgpu/src/engine.rs:30
+待办：延迟初始化抗锯齿管线
+@@ wgpu/src/layer.rs:254
+我们想复用 `Layer` 的容量
+@@ wgpu/src/layer.rs:264
+我们想复用 `Layer` 的容量
+@@ winit/src/conversion.rs:1
+把 [`winit`] 类型转换为 [`iced_runtime`] 类型，以及反向转换。
+@@ winit/src/conversion.rs:13
+把 [`window::Settings`] 转换为 `winit` 的 `WindowAttributes`。
+@@ winit/src/conversion.rs:148
+把 winit 窗口事件转换为 iced 事件。
+@@ winit/src/conversion.rs:202
+忽略窗口获得或失去焦点期间的按键按下和释放
+@@ winit/src/conversion.rs:214
+待办：修复 Wasm 上不一致的 API
+@@ winit/src/conversion.rs:230
+待办：修复 Wasm 上不一致的 API
+@@ winit/src/conversion.rs:312
+把 [`window::Level`] 转换为 [`winit`] 的窗口层级。
+@@ winit/src/conversion.rs:323
+针对给定的显示器，把 [`window::Position`] 转换为 [`winit`] 的逻辑位置。
+@@ winit/src/conversion.rs:390
+把 [`window::Mode`] 转换为 [`winit`] 的全屏模式。
+@@ winit/src/conversion.rs:403
+把 [`window::Mode`] 转换为可见性标志。
+@@ winit/src/conversion.rs:411
+把 [`winit`] 的全屏模式转换为 [`window::Mode`]。
+@@ winit/src/conversion.rs:421
+把 [`winit`] 的窗口主题转换为 [`theme::Mode`]。
+@@ winit/src/conversion.rs:431
+把 [`theme::Mode`] 转换为窗口主题。
+@@ winit/src/conversion.rs:442
+把 [`mouse::Interaction`] 转换为 [`winit`] 的光标图标。
+@@ winit/src/conversion.rs:482
+把 [`winit`] 的 `MouseButton` 转换为 [`iced`] 的鼠标按钮。
+@@ winit/src/conversion.rs:497
+把 [`winit`] 的 `ModifiersState` 转换为 [`iced`] 的修饰键
+状态。
+@@ winit/src/conversion.rs:513
+把物理光标位置转换为逻辑 `Point`。
+@@ winit/src/conversion.rs:520
+把 [`winit`] 的 `Touch` 转换为 [`iced`] 的触摸事件。
+@@ winit/src/conversion.rs:540
+把 [`winit`] 的 `Key` 转换为 [`iced`] 的按键。
+@@ winit/src/conversion.rs:863
+把 [`winit`] 的 `PhysicalKey` 转换为 [`iced`] 的物理按键。
+@@ winit/src/conversion.rs:880
+把 [`winit`] 的 `KeyCode` 转换为 [`iced`] 的键码。
+@@ winit/src/conversion.rs:1086
+把 [`winit`] 的 `NativeKeyCode` 转换为 [`iced`] 的原生键码。
+@@ winit/src/conversion.rs:1104
+把 [`UserAttention`] 转换为 `winit` 中对应的类型。
+@@ winit/src/conversion.rs:1114
+把 [`window::Direction`] 转换为 [`winit::window::ResizeDirection`]。
+@@ winit/src/conversion.rs:1128
+把 [`window::Icon`] 转换为 `winit` 中对应的类型。
+
+如果转换过程中出错，返回 `None`。
+@@ winit/src/conversion.rs:1137
+把 [`input_method::Purpose`] 转换为 `winit` 中对应的类型。
+@@ winit/src/conversion.rs:1146
+=
+@@ winit/src/error.rs:4
+运行应用程序时发生的错误。
+@@ winit/src/error.rs:7
+无法创建 futures 执行器。
+@@ winit/src/error.rs:11
+无法创建应用程序窗口。
+@@ winit/src/error.rs:15
+无法创建应用程序的图形上下文。
+@@ winit/src/clipboard.rs:1
+访问剪贴板。
+@@ winit/src/clipboard.rs:19
+用于在应用程序内部和应用程序之间
+短期存储和传输数据的缓冲区。
+@@ winit/src/clipboard.rs:33
+为给定的窗口创建一个新的 [`Clipboard`]。
+@@ winit/src/clipboard.rs:47
+以文本形式读取 [`Clipboard`] 当前的内容。
+@@ winit/src/clipboard.rs:94
+把给定的文本内容写入 [`Clipboard`]。
+@@ winit/src/clipboard.rs:154
+待办：Wasm 支持
+@@ winit/src/clipboard.rs:159
+用于在应用程序内部和应用程序之间
+短期存储和传输数据的缓冲区。
+@@ winit/src/clipboard.rs:164
+为给定的窗口创建一个新的 [`Clipboard`]。
+@@ winit/src/clipboard.rs:169
+以文本形式读取 [`Clipboard`] 当前的内容。
+@@ winit/src/clipboard.rs:174
+把给定的文本内容写入 [`Clipboard`]。
+@@ winit/src/lib.rs:1
+基于 [`winit`] 的 Iced 窗口外壳。
+
+![Iced 生态系统的原生路径](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/native.png?raw=true)
+
+`iced_winit` 在 [`iced_runtime`] 之上提供了一些方便的抽象，
+帮助你在使用 [`winit`] 时快速上手开发。
+
+它暴露了一个与渲染器无关的 [`Program`]特质，实现它之后
+只需一次简单的调用就能运行。是否使用这个特质是可选的。
+
+此外，对于决定自行实现事件循环的用户，
+还提供了 [`conversion`] 模块。
+@@ winit/src/lib.rs:69
+使用所提供的设置运行一个 [`Program`]。
+@@ winit/src/lib.rs:216
+待办：不再需要时移除
+在 Windows 上，我们在每个 `Resized` 事件之后模拟一个 `AboutToWait` 事件，
+因为在调整大小的交互过程中事件循环不会恢复运行。
+详情见上面的链接
+@@ winit/src/lib.rs:326
+在 macOS 上，`WindowAttributes` 里的 `position` 表示窗口的“内部”
+位置；而在其他平台上它是“外部”位置。
+我们通过在创建窗口之后再设置位置来修正 macOS 上的这种不一致。
+@@ winit/src/lib.rs:532
+尽可能清空队列
+@@ winit/src/lib.rs:584
+取巧做法！完成时发送一个代理事件，以触发
+运行时重新轮询
+待办：通过代理发送合成器（？）
+@@ winit/src/lib.rs:759
+窗口在两次重绘之间被调整了大小
+@@ winit/src/lib.rs:838
+推迟所有窗口动作，以避免重绘时出现
+合成器竞态条件
+@@ winit/src/lib.rs:865
+我们已经在重绘这个窗口了
+@@ winit/src/lib.rs:880
+窗口的缩放因子在处理重绘请求期间发生了变化
+@@ winit/src/lib.rs:951
+这是一个无法恢复的错误。
+@@ winit/src/lib.rs:957
+什么也不做，等待窗口重新变为可见
+@@ winit/src/lib.rs:969
+最多每秒重建一次，并且在此期间不请求重绘，
+这样一个持续失败的表面就不会让循环空转。
+@@ winit/src/lib.rs:1211
+为 [`Program`] 构建某个窗口的 [`UserInterface`]。
+@@ winit/src/lib.rs:1254
+同步运行立即可用的动作（例如部件操作）
+@@ winit/src/lib.rs:1678
+重新创建渲染器并重新布局所有窗口
+@@ winit/src/lib.rs:1713
+重绘所有窗口
+@@ winit/src/lib.rs:1720
+待办：在合成器中共享图像缓存
+@@ winit/src/lib.rs:1803
+为每个窗口构建用户界面。
+@@ winit/src/lib.rs:1856
+如果所提供的事件应该导致 [`Program`] 退出，
+返回 true。
+@@ winit/src/proxy.rs:12
+带背压、实现了 `Sink` 的事件循环代理。
+@@ winit/src/proxy.rs:33
+根据 `EventLoopProxy` 创建一个新的 [`Proxy`]。
+@@ winit/src/proxy.rs:77
+为 [`Proxy`] 创建一个输入通道。
+@@ winit/src/proxy.rs:82
+向事件循环发送一个值。
+
+注意：它使用无界通道，绕过了背压机制。
+请谨慎使用！
+@@ winit/src/proxy.rs:90
+向事件循环发送一个动作。
+
+注意：它使用无界通道，绕过了背压机制。
+请谨慎使用！
+@@ winit/src/proxy.rs:98
+释放一定数量的槽位，让更多消息可以在
+这个 [`Proxy`] 中排队。
+@@ winit/src/proxy.rs:119
+如果接收端已断开连接，我们就认为这个 sink 已经刷新完毕。
+@@ winit/src/window.rs:219
+把给定的时间吸附到帧网格上，向上取整到网格的
+下一个点。
+
+事件循环会在 `WaitUntil` 的截止时间稍后一点才被唤醒，因此
+向下取整可能会给帧打上早于重绘请求的时间戳，
+导致下一次重绘（例如光标闪烁）被安排在过去，
+让循环绘制多余的帧。
+@@ winit/src/window.rs:550
+60 Hz 帧时钟的周期，即 `Window::reanchor`
+根据刷新率为 60 000 mHz 的显示器推导出的值。
+@@ winit/src/window.rs:554
+文本编辑器光标的闪烁间隔
+（`core::text::editor::Focus::CURSOR_BLINK_INTERVAL_MILLIS`）。
+@@ winit/src/window.rs:565
+给定时间戳之后的下一个闪烁边界，其计算方式与
+`core::text::editor::Focus` 处理 `RedrawRequested` 事件时相同。
+@@ winit/src/window.rs:574
+模拟事件循环围绕一次已安排的重绘（一次光标闪烁）
+逐渐稳定下来的过程：循环等待到截止时间，晚 `wakeup` 被唤醒，
+绘制一帧（耗时 `frame_cost`），用帧时钟给它打上时间戳，
+然后根据这个时间戳安排下一次重绘。位于过去的截止时间
+会被立即处理，就像真实的事件循环那样：
+截止时间已过的 `ControlFlow::WaitUntil` 不经等待就会唤醒，
+循环会不断重绘，直到下一个截止时间位于未来。
+
+返回稳定过程中绘制的各帧的时间戳。
+@@ winit/src/window.rs:601
+事件循环可以等待到下一个截止时间
+@@ winit/src/window.rs:605
+截止时间已过：事件循环立即被唤醒
+@@ winit/src/window.rs:641
+网格点之后的一瞬间会吸附到下一个点
+@@ winit/src/window.rs:645
+网格点之前的一瞬间会吸附到这个点
+@@ winit/src/window.rs:650
+文本输入框的光标闪烁恰好在闪烁边界上安排一次重绘，
+而事件循环会在这个截止时间稍后一点被唤醒。
+
+这时绘制的帧必须打上不早于该边界的时间戳，
+这样：
+
+- 光标会以新的相位绘制，并且
+- 根据时间戳安排的下一次闪烁位于未来，于是
+  事件循环可以继续等待，而不是不断绘制多余的帧，
+  直到挂钟时间越过该边界（即窗口每次闪烁时
+  “闪”一下）。
+@@ winit/src/window.rs:666
+在边界之前 10 ms 处放置一个网格点，这样在边界处
+（加上唤醒延迟）绘制的帧就落在两个网格点之间
+@@ winit/src/window.rs:686
+按照之前向下取整的做法，这一帧的时间戳会比边界早 10 ms，
+下一次闪烁正好被安排在边界上，也就是
+在事件循环被唤醒之前
+@@ winit/src/window.rs:697
+让事件循环围绕一次光标闪烁稳定下来：使用向上取整的时间戳时，
+循环只绘制一帧就可以再次等待；使用向下取整的时间戳时，
+下一次重绘会被安排在过去，因此循环要绘制好几帧
+多余的帧之后才能稳定下来。
+@@ winit/src/window/state.rs:13
+[`Program`] 的窗口的状态。
+@@ winit/src/window/state.rs:47
+为所提供的 [`Program`] 的 `window` 创建一个新的 [`State`]。
+@@ winit/src/window/state.rs:199
+更新窗口标题
+@@ winit/src/window/state.rs:207
+更新缩放因子
+@@ winit/src/window/state.rs:220
+更新主题和外观
+@@ winit/src/window/state.rs:235
+假定旧的模式与系统的模式一致
+否则我们会收到通知
+@@ winit/src/window/state.rs:248
+mundy 总是会通知系统主题的变化，所以我们
+只需恢复默认的主题模式。
+@@ test/src/simulator.rs:1
+在没有副作用的情况下模拟运行你的应用程序。
+@@ test/src/simulator.rs:26
+可以通过编程方式交互和检查的用户界面。
+@@ test/src/simulator.rs:41
+使用默认的 [`Settings`] 和默认大小（1024x768）创建一个新的 [`Simulator`]。
+@@ test/src/simulator.rs:46
+使用给定的 [`Settings`] 和默认大小（1024x768）创建一个新的 [`Simulator`]。
+@@ test/src/simulator.rs:54
+使用给定的 [`Settings`] 和大小创建一个新的 [`Simulator`]。
+@@ test/src/simulator.rs:97
+在 [`Simulator`] 中查找给定部件 [`Selector`] 的目标。
+@@ test/src/simulator.rs:123
+把鼠标光标指向 [`Simulator`] 中的给定位置。
+
+这 _不会_ 产生鼠标移动事件！
+@@ test/src/simulator.rs:130
+对 [`Simulator`] 的部件树应用一个 [`widget::Operation`]。
+@@ test/src/simulator.rs:135
+用新的 `element` 重建 [`Simulator`] 的用户界面，
+并保留 id 未改变的部件的状态。
+@@ test/src/simulator.rs:149
+把 [`Simulator`] 的窗口调整为给定的 `size`，重新布局
+用户界面并保留部件状态。
+@@ test/src/simulator.rs:160
+点击给定 [`Selector`] 找到的 [`Bounded`] 目标（如果有）。
+
+这包括：
+- 把鼠标光标指向 [`Bounded`] 目标的中心。
+- 模拟一次 [`click`]。
+@@ test/src/simulator.rs:185
+在 [`Simulator`] 中模拟一次按键按下，随后释放。
+@@ test/src/simulator.rs:193
+在 [`Simulator`] 中模拟用户用键盘输入给定的文本。
+@@ test/src/simulator.rs:202
+在 [`Simulator`] 中按给定的 [`delta`] 滚动。
+
+鼠标光标必须位于被滚动的内容之上，滚动才会生效，
+例如通过 [`Self::point_at`]。
+@@ test/src/simulator.rs:216
+在 [`Simulator`] 中模拟给定的原始事件序列。
+@@ test/src/simulator.rs:232
+使用给定的主题绘制 [`Simulator`] 中的界面。
+
+绘制之前会先处理一个 `RedrawRequested` 事件。
+@@ test/src/simulator.rs:259
+绘制 [`Simulator`] 中的界面并为其生成一个 [`Snapshot`]。
+@@ test/src/simulator.rs:282
+把 [`Simulator`] 转换为各种交互所产生的消息序列。
+@@ test/src/simulator.rs:287
+返回到目前为止发布的消息，并清空队列。
+@@ test/src/simulator.rs:293
+由 [`Simulator`] 渲染的一帧用户界面。
+@@ test/src/simulator.rs:301
+把 [`Snapshot`] 与给定路径下的 PNG 图像进行比较，
+如果两者完全相同，返回 `true`。
+
+如果 PNG 图像不存在，[`Snapshot`] 会创建它以供将来
+测试使用，并返回 `true`。
+@@ test/src/simulator.rs:343
+把 [`Snapshot`] 与给定路径下的 SHA-256 哈希文件进行比较，
+如果两者完全相同，返回 `true`。
+
+如果哈希文件不存在，[`Snapshot`] 会创建它以供将来
+测试使用，并返回 `true`。
+@@ test/src/simulator.rs:388
+创建一个新的 [`Simulator`]。
+
+这只是 [`Simulator::new`] 的函数版本。
+@@ test/src/simulator.rs:402
+返回一次点击的事件序列。
+@@ test/src/simulator.rs:411
+返回一次带有给定 [`delta`] 的滚动的事件序列。
+@@ test/src/simulator.rs:418
+返回一次按键按下的事件序列。
+@@ test/src/simulator.rs:435
+返回一次按键释放的事件序列。
+@@ test/src/simulator.rs:450
+返回一次“敲击按键”（即按下并释放一个按键）的事件序列。
+@@ test/src/simulator.rs:460
+返回在键盘上打出给定文本的事件序列。
+@@ test/src/lib.rs:1
+以无头模式测试你的 `iced` 应用程序。
+@@ test/src/lib.rs:3
+基本用法
+@@ test/src/lib.rs:4
+假设我们想测试[经典的计数器界面][the classical counter interface]。
+
+首先，我们要为界面创建一个 [`Simulator`]：
+@@ test/src/lib.rs:19
+现在我们可以模拟用户与界面的交互了。让我们用 [`Simulator::click`] 来点击
+计数器的按钮：
+@@ test/src/lib.rs:37
+[`Simulator::click`] 接受一个实现了 [`Selector`]特质的类型。[`Selector`] 描述了一种查询界面中部件的方式。
+这里我们利用了 `&str` 的 [`Selector`] 实现，它根据部件包含的文本来选择部件。
+
+现在我们可以处理这些交互产生的消息，然后断言计数器的最终值
+确实是 `1`！
+@@ test/src/lib.rs:65
+我们甚至可以重建界面，用 [`Simulator::find`] 确认计数器 _显示_ 的值是正确的：
+@@ test/src/lib.rs:80
+就是这样！这就是测试 `iced` 应用程序的要点！
+
+[`Simulator`] 还包含其他操作，可以用来模拟更多交互，例如 [`tap_key`](Simulator::tap_key) 或
+[`typewrite`](Simulator::typewrite)，甚至可以进行[_快照测试_](Simulator::snapshot)！
+@@ test/src/lib.rs:115
+为给定的 [`Program`](program::Program) 运行一个 [`Ice`] 测试套件。
+
+会从给定目录中解析所有 `.ice` 测试，并在给定
+[`Program`](program::Program) 的 [`Emulator`] 中执行。
+
+请记住，[`Emulator`] 执行的是真实的程序！副作用 _一定会_
+发生。你需要自己利用 [`Preset`][program::Preset]
+来保证测试环境可复现。
+@@ test/src/lib.rs:187
+待办：并发的运行时
+@@ test/src/lib.rs:259
+让给定的 [`Program`](program::Program) 运行给定的 [`Duration`] 之后，
+按给定的主题、视口和缩放因子为它截图。
+@@ test/src/instruction.rs:1
+端到端测试中的一个步骤。
+@@ test/src/instruction.rs:9
+端到端测试中的一个步骤。
+
+[`Instruction`] 可以由 [`Emulator`](crate::Emulator) 运行。
+@@ test/src/instruction.rs:14
+用户 [`Interaction`]。
+@@ test/src/instruction.rs:16
+测试 [`Expectation`]。
+@@ test/src/instruction.rs:21
+从文本表示解析出一个 [`Instruction`]。
+@@ test/src/instruction.rs:36
+用户交互。
+@@ test/src/instruction.rs:39
+鼠标交互。
+@@ test/src/instruction.rs:41
+键盘交互。
+@@ test/src/instruction.rs:46
+根据运行时 [`Event`] 创建一个 [`Interaction`]。
+
+在真实使用过程中录制测试时，这会很有用。
+@@ test/src/instruction.rs:96
+尽可能把两个交互合并在一起。
+
+这个方法可以把某些交互序列变成单个交互。
+例如，一次鼠标移动、左键按下和左键释放
+可以合并成一次点击交互。
+
+合并是有损的，因此，如果你正在录制测试
+并希望完全可复现，它并不总是可取的。
+
+如果两个交互无法合并，`next` 交互会
+作为元组的第二个元素返回。
+@@ test/src/instruction.rs:201
+返回表示这个 [`Interaction`] 的运行时事件列表。
+
+`find_target` 闭包必须把 [`Target`] 转换为它的屏幕
+坐标。
+@@ test/src/instruction.rs:277
+鼠标交互。
+@@ test/src/instruction.rs:280
+鼠标被移动。
+@@ test/src/instruction.rs:282
+某个按钮被按下。
+@@ test/src/instruction.rs:284
+按钮。
+@@ test/src/instruction.rs:286
+按下的位置。
+@@ test/src/instruction.rs:289
+某个按钮被释放。
+@@ test/src/instruction.rs:291
+按钮。
+@@ test/src/instruction.rs:293
+释放的位置。
+@@ test/src/instruction.rs:296
+某个按钮被点击。
+@@ test/src/instruction.rs:298
+按钮。
+@@ test/src/instruction.rs:300
+点击的位置。
+@@ test/src/instruction.rs:324
+交互的目标。
+@@ test/src/instruction.rs:327
+具有给定标识符的部件。
+@@ test/src/instruction.rs:329
+包含给定文本的 UI 元素。
+@@ test/src/instruction.rs:331
+视口中的某个具体的点。
+@@ test/src/instruction.rs:345
+键盘交互。
+@@ test/src/instruction.rs:348
+某个按键被按下。
+@@ test/src/instruction.rs:350
+某个按键被释放。
+@@ test/src/instruction.rs:352
+某个按键被“敲击”（按下并释放）。
+@@ test/src/instruction.rs:354
+输入了一段文本。
+@@ test/src/instruction.rs:377
+键盘按键。
+
+目前只支持一小部分按键！
+@@ test/src/instruction.rs:450
+测试断言。
+
+期望（expectation）是用来验证应用程序用户界面
+当前状态的指令。
+@@ test/src/instruction.rs:456
+期望某个元素包含某段文本。
+@@ test/src/instruction.rs:486
+解析错误。
+@@ test/src/instruction.rs:621
+取自上面链接中的 nom 示例。
+（以上为原作者的版权声明与 MIT 许可条款，保留英文原文，不作翻译。）
+@@ test/src/ice.rs:1
+一种可分享的、简单的端到端测试格式。
+@@ test/src/ice.rs:7
+iced 应用程序的端到端测试。
+
+ice 测试把某个配置和一个指令序列编码在一起。
+如果所有指令都能成功执行，ice 测试就通过。
+
+通常，ice 测试由 [`Emulator`](crate::Emulator) 在持续
+集成流水线中运行。
+
+要运行 ice 测试很简单：把它们保存为某个文件夹里的 `.ice` 文件，然后
+调用 [`run`](crate::run) 即可。启用根 crate 的 `tester`
+特性标志后，就可以录制这些测试文件。
+@@ test/src/ice.rs:20
+测试必须使用的视口 [`Size`]。
+@@ test/src/ice.rs:22
+测试必须使用的 [`emulator::Mode`]。
+@@ test/src/ice.rs:24
+测试必须使用的 [`Preset`](crate::program::Preset) 的名称。
+@@ test/src/ice.rs:26
+测试的指令序列。
+@@ test/src/ice.rs:31
+从文本表示解析出一个 [`Ice`] 测试。
+
+下面是 [`Ice`] 测试语法的一个示例：
+@@ test/src/ice.rs:52
+这套语法 _非常_ 实验性，极有可能经常变动。
+因此，它只留给想要提前试用的高级用户。
+
+目前，要使用它，你需要通过阅读代码来赢得这个资格，
+并证明你理解它的实验性质！
+@@ test/src/ice.rs:154
+待办
+@@ test/src/ice.rs:155
+待办
+@@ test/src/ice.rs:175
+[`Ice::parse`] 过程中产生的错误。
+@@ test/src/ice.rs:178
+没有元数据。
+@@ test/src/ice.rs:182
+元数据无效。
+@@ test/src/ice.rs:185
+无效行的行号。
+@@ test/src/ice.rs:187
+无效行的内容。
+@@ test/src/ice.rs:191
+视口无效。
+@@ test/src/ice.rs:194
+无效行的行号。
+@@ test/src/ice.rs:197
+无效的值。
+@@ test/src/ice.rs:201
+[`emulator::Mode`] 无效。
+@@ test/src/ice.rs:204
+无效行的行号。
+@@ test/src/ice.rs:206
+无效的值。
+@@ test/src/ice.rs:210
+某个元数据字段未知。
+@@ test/src/ice.rs:213
+无效行的行号。
+@@ test/src/ice.rs:215
+未知字段的名称。
+@@ test/src/ice.rs:219
+缺少视口元数据。
+@@ test/src/ice.rs:223
+缺少 [`emulator::Mode`] 元数据。
+@@ test/src/ice.rs:227
+某条 [`Instruction`] 解析失败。
+@@ test/src/ice.rs:230
+无效行的行号。
+@@ test/src/ice.rs:232
+无效的指令。
+@@ test/src/ice.rs:234
+解析错误。
+@@ test/src/error.rs:8
+测试错误。
+@@ test/src/error.rs:11
+没有找到与 [`Selector`](crate::Selector) 匹配的部件。
+@@ test/src/error.rs:14
+选择器的描述。
+@@ test/src/error.rs:17
+有目标匹配，但它不可见。
+@@ test/src/error.rs:20
+目标
+@@ test/src/error.rs:23
+某个 IO 操作失败。
+@@ test/src/error.rs:26
+某个 PNG 图像解码失败。
+@@ test/src/error.rs:29
+某个 PNG 图像编码失败。
+@@ test/src/error.rs:32
+某个 [`Ice`](crate::Ice) 测试解析失败。
+@@ test/src/error.rs:35
+测试的路径。
+@@ test/src/error.rs:37
+解析错误。
+@@ test/src/error.rs:40
+某个 [`Ice`](crate::Ice) 测试执行失败。
+@@ test/src/error.rs:43
+测试的路径。
+@@ test/src/error.rs:45
+失败的 [`Instruction`]。
+@@ test/src/error.rs:48
+找不到程序的 [`Preset`](crate::program::Preset)。
+@@ test/src/error.rs:51
+[`Preset`](crate::program::Preset) 的名称。
+@@ test/src/error.rs:53
+可用的预设集合。
+@@ test/src/emulator.rs:1
+在无头运行时中运行你的应用程序。
+@@ test/src/emulator.rs:28
+可以运行 iced 应用程序并执行
+[指令](crate::Instruction)的无头运行时。
+
+[`Emulator`] 会尽可能忠实于真实情况地运行它的程序。
+它会用 [`Program`] 的 [`Executor`](Program::Executor)
+运行订阅和任务。
+
+如果你想进行没有副作用的模拟，请改用
+[`Simulator`](crate::Simulator)。
+@@ test/src/emulator.rs:49
+模拟事件。
+@@ test/src/emulator.rs:51
+必须由 [`Emulator`] [执行](Emulator::perform)的动作。
+@@ test/src/emulator.rs:53
+某条 [`Instruction`] 执行失败。
+@@ test/src/emulator.rs:55
+[`Emulator`] 已就绪。
+@@ test/src/emulator.rs:59
+必须由 [`Emulator`] [执行](Emulator::perform)的动作。
+@@ test/src/emulator.rs:68
+使用给定的 [`Mode`] 和 [`Size`] 为 [`Program`] 创建一个新的 [`Emulator`]。
+
+[`Emulator`] 会通过所提供的 [`mpsc::Sender`] 发送 [`Event`] 通知。
+
+[`Emulator`] 启动完成后，会产生一个 [`Event::Ready`]。
+@@ test/src/emulator.rs:77
+与 [`new`](Self::new) 类似地创建一个新的 [`Emulator`]，但还接受一个
+[`program::Preset`] 作为初始状态。
+
+[`Emulator`] 启动完成后，会产生一个 [`Event::Ready`]。
+@@ test/src/emulator.rs:96
+待办：错误处理
+@@ test/src/emulator.rs:136
+更新 [`Emulator`] 程序的状态。
+
+这相当于调用 [`Program::update`] 函数、
+重新订阅所有订阅，并并发地运行
+得到的任务。
+@@ test/src/emulator.rs:164
+执行一个 [`Action`]。
+
+每当 [`Emulator`] 发送一个 [`Event::Action`] 时，
+都必须调用这个方法才能继续执行。
+@@ test/src/emulator.rs:208
+待办
+@@ test/src/emulator.rs:242
+已忽略
+@@ test/src/emulator.rs:247
+待办
+@@ test/src/emulator.rs:259
+待办
+@@ test/src/emulator.rs:265
+待办
+@@ test/src/emulator.rs:269
+待办
+@@ test/src/emulator.rs:273
+待办
+@@ test/src/emulator.rs:277
+待办
+@@ test/src/emulator.rs:280
+待办
+@@ test/src/emulator.rs:283
+待办
+@@ test/src/emulator.rs:289
+运行一条 [`Instruction`]。
+
+如果 [`Instruction`] 执行成功，[`Emulator`] 会
+产生一个 [`Event::Ready`]。
+
+否则，会触发一个 [`Event::Failed`]。
+@@ test/src/emulator.rs:455
+返回 [`Emulator`] 当前的视图。
+@@ test/src/emulator.rs:460
+返回 [`Emulator`] 当前的主题。
+@@ test/src/emulator.rs:465
+为 [`Emulator`] 的当前状态生成一个 [`window::Screenshot`]。
+@@ test/src/emulator.rs:483
+待办：嵌套的重绘！
+@@ test/src/emulator.rs:522
+返回 [`Emulator`] 的状态的引用。
+@@ test/src/emulator.rs:527
+把 [`Emulator`] 转换为它的内部状态。
+@@ test/src/emulator.rs:533
+[`Emulator`] 等待任务完成时使用的策略。
+
+可以用 [`Mode`] 让 [`Emulator`] 等待副作用完成之后
+再继续执行。
+@@ test/src/emulator.rs:539
+等待某条 [`Instruction`] 产生的所有任务，以及由这些任务的结果
+间接产生的所有任务。
+
+这是默认值。
+@@ test/src/emulator.rs:545
+只等待某条 [`Instruction`] 直接产生的任务。
+@@ test/src/emulator.rs:547
+从不等待任何任务完成。
+@@ test/src/emulator.rs:552
+所有可用模式的列表。
+@@ examples/bezier_tool/src/main.rs:1
+这个示例展示了一个用于绘制贝塞尔曲线的交互式 `Canvas`。
+@@ examples/clock/src/main.rs:151
+绘制时钟上的数字
+@@ examples/clock/src/main.rs:169
+绘制刻度
+@@ examples/color_palette/src/main.rs:108
+转换为 HSL 颜色以便处理
+@@ examples/color_palette/src/main.rs:184
+我们为基准颜色显示一个小小的指示标记
+@@ examples/custom_widget/src/main.rs:1
+这个示例展示了一个绘制圆形的简单原生自定义部件。
+@@ examples/custom_shader/src/scene.rs:57
+生成
+@@ examples/custom_shader/src/scene.rs:71
+削减
+@@ examples/custom_shader/src/scene.rs:101
+可以渲染的一组 `Cube`。
+@@ examples/custom_shader/src/scene.rs:141
+把数据上传到 GPU
+@@ examples/custom_shader/src/scene.rs:159
+渲染图元
+@@ examples/custom_quad/src/main.rs:1
+这个示例展示了如何绘制四边形。
+@@ examples/geometry/src/main.rs:1
+这个示例展示了一个使用任意底层几何图形进行渲染的
+简单原生自定义部件。
+@@ examples/geometry/src/main.rs:138
+左上
+@@ examples/geometry/src/main.rs:140
+右上
+@@ examples/geometry/src/main.rs:142
+右下
+@@ examples/geometry/src/main.rs:144
+左下
+@@ examples/game_of_life/src/main.rs:1
+这个示例展示了 John Conway 发明的生命游戏的
+交互式版本。它把 `Canvas` 与其他部件结合起来使用。
+@@ examples/integration/src/main.rs:31
+初始化 winit
+@@ examples/integration/src/main.rs:137
+初始化场景和 GUI 控件
+@@ examples/integration/src/main.rs:141
+初始化 iced
+@@ examples/integration/src/main.rs:156
+如果你想持续渲染，应该修改这里
+@@ examples/integration/src/main.rs:204
+如果你要使用必须并发地通知运行时的部件，
+就应该接入你自己的定时逻辑。
+@@ examples/integration/src/main.rs:251
+清空这一帧
+@@ examples/integration/src/main.rs:255
+绘制场景
+@@ examples/integration/src/main.rs:259
+提交场景
+@@ examples/integration/src/main.rs:262
+在其上绘制 iced
+@@ examples/integration/src/main.rs:281
+更新鼠标光标
+@@ examples/integration/src/main.rs:286
+更新鼠标光标
+@@ examples/integration/src/main.rs:297
+绘制界面
+@@ examples/integration/src/main.rs:308
+呈现这一帧
+@@ examples/integration/src/main.rs:312
+下一帧再尝试渲染。
+@@ examples/integration/src/main.rs:335
+把窗口事件映射为 iced 事件
+@@ examples/integration/src/main.rs:342
+如果有待处理的事件
+@@ examples/integration/src/main.rs:344
+我们就处理它们
+@@ examples/integration/src/main.rs:359
+用产生的消息更新我们的 UI
+@@ examples/integration/src/main.rs:364
+并请求重绘
+@@ examples/custom_shader/src/scene/pipeline.rs:32
+一个立方体的顶点
+@@ examples/custom_shader/src/scene/pipeline.rs:39
+立方体实例数据
+@@ examples/custom_shader/src/scene/pipeline.rs:47
+所有立方体共用的 uniform
+@@ examples/custom_shader/src/scene/pipeline.rs:55
+深度缓冲区
+@@ examples/custom_shader/src/scene/pipeline.rs:75
+法线贴图
+@@ examples/custom_shader/src/scene/pipeline.rs:98
+用于反射/折射的天空盒纹理
+@@ examples/custom_shader/src/scene/pipeline.rs:318
+如果表面纹理的大小发生变化，就重新创建深度纹理
+@@ examples/custom_shader/src/scene/pipeline.rs:321
+更新 uniform
+@@ examples/custom_shader/src/scene/pipeline.rs:324
+如果立方体数量发生变化，就调整立方体顶点缓冲区的大小
+@@ examples/custom_shader/src/scene/pipeline.rs:328
+总是写入新的立方体数据，因为它们一直在旋转
+@@ examples/gallery/src/main.rs:1
+一个简单的画廊，显示 Civitai 的每日精选图像。
+
+展示了在后台延迟加载图像，以及
+一些流畅的动画。
+@@ examples/gallery/src/civitai.rs:89
+高 DPI
+@@ examples/multitouch/src/main.rs:1
+这个示例展示了如何在 `Canvas` 中使用触摸事件，
+在每个指尖周围画一个圆。它只能在支持触摸的
+计算机（例如 Microsoft Surface）上运行。
+@@ examples/multitouch/src/main.rs:90
+收集 (id, point) 元组；
+@@ examples/multitouch/src/main.rs:94
+按 ID 排序
+@@ examples/multitouch/src/main.rs:97
+生成排好序的点列表
+@@ examples/markdown/build.rs:2
+=
+@@ examples/custom_shader/src/scene/pipeline/vertex.rs:14
+位置
+@@ examples/custom_shader/src/scene/pipeline/vertex.rs:16
+法线
+@@ examples/custom_shader/src/scene/pipeline/vertex.rs:18
+切线
+@@ examples/custom_shader/src/scene/pipeline/vertex.rs:20
+uv 坐标
+@@ examples/loading_spinners/src/circular.rs:1
+显示一个环形进度指示器。
+@@ examples/loading_spinners/src/circular.rs:38
+使用给定的内容创建一个新的 [`Circular`]。
+@@ examples/loading_spinners/src/circular.rs:50
+设置这个 [`Circular`] 的缓动。
+@@ examples/loading_spinners/src/circular.rs:56
+设置这个 [`Circular`] 的循环时长。
+@@ examples/loading_spinners/src/circular.rs:310
+进度指示器的轨道 [`Color`]。
+@@ examples/loading_spinners/src/circular.rs:312
+进度指示器的进度条 [`Color`]。
+@@ examples/loading_spinners/src/circular.rs:325
+决定指示器样式的一组规则。
+@@ examples/loading_spinners/src/circular.rs:327
+[`StyleSheet`] 支持的样式。
+@@ examples/loading_spinners/src/circular.rs:330
+产生指示器处于活动状态时的 [`Appearance`]。
+@@ examples/custom_shader/src/scene/pipeline/cube.rs:6
+立方体的单个实例。
+@@ examples/custom_shader/src/scene/pipeline/cube.rs:64
+立方体变换矩阵
+@@ examples/custom_shader/src/scene/pipeline/cube.rs:69
+法线旋转矩阵
+@@ examples/custom_shader/src/scene/pipeline/cube.rs:99
+第 1 个面
+@@ examples/custom_shader/src/scene/pipeline/cube.rs:136
+第 2 个面
+@@ examples/custom_shader/src/scene/pipeline/cube.rs:173
+第 3 个面
+@@ examples/custom_shader/src/scene/pipeline/cube.rs:210
+第 4 个面
+@@ examples/custom_shader/src/scene/pipeline/cube.rs:247
+第 5 个面
+@@ examples/custom_shader/src/scene/pipeline/cube.rs:284
+第 6 个面
+@@ examples/loading_spinners/src/linear.rs:1
+显示一个线形进度指示器。
+@@ examples/loading_spinners/src/linear.rs:31
+使用给定的内容创建一个新的 [`Linear`]。
+@@ examples/loading_spinners/src/linear.rs:42
+设置这个 [`Linear`] 的运动缓动。
+@@ examples/loading_spinners/src/linear.rs:48
+设置这个 [`Linear`] 的循环时长。
+@@ examples/loading_spinners/src/linear.rs:228
+进度指示器的轨道 [`Color`]。
+@@ examples/loading_spinners/src/linear.rs:230
+进度指示器的进度条 [`Color`]。
+@@ examples/loading_spinners/src/linear.rs:243
+决定指示器样式的一组规则。
+@@ examples/loading_spinners/src/linear.rs:245
+[`StyleSheet`] 支持的样式。
+@@ examples/loading_spinners/src/linear.rs:248
+产生指示器处于活动状态时的 [`Appearance`]。
+@@ examples/custom_shader/src/scene/pipeline/buffer.rs:3
+支持动态调整大小的自定义缓冲区容器。
+@@ examples/loading_spinners/src/easing.rs:75
+添加一条三次贝塞尔曲线。各点必须位于 0,0 和 1,1 之间
+@@ examples/markdown/src/icon.rs:1
+由 iced_fontello 在构建时自动生成。
+请勿手动编辑。来源：../fonts/markdown-icons.toml
+@@ examples/scrollable/src/main.rs:276
+水平内容
+@@ examples/scrollable/src/main.rs:282
+垂直内容
+@@ examples/solar_system/src/main.rs:1
+一个带动画的太阳系。
+
+这个示例展示了如何使用带变换的 `Canvas` 部件，
+在不同的坐标系中绘图。
+
+灵感来自 MDN 文档[1]中的示例。
+@@ examples/websocket/src/echo/server.rs:8
+基础的 WebSocket 回显服务器，改编自上面的链接。
+（以上为原作者的版权声明与 MIT 许可条款，保留英文原文，不作翻译。）
+@@ examples/todos/src/main.rs:453
+字体
+@@ examples/todos/src/main.rs:478
+持久化
+@@ examples/todos/src/main.rs:540
+这是一种让保存频率不超过每秒两次的简单方法
+@@ examples/tour/src/main.rs:543
+等我们统一了原生平台上的资源加载之后，
+这段代码就应该去掉了
+@@ examples/toast/src/main.rs:109
+安排 `id` 对应的 toast 的过期时间。

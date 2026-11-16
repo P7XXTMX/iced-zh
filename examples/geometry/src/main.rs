@@ -1,5 +1,13 @@
+//! 这个示例展示了一个使用任意底层几何图形进行渲染的
+//! 简单原生自定义部件。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! This example showcases a simple native custom widget that renders using
 //! arbitrary low-level geometry.
+//!
+//! </details>
 mod rainbow {
     use iced::advanced::Shell;
     use iced::advanced::graphics::color;
@@ -135,13 +143,13 @@ mod rainbow {
                         },
                     ],
                     indices: vec![
-                        0, 1, 2, // TL
+                        0, 1, 2, // TL（左上）
                         0, 2, 3, // T
-                        0, 3, 4, // TR
+                        0, 3, 4, // TR（右上）
                         0, 4, 5, // R
-                        0, 5, 6, // BR
+                        0, 5, 6, // BR（右下）
                         0, 6, 7, // B
-                        0, 7, 8, // BL
+                        0, 7, 8, // BL（左下）
                         0, 8, 1, // L
                     ],
                 },

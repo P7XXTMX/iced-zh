@@ -1,6 +1,13 @@
+//! 画布可以用来绘制可交互的 2D 图形。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Canvases can be leveraged to draw interactive 2D graphics.
 //!
-//! # Example: Drawing a Simple Circle
+//! </details>
+//!
+//! # 示例：绘制一个简单的圆（Example: Drawing a Simple Circle）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # use iced::widget::Widget;
@@ -11,14 +18,17 @@
 //! use iced::{Color, Rectangle, Renderer, Theme};
 //!
 //! // First, we define the data we need for drawing
+//! // 首先，定义绘制所需的数据
 //! #[derive(Debug)]
 //! struct Circle {
 //!     radius: f32,
 //! }
 //!
 //! // Then, we implement the `Program` trait
+//! // 然后，实现 `Program`特质
 //! impl<Message> canvas::Program<Message> for Circle {
 //!     // No internal state
+//!     // 没有内部状态
 //!     type State = ();
 //!
 //!     fn draw(
@@ -30,20 +40,25 @@
 //!         _cursor: mouse::Cursor
 //!     ) -> Vec<canvas::Geometry> {
 //!         // We prepare a new `Frame`
+//!         // 准备一个新的 `Frame`
 //!         let mut frame = canvas::Frame::new(renderer, bounds.size());
 //!
 //!         // We create a `Path` representing a simple circle
+//!         // 创建一个表示简单圆形的 `Path`
 //!         let circle = canvas::Path::circle(frame.center(), self.radius);
 //!
 //!         // And fill it with some color
+//!         // 并用某种颜色填充它
 //!         frame.fill(&circle, Color::BLACK);
 //!
 //!         // Then, we produce the geometry
+//!         // 然后，生成几何图形
 //!         vec![frame.into_geometry()]
 //!     }
 //! }
 //!
 //! // Finally, we simply use our `Circle` to create the `Canvas`!
+//! // 最后，只需用我们的 `Circle` 创建 `Canvas`！
 //! fn view<Message>(_state: &State) -> impl Widget<Message> {
 //!     canvas(Circle { radius: 50.0 })
 //! }
@@ -72,21 +87,52 @@ use crate::graphics::geometry;
 
 use std::marker::PhantomData;
 
+/// 简单的缓存，存储已生成的 [`Geometry`] 以避免重复计算。
+///
+/// 除非所在图层的尺寸发生变化或被显式清除，
+/// 否则 [`Cache`] 不会重绘它的几何图形。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A simple cache that stores generated [`Geometry`] to avoid recomputation.
 ///
 /// A [`Cache`] will not redraw its geometry unless the dimensions of its layer
 /// change or it is explicitly cleared.
+///
+/// </details>
 pub type Cache<Renderer = crate::Renderer> = geometry::Cache<Renderer>;
 
+/// 渲染器所支持的几何图形。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The geometry supported by a renderer.
+///
+/// </details>
 pub type Geometry<Renderer = crate::Renderer> = <Renderer as geometry::Renderer>::Geometry;
 
+/// 渲染器所支持的帧。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The frame supported by a renderer.
+///
+/// </details>
 pub type Frame<Renderer = crate::Renderer> = geometry::Frame<Renderer>;
 
+/// 能够绘制 2D 图形的部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget capable of drawing 2D graphics.
 ///
-/// # Example: Drawing a Simple Circle
+/// </details>
+///
+/// # 示例：绘制一个简单的圆（Example: Drawing a Simple Circle）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # use iced::widget::Widget;
@@ -97,14 +143,17 @@ pub type Frame<Renderer = crate::Renderer> = geometry::Frame<Renderer>;
 /// use iced::{Color, Rectangle, Renderer, Theme};
 ///
 /// // First, we define the data we need for drawing
+/// // 首先，定义绘制所需的数据
 /// #[derive(Debug)]
 /// struct Circle {
 ///     radius: f32,
 /// }
 ///
 /// // Then, we implement the `Program` trait
+/// // 然后，实现 `Program`特质
 /// impl<Message> canvas::Program<Message> for Circle {
 ///     // No internal state
+///     // 没有内部状态
 ///     type State = ();
 ///
 ///     fn draw(
@@ -116,20 +165,25 @@ pub type Frame<Renderer = crate::Renderer> = geometry::Frame<Renderer>;
 ///         _cursor: mouse::Cursor
 ///     ) -> Vec<canvas::Geometry> {
 ///         // We prepare a new `Frame`
+///         // 准备一个新的 `Frame`
 ///         let mut frame = canvas::Frame::new(renderer, bounds.size());
 ///
 ///         // We create a `Path` representing a simple circle
+///         // 创建一个表示简单圆形的 `Path`
 ///         let circle = canvas::Path::circle(frame.center(), self.radius);
 ///
 ///         // And fill it with some color
+///         // 并用某种颜色填充它
 ///         frame.fill(&circle, Color::BLACK);
 ///
 ///         // Then, we produce the geometry
+///         // 然后，生成几何图形
 ///         vec![frame.into_geometry()]
 ///     }
 /// }
 ///
 /// // Finally, we simply use our `Circle` to create the `Canvas`!
+/// // 最后，只需用我们的 `Circle` 创建 `Canvas`！
 /// fn view<Message>(_state: &State) -> impl Widget<Message> {
 ///     canvas(Circle { radius: 50.0 })
 /// }
@@ -156,7 +210,14 @@ where
 {
     const DEFAULT_SIZE: f32 = 100.0;
 
+    /// 创建一个新的 [`Canvas`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Canvas`].
+    ///
+    /// </details>
     pub fn new(program: P) -> Self {
         Canvas {
             width: Length::Fixed(Self::DEFAULT_SIZE),
@@ -169,13 +230,27 @@ where
         }
     }
 
+    /// 设置 [`Canvas`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Canvas`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Canvas`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Canvas`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self

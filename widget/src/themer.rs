@@ -10,10 +10,20 @@ use crate::core::{
     Background, Color, Element, Event, Layout, Length, Rectangle, Shell, Size, Vector, Widget,
 };
 
+/// 把任意 `Theme` 应用到其内容上的部件。
+///
+/// 这个部件可以用来在一个应用程序中使用多种 `Theme`
+/// 类型。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that applies any `Theme` to its contents.
 ///
 /// This widget can be useful to leverage multiple `Theme`
 /// types in an application.
+///
+/// </details>
 pub struct Themer<'a, Message, Theme, Renderer = crate::Renderer> {
     content: Element<'a, Message, Theme, Renderer>,
     theme: Option<Theme>,
@@ -22,8 +32,16 @@ pub struct Themer<'a, Message, Theme, Renderer = crate::Renderer> {
 }
 
 impl<'a, Message, Theme, Renderer> Themer<'a, Message, Theme, Renderer> {
+    /// 创建一个空的 [`Themer`]，把给定的 `Theme`
+    /// 应用到提供的 `content` 上。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates an empty [`Themer`] that applies the given `Theme`
     /// to the provided `content`.
+    ///
+    /// </details>
     pub fn new(theme: Option<Theme>, content: impl Widget<Message, Theme, Renderer> + 'a) -> Self {
         Self {
             content: content._boxed(),
@@ -33,13 +51,27 @@ impl<'a, Message, Theme, Renderer> Themer<'a, Message, Theme, Renderer> {
         }
     }
 
+    /// 设置 [`Themer`] 的默认文本 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the default text [`Color`] of the [`Themer`].
+    ///
+    /// </details>
     pub fn text_color(mut self, f: fn(&Theme) -> Color) -> Self {
         self.text_color = Some(f);
         self
     }
 
+    /// 设置 [`Themer`] 的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Background`] of the [`Themer`].
+    ///
+    /// </details>
     pub fn background(mut self, f: fn(&Theme) -> Background) -> Self {
         self.background = Some(f);
         self

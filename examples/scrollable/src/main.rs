@@ -274,12 +274,14 @@ impl ScrollableDemo {
             .boxed(),
             Direction::Multi => scrollable(
                 //horizontal content
+                // 水平内容
                 row![
                     column![text("Let's do some scrolling!"), space().height(2400)],
                     scroll_to_end_button(),
                     text("Horizontal - Beginning!"),
                     space().width(1200),
                     //vertical content
+                    // 垂直内容
                     column![
                         text("Horizontal - Middle!"),
                         scroll_to_end_button(),
