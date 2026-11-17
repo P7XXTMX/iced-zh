@@ -13,7 +13,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const BASE = 'b2fbd3cb6';
+const BASE = 'e5c350f27';
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..');
 const TR_DIR = path.join(ROOT, 'zh-tools', 'translations');
 const SUMMARY = '显示英文原文';

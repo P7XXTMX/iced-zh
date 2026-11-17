@@ -3,7 +3,7 @@
 本项目 fork 自 [iced-rs/iced](https://github.com/iced-rs/iced)，把代码注释和文档翻译成了简体中文。
 代码与上游一致，只有注释和 Markdown 文档不同。
 
-- 基线提交：`b2fbd3cb6`（iced `0.15.0-dev`）
+- 基线提交：`e5c350f27`（iced `0.15.0-dev`）
 - 翻译规范：[`CLAUDE.md`](CLAUDE.md)
 - 术语表：[`rust-glossary.md`](rust-glossary.md)（Rust 术语）、[`zh-tools/iced-glossary.md`](zh-tools/iced-glossary.md)（iced 术语）
 - 译文格式与翻译规则的细节：[`zh-tools/README.md`](zh-tools/README.md)
@@ -169,7 +169,7 @@ cargo doc --no-deps --workspace --all-features --open
 
 仓库已添加 `upstream` 远程，指向 `iced-rs/iced`。
 
-目前**没有自动迁移译文的工具**。译文条目用基线提交里的行号定位，工具里的基线写死为 `b2fbd3cb6`
+目前**没有自动迁移译文的工具**。译文条目用基线提交里的行号定位，工具里的基线写死为 `e5c350f27`
 （`zh.mjs` 和 `md.mjs` 开头的 `BASE`）。上游改动注释后，对应条目的行号会变。
 要跟进新的上游版本，需要：
 

@@ -901,63 +901,63 @@ __警告：__ 所有文本都会渲染在 `Canvas` 所有图层的
 绘制段落。
 @@ graphics/src/text/paragraph.rs:13
 一段文本。
-@@ graphics/src/text/paragraph.rs:42
+@@ graphics/src/text/paragraph.rs:43
 创建一个新的空 [`Paragraph`]。
-@@ graphics/src/text/paragraph.rs:47
+@@ graphics/src/text/paragraph.rs:48
 返回 [`Paragraph`] 的缓冲区。
-@@ graphics/src/text/paragraph.rs:52
+@@ graphics/src/text/paragraph.rs:53
 创建 [`Paragraph`] 的 [`Weak`] 引用。
 
 在不需要引用保证的场合，这可以避免
 克隆 [`Paragraph`]。例如，
 在创建渲染树的时候。
-@@ graphics/src/text/paragraph.rs:404
+@@ graphics/src/text/paragraph.rs:407
 渲染器会把这一行的墨迹（ink）在行高范围内居中，
 并把基线放在墨迹顶部下方 `max_ascent`
 的位置：
-@@ graphics/src/text/paragraph.rs:419
+@@ graphics/src/text/paragraph.rs:422
 字形可能偏离所在行的基线（例如在复杂文字中）；
 这里沿用 `LayoutGlyph::physical` 中使用的锚点：
-@@ graphics/src/text/paragraph.rs:444
+@@ graphics/src/text/paragraph.rs:447
 把字形的墨迹与该文本片段在这一行上的边界
 求并集：
-@@ graphics/src/text/paragraph.rs:468
+@@ graphics/src/text/paragraph.rs:471
 模拟一次拖动选择
-@@ graphics/src/text/paragraph.rs:505
+@@ graphics/src/text/paragraph.rs:514
 如果光标和选区都落在段落的同一侧边缘，
 就取消选区。
-@@ graphics/src/text/paragraph.rs:634
+@@ graphics/src/text/paragraph.rs:644
 [`Paragraph`] 的弱引用。
-@@ graphics/src/text/paragraph.rs:638
+@@ graphics/src/text/paragraph.rs:648
 [`Paragraph`] 的最小边界。
-@@ graphics/src/text/paragraph.rs:640
+@@ graphics/src/text/paragraph.rs:650
 [`Paragraph`] 的水平对齐方式。
-@@ graphics/src/text/paragraph.rs:642
+@@ graphics/src/text/paragraph.rs:652
 [`Paragraph`] 的垂直对齐方式。
-@@ graphics/src/text/paragraph.rs:647
+@@ graphics/src/text/paragraph.rs:657
 尝试把该引用升级为 [`Paragraph`]。
-@@ graphics/src/text/paragraph.rs:685
+@@ graphics/src/text/paragraph.rs:695
 边界应当覆盖文本片段的墨迹，而不会拉伸到
 行高。
-@@ graphics/src/text/paragraph.rs:703
+@@ graphics/src/text/paragraph.rs:713
 较大的文本片段决定这一行的墨迹：
-@@ graphics/src/text/paragraph.rs:707
-两个文本片段共用这一行的基线：
-@@ graphics/src/text/paragraph.rs:712
-较小的文本片段严格位于这一行的墨迹框之内……
 @@ graphics/src/text/paragraph.rs:717
+两个文本片段共用这一行的基线：
+@@ graphics/src/text/paragraph.rs:722
+较小的文本片段严格位于这一行的墨迹框之内……
+@@ graphics/src/text/paragraph.rs:727
 ……并且墨迹始终位于行框之内：
-@@ graphics/src/text/paragraph.rs:723
+@@ graphics/src/text/paragraph.rs:733
 边界应当覆盖文本片段各字形的水平范围。
-@@ graphics/src/text/paragraph.rs:737
+@@ graphics/src/text/paragraph.rs:747
 第一个文本片段从行首开始，并且是这一行的
 真前缀：
-@@ graphics/src/text/paragraph.rs:743
+@@ graphics/src/text/paragraph.rs:753
 第二个文本片段从第一个文本片段结束的位置开始，
 并在行尾结束：
-@@ graphics/src/text/paragraph.rs:749
+@@ graphics/src/text/paragraph.rs:759
 跨多行的文本片段在每一行上各产生一个边界。
-@@ graphics/src/text/paragraph.rs:767
+@@ graphics/src/text/paragraph.rs:777
 各行依次堆叠、互不重叠，并且两行的
 墨迹高度相同：
 @@ graphics/src/geometry/path/arc.rs:1
