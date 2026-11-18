@@ -1,4 +1,11 @@
+//! 处理鼠标事件。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Handle mouse events.
+//!
+//! </details>
 pub mod click;
 
 mod button;

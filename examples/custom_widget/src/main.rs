@@ -1,4 +1,11 @@
+//! 这个示例展示了一个绘制圆形的简单原生自定义部件。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! This example showcases a simple native custom widget that draws a circle.
+//!
+//! </details>
 mod circle {
     use iced::advanced::layout::{self, Layout};
     use iced::advanced::renderer;

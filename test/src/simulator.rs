@@ -1,4 +1,11 @@
+//! 在没有副作用的情况下模拟运行你的应用程序。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Run a simulation of your application without side effects.
+//!
+//! </details>
 use crate::core;
 use crate::core::clipboard;
 use crate::core::event;
@@ -22,7 +29,14 @@ use std::io;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
+/// 可以通过编程方式交互和检查的用户界面。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A user interface that can be interacted with and inspected programmatically.
+///
+/// </details>
 pub struct Simulator<
     'a,
     Message,
@@ -41,14 +55,28 @@ where
     Theme: theme::Base,
     Renderer: core::Renderer + core::renderer::Headless,
 {
+    /// 使用默认的 [`Settings`] 和默认大小（1024x768）创建一个新的 [`Simulator`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Simulator`] with default [`Settings`] and a default size (1024x768).
+    ///
+    /// </details>
     pub fn new(
         element: impl Into<Element<'a, Message, Theme, Renderer>>,
     ) -> Self {
         Self::with_settings(Settings::default(), element)
     }
 
+    /// 使用给定的 [`Settings`] 和默认大小（1024x768）创建一个新的 [`Simulator`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Simulator`] with the given [`Settings`] and a default size (1024x768).
+    ///
+    /// </details>
     pub fn with_settings(
         settings: Settings,
         element: impl Into<Element<'a, Message, Theme, Renderer>>,
@@ -56,7 +84,14 @@ where
         Self::with_size(settings, window::Settings::default().size, element)
     }
 
+    /// 使用给定的 [`Settings`] 和大小创建一个新的 [`Simulator`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Simulator`] with the given [`Settings`] and size.
+    ///
+    /// </details>
     pub fn with_size(
         settings: Settings,
         size: impl Into<Size>,
@@ -100,7 +135,14 @@ where
         }
     }
 
+    /// 在 [`Simulator`] 中查找给定部件 [`Selector`] 的目标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Finds the target of the given widget [`Selector`] in the [`Simulator`].
+    ///
+    /// </details>
     pub fn find<S>(&mut self, selector: S) -> Result<S::Output, Error>
     where
         S: Selector + Send,
@@ -128,18 +170,38 @@ where
         }
     }
 
+    /// 把鼠标光标指向 [`Simulator`] 中的给定位置。
+    ///
+    /// 这 *不会* 产生鼠标移动事件！
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Points the mouse cursor at the given position in the [`Simulator`].
     ///
     /// This does _not_ produce mouse movement events!
+    ///
+    /// </details>
     pub fn point_at(&mut self, position: impl Into<Point>) {
         self.cursor = mouse::Cursor::Available(position.into());
     }
 
+    /// 点击给定 [`Selector`] 找到的 [`Bounded`] 目标（如果有）。
+    ///
+    /// 这包括：
+    /// - 把鼠标光标指向 [`Bounded`] 目标的中心。
+    /// - 模拟一次 [`click`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Clicks the [`Bounded`] target found by the given [`Selector`], if any.
     ///
     /// This consists in:
     /// - Pointing the mouse cursor at the center of the [`Bounded`] target.
     /// - Simulating a [`click`].
+    ///
+    /// </details>
     pub fn click<S>(&mut self, selector: S) -> Result<S::Output, Error>
     where
         S: Selector + Send,
@@ -160,7 +222,14 @@ where
         Ok(target)
     }
 
+    /// 在 [`Simulator`] 中模拟一次按键按下，随后释放。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Simulates a key press, followed by a release, in the [`Simulator`].
+    ///
+    /// </details>
     pub fn tap_key(&mut self, key: impl Into<keyboard::Key>) -> event::Status {
         self.simulate(tap_key(key, None))
             .first()
@@ -168,7 +237,14 @@ where
             .unwrap_or(event::Status::Ignored)
     }
 
+    /// 在 [`Simulator`] 中模拟用户用键盘输入给定的文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Simulates a user typing in the keyboard the given text in the [`Simulator`].
+    ///
+    /// </details>
     pub fn typewrite(&mut self, text: &str) -> event::Status {
         let statuses = self.simulate(typewrite(text));
 
@@ -177,7 +253,14 @@ where
             .fold(event::Status::Ignored, event::Status::merge)
     }
 
+    /// 在 [`Simulator`] 中模拟给定的原始事件序列。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Simulates the given raw sequence of events in the [`Simulator`].
+    ///
+    /// </details>
     pub fn simulate(
         &mut self,
         events: impl IntoIterator<Item = Event>,
@@ -195,7 +278,14 @@ where
         statuses
     }
 
+    /// 绘制 [`Simulator`] 中的界面并为其生成一个 [`Snapshot`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Draws and takes a [`Snapshot`] of the interface in the [`Simulator`].
+    ///
+    /// </details>
     pub fn snapshot(&mut self, theme: &Theme) -> Result<Snapshot, Error> {
         let base = theme.base();
 
@@ -241,7 +331,14 @@ where
         })
     }
 
+    /// 把 [`Simulator`] 转换为各种交互所产生的消息序列。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Turns the [`Simulator`] into the sequence of messages produced by any interactions.
+    ///
+    /// </details>
     pub fn into_messages(
         self,
     ) -> impl Iterator<Item = Message> + use<Message, Theme, Renderer> {
@@ -249,7 +346,14 @@ where
     }
 }
 
+/// 由 [`Simulator`] 渲染的一帧用户界面。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A frame of a user interface rendered by a [`Simulator`].
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct Snapshot {
     screenshot: window::Screenshot,
@@ -257,11 +361,22 @@ pub struct Snapshot {
 }
 
 impl Snapshot {
+    /// 把 [`Snapshot`] 与给定路径下的 PNG 图像进行比较，
+    /// 如果两者完全相同，返回 `true`。
+    ///
+    /// 如果 PNG 图像不存在，[`Snapshot`] 会创建它以供将来
+    /// 测试使用，并返回 `true`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Compares the [`Snapshot`] with the PNG image found in the given path, returning
     /// `true` if they are identical.
     ///
     /// If the PNG image does not exist, it will be created by the [`Snapshot`] for future
     /// testing and `true` will be returned.
+    ///
+    /// </details>
     pub fn matches_image(&self, path: impl AsRef<Path>) -> Result<bool, Error> {
         let path = self.path(path, "png");
 
@@ -299,11 +414,22 @@ impl Snapshot {
         }
     }
 
+    /// 把 [`Snapshot`] 与给定路径下的 SHA-256 哈希文件进行比较，
+    /// 如果两者完全相同，返回 `true`。
+    ///
+    /// 如果哈希文件不存在，[`Snapshot`] 会创建它以供将来
+    /// 测试使用，并返回 `true`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Compares the [`Snapshot`] with the SHA-256 hash file found in the given path, returning
     /// `true` if they are identical.
     ///
     /// If the hash file does not exist, it will be created by the [`Snapshot`] for future
     /// testing and `true` will be returned.
+    ///
+    /// </details>
     pub fn matches_hash(&self, path: impl AsRef<Path>) -> Result<bool, Error> {
         use sha2::{Digest, Sha256};
 
@@ -344,9 +470,18 @@ impl Snapshot {
     }
 }
 
+/// 创建一个新的 [`Simulator`]。
+///
+/// 这只是 [`Simulator::new`] 的函数版本。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Simulator`].
 ///
 /// This is just a function version of [`Simulator::new`].
+///
+/// </details>
 pub fn simulator<'a, Message, Theme, Renderer>(
     element: impl Into<Element<'a, Message, Theme, Renderer>>,
 ) -> Simulator<'a, Message, Theme, Renderer>
@@ -357,7 +492,14 @@ where
     Simulator::new(element)
 }
 
+/// 返回一次点击的事件序列。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Returns the sequence of events of a click.
+///
+/// </details>
 pub fn click() -> impl Iterator<Item = Event> {
     [
         Event::Mouse(mouse::Event::ButtonPressed(mouse::Button::Left)),
@@ -366,7 +508,14 @@ pub fn click() -> impl Iterator<Item = Event> {
     .into_iter()
 }
 
+/// 返回一次按键按下的事件序列。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Returns the sequence of events of a key press.
+///
+/// </details>
 pub fn press_key(
     key: impl Into<keyboard::Key>,
     text: Option<SmolStr>,
@@ -386,7 +535,14 @@ pub fn press_key(
     })
 }
 
+/// 返回一次按键释放的事件序列。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Returns the sequence of events of a key release.
+///
+/// </details>
 pub fn release_key(key: impl Into<keyboard::Key>) -> Event {
     let key = key.into();
 
@@ -401,7 +557,14 @@ pub fn release_key(key: impl Into<keyboard::Key>) -> Event {
     })
 }
 
+/// 返回一次“敲击按键”（即按下并释放一个按键）的事件序列。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Returns the sequence of events of a "key tap" (i.e. pressing and releasing a key).
+///
+/// </details>
 pub fn tap_key(
     key: impl Into<keyboard::Key>,
     text: Option<SmolStr>,
@@ -411,7 +574,14 @@ pub fn tap_key(
     [press_key(key.clone(), text), release_key(key)].into_iter()
 }
 
+/// 返回在键盘上打出给定文本的事件序列。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Returns the sequence of events of typewriting the given text in a keyboard.
+///
+/// </details>
 pub fn typewrite(text: &str) -> impl Iterator<Item = Event> + '_ {
     text.chars()
         .map(|c| SmolStr::new_inline(&c.to_string()))

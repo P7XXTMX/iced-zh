@@ -1,17 +1,46 @@
 use crate::core::Rectangle;
 
+/// 用于度量坐标的固定参考线。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A fixed reference line for the measurement of coordinates.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub enum Axis {
+    /// 水平轴：—
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The horizontal axis: —
+    ///
+    /// </details>
     Horizontal,
+    /// 垂直轴：|
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The vertical axis: |
+    ///
+    /// </details>
     Vertical,
 }
 
 impl Axis {
+    /// 使用给定的 `ratio` 和 `spacing`，沿当前 [`Axis`]
+    /// 分割提供的 [`Rectangle`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Splits the provided [`Rectangle`] on the current [`Axis`] with the
     /// given `ratio` and `spacing`.
+    ///
+    /// </details>
     pub fn split(
         &self,
         rectangle: &Rectangle,
@@ -72,7 +101,14 @@ impl Axis {
         }
     }
 
+    /// 计算分割线在某个 [`Rectangle`] 区域中的边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Calculates the bounds of the split line in a [`Rectangle`] region.
+    ///
+    /// </details>
     pub fn split_line_bounds(
         &self,
         rectangle: Rectangle,
@@ -123,6 +159,7 @@ mod tests {
     fn split() {
         let cases = vec![
             // Even height, even spacing
+            // 偶数高度，偶数间距
             Case::Horizontal {
                 overall_height: 10.0,
                 spacing: 2.0,
@@ -131,6 +168,7 @@ mod tests {
                 bottom_height: 4.0,
             },
             // Odd height, even spacing
+            // 奇数高度，偶数间距
             Case::Horizontal {
                 overall_height: 9.0,
                 spacing: 2.0,
@@ -139,6 +177,7 @@ mod tests {
                 bottom_height: 3.0,
             },
             // Even height, odd spacing
+            // 偶数高度，奇数间距
             Case::Horizontal {
                 overall_height: 10.0,
                 spacing: 1.0,
@@ -147,6 +186,7 @@ mod tests {
                 bottom_height: 4.0,
             },
             // Odd height, odd spacing
+            // 奇数高度，奇数间距
             Case::Horizontal {
                 overall_height: 9.0,
                 spacing: 1.0,
@@ -155,6 +195,7 @@ mod tests {
                 bottom_height: 4.0,
             },
             // Even width, even spacing
+            // 偶数宽度，偶数间距
             Case::Vertical {
                 overall_width: 10.0,
                 spacing: 2.0,
@@ -163,6 +204,7 @@ mod tests {
                 right_width: 4.0,
             },
             // Odd width, even spacing
+            // 奇数宽度，偶数间距
             Case::Vertical {
                 overall_width: 9.0,
                 spacing: 2.0,
@@ -171,6 +213,7 @@ mod tests {
                 right_width: 3.0,
             },
             // Even width, odd spacing
+            // 偶数宽度，奇数间距
             Case::Vertical {
                 overall_width: 10.0,
                 spacing: 1.0,
@@ -179,6 +222,7 @@ mod tests {
                 right_width: 4.0,
             },
             // Odd width, odd spacing
+            // 奇数宽度，奇数间距
             Case::Vertical {
                 overall_width: 9.0,
                 spacing: 1.0,

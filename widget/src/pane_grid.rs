@@ -1,3 +1,24 @@
+//! 窗格网格让用户可以分割应用程序的区域，并动态地组织布局。
+//!
+//! ![Pane grid - Iced](https://iced.rs/examples/pane_grid.gif)
+//!
+//! 这种空间分配方式在平铺式窗口管理器中很常见（例如
+//! [`awesome`](https://awesomewm.org/)、[`i3`](https://i3wm.org/)，甚至
+//! [`tmux`](https://github.com/tmux/tmux)）。
+//!
+//! [`PaneGrid`] 支持：
+//!
+//! * 垂直和水平分割
+//! * 跟踪最后一个活动窗格
+//! * 用鼠标调整大小
+//! * 通过拖放重新组织窗格
+//! * 快捷键支持
+//! * 可配置的修饰键
+//! * 用于以编程方式执行动作（`split`、`swap`、`resize` 等）的 [`State`] API
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Pane grids let your users split regions of your application and organize layout dynamically.
 //!
 //! ![Pane grid - Iced](https://iced.rs/examples/pane_grid.gif)
@@ -16,7 +37,9 @@
 //! * Configurable modifier keys
 //! * [`State`] API to perform actions programmatically (`split`, `swap`, `resize`, etc.)
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -49,8 +72,16 @@
 //!     .into()
 //! }
 //! ```
+//! [`pane_grid` 示例][`pane_grid` example]展示了如何使用支持调整大小、
+//! 拖放和快捷键的 [`PaneGrid`]。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! The [`pane_grid` example] showcases how to use a [`PaneGrid`] with resizing,
 //! drag and drop, and hotkey support.
+//!
+//! </details>
 //!
 //! [`pane_grid` example]: https://github.com/iced-rs/iced/tree/0.14/examples/pane_grid
 mod axis;
@@ -95,6 +126,28 @@ use crate::core::{
 const DRAG_DEADBAND_DISTANCE: f32 = 10.0;
 const THICKNESS_RATIO: f32 = 25.0;
 
+/// 一组窗格，通过垂直或水平分割进行分布，
+/// 完全填满可用空间。
+///
+/// ![Pane grid - Iced](https://iced.rs/examples/pane_grid.gif)
+///
+/// 这种空间分配方式在平铺式窗口管理器中很常见（例如
+/// [`awesome`](https://awesomewm.org/)、[`i3`](https://i3wm.org/)，甚至
+/// [`tmux`](https://github.com/tmux/tmux)）。
+///
+/// [`PaneGrid`] 支持：
+///
+/// * 垂直和水平分割
+/// * 跟踪最后一个活动窗格
+/// * 用鼠标调整大小
+/// * 通过拖放重新组织窗格
+/// * 快捷键支持
+/// * 可配置的修饰键
+/// * 用于以编程方式执行动作（`split`、`swap`、`resize` 等）的 [`State`] API
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A collection of panes distributed using either vertical or horizontal splits
 /// to completely fill the space available.
 ///
@@ -114,7 +167,9 @@ const THICKNESS_RATIO: f32 = 25.0;
 /// * Configurable modifier keys
 /// * [`State`] API to perform actions programmatically (`split`, `swap`, `resize`, etc.)
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -175,10 +230,20 @@ where
     Theme: Catalog,
     Renderer: core::Renderer,
 {
+    /// 使用给定的 [`State`] 和视图函数创建一个 [`PaneGrid`]。
+    ///
+    /// 视图函数会被调用，用来显示 [`State`] 中的每一个 [`Pane`]。
+    /// 如果窗格已被最大化，[`bool`] 为 true。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`PaneGrid`] with the given [`State`] and view function.
     ///
     /// The view function will be called to display each [`Pane`] present in the
     /// [`State`]. [`bool`] is set if the pane is maximized.
+    ///
+    /// </details>
     pub fn new<T>(
         state: &'a State<T>,
         view: impl Fn(Pane, &'a T, bool) -> Content<'a, Message, Theme, Renderer>,
@@ -209,32 +274,68 @@ where
         }
     }
 
+    /// 设置 [`PaneGrid`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`PaneGrid`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`PaneGrid`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`PaneGrid`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置 [`PaneGrid`] 各窗格 *之间* 的间距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the spacing _between_ the panes of the [`PaneGrid`].
+    ///
+    /// </details>
     pub fn spacing(mut self, amount: impl Into<Pixels>) -> Self {
         self.spacing = amount.into().0;
         self
     }
 
+    /// 设置 [`PaneGrid`] 中 [`Pane`] 在两个轴上的最小尺寸。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the minimum size of a [`Pane`] in the [`PaneGrid`] on both axes.
+    ///
+    /// </details>
     pub fn min_size(mut self, min_size: impl Into<Pixels>) -> Self {
         self.min_size = min_size.into().0;
         self
     }
 
+    /// 设置 [`PaneGrid`] 的某个 [`Pane`] 被点击时
+    /// 产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when a [`Pane`] of the
     /// [`PaneGrid`] is clicked.
+    ///
+    /// </details>
     pub fn on_click<F>(mut self, f: F) -> Self
     where
         F: 'a + Fn(Pane) -> Message,
@@ -243,8 +344,16 @@ where
         self
     }
 
+    /// 启用 [`PaneGrid`] 的拖放交互，
+    /// 并使用提供的函数产生消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Enables the drag and drop interactions of the [`PaneGrid`], which will
     /// use the provided function to produce messages.
+    ///
+    /// </details>
     pub fn on_drag<F>(mut self, f: F) -> Self
     where
         F: 'a + Fn(DragEvent) -> Message,
@@ -255,6 +364,19 @@ where
         self
     }
 
+    /// 启用 [`PaneGrid`] 的调整大小交互，
+    /// 并使用提供的函数产生消息。
+    ///
+    /// `leeway` 描述分割线周围可以用来
+    /// 抓取它的空间大小。
+    ///
+    /// 分割线的可抓取区域长度为 `spacing + leeway`，
+    /// 并且居中。换句话说，分割线两侧各有
+    /// `(spacing + leeway) / 2.0` 的长度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Enables the resize interactions of the [`PaneGrid`], which will
     /// use the provided function to produce messages.
     ///
@@ -264,6 +386,8 @@ where
     /// The grabbable area of a split will have a length of `spacing + leeway`,
     /// properly centered. In other words, a length of
     /// `(spacing + leeway) / 2.0` on either side of the split line.
+    ///
+    /// </details>
     pub fn on_resize<F>(mut self, leeway: impl Into<Pixels>, f: F) -> Self
     where
         F: 'a + Fn(ResizeEvent) -> Message,
@@ -274,7 +398,14 @@ where
         self
     }
 
+    /// 设置 [`PaneGrid`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`PaneGrid`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme) -> Style + 'a) -> Self
     where
@@ -284,7 +415,14 @@ where
         self
     }
 
+    /// 设置 [`PaneGrid`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`PaneGrid`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(
@@ -385,6 +523,11 @@ where
         // states which no longer exist and `diff_children` will
         // diff the remaining values in the correct order and
         // add new states at the end
+        // `Pane` 总是递增的，并且按 Ord 顺序迭代，因此新的
+        // 状态总是添加在末尾。我们只需移除
+        // 已不存在的状态，`diff_children` 就会
+        // 按正确的顺序对剩余的值做差异比较，并
+        // 在末尾添加新的状态
 
         let mut i = 0;
         let mut j = 0;
@@ -924,6 +1067,7 @@ where
         }
 
         // Render picked pane last
+        // 最后渲染被拾起的窗格
         if let Some(((content, tree), origin, layout)) = render_picked_pane
             && let Some(cursor_position) = cursor.position()
         {
@@ -1165,80 +1309,239 @@ fn layout_region_bounds(layout: Layout<'_>, region: Region) -> Rectangle {
     }
 }
 
+/// [`PaneGrid`] 的拖放交互过程中产生的事件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An event produced during a drag and drop interaction of a [`PaneGrid`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy)]
 pub enum DragEvent {
+    /// 某个 [`Pane`] 被拾取以进行拖动。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A [`Pane`] was picked for dragging.
+    ///
+    /// </details>
     Picked {
+        /// 被拾取的 [`Pane`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The picked [`Pane`].
+        ///
+        /// </details>
         pane: Pane,
     },
 
+    /// 某个 [`Pane`] 被放置到另一个 [`Pane`] 之上。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A [`Pane`] was dropped on top of another [`Pane`].
+    ///
+    /// </details>
     Dropped {
+        /// 被拾取的 [`Pane`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The picked [`Pane`].
+        ///
+        /// </details>
         pane: Pane,
 
+        /// 被拾取的 [`Pane`] 所放置到的 [`Target`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The [`Target`] where the picked [`Pane`] was dropped on.
+        ///
+        /// </details>
         target: Target,
     },
 
+    /// 某个 [`Pane`] 被拾取，然后被放置在其他 [`Pane`]
+    /// 的边界之外。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A [`Pane`] was picked and then dropped outside of other [`Pane`]
     /// boundaries.
+    ///
+    /// </details>
     Canceled {
+        /// 被拾取的 [`Pane`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The picked [`Pane`].
+        ///
+        /// </details>
         pane: Pane,
     },
 }
 
+/// 窗格可以被放置到的 [`Target`] 区域。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The [`Target`] area a pane can be dropped on.
+///
+/// </details>
 #[derive(Debug, Clone, Copy)]
 pub enum Target {
+    /// 整个 [`PaneGrid`] 的某条 [`Edge`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// An [`Edge`] of the full [`PaneGrid`].
+    ///
+    /// </details>
     Edge(Edge),
+    /// [`PaneGrid`] 中的单个 [`Pane`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A single [`Pane`] of the [`PaneGrid`].
+    ///
+    /// </details>
     Pane(Pane, Region),
 }
 
+/// [`Pane`] 的区域。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The region of a [`Pane`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, Default)]
 pub enum Region {
+    /// 中心区域。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Center region.
+    ///
+    /// </details>
     #[default]
     Center,
+    /// 边缘区域。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Edge region.
+    ///
+    /// </details>
     Edge(Edge),
 }
 
+/// 某个区域的各条边。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The edges of an area.
+///
+/// </details>
 #[derive(Debug, Clone, Copy)]
 pub enum Edge {
+    /// 上边缘。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Top edge.
+    ///
+    /// </details>
     Top,
+    /// 左边缘。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Left edge.
+    ///
+    /// </details>
     Left,
+    /// 右边缘。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Right edge.
+    ///
+    /// </details>
     Right,
+    /// 下边缘。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Bottom edge.
+    ///
+    /// </details>
     Bottom,
 }
 
+/// [`PaneGrid`] 的调整大小交互过程中产生的事件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An event produced during a resize interaction of a [`PaneGrid`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy)]
 pub struct ResizeEvent {
+    /// 正在被拖动以调整大小的 [`Split`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Split`] that is being dragged for resizing.
+    ///
+    /// </details>
     pub split: Split,
 
+    /// [`Split`] 的新比例。
+    ///
+    /// 比例是 [0, 1] 范围内的值，表示 [`Split`]
+    /// 在两个窗格之间的确切位置。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The new ratio of the [`Split`].
     ///
     /// The ratio is a value in [0, 1], representing the exact position of a
     /// [`Split`] between two panes.
+    ///
+    /// </details>
     pub ratio: f32,
 }
 
 /*
  * Helpers
  */
+// 辅助函数
 fn hovered_split<'a>(
     mut splits: impl Iterator<Item = (&'a Split, &'a (Axis, Rectangle, f32))>,
     spacing: f32,
@@ -1255,52 +1558,161 @@ fn hovered_split<'a>(
     })
 }
 
+/// [`PaneGrid`] 的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of a [`PaneGrid`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Style {
+    /// 被悬停区域的高亮外观。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The appearance of a hovered region highlight.
+    ///
+    /// </details>
     pub hovered_region: Highlight,
+    /// 被拾取的分割线的外观。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The appearance of a picked split.
+    ///
+    /// </details>
     pub picked_split: Line,
+    /// 被悬停的分割线的外观。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The appearance of a hovered split.
+    ///
+    /// </details>
     pub hovered_split: Line,
 }
 
+/// [`PaneGrid`] 的高亮外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of a highlight of the [`PaneGrid`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Highlight {
+    /// 窗格区域的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Background`] of the pane region.
+    ///
+    /// </details>
     pub background: Background,
+    /// 窗格区域的 [`Border`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Border`] of the pane region.
+    ///
+    /// </details>
     pub border: Border,
 }
 
+/// 线条。
+///
+/// 通常用于定义某个东西（例如分割线）的高亮。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A line.
 ///
 /// It is normally used to define the highlight of something, like a split.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Line {
+    /// [`Line`] 的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of the [`Line`].
+    ///
+    /// </details>
     pub color: Color,
+    /// [`Line`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The width of the [`Line`].
+    ///
+    /// </details>
     pub width: f32,
 }
 
+/// [`PaneGrid`] 的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`PaneGrid`].
+///
+/// </details>
 pub trait Catalog: container::Catalog {
+    /// 这个 [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of this [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// 这个 [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by this [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> <Self as Catalog>::Class<'a>;
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(&self, class: &<Self as Catalog>::Class<'_>) -> Style;
 }
 
+/// [`PaneGrid`] 的样式函数。
+///
+/// 它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for a [`PaneGrid`].
 ///
 /// This is just a boxed closure: `Fn(&Theme, Status) -> Style`.
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme) -> Style + 'a>;
 
 impl Catalog for Theme {
@@ -1315,7 +1727,14 @@ impl Catalog for Theme {
     }
 }
 
+/// [`PaneGrid`] 的默认样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default style of a [`PaneGrid`].
+///
+/// </details>
 pub fn default(theme: &Theme) -> Style {
     let palette = theme.extended_palette();
 

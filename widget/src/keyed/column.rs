@@ -1,4 +1,11 @@
+//! 带键的列在垂直方向上分布内容，同时保持连续性。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Keyed columns distribute content vertically while keeping continuity.
+//!
+//! </details>
 use crate::core::layout;
 use crate::core::mouse;
 use crate::core::overlay;
@@ -10,9 +17,16 @@ use crate::core::{
     Rectangle, Shell, Size, Vector, Widget,
 };
 
+/// 在垂直方向上分布其内容并保持连续性的容器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A container that distributes its contents vertically while keeping continuity.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -54,11 +68,29 @@ where
     Key: Copy + PartialEq,
     Renderer: crate::core::Renderer,
 {
+    /// 创建一个空的 [`Column`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates an empty [`Column`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::from_vecs(Vec::new(), Vec::new())
     }
 
+    /// 从已分配的 [`Vec`] 创建一个 [`Column`]。
+    ///
+    /// 请注意，[`Column`] 不会检查这些 [`Vec`]，也就是说
+    /// 它不会自动适应其内容的尺寸策略。
+    ///
+    /// 如果有子元素使用 [`Length::Fill`] 策略，你需要
+    /// 相应地调用 [`Column::width`] 或 [`Column::height`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Column`] from already allocated [`Vec`]s.
     ///
     /// Keep in mind that the [`Column`] will not inspect the [`Vec`]s, which means
@@ -66,6 +98,8 @@ where
     ///
     /// If any of the children have a [`Length::Fill`] strategy, you will need to
     /// call [`Column::width`] or [`Column::height`] accordingly.
+    ///
+    /// </details>
     pub fn from_vecs(
         keys: Vec<Key>,
         children: Vec<Element<'a, Message, Theme, Renderer>>,
@@ -82,7 +116,14 @@ where
         }
     }
 
+    /// 使用给定的容量创建一个 [`Column`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Column`] with the given capacity.
+    ///
+    /// </details>
     pub fn with_capacity(capacity: usize) -> Self {
         Self::from_vecs(
             Vec::with_capacity(capacity),
@@ -90,7 +131,14 @@ where
         )
     }
 
+    /// 使用给定的元素创建一个 [`Column`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Column`] with the given elements.
+    ///
+    /// </details>
     pub fn with_children(
         children: impl IntoIterator<
             Item = (Key, Element<'a, Message, Theme, Renderer>),
@@ -101,47 +149,100 @@ where
         Self::with_capacity(iterator.size_hint().0).extend(iterator)
     }
 
+    /// 设置元素*之间*的垂直间距。
+    ///
+    /// iced 中不存在针对单个元素的自定义外边距。你应该改用
+    /// 此方法！虽然灵活性差一些，但它有助于让元素之间的
+    /// 间距保持一致。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the vertical spacing _between_ elements.
     ///
     /// Custom margins per element do not exist in iced. You should use this
     /// method instead! While less flexible, it helps you keep spacing between
     /// elements consistent.
+    ///
+    /// </details>
     pub fn spacing(mut self, amount: impl Into<Pixels>) -> Self {
         self.spacing = amount.into().0;
         self
     }
 
+    /// 设置 [`Column`] 的 [`Padding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Padding`] of the [`Column`].
+    ///
+    /// </details>
     pub fn padding<P: Into<Padding>>(mut self, padding: P) -> Self {
         self.padding = padding.into();
         self
     }
 
+    /// 设置 [`Column`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Column`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Column`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Column`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置 [`Column`] 的最大宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the maximum width of the [`Column`].
+    ///
+    /// </details>
     pub fn max_width(mut self, max_width: impl Into<Pixels>) -> Self {
         self.max_width = max_width.into().0;
         self
     }
 
+    /// 设置 [`Column`] 内容的水平对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the horizontal alignment of the contents of the [`Column`] .
+    ///
+    /// </details>
     pub fn align_items(mut self, align: Alignment) -> Self {
         self.align_items = align;
         self
     }
 
+    /// 向 [`Column`] 添加一个元素。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Adds an element to the [`Column`].
+    ///
+    /// </details>
     pub fn push(
         mut self,
         key: Key,
@@ -158,7 +259,14 @@ where
         self
     }
 
+    /// 向 [`Column`] 添加一个元素，如果为 `Some` 的话。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Adds an element to the [`Column`], if `Some`.
+    ///
+    /// </details>
     pub fn push_maybe(
         self,
         key: Key,
@@ -171,7 +279,14 @@ where
         }
     }
 
+    /// 用给定的子元素扩展 [`Column`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Extends the [`Column`] with the given children.
+    ///
+    /// </details>
     pub fn extend(
         self,
         children: impl IntoIterator<

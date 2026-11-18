@@ -1,6 +1,13 @@
+//! 开关让用户通过拨动一个切换钮来做出二元选择。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Togglers let users make binary choices by toggling a switch.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -45,9 +52,16 @@ use crate::core::{
     Pixels, Rectangle, Shell, Size, Theme, Widget,
 };
 
+/// 开关部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A toggler widget.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -107,9 +121,28 @@ where
     Theme: Catalog,
     Renderer: text::Renderer,
 {
+    /// [`Toggler`] 的默认大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default size of a [`Toggler`].
+    ///
+    /// </details>
     pub const DEFAULT_SIZE: f32 = 16.0;
 
+    /// 创建一个新的 [`Toggler`]。
+    ///
+    /// 它需要：
+    ///   * 一个布尔值，描述 [`Toggler`] 是否处于选中状态
+    ///   * [`Toggler`] 的一个可选标签
+    ///   * 一个在 [`Toggler`] 被切换时调用的函数。它
+    ///     会收到 [`Toggler`] 的新状态，并且必须产生一个
+    ///     `Message`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Toggler`].
     ///
     /// It expects:
@@ -118,6 +151,8 @@ where
     ///   * a function that will be called when the [`Toggler`] is toggled. It
     ///     will receive the new state of the [`Toggler`] and must produce a
     ///     `Message`.
+    ///
+    /// </details>
     pub fn new(is_toggled: bool) -> Self {
         Toggler {
             is_toggled,
@@ -137,16 +172,33 @@ where
         }
     }
 
+    /// 设置 [`Toggler`] 的标签。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the label of the [`Toggler`].
+    ///
+    /// </details>
     pub fn label(mut self, label: impl text::IntoFragment<'a>) -> Self {
         self.label = Some(label.into_fragment());
         self
     }
 
+    /// 设置用户切换 [`Toggler`] 时
+    /// 应该产生的消息。
+    ///
+    /// 如果没有调用这个方法，[`Toggler`] 会被禁用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that should be produced when a user toggles
     /// the [`Toggler`].
     ///
     /// If this method is not called, the [`Toggler`] will be disabled.
+    ///
+    /// </details>
     pub fn on_toggle(
         mut self,
         on_toggle: impl Fn(bool) -> Message + 'a,
@@ -155,10 +207,20 @@ where
         self
     }
 
+    /// 如果为 `Some`，设置用户切换 [`Toggler`] 时
+    /// 应该产生的消息。
+    ///
+    /// 如果为 `None`，[`Toggler`] 会被禁用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that should be produced when a user toggles
     /// the [`Toggler`], if `Some`.
     ///
     /// If `None`, the [`Toggler`] will be disabled.
+    ///
+    /// </details>
     pub fn on_toggle_maybe(
         mut self,
         on_toggle: Option<impl Fn(bool) -> Message + 'a>,
@@ -167,25 +229,53 @@ where
         self
     }
 
+    /// 设置 [`Toggler`] 的大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the size of the [`Toggler`].
+    ///
+    /// </details>
     pub fn size(mut self, size: impl Into<Pixels>) -> Self {
         self.size = size.into().0;
         self
     }
 
+    /// 设置 [`Toggler`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Toggler`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Toggler`] 的文本字号。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the text size o the [`Toggler`].
+    ///
+    /// </details>
     pub fn text_size(mut self, text_size: impl Into<Pixels>) -> Self {
         self.text_size = Some(text_size.into());
         self
     }
 
+    /// 设置 [`Toggler`] 的文本 [`text::LineHeight`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the text [`text::LineHeight`] of the [`Toggler`].
+    ///
+    /// </details>
     pub fn text_line_height(
         mut self,
         line_height: impl Into<text::LineHeight>,
@@ -194,7 +284,14 @@ where
         self
     }
 
+    /// 设置 [`Toggler`] 文本的水平对齐方式
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the horizontal alignment of the text of the [`Toggler`]
+    ///
+    /// </details>
     pub fn text_alignment(
         mut self,
         alignment: impl Into<text::Alignment>,
@@ -203,25 +300,53 @@ where
         self
     }
 
+    /// 设置 [`Toggler`] 的 [`text::Shaping`] 策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`text::Shaping`] strategy of the [`Toggler`].
+    ///
+    /// </details>
     pub fn text_shaping(mut self, shaping: text::Shaping) -> Self {
         self.text_shaping = shaping;
         self
     }
 
+    /// 设置 [`Toggler`] 的 [`text::Wrapping`] 策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`text::Wrapping`] strategy of the [`Toggler`].
+    ///
+    /// </details>
     pub fn text_wrapping(mut self, wrapping: text::Wrapping) -> Self {
         self.text_wrapping = wrapping;
         self
     }
 
+    /// 设置 [`Toggler`] 与文本之间的间距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the spacing between the [`Toggler`] and the text.
+    ///
+    /// </details>
     pub fn spacing(mut self, spacing: impl Into<Pixels>) -> Self {
         self.spacing = spacing.into().0;
         self
     }
 
+    /// 设置 [`Toggler`] 文本的 [`Renderer::Font`]
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Renderer::Font`] of the text of the [`Toggler`]
+    ///
+    /// </details>
     ///
     /// [`Renderer::Font`]: crate::core::text::Renderer
     pub fn font(mut self, font: impl Into<Renderer::Font>) -> Self {
@@ -229,7 +354,14 @@ where
         self
     }
 
+    /// 设置 [`Toggler`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`Toggler`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme, Status) -> Style + 'a) -> Self
     where
@@ -239,7 +371,14 @@ where
         self
     }
 
+    /// 设置 [`Toggler`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`Toggler`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
@@ -483,66 +622,224 @@ where
     }
 }
 
+/// [`Toggler`] 可能的交互状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The possible status of a [`Toggler`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
+    /// [`Toggler`] 可以交互。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Toggler`] can be interacted with.
+    ///
+    /// </details>
     Active {
+        /// 表示 [`Toggler`] 是否处于开启状态。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Indicates whether the [`Toggler`] is toggled.
+        ///
+        /// </details>
         is_toggled: bool,
     },
+    /// [`Toggler`] 正处于悬停状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Toggler`] is being hovered.
+    ///
+    /// </details>
     Hovered {
+        /// 表示 [`Toggler`] 是否处于开启状态。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Indicates whether the [`Toggler`] is toggled.
+        ///
+        /// </details>
         is_toggled: bool,
     },
+    /// [`Toggler`] 已被禁用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Toggler`] is disabled.
+    ///
+    /// </details>
     Disabled {
+        /// 表示 [`Toggler`] 是否处于开启状态。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Indicates whether the [`Toggler`] is toggled.
+        ///
+        /// </details>
         is_toggled: bool,
     },
 }
 
+/// 开关的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of a toggler.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Style {
+    /// 开关的背景 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The background [`Color`] of the toggler.
+    ///
+    /// </details>
     pub background: Background,
+    /// 开关背景边框的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The width of the background border of the toggler.
+    ///
+    /// </details>
     pub background_border_width: f32,
+    /// 开关背景边框的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of the background border of the toggler.
+    ///
+    /// </details>
     pub background_border_color: Color,
+    /// 开关的前景 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The foreground [`Color`] of the toggler.
+    ///
+    /// </details>
     pub foreground: Background,
+    /// 开关前景边框的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The width of the foreground border of the toggler.
+    ///
+    /// </details>
     pub foreground_border_width: f32,
+    /// 开关前景边框的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of the foreground border of the toggler.
+    ///
+    /// </details>
     pub foreground_border_color: Color,
+    /// 开关的文本 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text [`Color`] of the toggler.
+    ///
+    /// </details>
     pub text_color: Option<Color>,
+    /// 开关的边框半径。
+    ///
+    /// 如果为 `None`，开关会是完全圆润的。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The border radius of the toggler.
     ///
     /// If `None`, the toggler will be perfectly round.
+    ///
+    /// </details>
     pub border_radius: Option<border::Radius>,
+    /// 背景与切换钮之间的间隔比例，相对于高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The ratio of separation between the background and the toggle in relative height.
+    ///
+    /// </details>
     pub padding_ratio: f32,
 }
 
+/// [`Toggler`] 的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`Toggler`].
+///
+/// </details>
 pub trait Catalog: Sized {
+    /// [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of the [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by the [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> Self::Class<'a>;
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(&self, class: &Self::Class<'_>, status: Status) -> Style;
 }
 
+/// [`Toggler`] 的样式函数。
+///
+/// 它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for a [`Toggler`].
 ///
 /// This is just a boxed closure: `Fn(&Theme, Status) -> Style`.
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme, Status) -> Style + 'a>;
 
 impl Catalog for Theme {
@@ -557,7 +854,14 @@ impl Catalog for Theme {
     }
 }
 
+/// [`Toggler`] 的默认样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default style of a [`Toggler`].
+///
+/// </details>
 pub fn default(theme: &Theme, status: Status) -> Style {
     let palette = theme.extended_palette();
 

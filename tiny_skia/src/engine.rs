@@ -48,6 +48,7 @@ impl Engine {
         let transform = into_transform(transformation);
 
         // Make sure the border radius is not larger than the bounds
+        // 确保边框半径不大于边界
         let border_width = quad
             .border
             .width
@@ -203,6 +204,7 @@ impl Engine {
 
         if border_width > 0.0 {
             // Border path is offset by half the border width
+            // 边框路径偏移半个边框宽度
             let border_bounds = Rectangle {
                 x: quad.bounds.x + border_width / 2.0,
                 y: quad.bounds.y + border_width / 2.0,
@@ -211,12 +213,14 @@ impl Engine {
             };
 
             // Make sure the border radius is correct
+            // 确保边框半径正确
             let mut border_radius = <[f32; 4]>::from(quad.border.radius);
             let mut is_simple_border = true;
 
             for radius in &mut border_radius {
                 *radius = if *radius == 0.0 {
                     // Path should handle this fine
+                    // 路径可以正常处理这种情况
                     0.0
                 } else if *radius > border_width / 2.0 {
                     *radius - border_width / 2.0
@@ -229,6 +233,7 @@ impl Engine {
             }
 
             // Stroking a path works well in this case
+            // 这种情况下对路径描边的效果很好
             if is_simple_border {
                 let border_path =
                     rounded_rectangle(border_bounds, border_radius);
@@ -252,6 +257,8 @@ impl Engine {
             } else {
                 // Draw corners that have too small border radii as having no border radius,
                 // but mask them with the rounded rectangle with the correct border radius.
+                // 把边框半径过小的角按没有边框半径来绘制，
+                // 再用边框半径正确的圆角矩形对它们进行遮罩。
                 let mut temp_pixmap = tiny_skia::Pixmap::new(
                     quad.bounds.width as u32,
                     quad.bounds.height as u32,

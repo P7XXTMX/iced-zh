@@ -257,6 +257,8 @@ struct Ratio {
     v: f32,
     // Padding field for 16-byte alignment.
     // See https://docs.rs/wgpu/latest/wgpu/struct.DownlevelFlags.html#associatedconstant.BUFFER_BINDINGS_NOT_16_BYTE_ALIGNED
+    // 用于 16 字节对齐的填充字段。
+    // 参见上面的链接
     _padding: [f32; 2],
 }
 

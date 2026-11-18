@@ -1,27 +1,71 @@
+//! 把部件的内部状态保存在一棵状态树中，以保证连续性。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Store internal widget state in a state tree to ensure continuity.
+//!
+//! </details>
 use crate::Widget;
 
 use std::any::{self, Any};
 use std::borrow::Borrow;
 use std::fmt;
 
+/// 持久化的部件状态树。
+///
+/// 一个 [`Tree`] 通常与部件树中的某个特定部件相关联。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A persistent state widget tree.
 ///
 /// A [`Tree`] is normally associated with a specific widget in the widget tree.
+///
+/// </details>
 #[derive(Debug)]
 pub struct Tree {
+    /// [`Tree`] 的标签。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The tag of the [`Tree`].
+    ///
+    /// </details>
     pub tag: Tag,
 
+    /// [`Tree`] 的 [`State`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`State`] of the [`Tree`].
+    ///
+    /// </details>
     pub state: State,
 
+    /// [`Tree`] 的根部件的各个子级。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The children of the root widget of the [`Tree`].
+    ///
+    /// </details>
     pub children: Vec<Tree>,
 }
 
 impl Tree {
+    /// 创建一个空的、无状态且没有子节点的 [`Tree`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates an empty, stateless [`Tree`] with no children.
+    ///
+    /// </details>
     pub fn empty() -> Self {
         Self {
             tag: Tag::stateless(),
@@ -30,7 +74,14 @@ impl Tree {
         }
     }
 
+    /// 为给定的 [`Widget`] 创建一个新的 [`Tree`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Tree`] for the provided [`Widget`].
+    ///
+    /// </details>
     pub fn new<'a, Message, Theme, Renderer>(
         widget: impl Borrow<dyn Widget<Message, Theme, Renderer> + 'a>,
     ) -> Self
@@ -46,12 +97,24 @@ impl Tree {
         }
     }
 
+    /// 把当前的树与给定的 [`Widget`] 进行协调。
+    ///
+    /// 如果 [`Widget`] 的标签与 [`Tree`] 的标签匹配，那么
+    /// [`Widget`] 会继续进行协调（即调用 [`Widget::diff`]）。
+    ///
+    /// 否则，整棵 [`Tree`] 会被重新创建。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Reconciles the current tree with the provided [`Widget`].
     ///
     /// If the tag of the [`Widget`] matches the tag of the [`Tree`], then the
     /// [`Widget`] proceeds with the reconciliation (i.e. [`Widget::diff`] is called).
     ///
     /// Otherwise, the whole [`Tree`] is recreated.
+    ///
+    /// </details>
     ///
     /// [`Widget::diff`]: crate::Widget::diff
     pub fn diff<'a, Message, Theme, Renderer>(
@@ -67,7 +130,14 @@ impl Tree {
         }
     }
 
+    /// 把这棵树的子节点与给定的部件列表进行协调。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Reconciles the children of the tree with the provided list of widgets.
+    ///
+    /// </details>
     pub fn diff_children<'a, Message, Theme, Renderer>(
         &mut self,
         new_children: &[impl Borrow<dyn Widget<Message, Theme, Renderer> + 'a>],
@@ -81,8 +151,16 @@ impl Tree {
         );
     }
 
+    /// 把这棵树的子节点与给定的部件列表进行协调，差异比较和
+    /// 创建新的部件状态都使用自定义逻辑。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Reconciles the children of the tree with the provided list of widgets using custom
     /// logic both for diffing and creating new widget state.
+    ///
+    /// </details>
     pub fn diff_children_custom<T>(
         &mut self,
         new_children: &[T],
@@ -107,11 +185,22 @@ impl Tree {
     }
 }
 
+/// 把 `current_children` 与给定的部件列表进行协调，
+/// 差异比较和创建新的部件状态都使用自定义逻辑。
+///
+/// 该算法会通过查询 `maybe_changed` 闭包，
+/// 尽量减小差异比较带来的影响。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Reconciles the `current_children` with the provided list of widgets using
 /// custom logic both for diffing and creating new widget state.
 ///
 /// The algorithm will try to minimize the impact of diffing by querying the
 /// `maybe_changed` closure.
+///
+/// </details>
 pub fn diff_children_custom_with_search<T>(
     current_children: &mut Vec<Tree>,
     new_children: &[T],
@@ -182,6 +271,7 @@ pub fn diff_children_custom_with_search<T>(
     }
 
     // TODO: Merge loop with extend logic (?)
+    // 待办：把这个循环与 extend 的逻辑合并（？）
     for (child_state, new) in
         current_children.iter_mut().zip(new_children.iter())
     {
@@ -189,12 +279,26 @@ pub fn diff_children_custom_with_search<T>(
     }
 }
 
+/// 部件状态的标识符。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The identifier of some widget state.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash)]
 pub struct Tag(any::TypeId);
 
 impl Tag {
+    /// 为类型 `T` 的状态创建一个 [`Tag`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Tag`] for a state of type `T`.
+    ///
+    /// </details>
     pub fn of<T>() -> Self
     where
         T: 'static,
@@ -202,23 +306,58 @@ impl Tag {
         Self(any::TypeId::of::<T>())
     }
 
+    /// 为无状态的部件创建一个 [`Tag`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Tag`] for a stateless widget.
+    ///
+    /// </details>
     pub fn stateless() -> Self {
         Self::of::<()>()
     }
 }
 
+/// 部件的内部 [`State`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The internal [`State`] of a widget.
+///
+/// </details>
 pub enum State {
+    /// 没有有意义的内部状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// No meaningful internal state.
+    ///
+    /// </details>
     None,
 
+    /// 有某种有意义的内部状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Some meaningful internal state.
+    ///
+    /// </details>
     Some(Box<dyn Any>),
 }
 
 impl State {
+    /// 创建一个新的 [`State`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`State`].
+    ///
+    /// </details>
     pub fn new<T>(state: T) -> Self
     where
         T: 'static,
@@ -226,10 +365,24 @@ impl State {
         State::Some(Box::new(state))
     }
 
+    /// 把 [`State`] 向下转型为 `T`，并返回它的引用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Downcasts the [`State`] to `T` and returns a reference to it.
     ///
+    /// </details>
+    ///
     /// # Panics
+    /// 如果向下转型失败，或者 [`State`] 是 [`State::None`]，此方法会 panic。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// This method will panic if the downcast fails or the [`State`] is [`State::None`].
+    ///
+    /// </details>
     pub fn downcast_ref<T>(&self) -> &T
     where
         T: 'static,
@@ -242,10 +395,24 @@ impl State {
         }
     }
 
+    /// 把 [`State`] 向下转型为 `T`，并返回它的可变引用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Downcasts the [`State`] to `T` and returns a mutable reference to it.
     ///
+    /// </details>
+    ///
     /// # Panics
+    /// 如果向下转型失败，或者 [`State`] 是 [`State::None`]，此方法会 panic。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// This method will panic if the downcast fails or the [`State`] is [`State::None`].
+    ///
+    /// </details>
     pub fn downcast_mut<T>(&mut self) -> &mut T
     where
         T: 'static,

@@ -5,14 +5,35 @@ use crate::quad::{self, Quad};
 use bytemuck::{Pod, Zeroable};
 use std::ops::Range;
 
+/// 用纯色填充的四边形。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A quad filled with a solid color.
+///
+/// </details>
 #[derive(Clone, Copy, Debug, Pod, Zeroable)]
 #[repr(C)]
 pub struct Solid {
+    /// 四边形的背景颜色数据。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The background color data of the quad.
+    ///
+    /// </details>
     pub color: color::Packed,
 
+    /// [`Solid`] 的 [`Quad`] 数据。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Quad`] data of the [`Solid`].
+    ///
+    /// </details>
     pub quad: Quad,
 }
 
@@ -97,24 +118,34 @@ impl Pipeline {
                         step_mode: wgpu::VertexStepMode::Instance,
                         attributes: &wgpu::vertex_attr_array!(
                             // Color
+                            // 颜色
                             0 => Float32x4,
                             // Position
+                            // 位置
                             1 => Float32x2,
                             // Size
+                            // 大小
                             2 => Float32x2,
                             // Border color
+                            // 边框颜色
                             3 => Float32x4,
                             // Border radius
+                            // 边框半径
                             4 => Float32x4,
                             // Border width
+                            // 边框宽度
                             5 => Float32,
                             // Shadow color
+                            // 阴影颜色
                             6 => Float32x4,
                             // Shadow offset
+                            // 阴影偏移
                             7 => Float32x2,
                             // Shadow blur radius
+                            // 阴影模糊半径
                             8 => Float32,
                             // Snap
+                            // 吸附
                             9 => Uint32,
                         ),
                     }],

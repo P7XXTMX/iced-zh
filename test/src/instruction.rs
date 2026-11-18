@@ -1,4 +1,11 @@
+//! 端到端测试中的一个步骤。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A step in an end-to-end test.
+//!
+//! </details>
 use crate::core::keyboard;
 use crate::core::mouse;
 use crate::core::{Event, Point};
@@ -6,19 +13,49 @@ use crate::simulator;
 
 use std::fmt;
 
+/// 端到端测试中的一个步骤。
+///
+/// [`Instruction`] 可以由 [`Emulator`](crate::Emulator) 运行。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A step in an end-to-end test.
 ///
 /// An [`Instruction`] can be run by an [`Emulator`](crate::Emulator).
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub enum Instruction {
+    /// 用户 [`Interaction`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A user [`Interaction`].
+    ///
+    /// </details>
     Interact(Interaction),
+    /// 测试 [`Expectation`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A testing [`Expectation`].
+    ///
+    /// </details>
     Expect(Expectation),
 }
 
 impl Instruction {
+    /// 从文本表示解析出一个 [`Instruction`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Parses an [`Instruction`] from its textual representation.
+    ///
+    /// </details>
     pub fn parse(line: &str) -> Result<Self, ParseError> {
         parser::run(line)
     }
@@ -33,19 +70,49 @@ impl fmt::Display for Instruction {
     }
 }
 
+/// 用户交互。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A user interaction.
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub enum Interaction {
+    /// 鼠标交互。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A mouse interaction.
+    ///
+    /// </details>
     Mouse(Mouse),
+    /// 键盘交互。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A keyboard interaction.
+    ///
+    /// </details>
     Keyboard(Keyboard),
 }
 
 impl Interaction {
+    /// 根据运行时 [`Event`] 创建一个 [`Interaction`]。
+    ///
+    /// 在真实使用过程中录制测试时，这会很有用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates an [`Interaction`] from a runtime [`Event`].
     ///
     /// This can be useful for recording tests during real usage.
+    ///
+    /// </details>
     pub fn from_event(event: &Event) -> Option<Self> {
         Some(match event {
             Event::Mouse(mouse) => Self::Mouse(match mouse {
@@ -99,6 +166,21 @@ impl Interaction {
         })
     }
 
+    /// 尽可能把两个交互合并在一起。
+    ///
+    /// 这个方法可以把某些交互序列变成单个交互。
+    /// 例如，一次鼠标移动、左键按下和左键释放
+    /// 可以合并成一次点击交互。
+    ///
+    /// 合并是有损的，因此，如果你正在录制测试
+    /// 并希望完全可复现，它并不总是可取的。
+    ///
+    /// 如果两个交互无法合并，`next` 交互会
+    /// 作为元组的第二个元素返回。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Merges two interactions together, if possible.
     ///
     /// This method can turn certain sequences of interactions into a single one.
@@ -110,6 +192,8 @@ impl Interaction {
     ///
     /// If the interactions cannot be merged, the `next` interaction will be
     /// returned as the second element of the tuple.
+    ///
+    /// </details>
     pub fn merge(self, next: Self) -> (Self, Option<Self>) {
         match (self, next) {
             (Self::Mouse(current), Self::Mouse(next)) => {
@@ -221,10 +305,20 @@ impl Interaction {
         }
     }
 
+    /// 返回表示这个 [`Interaction`] 的运行时事件列表。
+    ///
+    /// `find_target` 闭包必须把 [`Target`] 转换为它的屏幕
+    /// 坐标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns a list of runtime events representing the [`Interaction`].
     ///
     /// The `find_target` closure must convert a [`Target`] into its screen
     /// coordinates.
+    ///
+    /// </details>
     pub fn events(
         &self,
         find_target: impl FnOnce(&Target) -> Option<Point>,
@@ -305,30 +399,107 @@ impl fmt::Display for Interaction {
     }
 }
 
+/// 鼠标交互。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A mouse interaction.
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub enum Mouse {
+    /// 鼠标被移动。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The mouse was moved.
+    ///
+    /// </details>
     Move(Target),
+    /// 某个按钮被按下。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A button was pressed.
+    ///
+    /// </details>
     Press {
+        /// 按钮。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The button.
+        ///
+        /// </details>
         button: mouse::Button,
+        /// 按下的位置。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The location of the press.
+        ///
+        /// </details>
         target: Option<Target>,
     },
+    /// 某个按钮被释放。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A button was released.
+    ///
+    /// </details>
     Release {
+        /// 按钮。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The button.
+        ///
+        /// </details>
         button: mouse::Button,
+        /// 释放的位置。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The location of the release.
+        ///
+        /// </details>
         target: Option<Target>,
     },
+    /// 某个按钮被点击。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A button was clicked.
+    ///
+    /// </details>
     Click {
+        /// 按钮。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The button.
+        ///
+        /// </details>
         button: mouse::Button,
+        /// 点击的位置。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The location of the click.
+        ///
+        /// </details>
         target: Option<Target>,
     },
 }
@@ -364,12 +535,33 @@ impl fmt::Display for Mouse {
     }
 }
 
+/// 交互的目标。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The target of an interaction.
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub enum Target {
+    /// 视口中的某个具体的点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A specific point of the viewport.
+    ///
+    /// </details>
     Point(Point),
+    /// 包含给定文本的 UI 元素。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A UI element containing the given text.
+    ///
+    /// </details>
     Text(String),
 }
 
@@ -382,16 +574,51 @@ impl fmt::Display for Target {
     }
 }
 
+/// 键盘交互。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A keyboard interaction.
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub enum Keyboard {
+    /// 某个按键被按下。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A key was pressed.
+    ///
+    /// </details>
     Press(Key),
+    /// 某个按键被释放。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A key was released.
+    ///
+    /// </details>
     Release(Key),
+    /// 某个按键被“敲击”（按下并释放）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A key was "typed" (press and released).
+    ///
+    /// </details>
     Type(Key),
+    /// 输入了一段文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A bunch of text was typed.
+    ///
+    /// </details>
     Typewrite(String),
 }
 
@@ -414,9 +641,18 @@ impl fmt::Display for Keyboard {
     }
 }
 
+/// 键盘按键。
+///
+/// 目前只支持一小部分按键！
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A keyboard key.
 ///
 /// Only a small subset of keys is supported currently!
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[allow(missing_docs)]
 pub enum Key {
@@ -483,13 +719,30 @@ mod format {
     }
 }
 
+/// 测试断言。
+///
+/// 期望（expectation）是用来验证应用程序用户界面
+/// 当前状态的指令。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A testing assertion.
 ///
 /// Expectations are instructions that verify the current state of
 /// the user interface of an application.
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub enum Expectation {
+    /// 期望某个元素包含某段文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Expect some element to contain some text.
+    ///
+    /// </details>
     Text(String),
 }
 
@@ -519,7 +772,14 @@ mod parser {
     use nom::sequence::{delimited, preceded, separated_pair};
     use nom::{Finish, IResult, Parser};
 
+    /// 解析错误。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A parsing error.
+    ///
+    /// </details>
     #[derive(Debug, Clone, thiserror::Error)]
     #[error("parse error: {0}")]
     pub struct Error(nom::error::Error<String>);
@@ -665,6 +925,8 @@ mod parser {
     // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
     // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
     // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    // 取自上面链接中的 nom 示例。
+    // （以上为原作者的版权声明与 MIT 许可条款，保留英文原文，不作翻译。）
     fn string(input: &str) -> IResult<&str, String> {
         #[derive(Debug, Clone, Copy)]
         enum Fragment<'a> {

@@ -1,23 +1,72 @@
+//! 跟踪文本输入框的光标。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Track the cursor of a text input.
+//!
+//! </details>
 use crate::text_input::Value;
 
+/// 文本输入框的光标。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The cursor of a text input.
+///
+/// </details>
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct Cursor {
     state: State,
 }
 
+/// [`Cursor`] 的状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The state of a [`Cursor`].
+///
+/// </details>
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum State {
+    /// 没有选区的光标
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Cursor without a selection
+    ///
+    /// </details>
     Index(usize),
 
+    /// 正在选中一段文本的光标
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Cursor selecting a range of text
+    ///
+    /// </details>
     Selection {
+        /// 选区的起点
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The start of the selection
+        ///
+        /// </details>
         start: usize,
+        /// 选区的终点
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The end of the selection
+        ///
+        /// </details>
         end: usize,
     },
 }
@@ -31,7 +80,14 @@ impl Default for Cursor {
 }
 
 impl Cursor {
+    /// 返回 [`Cursor`] 的 [`State`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the [`State`] of the [`Cursor`].
+    ///
+    /// </details>
     pub fn state(&self, value: &Value) -> State {
         match self.state {
             State::Index(index) => State::Index(index.min(value.len())),
@@ -48,9 +104,18 @@ impl Cursor {
         }
     }
 
+    /// 返回 [`Cursor`] 在给定 [`Value`] 上的当前选区。
+    ///
+    /// `start` 保证小于等于 `end`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current selection of the [`Cursor`] for the given [`Value`].
     ///
     /// `start` is guaranteed to be <= than `end`.
+    ///
+    /// </details>
     pub fn selection(&self, value: &Value) -> Option<(usize, usize)> {
         match self.state(value) {
             State::Selection { start, end } => {

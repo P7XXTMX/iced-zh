@@ -1,4 +1,11 @@
+//! 在网格上分布内容。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Distribute content on a grid.
+//!
+//! </details>
 use crate::core::layout::{self, Layout};
 use crate::core::mouse;
 use crate::core::overlay;
@@ -9,7 +16,14 @@ use crate::core::{
     Widget,
 };
 
+/// 在响应式网格上分布其内容的容器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A container that distributes its contents on a responsive grid.
+///
+/// </details>
 pub struct Grid<'a, Message, Theme = crate::Theme, Renderer = crate::Renderer> {
     spacing: f32,
     columns: Constraint,
@@ -27,17 +41,38 @@ impl<'a, Message, Theme, Renderer> Grid<'a, Message, Theme, Renderer>
 where
     Renderer: crate::core::Renderer,
 {
+    /// 创建一个空的 [`Grid`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates an empty [`Grid`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::from_vec(Vec::new())
     }
 
+    /// 使用给定的容量创建一个 [`Grid`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Grid`] with the given capacity.
+    ///
+    /// </details>
     pub fn with_capacity(capacity: usize) -> Self {
         Self::from_vec(Vec::with_capacity(capacity))
     }
 
+    /// 使用给定的元素创建一个 [`Grid`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Grid`] with the given elements.
+    ///
+    /// </details>
     pub fn with_children(
         children: impl IntoIterator<Item = Element<'a, Message, Theme, Renderer>>,
     ) -> Self {
@@ -46,7 +81,14 @@ where
         Self::with_capacity(iterator.size_hint().0).extend(iterator)
     }
 
+    /// 从已分配的 [`Vec`] 创建一个 [`Grid`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Grid`] from an already allocated [`Vec`].
+    ///
+    /// </details>
     pub fn from_vec(
         children: Vec<Element<'a, Message, Theme, Renderer>>,
     ) -> Self {
@@ -59,15 +101,31 @@ where
         }
     }
 
+    /// 设置 [`Grid`] 中单元格*之间*的间距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the spacing _between_ cells in the [`Grid`].
+    ///
+    /// </details>
     pub fn spacing(mut self, amount: impl Into<Pixels>) -> Self {
         self.spacing = amount.into().0;
         self
     }
 
+    /// 以 [`Pixels`] 为单位设置 [`Grid`] 的宽度。
+    ///
+    /// 默认情况下，[`Grid`] 会 [`Fill`] 它的父级。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Grid`] in [`Pixels`].
     ///
     /// By default, a [`Grid`] will [`Fill`] its parent.
+    ///
+    /// </details>
     ///
     /// [`Fill`]: Length::Fill
     pub fn width(mut self, width: impl Into<Pixels>) -> Self {
@@ -75,28 +133,59 @@ where
         self
     }
 
+    /// 设置 [`Grid`] 的高度。
+    ///
+    /// 默认情况下，[`Grid`] 的单元格宽高比为 `1.0`（即正方形）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Grid`].
     ///
     /// By default, a [`Grid`] uses a cell aspect ratio of `1.0` (i.e. squares).
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Sizing>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置 [`Grid`] 的列数。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the amount of columns in the [`Grid`].
+    ///
+    /// </details>
     pub fn columns(mut self, column: usize) -> Self {
         self.columns = Constraint::Amount(column);
         self
     }
 
+    /// 让 [`Grid`] 的列数动态变化，且每列宽度永远不会
+    /// 超过给定的 `max_width`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Makes the amount of columns dynamic in the [`Grid`], never
     /// exceeding the provided `max_width`.
+    ///
+    /// </details>
     pub fn fluid(mut self, max_width: impl Into<Pixels>) -> Self {
         self.columns = Constraint::MaxWidth(max_width.into());
         self
     }
 
+    /// 向 [`Grid`] 添加一个 [`Element`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Adds an [`Element`] to the [`Grid`].
+    ///
+    /// </details>
     pub fn push(
         mut self,
         child: impl Into<Element<'a, Message, Theme, Renderer>>,
@@ -105,7 +194,14 @@ where
         self
     }
 
+    /// 如果是 `Some`，向 [`Grid`] 添加一个元素。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Adds an element to the [`Grid`], if `Some`.
+    ///
+    /// </details>
     pub fn push_maybe(
         self,
         child: Option<impl Into<Element<'a, Message, Theme, Renderer>>>,
@@ -117,7 +213,14 @@ where
         }
     }
 
+    /// 用给定的子元素扩展 [`Grid`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Extends the [`Grid`] with the given children.
+    ///
+    /// </details>
     pub fn extend(
         self,
         children: impl IntoIterator<Item = Element<'a, Message, Theme, Renderer>>,
@@ -186,6 +289,7 @@ where
 
         let cells_per_row = match self.columns {
             // width = n * (cell + spacing) - spacing, given n > 0
+            // 宽度 = n * (单元格 + 间距) - 间距，其中 n > 0
             Constraint::MaxWidth(pixels) => ((available.width + self.spacing)
                 / (pixels.0 + self.spacing))
                 .ceil() as usize,
@@ -379,18 +483,44 @@ where
     }
 }
 
+/// [`Grid`] 的尺寸策略。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The sizing strategy of a [`Grid`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Sizing {
+    /// [`Grid`] 会确保每个单元格都遵循给定的宽高比，
+    /// 总尺寸为所有单元格及其间距之和。
+    ///
+    /// 该比值是 [`Grid`] 中单元格每一个垂直像素所对应的
+    /// 水平像素数。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Grid`] will ensure each cell follows the given aspect ratio and the
     /// total size will be the sum of the cells and the spacing between them.
     ///
     /// The ratio is the amount of horizontal pixels per each vertical pixel of a cell
     /// in the [`Grid`].
+    ///
+    /// </details>
     AspectRatio(f32),
 
+    /// [`Grid`] 会把给定 [`Length`] 内的可用空间平均分配给
+    /// 每个单元格。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Grid`] will evenly distribute the space available in the given [`Length`]
     /// for each cell.
+    ///
+    /// </details>
     EvenlyDistribute(Length),
 }
 
@@ -406,7 +536,14 @@ impl From<Length> for Sizing {
     }
 }
 
+/// 创建一个保持给定宽高比的新 [`Sizing`] 策略。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Sizing`] strategy that maintains the given aspect ratio.
+///
+/// </details>
 pub fn aspect_ratio(
     width: impl Into<Pixels>,
     height: impl Into<Pixels>,

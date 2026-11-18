@@ -6,7 +6,14 @@ use crate::renderer;
 use crate::widget;
 use crate::{Clipboard, Event, Layout, Shell, Size};
 
+/// 一个显示嵌套覆盖层的覆盖层容器
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An overlay container that displays nested overlays
+///
+/// </details>
 pub struct Nested<'a, Message, Theme, Renderer> {
     overlay: overlay::Element<'a, Message, Theme, Renderer>,
 }
@@ -15,14 +22,28 @@ impl<'a, Message, Theme, Renderer> Nested<'a, Message, Theme, Renderer>
 where
     Renderer: renderer::Renderer,
 {
+    /// 从给定的 [`overlay::Element`] 创建一个嵌套覆盖层
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a nested overlay from the provided [`overlay::Element`]
+    ///
+    /// </details>
     pub fn new(
         element: overlay::Element<'a, Message, Theme, Renderer>,
     ) -> Self {
         Self { overlay: element }
     }
 
+    /// 返回 [`Nested`] 覆盖层的布局 [`Node`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the layout [`Node`] of the [`Nested`] overlay.
+    ///
+    /// </details>
     ///
     /// [`Node`]: layout::Node
     pub fn layout(
@@ -59,7 +80,14 @@ where
         recurse(&mut self.overlay, renderer, bounds)
     }
 
+    /// 使用关联的 `Renderer` 绘制 [`Nested`] 覆盖层。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Draws the [`Nested`] overlay using the associated `Renderer`.
+    ///
+    /// </details>
     pub fn draw(
         &mut self,
         renderer: &mut Renderer,
@@ -130,7 +158,14 @@ where
         recurse(&mut self.overlay, layout, renderer, theme, style, cursor);
     }
 
+    /// 对 [`Nested`] 覆盖层应用一个 [`widget::Operation`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Applies a [`widget::Operation`] to the [`Nested`] overlay.
+    ///
+    /// </details>
     pub fn operate(
         &mut self,
         layout: Layout<'_>,
@@ -163,7 +198,14 @@ where
         recurse(&mut self.overlay, layout, renderer, operation);
     }
 
+    /// 处理运行时的 [`Event`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Processes a runtime [`Event`].
+    ///
+    /// </details>
     pub fn update(
         &mut self,
         event: &Event,
@@ -252,7 +294,14 @@ where
         );
     }
 
+    /// 返回 [`Nested`] 覆盖层当前的 [`mouse::Interaction`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current [`mouse::Interaction`] of the [`Nested`] overlay.
+    ///
+    /// </details>
     pub fn mouse_interaction(
         &mut self,
         layout: Layout<'_>,

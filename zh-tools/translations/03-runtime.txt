@@ -1,0 +1,626 @@
+@@ runtime/src/clipboard.rs:1
+访问剪贴板。
+@@ runtime/src/clipboard.rs:6
+由某个 [`Task`] 执行的剪贴板动作。
+@@ runtime/src/clipboard.rs:11
+读取剪贴板，并用结果产生 `T`。
+@@ runtime/src/clipboard.rs:15
+用于发送读取到的内容的通道。
+@@ runtime/src/clipboard.rs:19
+把给定的内容写入剪贴板。
+@@ runtime/src/clipboard.rs:23
+要写入的内容。
+@@ runtime/src/clipboard.rs:48
+把给定的内容写入剪贴板。
+@@ runtime/src/clipboard.rs:28
+读取剪贴板的当前内容。
+@@ runtime/src/clipboard.rs:38
+读取主选区剪贴板的当前内容。
+@@ runtime/src/clipboard.rs:13
+剪贴板目标。
+@@ runtime/src/clipboard.rs:21
+剪贴板目标。
+@@ runtime/src/clipboard.rs:56
+把给定的内容写入主选区剪贴板。
+@@ runtime/src/font.rs:1
+加载并使用字体。
+@@ runtime/src/font.rs:6
+加载字体时发生的错误。
+@@ runtime/src/lib.rs:39
+根据字节数据加载字体。
+@@ runtime/src/lib.rs:41
+要加载的字体的字节数据。
+@@ runtime/src/lib.rs:43
+用于传回加载结果的通道。
+@@ runtime/src/font.rs:10
+根据字节数据加载字体。
+@@ runtime/src/image.rs:1
+显式分配图像以控制呈现。
+@@ runtime/src/image.rs:8
+图像动作。
+@@ runtime/src/image.rs:11
+分配给定的 [`Handle`]。
+@@ runtime/src/image.rs:15
+分配一个图像 [`Handle`]。
+
+显式取得 [`Allocation`] 之后，你就得到一个保证：
+使用这个 [`Handle`] 时，对应的图像会在下一帧
+立即绘制出来。
+@@ runtime/src/keyboard.rs:1
+跟踪键盘事件。
+@@ runtime/src/lib.rs:1
+与渲染器无关的原生 GUI 运行时。
+
+![Iced 生态系统的原生路径](https://github.com/iced-rs/iced/blob/master/docs/graphs/native.png?raw=true)
+
+`iced_runtime` 以 [`iced_core`] 为基础，在其上构建了一个原生运行时。
+@@ runtime/src/lib.rs:34
+iced 运行时可以执行的动作。
+@@ runtime/src/lib.rs:36
+输出某个值。
+@@ runtime/src/lib.rs:47
+运行一个部件操作。
+@@ runtime/src/lib.rs:50
+运行一个剪贴板动作。
+@@ runtime/src/lib.rs:53
+运行一个窗口动作。
+@@ runtime/src/lib.rs:56
+运行一个系统动作。
+@@ runtime/src/lib.rs:59
+一个图像动作。
+@@ runtime/src/lib.rs:62
+重新创建所有用户界面并重绘所有窗口。
+@@ runtime/src/lib.rs:65
+退出运行时。
+
+这通常会关闭应用程序的所有窗口，并
+终止运行时循环。
+@@ runtime/src/lib.rs:73
+使用给定的 [`widget::Operation`](core::widget::Operation) 创建一个新的 [`Action::Widget`]。
+@@ runtime/src/lib.rs:120
+创建一个退出 iced 运行时的 [`Task`]。
+
+这通常会关闭应用程序的所有窗口，并
+终止运行时循环。
+@@ runtime/src/system.rs:1
+访问原生系统。
+@@ runtime/src/system.rs:7
+要在系统上执行的操作。
+@@ runtime/src/system.rs:10
+发送可用的系统信息。
+@@ runtime/src/system.rs:13
+发送当前的系统主题模式。
+@@ runtime/src/system.rs:16
+通知运行时系统主题已经改变。
+@@ runtime/src/system.rs:20
+包含系统的相关信息（例如系统名称、处理器、内存、图形适配器）。
+@@ runtime/src/system.rs:23
+操作系统名称
+@@ runtime/src/system.rs:25
+操作系统内核版本
+@@ runtime/src/system.rs:27
+完整的操作系统版本
+
+示例：
+- MacOS 10.15 Catalina
+- Windows 10 Pro
+- Ubuntu 20.04 LTS (Focal Fossa)
+@@ runtime/src/system.rs:34
+简短的操作系统版本号
+@@ runtime/src/system.rs:36
+详细的处理器型号信息
+@@ runtime/src/system.rs:38
+处理器的物理核心数
+@@ runtime/src/system.rs:40
+内存总大小，以字节为单位
+@@ runtime/src/system.rs:42
+本进程使用的内存，以字节为单位
+@@ runtime/src/system.rs:44
+用于渲染的底层图形后端
+@@ runtime/src/system.rs:46
+当前使用的图形适配器的型号信息
+@@ runtime/src/system.rs:50
+返回可用的系统信息。
+@@ runtime/src/system.rs:57
+返回当前的系统主题。
+@@ runtime/src/system.rs:62
+订阅系统主题的变化。
+@@ runtime/src/task.rs:1
+创建运行时任务。
+@@ runtime/src/task.rs:20
+由 iced 运行时执行的一组并发动作。
+
+一个 [`Task`] *可能*会产生若干个 `T` 类型的值。
+@@ runtime/src/task.rs:30
+创建一个什么都不做的 [`Task`]。
+@@ runtime/src/task.rs:38
+创建一个立即产生给定值的新 [`Task`]。
+@@ runtime/src/task.rs:46
+创建一个 [`Task`]，它运行给定的 [`Future`] 直至完成，并用
+给定的闭包映射其输出。
+@@ runtime/src/task.rs:59
+创建一个 [`Task`]，它运行给定的 [`Stream`] 直至完成，并用
+给定的闭包映射每一项。
+@@ runtime/src/task.rs:71
+创建一个 [`Task`]，它运行给定的 [`Sipper`] 直至完成，用第一个闭包
+映射进度，用第二个闭包映射输出。
+@@ runtime/src/task.rs:88
+合并给定的任务，产生一个会并行运行所有这些任务的
+[`Task`]。
+@@ runtime/src/task.rs:111
+用给定的闭包映射 [`Task`] 的输出。
+@@ runtime/src/task.rs:123
+用给定的闭包，为当前 [`Task`] 的每一个输出执行一个新的
+[`Task`]。
+
+这是 [`Task`] 的单子式接口——类似于 [`Future`] 和
+[`Stream`]。
+@@ runtime/src/task.rs:158
+串联一个新的 [`Task`]，在当前任务完全结束后执行。
+@@ runtime/src/task.rs:178
+创建一个新的 [`Task`]，把当前任务的所有输出收集到一个 [`Vec`] 中。
+@@ runtime/src/task.rs:219
+创建一个新的 [`Task`]，丢弃当前任务的结果。
+
+当你只关心 [`Task`] 的副作用时很有用。
+@@ runtime/src/task.rs:230
+创建一个新的 [`Task`]，可以用返回的 [`Handle`] 中止它。
+@@ runtime/src/task.rs:256
+创建一个新的 [`Task`]，它运行给定的 [`Future`] 并产生
+其输出。
+@@ runtime/src/task.rs:265
+创建一个新的 [`Task`]，它运行给定的 [`Stream`] 并产生
+其中的每一项。
+@@ runtime/src/task.rs:281
+返回 [`Task`] 的工作“单元”数量。
+@@ runtime/src/task.rs:295
+[`Task`] 的句柄，可以用来中止它。
+@@ runtime/src/task.rs:317
+中止这个 [`Handle`] 对应的 [`Task`]。
+@@ runtime/src/task.rs:322
+返回一个新的 [`Handle`]，当它的所有实例都被丢弃时，会调用
+[`Handle::abort`]。
+
+如果 [`Handle`] 被克隆，只有在所有克隆都被丢弃之后
+才会调用 [`Handle::abort`]。
+
+如果你不想操心自己调用 [`Handle::abort`]，
+这会非常有用。
+@@ runtime/src/task.rs:339
+如果这个 [`Handle`] 对应的 [`Task`] 已被中止，返回 `true`。
+@@ runtime/src/task.rs:361
+在这个任务之后执行一个新的 [`Task`]，仅当它产生 `Some` 值时才执行。
+
+该值会传给闭包，用来创建后续的 [`Task`]。
+@@ runtime/src/task.rs:377
+在这个任务之后执行一个新的 [`Task`]，仅当它以 `Ok` 值成功时才执行。
+
+成功的值会传给闭包，用来创建后续的 [`Task`]。
+@@ runtime/src/task.rs:394
+用给定的函数把这个 [`Task`] 的错误类型映射为另一种
+类型。
+@@ runtime/src/task.rs:421
+创建一个新的 [`Task`]，它运行给定的 [`widget::Operation`] 并产生
+其输出。
+@@ runtime/src/task.rs:437
+创建一个新的 [`Task`]，它执行闭包返回的 [`Action`]，并产生
+送入 [`oneshot::Sender`] 的值。
+@@ runtime/src/task.rs:457
+创建一个新的 [`Task`]，它执行闭包返回的 [`Action`]，并产生
+送入 [`mpsc::Sender`] 的各个值。
+@@ runtime/src/task.rs:476
+创建一个新的 [`Task`]，它执行给定的 [`Action`]，不产生任何输出。
+@@ runtime/src/task.rs:488
+返回 [`Task`] 底层的 [`Stream`]。
+@@ runtime/src/task.rs:493
+创建一个新的 [`Task`]，它会在一个新线程中运行给定的闭包。
+
+闭包通过 [`mpsc::Sender`] 发送的任何数据都会由
+这个 [`Task`] 产生。
+@@ runtime/src/task.rs:510
+创建一个新的 [`Task`]，它会在一个新线程中运行给定的
+可能失败的闭包。
+
+闭包通过 [`mpsc::Sender`] 发送的任何数据都会由
+这个 [`Task`] 产生。
+@@ runtime/src/user_interface.rs:1
+实现你自己的事件循环来驱动用户界面。
+@@ runtime/src/user_interface.rs:13
+一组具有特定 [`Layout`] 的可交互图形元素。
+
+它可以被更新和绘制。
+
+Iced 尽量不规定你该如何编写事件循环。如何在你的系统中
+使用这个类型，完全由你决定。
+@@ runtime/src/user_interface.rs:20
+{#example}
+示例
+@@ runtime/src/user_interface.rs:21
+[`integration`] 示例使用 [`UserInterface`] 把 Iced 集成到一个
+已有的图形应用程序中。
+@@ runtime/src/user_interface.rs:42
+为一个 [`Element`] 构建用户界面。
+
+如果使用从上一个 [`UserInterface`] 实例得到的 [`Cache`]，
+它可以避免昂贵的计算。
+@@ runtime/src/user_interface.rs:47
+{#example-1}
+示例
+@@ runtime/src/user_interface.rs:48
+假设我们想为[之前编写的计数器示例](index.html#usage)
+构建一个 [`UserInterface`]。下面是搭建应用程序循环的
+一种朴素做法：
+@@ runtime/src/user_interface.rs:68
+初始化
+@@ runtime/src/user_interface.rs:74
+应用程序循环
+@@ runtime/src/user_interface.rs:76
+在这里处理系统事件……
+@@ runtime/src/user_interface.rs:78
+构建用户界面
+@@ runtime/src/user_interface.rs:86
+在这里更新并绘制用户界面……
+@@ runtime/src/user_interface.rs:89
+取得用于下一次迭代的缓存
+@@ runtime/src/user_interface.rs:119
+处理给定的每一个 [`Event`]，以此更新 [`UserInterface`]。
+
+它返回因用户交互而可能产生的**消息**。
+你应该把这些消息交给你的**更新逻辑**。
+@@ runtime/src/user_interface.rs:124
+示例
+@@ runtime/src/user_interface.rs:125
+让我们补全[上一个示例](#example)，使我们的
+[计数器](index.html#usage)能够改变状态：
+@@ runtime/src/user_interface.rs:153
+初始化我们的事件存储
+@@ runtime/src/user_interface.rs:158
+获取系统事件……
+@@ runtime/src/user_interface.rs:167
+更新用户界面
+@@ runtime/src/user_interface.rs:178
+处理产生的消息
+@@ runtime/src/user_interface.rs:409
+使用给定的 [`Renderer`] 绘制 [`UserInterface`]。
+
+它返回当前的 [`mouse::Interaction`]。你应该据此在你的系统中
+更新鼠标光标的图标。
+@@ runtime/src/user_interface.rs:416
+示例
+@@ runtime/src/user_interface.rs:417
+[补全上一个示例](#example-1)之后，我们终于可以绘制
+我们的[计数器](index.html#usage)了：
+@@ runtime/src/user_interface.rs:451
+获取系统事件……
+@@ runtime/src/user_interface.rs:460
+更新用户界面
+@@ runtime/src/user_interface.rs:469
+绘制用户界面
+@@ runtime/src/user_interface.rs:478
+更新鼠标光标图标……
+@@ runtime/src/user_interface.rs:479
+刷新渲染操作……
+@@ runtime/src/user_interface.rs:538
+对 [`UserInterface`] 应用一个 [`widget::Operation`]。
+@@ runtime/src/user_interface.rs:580
+使用给定的边界重新布局，并返回一个新的
+[`UserInterface`]。
+@@ runtime/src/user_interface.rs:586
+取出 [`UserInterface`] 的 [`Cache`]，这个过程会
+消耗该用户界面。
+@@ runtime/src/user_interface.rs:593
+某个特定 [`UserInterface`] 的可复用数据。
+@@ runtime/src/user_interface.rs:600
+创建一个空的 [`Cache`]。
+
+在构建第一个 [`UserInterface`] 之前，你应该用它来
+初始化 [`Cache`]。
+@@ runtime/src/user_interface.rs:617
+更新 [`UserInterface`] 之后得到的状态。
+@@ runtime/src/user_interface.rs:620
+[`UserInterface`] 已过时，需要重新构建。
+@@ runtime/src/user_interface.rs:623
+[`UserInterface`] 是最新的，无需重新构建即可
+复用。
+@@ runtime/src/user_interface.rs:626
+用户界面当前的 [`mouse::Interaction`]。
+@@ runtime/src/user_interface.rs:628
+描述何时应当重绘的 [`window::RedrawRequest`]。
+@@ runtime/src/user_interface.rs:630
+用户界面当前的 [`InputMethod`] 策略。
+@@ runtime/src/user_interface.rs:632
+[`UserInterface`] 的布局是否发生了变化。
+@@ runtime/src/user_interface.rs:638
+返回 [`UserInterface`] 的布局是否发生了变化。
+@@ runtime/src/widget.rs:1
+在运行时操作并查询部件。
+@@ runtime/src/widget/operation.rs:1
+改变部件的内部状态。
+@@ runtime/src/widget/operation.rs:49
+让上一个可获得焦点的部件获得焦点。
+@@ runtime/src/widget/operation.rs:54
+让下一个可获得焦点的部件获得焦点。
+@@ runtime/src/widget/operation.rs:59
+返回具有给定 [`Id`] 的部件是否获得了焦点。
+@@ runtime/src/widget/operation.rs:64
+让具有给定 [`Id`] 的部件获得焦点。
+@@ runtime/src/widget/operation.rs:11
+把具有给定 [`Id`] 的可滚动区域直接定位到给定的 [`RelativeOffset`]。
+@@ runtime/src/widget/operation.rs:22
+把具有给定 [`Id`] 的可滚动区域直接定位到 [`RelativeOffset::END`]。
+@@ runtime/src/widget/operation.rs:30
+把具有给定 [`Id`] 的可滚动区域滚动到给定的 [`AbsoluteOffset`]。
+@@ runtime/src/widget/operation.rs:41
+把具有给定 [`Id`] 的可滚动区域滚动给定的 [`AbsoluteOffset`] 偏移量。
+@@ runtime/src/widget/operation.rs:91
+选中具有给定 [`Id`] 的部件的全部内容。
+@@ runtime/src/widget/operation.rs:96
+选中具有给定 [`Id`] 的部件中给定的内容范围。
+@@ runtime/src/widget/operation.rs:69
+把具有给定 [`Id`] 的部件的光标移到末尾。
+@@ runtime/src/widget/operation.rs:76
+把具有给定 [`Id`] 的部件的光标移到开头。
+@@ runtime/src/widget/operation.rs:83
+把具有给定 [`Id`] 的部件的光标移到给定的位置。
+@@ runtime/src/widget/selector.rs:1
+在你的应用程序中查找并查询部件。
+@@ runtime/src/widget/selector.rs:9
+查找一个与给定 [`Selector`] 匹配的部件。
+@@ runtime/src/widget/selector.rs:18
+查找所有与给定 [`Selector`] 匹配的部件。
+@@ runtime/src/window.rs:1
+构建基于窗口的 GUI 应用程序。
+@@ runtime/src/window.rs:17
+要在某个窗口上执行的操作。
+@@ runtime/src/window.rs:19
+使用某个 [`Settings`] 打开一个新窗口。
+@@ runtime/src/window.rs:22
+关闭窗口并退出应用程序。
+@@ runtime/src/window.rs:25
+获取最早打开的窗口的 [`Id`]。
+@@ runtime/src/window.rs:28
+获取最近打开的窗口的 [`Id`]。
+@@ runtime/src/window.rs:31
+用鼠标左键移动窗口，直到松开
+按键。
+
+除非在调用这个函数之前刚刚按下了鼠标左键，
+否则不保证它能生效。
+@@ runtime/src/window.rs:38
+用鼠标左键调整窗口大小，直到松开
+按键。
+
+除非在调用这个函数之前刚刚按下了鼠标左键，
+否则不保证它能生效。
+@@ runtime/src/window.rs:45
+把窗口调整为给定的逻辑尺寸。
+@@ runtime/src/window.rs:48
+获取窗口当前的逻辑尺寸。
+@@ runtime/src/window.rs:51
+获取当前窗口是否已最大化。
+@@ runtime/src/window.rs:54
+把窗口设置为最大化或还原
+@@ runtime/src/window.rs:57
+获取当前窗口是否已最小化。
+@@ runtime/src/window.rs:59
+平台差异
+@@ runtime/src/window.rs:60
+- **Wayland：** 始终为 `None`。
+@@ runtime/src/window.rs:63
+把窗口设置为最小化或还原
+@@ runtime/src/window.rs:66
+获取窗口当前的逻辑坐标。
+@@ runtime/src/window.rs:69
+获取窗口当前的缩放因子（DPI）。
+@@ runtime/src/window.rs:72
+把窗口移动到给定的逻辑坐标。
+
+Wayland 上不支持。
+@@ runtime/src/window.rs:77
+更改窗口的 [`Mode`]。
+@@ runtime/src/window.rs:80
+获取窗口当前的 [`Mode`]。
+@@ runtime/src/window.rs:83
+在最大化与还原之间切换窗口
+@@ runtime/src/window.rs:86
+切换窗口是否带有装饰。
+@@ runtime/src/window.rs:88
+平台差异
+@@ runtime/src/window.rs:89
+- **X11：** 未实现。
+- **Web：** 不支持。
+@@ runtime/src/window.rs:93
+请求用户注意该窗口；如果应用程序已经获得焦点，则没有效果。
+请求用户注意的具体表现形式取决于平台，
+详见 [`UserAttention`]。
+
+传入 `None` 会取消请求用户注意。当窗口收到输入时，
+窗口管理器不一定会自动取消这个请求。
+@@ runtime/src/window.rs:100
+平台差异
+@@ runtime/src/window.rs:102
+- **iOS / Android / Web：** 不支持。
+- **macOS：** `None` 没有效果。
+- **X11：** 请求用户注意必须手动清除。
+- **Wayland：** 需要 `xdg_activation_v1` 协议，`None` 没有效果。
+@@ runtime/src/window.rs:108
+把窗口置于最前并设置输入焦点。如果窗口已经获得焦点、
+已最小化或不可见，则没有效果。
+
+这个方法会从其他应用程序抢走输入焦点。除非你确定这正是用户想要的，
+否则不要使用它。抢占焦点可能造成极具干扰性的
+用户体验。
+@@ runtime/src/window.rs:115
+平台差异
+@@ runtime/src/window.rs:117
+- **Web / Wayland：** 不支持。
+@@ runtime/src/window.rs:120
+更改窗口的 [`Level`]。
+@@ runtime/src/window.rs:123
+在光标位置显示系统菜单。
+@@ runtime/src/window.rs:125
+平台差异
+@@ runtime/src/window.rs:126
+Android / iOS / macOS / Orbital / Web / X11：不支持。
+@@ runtime/src/window.rs:129
+获取窗口唯一的原始标识符。
+@@ runtime/src/window.rs:132
+更改窗口的 [`Icon`]。
+
+在 Windows 和 X11 上，它通常是标题栏左上角的
+小图标。
+@@ runtime/src/window.rs:137
+平台差异
+@@ runtime/src/window.rs:139
+- **Web / Wayland / macOS：** 不支持。
+
+- **Windows：** 设置 `ICON_SMALL`。窗口图标的基准尺寸是 16x16，但建议
+  考虑屏幕缩放并选用它的倍数，例如 32x32。
+
+- **X11：** 没有通用的图标尺寸规范，因此取决于窗口管理器。不过，
+  通常与 Windows 上的尺寸相近。
+@@ runtime/src/window.rs:148
+使用具有给定 [`Id`] 的 [`Window`] 的引用来运行闭包。
+@@ runtime/src/window.rs:151
+对窗口的视口截图。
+@@ runtime/src/window.rs:154
+为给定的窗口启用鼠标穿透。
+
+这会禁用该窗口的鼠标事件，并把鼠标事件
+传递给位于其下方的窗口。
+@@ runtime/src/window.rs:160
+为给定的窗口禁用鼠标穿透。
+
+这会启用该窗口的鼠标事件，并且不再把鼠标事件
+传递给位于其下方的内容。
+@@ runtime/src/window.rs:166
+设置窗口内部区域的最小尺寸。
+@@ runtime/src/window.rs:169
+设置窗口内部区域的最大尺寸。
+@@ runtime/src/window.rs:172
+设置窗口是否可以调整大小。
+@@ runtime/src/window.rs:175
+设置窗口尺寸的调整增量。
+@@ runtime/src/window.rs:178
+获取具有给定 [`Id`] 的窗口所在显示器的逻辑尺寸。
+@@ runtime/src/window.rs:181
+设置系统是否可以自动把窗口组织成标签页。
+
+参见 <https://developer.apple.com/documentation/appkit/nswindow/1646657-allowsautomaticwindowtabbing>
+@@ runtime/src/window.rs:186
+重绘所有窗口。
+@@ runtime/src/window.rs:189
+重新计算所有窗口的布局。
+@@ runtime/src/window.rs:200
+订阅正在运行的应用程序的窗口的帧。
+
+得到的 [`Subscription`] 产生项的速率等于应用程序第一个窗口的
+刷新率。注意这个速率可能是可变的，因为它通常由图形驱动
+和/或操作系统管理。
+
+无论如何，这个 [`Subscription`] 适合用来流畅地绘制由应用程序驱动的
+动画，而不会丢帧。
+@@ runtime/src/window.rs:215
+订阅正在运行的应用程序的所有窗口事件。
+@@ runtime/src/window.rs:226
+订阅正在运行的应用程序中发生的所有 [`Event::Opened`]。
+@@ runtime/src/window.rs:237
+订阅正在运行的应用程序中发生的所有 [`Event::Closed`]。
+@@ runtime/src/window.rs:248
+订阅正在运行的应用程序中发生的所有 [`Event::Resized`]。
+@@ runtime/src/window.rs:259
+订阅正在运行的应用程序中发生的所有 [`Event::CloseRequested`]。
+@@ runtime/src/window.rs:270
+使用给定的 [`Settings`] 打开一个新窗口；完成时产生新窗口的
+[`Id`]。
+@@ runtime/src/window.rs:283
+关闭具有 `id` 的窗口。
+@@ runtime/src/window.rs:288
+获取最早打开的窗口的窗口 [`Id`]。
+@@ runtime/src/window.rs:293
+获取最近打开的窗口的窗口 [`Id`]。
+@@ runtime/src/window.rs:298
+在按住鼠标左键期间开始拖动窗口。
+@@ runtime/src/window.rs:303
+在按住鼠标左键期间开始调整窗口大小。
+@@ runtime/src/window.rs:308
+把窗口调整为给定的逻辑尺寸。
+@@ runtime/src/window.rs:313
+设置窗口是否可以调整大小。
+@@ runtime/src/window.rs:318
+设置窗口内部区域的最大尺寸。
+@@ runtime/src/window.rs:323
+设置窗口内部区域的最小尺寸。
+@@ runtime/src/window.rs:328
+设置窗口尺寸的调整增量。
+
+通常用于终端模拟器这类需要“按格”调整大小的应用。
+@@ runtime/src/window.rs:337
+获取以逻辑尺寸表示的窗口大小。
+@@ runtime/src/window.rs:344
+获取具有给定 [`Id`] 的窗口的最大化状态。
+@@ runtime/src/window.rs:351
+最大化窗口。
+@@ runtime/src/window.rs:356
+获取具有给定 [`Id`] 的窗口的最小化状态。
+@@ runtime/src/window.rs:363
+最小化窗口。
+@@ runtime/src/window.rs:368
+获取具有给定 [`Id`] 的窗口以逻辑坐标表示的位置。
+@@ runtime/src/window.rs:375
+获取具有给定 [`Id`] 的窗口的缩放因子。
+@@ runtime/src/window.rs:382
+把窗口移动到给定的逻辑坐标。
+@@ runtime/src/window.rs:387
+获取窗口当前的 [`Mode`]。
+@@ runtime/src/window.rs:394
+更改窗口的 [`Mode`]。
+@@ runtime/src/window.rs:399
+在最大化与还原之间切换窗口。
+@@ runtime/src/window.rs:404
+切换窗口装饰。
+@@ runtime/src/window.rs:409
+请求用户注意该窗口。如果应用程序已经获得焦点，则没有效果。
+请求用户注意的具体表现形式取决于平台，
+详见 [`UserAttention`]。
+
+传入 `None` 会取消请求用户注意。当窗口收到输入时，
+窗口管理器不一定会自动取消这个请求。
+@@ runtime/src/window.rs:425
+把窗口置于最前并设置输入焦点。如果窗口已经获得焦点、
+已最小化或不可见，则没有效果。
+
+这个 [`Task`] 会从其他应用程序抢走输入焦点。除非你确定这正是用户想要的，
+否则不要使用它。抢占焦点可能造成极具干扰性的
+用户体验。
+@@ runtime/src/window.rs:435
+更改窗口的 [`Level`]。
+@@ runtime/src/window.rs:440
+在光标位置显示[系统菜单][system menu]。
+@@ runtime/src/window.rs:447
+获取由底层窗口系统提供的、窗口唯一的标识符。
+不要把它与 [`Id`] 混淆。
+@@ runtime/src/window.rs:455
+更改窗口的 [`Icon`]。
+@@ runtime/src/window.rs:460
+使用具有给定 [`Id`] 的 [`Window`] 的引用来运行给定的回调。
+
+注意，如果窗口在这个调用被处理之前关闭，回调将不会运行。
+@@ runtime/src/window.rs:480
+从窗口捕获一张 [`Screenshot`]。
+@@ runtime/src/window.rs:487
+为给定的窗口启用鼠标穿透。
+
+这会禁用该窗口的鼠标事件，并把鼠标事件
+传递给位于其下方的窗口。
+@@ runtime/src/window.rs:495
+为给定的窗口禁用鼠标穿透。
+
+这会启用该窗口的鼠标事件，并且不再把鼠标事件
+传递给位于其下方的内容。
+@@ runtime/src/window.rs:503
+获取具有给定 [`Id`] 的窗口所在显示器的逻辑尺寸。
+@@ runtime/src/window.rs:510
+设置系统是否可以自动把窗口组织成标签页。
+
+参见 <https://developer.apple.com/documentation/appkit/nswindow/1646657-allowsautomaticwindowtabbing>

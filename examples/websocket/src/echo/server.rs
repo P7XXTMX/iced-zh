@@ -26,6 +26,8 @@ use warp::ws::WebSocket;
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+// 基础的 WebSocket 回显服务器，改编自上面的链接。
+// （以上为原作者的版权声明与 MIT 许可条款，保留英文原文，不作翻译。）
 pub async fn run() {
     let routes = warp::path::end()
         .and(warp::ws())

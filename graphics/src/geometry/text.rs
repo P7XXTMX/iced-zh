@@ -5,11 +5,40 @@ use crate::core::{Color, Font, Pixels, Point, Size, Vector};
 use crate::geometry::Path;
 use crate::text;
 
+/// 可以绘制到画布上的一段文本
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A bunch of text that can be drawn to a canvas
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct Text {
+    /// 文本的内容
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The contents of the text
+    ///
+    /// </details>
     pub content: String,
+    /// 文本相对于对齐属性的位置。
+    ///
+    /// 默认情况下，这个位置相对于左上角坐标，也就是说，
+    /// 如果水平和垂直对齐方式保持不变，这个属性指定的就是
+    /// 文本左上角应当放置的位置。
+    ///
+    /// 通过修改 horizontal_alignment 和 vertical_alignment 属性，
+    /// 可以改变文本的哪个部分被放置在这个位置。
+    ///
+    /// 例如，当 horizontal_alignment 和 vertical_alignment 都设置为 Center 时，
+    /// 放置在给定位置的是文本的中心，而不是左上角坐标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The position of the text relative to the alignment properties.
     ///
     /// By default, this position will be relative to the top-left corner coordinate meaning that
@@ -21,30 +50,98 @@ pub struct Text {
     ///
     /// For example, when the horizontal_alignment and vertical_alignment are set to Center, the
     /// center of the text will be placed at the given position NOT the top-left coordinate.
+    ///
+    /// </details>
     pub position: Point,
+    /// 此 [`Text`] 可用的最大水平空间。
+    ///
+    /// 文本到达该宽度时会换行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The maximum horizontal space available for this [`Text`].
     ///
     /// Text will break into new lines when the width is reached.
+    ///
+    /// </details>
     pub max_width: f32,
+    /// 文本的颜色
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The color of the text
+    ///
+    /// </details>
     pub color: Color,
+    /// 文本的大小
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The size of the text
+    ///
+    /// </details>
     pub size: Pixels,
+    /// 文本的行高。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The line height of the text.
+    ///
+    /// </details>
     pub line_height: LineHeight,
+    /// 文本的字体
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The font of the text
+    ///
+    /// </details>
     pub font: Font,
+    /// 文本的水平对齐方式
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The horizontal alignment of the text
+    ///
+    /// </details>
     pub align_x: Alignment,
+    /// 文本的垂直对齐方式
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The vertical alignment of the text
+    ///
+    /// </details>
     pub align_y: alignment::Vertical,
+    /// 文本的整形策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The shaping strategy of the text.
+    ///
+    /// </details>
     pub shaping: Shaping,
 }
 
 impl Text {
+    /// 计算 [`Text`] 的各个 [`Path`]，并使用给定的闭包
+    /// 绘制它们。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Computes the [`Path`]s of the [`Text`] and draws them using
     /// the given closure.
+    ///
+    /// </details>
     pub fn draw_with(&self, mut f: impl FnMut(Path, Color)) {
         let paragraph = text::Paragraph::with_text(core::text::Text {
             content: &self.content,
@@ -137,6 +234,7 @@ impl Text {
                     f(glyph, self.color);
                 } else {
                     // TODO: Raster image support for `Canvas`
+                    // 待办：为 `Canvas` 支持位图图像
                     let [r, g, b, a] = self.color.into_rgba8();
 
                     swash_cache.with_pixels(

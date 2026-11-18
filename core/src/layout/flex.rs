@@ -1,4 +1,11 @@
+//! 使用基于 flex 的布局来分布元素。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Distribute elements using a flex-based layout.
+//!
+//! </details>
 // This code is heavily inspired by the [`druid`] codebase.
 //
 // [`druid`]: https://github.com/xi-editor/druid
@@ -16,19 +23,55 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// 这段代码在很大程度上受到了 [`druid`] 代码库的启发。
+//
+// 版权所有 2018 The xi-editor Authors, Héctor Ramón
+//
+// 根据 Apache 许可证 2.0 版（“许可证”）授权；
+// 除非遵守许可证，否则你不得使用此文件。
+// 你可以在以下网址获取许可证的副本：
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// 除非适用法律要求或经书面同意，
+// 根据许可证分发的软件均按“原样”分发，
+// 不附带任何明示或暗示的保证或条件。
+// 有关许可证下的权限和限制的具体规定，
+// 请参阅许可证。
 use crate::Element;
 
 use crate::layout::{Limits, Node};
 use crate::widget;
 use crate::{Alignment, Length, Padding, Point, Size};
 
+/// flex 布局的主轴。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The main axis of a flex layout.
+///
+/// </details>
 #[derive(Debug)]
 pub enum Axis {
+    /// 水平轴
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The horizontal axis
+    ///
+    /// </details>
     Horizontal,
 
+    /// 垂直轴
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The vertical axis
+    ///
+    /// </details>
     Vertical,
 }
 
@@ -55,10 +98,20 @@ impl Axis {
     }
 }
 
+/// 使用给定的轴和限制计算 flex 布局，并根据需要
+/// 对各个条目应用间距、内边距和对齐。
+///
+/// 它返回一个新的布局 [`Node`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Computes the flex layout with the given axis and limits, applying spacing,
 /// padding and alignment to the items as needed.
 ///
 /// It returns a new layout [`Node`].
+///
+/// </details>
 pub fn resolve<Message, Theme, Renderer>(
     axis: Axis,
     renderer: &Renderer,
@@ -100,6 +153,10 @@ where
     // We lay out non-fluid elements in the main axis.
     // If we need to compress the cross axis, then we skip any of these elements
     // that are also fluid in the cross axis.
+    // 第一阶段
+    // 我们在主轴上布局非流动（non-fluid）元素。
+    // 如果需要压缩交叉轴，就跳过其中那些
+    // 在交叉轴上同样是流动的元素。
     for (i, (child, tree)) in items.iter_mut().zip(trees.iter_mut()).enumerate()
     {
         let (fill_main_factor, fill_cross_factor) = {
@@ -150,6 +207,16 @@ where
     //
     // We can defer the layout of any elements that have a fixed size in the main axis,
     // allowing them to use the cross calculations of the next pass.
+    // 第二阶段（有条件执行）
+    // 如果必须压缩交叉轴，并且存在在交叉轴上流动的元素，
+    // 我们就布局其中那些在主轴上非流动的元素
+    // （即我们在第一阶段特意跳过的那些）。
+    //
+    // 我们把第一阶段得到的最大交叉轴长度用作
+    // 交叉轴的最大限制。
+    //
+    // 对于在主轴上具有固定尺寸的元素，我们可以推迟它们的布局，
+    // 让它们使用下一阶段的交叉轴计算结果。
     if cross_compress && some_fill_cross {
         for (i, (child, tree)) in
             items.iter_mut().zip(trees.iter_mut()).enumerate()
@@ -193,6 +260,9 @@ where
     // THIRD PASS (conditional)
     // We lay out the elements that are fluid in the main axis.
     // We use the remaining space to evenly allocate space based on fill factors.
+    // 第三阶段（有条件执行）
+    // 我们布局在主轴上流动的元素。
+    // 我们根据填充因子，用剩余空间均匀地分配空间。
     if !main_compress {
         for (i, (child, tree)) in
             items.iter_mut().zip(trees.iter_mut()).enumerate()
@@ -248,6 +318,10 @@ where
     // We lay out any elements that were deferred in the second pass.
     // These are elements that must be compressed in their cross axis and have
     // a fixed length in the main axis.
+    // 第四阶段（有条件执行）
+    // 我们布局在第二阶段被推迟的元素。
+    // 这些元素必须在交叉轴上被压缩，并且
+    // 在主轴上具有固定长度。
     if cross_compress && some_fill_cross {
         for (i, (child, tree)) in items.iter_mut().zip(trees).enumerate() {
             let (main_size, cross_size) = {
@@ -282,6 +356,8 @@ where
 
     // FIFTH PASS
     // We align all the laid out nodes in the cross axis, if needed.
+    // 第五阶段
+    // 如有需要，我们在交叉轴上对齐所有已布局的节点。
     for (i, node) in nodes.iter_mut().enumerate() {
         if i > 0 {
             main += spacing;

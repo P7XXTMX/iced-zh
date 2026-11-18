@@ -14,35 +14,105 @@ use std::mem;
 
 const INITIAL_INSTANCES: usize = 2_000;
 
+/// 四边形的属性。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The properties of a quad.
+///
+/// </details>
 #[derive(Clone, Copy, Debug, Pod, Zeroable)]
 #[repr(C)]
 pub struct Quad {
+    /// [`Quad`] 的位置。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The position of the [`Quad`].
+    ///
+    /// </details>
     pub position: [f32; 2],
 
+    /// [`Quad`] 的大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The size of the [`Quad`].
+    ///
+    /// </details>
     pub size: [f32; 2],
 
+    /// [`Quad`] 的边框颜色，使用 **线性 RGB**。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The border color of the [`Quad`], in __linear RGB__.
+    ///
+    /// </details>
     pub border_color: color::Packed,
 
+    /// [`Quad`] 的边框半径。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The border radii of the [`Quad`].
+    ///
+    /// </details>
     pub border_radius: [f32; 4],
 
+    /// [`Quad`] 的边框宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The border width of the [`Quad`].
+    ///
+    /// </details>
     pub border_width: f32,
 
+    /// [`Quad`] 的阴影颜色。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The shadow color of the [`Quad`].
+    ///
+    /// </details>
     pub shadow_color: color::Packed,
 
+    /// [`Quad`] 的阴影偏移。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The shadow offset of the [`Quad`].
+    ///
+    /// </details>
     pub shadow_offset: [f32; 2],
 
+    /// [`Quad`] 的阴影模糊半径。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The shadow blur radius of the [`Quad`].
+    ///
+    /// </details>
     pub shadow_blur_radius: f32,
 
+    /// [`Quad`] 是否应该吸附到像素网格。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Whether the [`Quad`] should be snapped to the pixel grid.
+    ///
+    /// </details>
     pub snap: u32,
 }
 
@@ -243,29 +313,78 @@ impl Layer {
     }
 }
 
+/// 一起渲染的一组 [`Quad`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A group of [`Quad`]s rendered together.
+///
+/// </details>
 #[derive(Default, Debug)]
 pub struct Batch {
+    /// [`Layer`] 的纯色四边形。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The solid quads of the [`Layer`].
+    ///
+    /// </details>
     solids: Vec<Solid>,
 
+    /// [`Layer`] 的渐变四边形。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The gradient quads of the [`Layer`].
+    ///
+    /// </details>
     gradients: Vec<Gradient>,
 
+    /// [`Layer`] 的四边形顺序。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The quad order of the [`Layer`].
+    ///
+    /// </details>
     order: Order,
 }
 
+/// [`Layer`] 的四边形顺序；以（四边形类型，数量）元组的形式存储。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The quad order of a [`Layer`]; stored as a tuple of the quad type & its count.
+///
+/// </details>
 type Order = Vec<(Kind, usize)>;
 
 impl Batch {
+    /// 如果 [`Quads`] 中没有任何类型的四边形，返回 true。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns true if there are no quads of any type in [`Quads`].
+    ///
+    /// </details>
     pub fn is_empty(&self) -> bool {
         self.solids.is_empty() && self.gradients.is_empty()
     }
 
+    /// 把一个带有给定 `Background` 类型的 [`Quad`] 添加到四边形 [`Layer`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Adds a [`Quad`] with the provided `Background` type to the quad [`Layer`].
+    ///
+    /// </details>
     pub fn add(&mut self, quad: Quad, background: &Background) {
         let kind = match background {
             Background::Color(color) => {
@@ -313,11 +432,32 @@ impl Batch {
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
+/// 四边形的种类。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The kind of a quad.
+///
+/// </details>
 enum Kind {
+    /// 纯色四边形
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A solid quad
+    ///
+    /// </details>
     Solid,
+    /// 渐变四边形
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A gradient quad
+    ///
+    /// </details>
     Gradient,
 }
 
@@ -338,6 +478,8 @@ struct Uniforms {
     scale: f32,
     // Uniforms must be aligned to their largest member,
     // this uses a mat4x4<f32> which aligns to 16, so align to that
+    // uniform 必须按其最大的成员对齐，
+    // 这里用到了按 16 对齐的 mat4x4<f32>，所以按 16 对齐
     _padding: [f32; 3],
 }
 

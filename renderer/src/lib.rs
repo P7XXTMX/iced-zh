@@ -1,4 +1,11 @@
+//! iced 的官方渲染器。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! The official renderer for iced.
+//!
+//! </details>
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 #[cfg(feature = "wgpu-bare")]
@@ -12,12 +19,26 @@ pub use iced_graphics::core;
 #[cfg(feature = "geometry")]
 pub use iced_graphics::geometry;
 
+/// [`iced`] 的默认图形渲染器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default graphics renderer for [`iced`].
+///
+/// </details>
 ///
 /// [`iced`]: https://github.com/iced-rs/iced
 pub type Renderer = renderer::Renderer;
 
+/// [`iced`] 的默认图形合成器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default graphics compositor for [`iced`].
+///
+/// </details>
 ///
 /// [`iced`]: https://github.com/iced-rs/iced
 pub type Compositor = renderer::Compositor;

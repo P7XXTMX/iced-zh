@@ -1,4 +1,11 @@
+//! iced 的语法高亮器。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A syntax highlighter for iced.
+//!
+//! </details>
 use iced_core as core;
 
 use crate::core::Color;
@@ -20,7 +27,14 @@ static THEMES: LazyLock<highlighting::ThemeSet> =
 
 const LINES_PER_SNAPSHOT: usize = 50;
 
+/// 一个语法高亮器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A syntax highlighter.
+///
+/// </details>
 #[derive(Debug)]
 pub struct Highlighter {
     syntax: &'static parsing::SyntaxReference,
@@ -66,6 +80,7 @@ impl highlighter::Highlighter for Highlighter {
         );
 
         // Restart the highlighter
+        // 重启高亮器
         self.change_line(0);
     }
 
@@ -140,9 +155,18 @@ fn scope_iterator<'a>(
     })
 }
 
+/// 一个流式语法高亮器。
+///
+/// 它可以高效地高亮不可变的词法单元流。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A streaming syntax highlighter.
 ///
 /// It can efficiently highlight an immutable stream of tokens.
+///
+/// </details>
 #[derive(Debug)]
 pub struct Stream {
     syntax: &'static parsing::SyntaxReference,
@@ -153,7 +177,14 @@ pub struct Stream {
 }
 
 impl Stream {
+    /// 创建一个新的 [`Stream`] 高亮器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Stream`] highlighter.
+    ///
+    /// </details>
     pub fn new(settings: &Settings) -> Self {
         let syntax = SYNTAXES
             .find_syntax_by_token(&settings.token)
@@ -175,7 +206,14 @@ impl Stream {
         }
     }
 
+    /// 从上一次提交的位置开始高亮给定的行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Highlights the given line from the last commit.
+    ///
+    /// </details>
     pub fn highlight_line(
         &mut self,
         line: &str,
@@ -187,12 +225,26 @@ impl Stream {
         scope_iterator(ops, line, &mut self.stack, &self.highlighter)
     }
 
+    /// 提交上一次高亮的行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Commits the last highlighted line.
+    ///
+    /// </details>
     pub fn commit(&mut self) {
         self.commit = (self.state.clone(), self.stack.clone());
     }
 
+    /// 重置 [`Stream`] 高亮器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Resets the [`Stream`] highlighter.
+    ///
+    /// </details>
     pub fn reset(&mut self) {
         self.state = parsing::ParseState::new(self.syntax);
         self.stack = parsing::ScopeStack::new();
@@ -200,37 +252,88 @@ impl Stream {
     }
 }
 
+/// [`Highlighter`] 的设置。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The settings of a [`Highlighter`].
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub struct Settings {
+    /// [`Highlighter`] 的 [`Theme`]。
+    ///
+    /// 它决定高亮时使用的配色方案。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Theme`] of the [`Highlighter`].
     ///
     /// It dictates the color scheme that will be used for highlighting.
+    ///
+    /// </details>
     pub theme: Theme,
+    /// 要高亮的文件的扩展名，或语言的名称。
+    ///
+    /// [`Highlighter`] 会用这个标记自动确定
+    /// 高亮时使用的语法。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The extension of the file or the name of the language to highlight.
     ///
     /// The [`Highlighter`] will use the token to automatically determine
     /// the grammar to use for highlighting.
+    ///
+    /// </details>
     pub token: String,
 }
 
+/// [`Highlighter`] 产生的一个高亮。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A highlight produced by a [`Highlighter`].
+///
+/// </details>
 #[derive(Debug)]
 pub struct Highlight(highlighting::StyleModifier);
 
 impl Highlight {
+    /// 返回这个 [`Highlight`] 的颜色。
+    ///
+    /// 如果是 `None`，原来的文本颜色应保持不变。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the color of this [`Highlight`].
     ///
     /// If `None`, the original text color should be unchanged.
+    ///
+    /// </details>
     pub fn color(&self) -> Option<Color> {
         self.0.foreground.map(|color| {
             Color::from_rgba8(color.r, color.g, color.b, color.a as f32 / 255.0)
         })
     }
 
+    /// 返回这个 [`Highlight`] 的字体。
+    ///
+    /// 如果是 `None`，原来的字体应保持不变。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the font of this [`Highlight`].
     ///
     /// If `None`, the original font should be unchanged.
+    ///
+    /// </details>
     pub fn font(&self) -> Option<Font> {
         self.0.font_style.and_then(|style| {
             let bold = style.contains(highlighting::FontStyle::BOLD);
@@ -256,9 +359,18 @@ impl Highlight {
         })
     }
 
+    /// 返回 [`Highlight`] 的 [`Format`]。
+    ///
+    /// 它同时包含 [`color`] 和 [`font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the [`Format`] of the [`Highlight`].
     ///
     /// It contains both the [`color`] and the [`font`].
+    ///
+    /// </details>
     ///
     /// [`color`]: Self::color
     /// [`font`]: Self::font
@@ -270,7 +382,14 @@ impl Highlight {
     }
 }
 
+/// 一个高亮主题。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A highlighting theme.
+///
+/// </details>
 #[allow(missing_docs)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Theme {
@@ -282,7 +401,14 @@ pub enum Theme {
 }
 
 impl Theme {
+    /// 包含所有可用主题的静态切片。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A static slice containing all the available themes.
+    ///
+    /// </details>
     pub const ALL: &'static [Self] = &[
         Self::SolarizedDark,
         Self::Base16Mocha,
@@ -291,7 +417,14 @@ impl Theme {
         Self::InspiredGitHub,
     ];
 
+    /// 如果 [`Theme`] 是深色的，返回 `true`，否则返回 false。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns `true` if the [`Theme`] is dark, and false otherwise.
+    ///
+    /// </details>
     pub fn is_dark(self) -> bool {
         match self {
             Self::SolarizedDark

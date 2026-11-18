@@ -1,0 +1,253 @@
+@@ beacon/src/client.rs:126
+默认丢弃
+@@ beacon/src/client.rs:223
+返回当前环境中 beacon 服务器的地址。
+
+如果定义了 `ICED_BEACON_SERVER_ADDRESS` 环境变量，
+则返回它的值。
+
+否则返回默认的本地服务器地址。
+@@ debug/src/lib.rs:450
+这里的 `move` 很重要，否则热补丁
+无法生效。
+@@ devtools/src/lib.rs:37
+一个附加了开发者工具的 [`Program`]。
+@@ devtools/src/lib.rs:40
+由这些开发者工具管理的原始 [`Program`]。
+@@ devtools/src/lib.rs:118
+开发者工具的状态。
+@@ devtools/src/time_machine.rs:38
+待办：并发运行（？）
+@@ highlighter/src/lib.rs:1
+iced 的语法高亮器。
+@@ highlighter/src/lib.rs:23
+一个语法高亮器。
+@@ highlighter/src/lib.rs:203
+[`Highlighter`] 的设置。
+@@ highlighter/src/lib.rs:156
+创建一个新的 [`Stream`] 高亮器。
+@@ highlighter/src/lib.rs:68
+重启高亮器
+@@ highlighter/src/lib.rs:143
+一个流式语法高亮器。
+
+它可以高效地高亮不可变的词法单元流。
+@@ highlighter/src/lib.rs:178
+从上一次提交的位置开始高亮给定的行。
+@@ highlighter/src/lib.rs:190
+提交上一次高亮的行。
+@@ highlighter/src/lib.rs:195
+重置 [`Stream`] 高亮器。
+@@ highlighter/src/lib.rs:206
+[`Highlighter`] 的 [`Theme`]。
+
+它决定高亮时使用的配色方案。
+@@ highlighter/src/lib.rs:210
+要高亮的文件的扩展名，或语言的名称。
+
+[`Highlighter`] 会用这个标记自动确定
+高亮时使用的语法。
+@@ highlighter/src/lib.rs:217
+[`Highlighter`] 产生的一个高亮。
+@@ highlighter/src/lib.rs:222
+返回这个 [`Highlight`] 的颜色。
+
+如果是 `None`，原来的文本颜色应保持不变。
+@@ highlighter/src/lib.rs:231
+返回这个 [`Highlight`] 的字体。
+
+如果是 `None`，原来的字体应保持不变。
+@@ highlighter/src/lib.rs:259
+返回 [`Highlight`] 的 [`Format`]。
+
+它同时包含 [`color`] 和 [`font`]。
+@@ highlighter/src/lib.rs:273
+一个高亮主题。
+@@ highlighter/src/lib.rs:285
+包含所有可用主题的静态切片。
+@@ highlighter/src/lib.rs:294
+如果 [`Theme`] 是深色的，返回 `true`，否则返回 false。
+@@ program/src/lib.rs:1
+iced 程序的定义。
+@@ program/src/lib.rs:22
+一个可交互的、原生的、跨平台的多窗口应用程序。
+
+[`Program`] 可以通过在某些方法中返回 [`Task`]
+来执行异步操作。
+@@ program/src/lib.rs:28
+程序的状态。
+@@ program/src/lib.rs:31
+程序的消息。
+@@ program/src/lib.rs:34
+程序的主题。
+@@ program/src/lib.rs:37
+程序的渲染器。
+@@ program/src/lib.rs:40
+程序的执行器。
+@@ program/src/lib.rs:43
+返回 [`Program`] 的唯一名称。
+@@ program/src/lib.rs:209
+使用给定的订阅函数装饰一个 [`Program`]。
+@@ program/src/lib.rs:386
+使用给定的样式函数装饰一个 [`Program`]。
+@@ program/src/lib.rs:563
+使用给定的执行器函数装饰一个 [`Program`]。
+@@ program/src/lib.rs:654
+某个 [`Program`] 的渲染器。
+@@ program/src/lib.rs:665
+一个正在运行的 [`Program`] 的特定实例。
+@@ program/src/lib.rs:672
+为给定的 [`Program`] 创建一个新的 [`Instance`]。
+@@ program/src/lib.rs:679
+返回 [`Instance`] 当前的标题。
+@@ program/src/lib.rs:684
+处理给定的消息并更新 [`Instance`]。
+@@ program/src/lib.rs:689
+生成 [`Instance`] 当前的部件树。
+@@ program/src/lib.rs:697
+返回 [`Instance`] 当前的 [`Subscription`]。
+@@ program/src/lib.rs:702
+返回 [`Instance`] 当前的主题。
+@@ program/src/lib.rs:707
+返回 [`Instance`] 当前的 [`theme::Style`]。
+@@ program/src/lib.rs:712
+返回 [`Instance`] 当前的缩放因子。
+@@ program/src/message.rs:1
+用于 [`Program`](crate::Program) 消息类型的特质。
+@@ program/src/message.rs:3
+[`Clone`] 的特质别名，但仅在启用 `time-travel`
+特性时生效。
+@@ program/src/message.rs:11
+[`Clone`] 的特质别名，但仅在启用 `time-travel`
+特性时生效。
+@@ program/src/message.rs:19
+[`Debug`](std::fmt::Debug) 的特质别名，但仅在启用
+`debug` 特性时生效。
+@@ program/src/message.rs:27
+[`Debug`](std::fmt::Debug) 的特质别名，但仅在启用
+`debug` 特性时生效。
+@@ program/src/preset.rs:6
+[`Program`](crate::Program) 的一种特定启动策略。
+@@ program/src/preset.rs:13
+使用给定的名称和启动策略创建一个新的 [`Preset`]。
+@@ program/src/preset.rs:24
+返回 [`Preset`] 的名称。
+@@ program/src/preset.rs:29
+启动 [`Preset`]，返回 [`Program`](crate::Program) 的初始状态
+以及一个用于并发启动的 [`Task`]。
+@@ renderer/src/fallback.rs:1
+组合现有的渲染器，创建类型安全的回退策略。
+@@ renderer/src/fallback.rs:16
+带有回退策略 `B` 的渲染器 `A`。
+
+这个类型可以用来轻松组合现有的渲染器，
+创建自定义的、类型安全的回退策略。
+@@ renderer/src/fallback.rs:22
+首选的渲染方案。
+@@ renderer/src/fallback.rs:24
+次选（即回退）的渲染方案。
+@@ renderer/src/fallback.rs:233
+带有回退策略 `B` 的合成器 `A`。
+
+它的工作方式与 [`Renderer`] 类似。
+@@ renderer/src/fallback.rs:242
+首选的合成方案。
+@@ renderer/src/fallback.rs:244
+次选（即回退）的合成方案。
+@@ renderer/src/fallback.rs:248
+带有回退策略 `B` 的表面 `A`。
+
+它的工作方式与 [`Renderer`] 类似。
+@@ renderer/src/fallback.rs:253
+首选的表面方案。
+@@ renderer/src/fallback.rs:255
+次选（即回退）的表面方案。
+@@ renderer/src/lib.rs:1
+iced 的官方渲染器。
+@@ renderer/src/lib.rs:15
+[`iced`] 的默认图形渲染器。
+@@ renderer/src/lib.rs:20
+[`iced`] 的默认图形合成器。
+@@ selector/src/find.rs:11
+一个 [`Operation`]，它运行 [`Selector`]，并在产生
+第一个 [`Output`](Selector::Output) 后停止。
+@@ selector/src/find.rs:15
+一个 [`Operation`]，它对整棵部件树运行 [`Selector`]，
+并汇总其所有的 [`Output`](Selector::Output)。
+@@ selector/src/lib.rs:1
+从部件树中选择数据。
+@@ selector/src/lib.rs:13
+一种遍历部件树以“选择”数据并产生某种输出的类型。
+@@ selector/src/lib.rs:15
+[`Selector`] 的输出类型。
+
+对于大多数选择器，它通常是 [`Target`]。不过，有些
+选择器可能希望返回一个更受限的类型，以便在类型系统中
+表达选择结果的保证。
+
+例如，[`String`] 和 [`str`] 的 [`Selector`] 实现
+返回的是 [`target::Text`] 而不是通用的 [`Target`]，因为它们
+保证只会选择文本。
+@@ selector/src/lib.rs:26
+在适用的情况下，对给定的 [`Candidate`] 执行选择。
+
+这个方法按深度优先的顺序遍历部件树。
+@@ selector/src/lib.rs:31
+返回 [`Selector`] 的简短描述，用于调试。
+@@ selector/src/lib.rs:34
+返回一个 [`widget::Operation`]，它运行 [`Selector`]，并在产生
+第一个 [`Output`](Self::Output) 后停止。
+@@ selector/src/lib.rs:43
+返回一个 [`widget::Operation`]，它对整棵部件树运行 [`Selector`]，
+并汇总其所有的 [`Output`](Self::Output)。
+@@ selector/src/lib.rs:145
+创建一个新的 [`Selector`]，匹配具有给定 [`widget::Id`] 的部件。
+@@ selector/src/lib.rs:150
+返回一个 [`Selector`]，匹配当前获得焦点的部件。
+@@ selector/src/target.rs:7
+选择过程中产生的通用部件匹配结果。
+@@ selector/src/target.rs:48
+返回 [`Target`] 的布局边界。
+@@ selector/src/target.rs:60
+返回 [`Target`] 的可见边界，以屏幕坐标表示。
+@@ selector/src/target.rs:155
+一个选择候选项。
+
+它会被传给 [`Selector::select`](crate::Selector::select)。
+@@ selector/src/target.rs:201
+返回 [`Candidate`] 的部件 [`Id`]。
+@@ selector/src/target.rs:213
+返回 [`Candidate`] 的布局边界。
+@@ selector/src/target.rs:225
+返回 [`Candidate`] 的可见边界，以屏幕坐标表示。
+@@ selector/src/target.rs:238
+有界类型同时具有布局边界和可见边界。
+
+这个特质让我们可以针对 [`Selector`](crate::Selector) 的
+[`Output`](crate::Selector::Output) 编写泛型代码。
+@@ selector/src/target.rs:243
+返回布局边界。
+@@ selector/src/target.rs:246
+返回可见边界，以屏幕坐标表示。
+@@ selector/src/target.rs:250
+一个文本匹配结果。
+@@ selector/src/target.rs:267
+返回 [`Text`] 的布局边界。
+@@ selector/src/target.rs:274
+返回 [`Text`] 的可见边界，以屏幕坐标表示。
+@@ tester/src/lib.rs:1
+为你的 iced 应用程序录制、编辑并运行端到端测试。
+@@ tester/src/lib.rs:36
+将一个 [`Tester`] 附加到给定的 [`Program`] 上。
+@@ tester/src/lib.rs:41
+一个附加了 [`Tester`] 的 [`Program`]。
+@@ tester/src/lib.rs:44
+附加了 [`Tester`] 的原始 [`Program`]。
+@@ tester/src/lib.rs:109
+测试器装饰一个 [`Program`] 定义，并在其上附加一个测试录制器。
+
+它既可以录制也可以回放 [`Ice`] 测试。
+@@ tester/src/lib.rs:148
+[`Tester`] 的消息。
+@@ tester/src/lib.rs:734
+待办：是否加省略号？

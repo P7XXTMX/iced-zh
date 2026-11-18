@@ -1,0 +1,1425 @@
+@@ core/src/text/editor.rs:1
+编辑文本。
+@@ core/src/text/editor.rs:9
+可供部件用来编辑多行文本的组件。
+@@ core/src/text/editor.rs:14
+使用给定的文本创建一个已完成布局的新 [`Editor`]。
+@@ core/src/text/editor.rs:17
+如果 [`Editor`] 没有内容，返回 true。
+@@ core/src/text/editor.rs:20
+返回 [`Editor`] 当前的 [`Cursor`]。
+@@ core/src/text/editor.rs:23
+返回 [`Editor`] 当前的 [`Selection`]。
+@@ core/src/text/editor.rs:26
+返回 [`Editor`] 当前选中的文本。
+@@ core/src/text/editor.rs:29
+返回 [`Editor`] 中给定行的文本（如果该行存在）。
+@@ core/src/text/editor.rs:32
+返回 [`Editor`] 中的行数。
+@@ core/src/text/editor.rs:35
+在 [`Editor`] 上执行一个 [`Action`]。
+@@ core/src/text/editor.rs:38
+把光标移动到给定的位置。
+@@ core/src/text/editor.rs:41
+返回 [`Editor`] 当前的边界。
+@@ core/src/text/editor.rs:44
+返回能容纳 [`Editor`] 当前内容的
+最小边界。
+@@ core/src/text/editor.rs:11
+[`Editor`] 的字体。
+@@ core/src/text/editor.rs:48
+使用一些新的属性更新 [`Editor`]。
+@@ core/src/text/editor.rs:59
+在 [`Editor`] 中运行一个文本 [`Highlighter`]。
+@@ core/src/text/editor.rs:212
+文本所在的行。
+@@ core/src/text/editor.rs:68
+与 [`Editor`] 的一次交互。
+@@ core/src/text/editor.rs:71
+应用一个 [`Motion`]。
+@@ core/src/text/editor.rs:73
+使用给定的 [`Motion`] 选择文本。
+@@ core/src/text/editor.rs:75
+选择当前光标处的单词。
+@@ core/src/text/editor.rs:77
+选择当前光标处的行。
+@@ core/src/text/editor.rs:79
+选择整个缓冲区。
+@@ core/src/text/editor.rs:81
+执行一个 [`Edit`]。
+@@ core/src/text/editor.rs:83
+在给定的 [`Point`] 处点击 [`Editor`]。
+@@ core/src/text/editor.rs:85
+在 [`Editor`] 上把鼠标拖动到给定的 [`Point`]。
+@@ core/src/text/editor.rs:87
+把 [`Editor`] 滚动一定的行数。
+@@ core/src/text/editor.rs:89
+要滚动的行数。
+@@ core/src/text/editor.rs:95
+返回该 [`Action`] 是否为编辑动作。
+@@ core/src/text/editor.rs:101
+编辑文本的动作。
+@@ core/src/text/editor.rs:104
+插入给定的字符。
+@@ core/src/text/editor.rs:106
+粘贴给定的文本。
+@@ core/src/text/editor.rs:108
+在当前行换行。
+@@ core/src/text/editor.rs:110
+缩进当前行。
+@@ core/src/text/editor.rs:112
+取消当前行的缩进。
+@@ core/src/text/editor.rs:114
+删除前一个字符。
+@@ core/src/text/editor.rs:214
+行内的列。
+@@ core/src/text/editor.rs:116
+删除后一个字符。
+@@ core/src/text/editor.rs:120
+光标的移动。
+@@ core/src/text/editor.rs:123
+向左移动。
+@@ core/src/text/editor.rs:125
+向右移动。
+@@ core/src/text/editor.rs:127
+向上移动。
+@@ core/src/text/editor.rs:129
+向下移动。
+@@ core/src/text/editor.rs:131
+移动到单词的左边界。
+@@ core/src/text/editor.rs:133
+移动到单词的右边界。
+@@ core/src/text/editor.rs:135
+移动到行首。
+@@ core/src/text/editor.rs:137
+移动到行尾。
+@@ core/src/text/editor.rs:139
+移动到上一屏的开头。
+@@ core/src/text/editor.rs:141
+移动到下一屏的开头。
+@@ core/src/text/editor.rs:143
+移动到文本的开头。
+@@ core/src/text/editor.rs:145
+移动到文本的末尾。
+@@ core/src/text/editor.rs:150
+如果可能，扩大该 [`Motion`] 的范围。
+@@ core/src/text/editor.rs:161
+返回 [`Motion`] 的 [`Direction`]。
+@@ core/src/text/editor.rs:180
+文本中的方向。
+@@ core/src/text/editor.rs:189
+[`Editor`] 的光标。
+@@ core/src/text/editor.rs:192
+没有选区的光标
+@@ core/src/text/editor.rs:195
+选中一段文本范围的光标
+@@ core/src/text/editor.rs:199
+[`Editor`] 的范围。
+@@ core/src/text/editor.rs:202
+光标位置。
+@@ core/src/text/editor.rs:205
+选区位置（如果有）。
+@@ core/src/text/editor.rs:218
+[`Editor`] 的一行。
+@@ core/src/text/editor.rs:221
+[`Line`] 的原始文本。
+@@ core/src/text/editor.rs:223
+[`Line`] 的行尾符。
+@@ core/src/text/editor.rs:227
+[`Line`] 的行尾符。
+@@ core/src/text/editor.rs:230
+使用 `\n` 作为行尾符（POSIX 风格）
+@@ core/src/text/editor.rs:233
+使用 `\r\n` 作为行尾符（Windows 风格）
+@@ core/src/text/editor.rs:235
+使用 `\r` 作为行尾符（许多旧式系统）
+@@ core/src/text/editor.rs:237
+使用 `\n\r` 作为行尾符（部分旧式系统）
+@@ core/src/text/editor.rs:239
+没有行尾符
+@@ core/src/text/editor.rs:244
+获取 [`LineEnding`] 的字符串表示。
+@@ core/src/text/editor.rs:209
+[`Editor`] 中的一个光标位置。
+@@ widget/src/text_editor.rs:200
+设置 [`TextEditor`] 的最小高度。
+@@ widget/src/text_editor.rs:206
+设置 [`TextEditor`] 的最大高度。
+@@ widget/src/text_editor.rs:522
+[`TextEditor`] 的状态。
+@@ widget/src/text_editor.rs:565
+返回 [`TextEditor`] 当前是否获得焦点。
+@@ widget/src/text_editor.rs:1117
+到 [`TextEditor`] 中某个动作的绑定。
+@@ widget/src/text_editor.rs:1120
+让 [`TextEditor`] 失去焦点。
+@@ widget/src/text_editor.rs:1122
+复制 [`TextEditor`] 的选区。
+@@ widget/src/text_editor.rs:1124
+剪切 [`TextEditor`] 的选区。
+@@ widget/src/text_editor.rs:1126
+把剪贴板内容粘贴到 [`TextEditor`] 中。
+@@ widget/src/text_editor.rs:1128
+应用一个 [`Motion`]。
+@@ widget/src/text_editor.rs:1130
+使用给定的 [`Motion`] 选择文本。
+@@ widget/src/text_editor.rs:1132
+选择当前光标处的单词。
+@@ widget/src/text_editor.rs:1134
+选择当前光标处的行。
+@@ widget/src/text_editor.rs:1136
+选择整个缓冲区。
+@@ widget/src/text_editor.rs:1138
+插入给定的字符。
+@@ widget/src/text_editor.rs:1140
+在当前行换行。
+@@ widget/src/text_editor.rs:1142
+删除前一个字符。
+@@ widget/src/text_editor.rs:1144
+删除后一个字符。
+@@ widget/src/text_editor.rs:1146
+要依次执行的一系列绑定。
+@@ widget/src/text_editor.rs:1148
+产生给定的消息。
+@@ widget/src/text_editor.rs:1152
+一次按键。
+@@ widget/src/text_editor.rs:1155
+按下的原始按键，未应用修饰键。
+
+组合键（例如 Ctrl+C）应当使用这个按键。
+@@ widget/src/text_editor.rs:1159
+按下的按键，已应用修饰键。
+
+任何单键绑定（例如光标移动）都应当使用这个按键。
+@@ widget/src/text_editor.rs:1163
+按下的物理按键。
+
+与键盘布局无关的绑定应当使用这个按键。
+@@ widget/src/text_editor.rs:1167
+键盘修饰键的状态。
+@@ widget/src/text_editor.rs:1169
+这次按键产生的文本。
+@@ widget/src/text_editor.rs:1171
+[`TextEditor`] 当前的 [`Status`]。
+@@ widget/src/text_editor.rs:1176
+返回给定按键对应的默认 [`Binding`]。
+@@ widget/src/text_input/cursor.rs:1
+跟踪文本输入框的光标。
+@@ widget/src/text_input/cursor.rs:4
+文本输入框的光标。
+@@ widget/src/text_input/cursor.rs:10
+[`Cursor`] 的状态。
+@@ widget/src/text_input/cursor.rs:13
+没有选区的光标
+@@ widget/src/text_input/cursor.rs:16
+正在选中一段文本的光标
+@@ widget/src/text_input/cursor.rs:18
+选区的起点
+@@ widget/src/text_input/cursor.rs:20
+选区的终点
+@@ widget/src/text_input/cursor.rs:34
+返回 [`Cursor`] 的 [`State`]。
+@@ widget/src/text_input/cursor.rs:51
+返回 [`Cursor`] 在给定 [`Value`] 上的当前选区。
+
+`start` 保证小于等于 `end`。
+@@ widget/src/text_input/value.rs:3
+[`TextInput`] 的值。
+@@ widget/src/text_input/value.rs:6
+待办：减少分配，缓存结果（？）
+@@ widget/src/text_input/value.rs:13
+从字符串切片创建一个新的 [`Value`]。
+@@ widget/src/text_input/value.rs:22
+返回 [`Value`] 是否为空。
+
+不包含任何字素的 [`Value`] 是空的。
+@@ widget/src/text_input/value.rs:29
+返回 [`Value`] 中字素的总数。
+@@ widget/src/text_input/value.rs:34
+返回从给定字素 `index` 起，上一个单词开头的
+位置。
+@@ widget/src/text_input/value.rs:56
+返回从给定字素 `index` 起，下一个单词结尾的
+位置。
+@@ widget/src/text_input/value.rs:75
+返回一个新的 [`Value`]，包含从 `start` 到
+给定 `end` 的字素。
+@@ widget/src/text_input/value.rs:84
+返回一个新的 [`Value`]，包含给定 `index`
+之前的字素。
+@@ widget/src/text_input/value.rs:92
+在给定的字素 `index` 处插入一个新的 `char`。
+@@ widget/src/text_input/value.rs:102
+在给定的字素 `index` 处插入一批字素。
+@@ widget/src/text_input/value.rs:109
+移除给定 `index` 处的字素。
+@@ widget/src/text_input/value.rs:114
+移除从 `start` 到 `end` 的字素。
+@@ widget/src/text_input/value.rs:119
+返回一个新的 [`Value`]，其中所有字素都被替换为
+圆点（'•'）字符。
+@@ core/src/text/highlighter.rs:1
+高亮文本。
+@@ core/src/text/highlighter.rs:6
+一种能够高亮文本的类型。
+
+[`Highlighter`] 按顺序高亮各行。某一行发生变化时，
+必须通知它，并且必须把变化行之后的各行
+重新交给 [`Highlighter`]。
+@@ core/src/text/highlighter.rs:12
+用来配置 [`Highlighter`] 的设置。
+@@ core/src/text/highlighter.rs:15
+[`Highlighter`] 的输出。
+@@ core/src/text/highlighter.rs:18
+高亮迭代器的类型。
+@@ core/src/text/highlighter.rs:23
+根据其 [`Self::Settings`] 创建一个新的 [`Highlighter`]。
+@@ core/src/text/highlighter.rs:26
+用新的 [`Self::Settings`] 更新 [`Highlighter`]。
+@@ core/src/text/highlighter.rs:29
+通知 [`Highlighter`]：给定索引处的行已经发生变化。
+@@ core/src/text/highlighter.rs:32
+高亮给定的行。
+
+如果在此之前有某一行发生了变化，那么这里提供的第一行
+就是发生变化的那一行。
+@@ core/src/text/highlighter.rs:38
+返回 [`Highlighter`] 的当前行。
+
+如果调用过 `change_line`，它通常是发生变化的
+最小索引。
+@@ core/src/text/highlighter.rs:45
+一个什么都不高亮的高亮器。
+@@ core/src/text/highlighter.rs:72
+某段文本的格式。
+@@ core/src/text/highlighter.rs:75
+文本的 [`Color`]。
+@@ core/src/text/highlighter.rs:77
+文本的 `Font`。
+@@ core/src/text/paragraph.rs:1
+绘制段落。
+@@ core/src/text/paragraph.rs:8
+文本段落。
+@@ core/src/text/paragraph.rs:13
+使用给定的 [`Text`] 创建一个已完成布局的新 [`Paragraph`]。
+@@ core/src/text/paragraph.rs:16
+使用给定的 [`Text`] 创建一个已完成布局的新 [`Paragraph`]。
+@@ core/src/text/paragraph.rs:21
+使用新的边界对 [`Paragraph`] 进行布局。
+@@ core/src/text/paragraph.rs:24
+把 [`Paragraph`] 与期望的 [`Text`] 进行比较，并返回
+[`Difference`]。
+@@ core/src/text/paragraph.rs:28
+返回 [`Paragraph`] 的文本大小，单位为 [`Pixels`]。
+@@ core/src/text/paragraph.rs:31
+返回 [`Paragraph`] 的字体。
+@@ core/src/text/paragraph.rs:10
+这个 [`Paragraph`] 的字体。
+@@ core/src/text/paragraph.rs:34
+返回 [`Paragraph`] 的 [`LineHeight`]。
+@@ core/src/text/paragraph.rs:37
+返回 [`Paragraph`] 的水平对齐方式。
+@@ core/src/text/paragraph.rs:40
+返回 [`Paragraph`] 的垂直对齐方式。
+@@ core/src/text/paragraph.rs:43
+返回 [`Paragraph`] 的 [`Wrapping`] 策略。
+@@ core/src/text/paragraph.rs:69
+返回到 [`Paragraph`] 中给定字素索引处的距离。
+@@ core/src/text/paragraph.rs:46
+返回 [`Paragraph`] 的 [`Shaping`] 策略。
+@@ core/src/text/paragraph.rs:49
+返回用于对 [`Paragraph`] 进行布局的可用边界。
+@@ core/src/text/paragraph.rs:52
+返回能容纳 [`Paragraph`] 内容的
+最小边界。
+@@ core/src/text/paragraph.rs:56
+测试给定的点是否位于 [`Paragraph`] 的边界之内，
+并返回最近字符的相关信息。
+@@ core/src/text/paragraph.rs:60
+测试给定的点是否位于 [`Paragraph`] 中某个
+[`Span`] 的边界之内，并返回被命中的 [`Span`]
+的索引。
+@@ core/src/text/paragraph.rs:65
+返回 [`Paragraph`] 中给定索引的 [`Span`] 的所有边界。
+一个 [`Span`] 在它所跨的每一行上都可以有一个边界。
+@@ core/src/text/paragraph.rs:72
+返回能容纳 [`Paragraph`] 内容的最小宽度。
+@@ core/src/text/paragraph.rs:77
+返回能容纳 [`Paragraph`] 内容的最小高度。
+@@ core/src/text/paragraph.rs:83
+纯文本的 [`Paragraph`]。
+@@ core/src/text/paragraph.rs:91
+创建一个新的 [`Plain`] 段落。
+@@ core/src/text/paragraph.rs:99
+在需要时更新纯文本 [`Paragraph`]，使其与给定的 [`Text`] 一致。
+
+如果 [`Paragraph`] 发生了变化，返回 true。
+@@ core/src/text/paragraph.rs:122
+返回 [`Paragraph`] 的水平对齐方式。
+@@ core/src/text/paragraph.rs:127
+返回 [`Paragraph`] 的垂直对齐方式。
+@@ core/src/text/paragraph.rs:132
+返回能容纳 [`Paragraph`] 内容的
+最小边界。
+@@ core/src/text/paragraph.rs:138
+返回能容纳 [`Paragraph`] 内容的
+最小宽度。
+@@ core/src/text/paragraph.rs:144
+返回能容纳 [`Paragraph`] 内容的
+最小高度。
+@@ core/src/text/paragraph.rs:150
+返回缓存的 [`Paragraph`]。
+@@ core/src/text/paragraph.rs:155
+返回纯文本 [`Paragraph`] 当前的内容。
+@@ core/src/text/paragraph.rs:160
+以 [`Text`] 定义的形式返回 [`Paragraph`]。
+@@ core/src/theme/palette.rs:1
+定义主题的颜色。
+@@ core/src/theme/palette.rs:286
+根据 [`Palette`] 生成的一组扩展颜色。
+@@ core/src/theme/palette.rs:289
+背景色组。
+@@ core/src/theme/palette.rs:291
+主色组。
+@@ core/src/theme/palette.rs:293
+辅助色组。
+@@ core/src/theme/palette.rs:295
+成功色组。
+@@ core/src/theme/palette.rs:297
+警告色组。
+@@ core/src/theme/palette.rs:299
+危险色组。
+@@ core/src/theme/palette.rs:301
+调色板是否为深色。
+@@ core/src/theme/palette.rs:6
+一个调色板。
+@@ core/src/theme/palette.rs:424
+一对背景色和文本色。
+@@ core/src/theme/palette.rs:427
+背景色。
+@@ core/src/theme/palette.rs:430
+文本色。
+
+保证它在背景 [`color`] 之上清晰可读。
+@@ core/src/theme/palette.rs:439
+根据一个背景 [`Color`] 和一个文本 [`Color`] 创建一个新的 [`Pair`]。
+@@ core/src/theme/palette.rs:448
+一组背景色。
+@@ core/src/theme/palette.rs:451
+基础背景色。
+@@ core/src/theme/palette.rs:453
+基础背景色最弱的版本。
+@@ core/src/theme/palette.rs:455
+基础背景色更弱的版本。
+@@ core/src/theme/palette.rs:457
+基础背景色较弱的版本。
+@@ core/src/theme/palette.rs:459
+基础背景色的中性版本，介于弱与强之间。
+@@ core/src/theme/palette.rs:461
+基础背景色较强的版本。
+@@ core/src/theme/palette.rs:463
+基础背景色更强的版本。
+@@ core/src/theme/palette.rs:465
+基础背景色最强的版本。
+@@ core/src/theme/palette.rs:470
+根据基础色和文本色生成一组 [`Background`] 颜色。
+@@ core/src/theme/palette.rs:493
+一组主色。
+@@ core/src/theme/palette.rs:496
+基础主色。
+@@ core/src/theme/palette.rs:498
+基础主色的较弱版本。
+@@ core/src/theme/palette.rs:500
+基础主色的较强版本。
+@@ core/src/theme/palette.rs:505
+根据基础色、背景色和文本颜色生成一组 [`Primary`] 颜色。
+@@ core/src/theme/palette.rs:518
+一组次要色。
+@@ core/src/theme/palette.rs:10
+[`Palette`] 的背景 [`Color`]。
+@@ core/src/theme/palette.rs:12
+[`Palette`] 的文本 [`Color`]。
+@@ core/src/theme/palette.rs:14
+[`Palette`] 的主 [`Color`]。
+@@ core/src/theme/palette.rs:16
+[`Palette`] 的成功 [`Color`]。
+@@ core/src/theme/palette.rs:18
+[`Palette`] 的警告 [`Color`]。
+@@ core/src/theme/palette.rs:20
+[`Palette`] 的危险 [`Color`]。
+@@ core/src/theme/palette.rs:25
+[`Palette`] 内置的浅色变体。
+@@ core/src/theme/palette.rs:35
+[`Palette`] 内置的深色变体。
+@@ core/src/theme/palette.rs:45
+[`Palette`] 内置的 [Dracula] 变体。
+@@ core/src/theme/palette.rs:49
+背景
+@@ core/src/theme/palette.rs:50
+前景
+@@ core/src/theme/palette.rs:51
+紫色
+@@ core/src/theme/palette.rs:52
+绿色
+@@ core/src/theme/palette.rs:53
+黄色
+@@ core/src/theme/palette.rs:54
+红色
+@@ core/src/theme/palette.rs:57
+[`Palette`] 内置的 [Nord] 变体。
+@@ core/src/theme/palette.rs:61
+=
+@@ core/src/theme/palette.rs:62
+=
+@@ core/src/theme/palette.rs:63
+=
+@@ core/src/theme/palette.rs:64
+=
+@@ core/src/theme/palette.rs:65
+=
+@@ core/src/theme/palette.rs:66
+=
+@@ core/src/theme/palette.rs:69
+[`Palette`] 内置的 [Solarized] Light 变体。
+@@ core/src/theme/palette.rs:73
+=
+@@ core/src/theme/palette.rs:74
+=
+@@ core/src/theme/palette.rs:75
+青色
+@@ core/src/theme/palette.rs:76
+绿色
+@@ core/src/theme/palette.rs:77
+黄色
+@@ core/src/theme/palette.rs:78
+红色
+@@ core/src/theme/palette.rs:81
+[`Palette`] 内置的 [Solarized] Dark 变体。
+@@ core/src/theme/palette.rs:85
+=
+@@ core/src/theme/palette.rs:86
+=
+@@ core/src/theme/palette.rs:87
+青色
+@@ core/src/theme/palette.rs:88
+绿色
+@@ core/src/theme/palette.rs:89
+黄色
+@@ core/src/theme/palette.rs:90
+红色
+@@ core/src/theme/palette.rs:93
+[`Palette`] 内置的 [Gruvbox] Light 变体。
+@@ core/src/theme/palette.rs:97
+=
+@@ core/src/theme/palette.rs:98
+=
+@@ core/src/theme/palette.rs:99
+=
+@@ core/src/theme/palette.rs:100
+=
+@@ core/src/theme/palette.rs:101
+=
+@@ core/src/theme/palette.rs:102
+=
+@@ core/src/theme/palette.rs:105
+[`Palette`] 内置的 [Gruvbox] Dark 变体。
+@@ core/src/theme/palette.rs:109
+=
+@@ core/src/theme/palette.rs:110
+=
+@@ core/src/theme/palette.rs:111
+=
+@@ core/src/theme/palette.rs:112
+=
+@@ core/src/theme/palette.rs:113
+=
+@@ core/src/theme/palette.rs:114
+=
+@@ core/src/theme/palette.rs:117
+[`Palette`] 内置的 [Catppuccin] Latte 变体。
+@@ core/src/theme/palette.rs:121
+基底色
+@@ core/src/theme/palette.rs:122
+文本
+@@ core/src/theme/palette.rs:123
+蓝色
+@@ core/src/theme/palette.rs:124
+绿色
+@@ core/src/theme/palette.rs:125
+黄色
+@@ core/src/theme/palette.rs:126
+红色
+@@ core/src/theme/palette.rs:129
+[`Palette`] 内置的 [Catppuccin] Frappé 变体。
+@@ core/src/theme/palette.rs:133
+基底色
+@@ core/src/theme/palette.rs:134
+文本
+@@ core/src/theme/palette.rs:135
+蓝色
+@@ core/src/theme/palette.rs:136
+绿色
+@@ core/src/theme/palette.rs:137
+黄色
+@@ core/src/theme/palette.rs:138
+红色
+@@ core/src/theme/palette.rs:141
+[`Palette`] 内置的 [Catppuccin] Macchiato 变体。
+@@ core/src/theme/palette.rs:145
+基底色
+@@ core/src/theme/palette.rs:146
+文本
+@@ core/src/theme/palette.rs:147
+蓝色
+@@ core/src/theme/palette.rs:148
+绿色
+@@ core/src/theme/palette.rs:149
+黄色
+@@ core/src/theme/palette.rs:150
+红色
+@@ core/src/theme/palette.rs:153
+[`Palette`] 内置的 [Catppuccin] Mocha 变体。
+@@ core/src/theme/palette.rs:157
+基底色
+@@ core/src/theme/palette.rs:158
+文本
+@@ core/src/theme/palette.rs:159
+蓝色
+@@ core/src/theme/palette.rs:160
+绿色
+@@ core/src/theme/palette.rs:161
+黄色
+@@ core/src/theme/palette.rs:162
+红色
+@@ core/src/theme/palette.rs:165
+[`Palette`] 内置的 [Tokyo Night] 变体。
+@@ core/src/theme/palette.rs:169
+背景（Night）
+@@ core/src/theme/palette.rs:170
+文本
+@@ core/src/theme/palette.rs:171
+蓝色
+@@ core/src/theme/palette.rs:172
+绿色
+@@ core/src/theme/palette.rs:173
+黄色
+@@ core/src/theme/palette.rs:174
+红色
+@@ core/src/theme/palette.rs:177
+[`Palette`] 内置的 [Tokyo Night] Storm 变体。
+@@ core/src/theme/palette.rs:181
+背景（Storm）
+@@ core/src/theme/palette.rs:182
+文本
+@@ core/src/theme/palette.rs:183
+蓝色
+@@ core/src/theme/palette.rs:184
+绿色
+@@ core/src/theme/palette.rs:185
+黄色
+@@ core/src/theme/palette.rs:186
+红色
+@@ core/src/theme/palette.rs:189
+[`Palette`] 内置的 [Tokyo Night] Light 变体。
+@@ core/src/theme/palette.rs:193
+背景
+@@ core/src/theme/palette.rs:194
+文本
+@@ core/src/theme/palette.rs:195
+蓝色
+@@ core/src/theme/palette.rs:196
+绿色
+@@ core/src/theme/palette.rs:197
+黄色
+@@ core/src/theme/palette.rs:198
+红色
+@@ core/src/theme/palette.rs:201
+[`Palette`] 内置的 [Kanagawa] Wave 变体。
+@@ core/src/theme/palette.rs:205
+=
+@@ core/src/theme/palette.rs:206
+=
+@@ core/src/theme/palette.rs:207
+=
+@@ core/src/theme/palette.rs:208
+=
+@@ core/src/theme/palette.rs:209
+=
+@@ core/src/theme/palette.rs:210
+=
+@@ core/src/theme/palette.rs:213
+[`Palette`] 内置的 [Kanagawa] Dragon 变体。
+@@ core/src/theme/palette.rs:217
+=
+@@ core/src/theme/palette.rs:218
+=
+@@ core/src/theme/palette.rs:219
+=
+@@ core/src/theme/palette.rs:220
+=
+@@ core/src/theme/palette.rs:221
+=
+@@ core/src/theme/palette.rs:222
+=
+@@ core/src/theme/palette.rs:225
+[`Palette`] 内置的 [Kanagawa] Lotus 变体。
+@@ core/src/theme/palette.rs:229
+=
+@@ core/src/theme/palette.rs:230
+=
+@@ core/src/theme/palette.rs:231
+=
+@@ core/src/theme/palette.rs:232
+=
+@@ core/src/theme/palette.rs:233
+=
+@@ core/src/theme/palette.rs:234
+=
+@@ core/src/theme/palette.rs:237
+[`Palette`] 内置的 [Moonfly] 变体。
+@@ core/src/theme/palette.rs:241
+背景
+@@ core/src/theme/palette.rs:242
+前景
+@@ core/src/theme/palette.rs:243
+蓝色（普通）
+@@ core/src/theme/palette.rs:244
+绿色（普通）
+@@ core/src/theme/palette.rs:245
+黄色（普通）
+@@ core/src/theme/palette.rs:246
+红色（普通）
+@@ core/src/theme/palette.rs:249
+[`Palette`] 内置的 [Nightfly] 变体。
+@@ core/src/theme/palette.rs:253
+背景
+@@ core/src/theme/palette.rs:254
+前景
+@@ core/src/theme/palette.rs:255
+蓝色（普通）
+@@ core/src/theme/palette.rs:256
+绿色（普通）
+@@ core/src/theme/palette.rs:257
+黄色（普通）
+@@ core/src/theme/palette.rs:258
+红色（普通）
+@@ core/src/theme/palette.rs:261
+[`Palette`] 内置的 [Oxocarbon] 变体。
+@@ core/src/theme/palette.rs:269
+=
+@@ core/src/theme/palette.rs:273
+[`Palette`] 内置的 [Ferra] 变体。
+@@ core/src/theme/palette.rs:281
+=
+@@ core/src/theme/palette.rs:305
+[`Extended`] 调色板的内置浅色变体。
+@@ core/src/theme/palette.rs:309
+[`Extended`] 调色板的内置深色变体。
+@@ core/src/theme/palette.rs:313
+[`Extended`] 调色板的内置 Dracula 变体。
+@@ core/src/theme/palette.rs:317
+[`Extended`] 调色板的内置 Nord 变体。
+@@ core/src/theme/palette.rs:321
+[`Extended`] 调色板的内置 Solarized Light 变体。
+@@ core/src/theme/palette.rs:325
+[`Extended`] 调色板的内置 Solarized Dark 变体。
+@@ core/src/theme/palette.rs:329
+[`Extended`] 调色板的内置 Gruvbox Light 变体。
+@@ core/src/theme/palette.rs:333
+[`Extended`] 调色板的内置 Gruvbox Dark 变体。
+@@ core/src/theme/palette.rs:337
+[`Extended`] 调色板的内置 Catppuccin Latte 变体。
+@@ core/src/theme/palette.rs:341
+[`Extended`] 调色板的内置 Catppuccin Frappé 变体。
+@@ core/src/theme/palette.rs:345
+[`Extended`] 调色板的内置 Catppuccin Macchiato 变体。
+@@ core/src/theme/palette.rs:349
+[`Extended`] 调色板的内置 Catppuccin Mocha 变体。
+@@ core/src/theme/palette.rs:353
+[`Extended`] 调色板的内置 Tokyo Night 变体。
+@@ core/src/theme/palette.rs:357
+[`Extended`] 调色板的内置 Tokyo Night Storm 变体。
+@@ core/src/theme/palette.rs:361
+[`Extended`] 调色板的内置 Tokyo Night 变体。
+@@ core/src/theme/palette.rs:365
+[`Extended`] 调色板的内置 Kanagawa Wave 变体。
+@@ core/src/theme/palette.rs:369
+[`Extended`] 调色板的内置 Kanagawa Dragon 变体。
+@@ core/src/theme/palette.rs:373
+[`Extended`] 调色板的内置 Kanagawa Lotus 变体。
+@@ core/src/theme/palette.rs:377
+[`Extended`] 调色板的内置 Moonfly 变体。
+@@ core/src/theme/palette.rs:381
+[`Extended`] 调色板的内置 Nightfly 变体。
+@@ core/src/theme/palette.rs:385
+[`Extended`] 调色板的内置 Oxocarbon 变体。
+@@ core/src/theme/palette.rs:389
+[`Extended`] 调色板的内置 Ferra 变体。
+@@ core/src/theme/palette.rs:628
+按给定的系数加深一个 [`Color`]。
+@@ core/src/theme/palette.rs:632
+我们尝试稍微提高色度，让调色板更鲜艳
+@@ core/src/theme/palette.rs:634
+公式是凭经验瞎试出来的
+@@ core/src/theme/palette.rs:651
+我们尝试稍微提高色度，让调色板更鲜艳
+公式是凭经验瞎试出来的
+@@ core/src/theme/palette.rs:664
+按给定的系数偏移一个 [`Color`]。如果该 [`Color`] 是深色
+则提亮，否则加深。
+@@ core/src/theme/palette.rs:690
+根据给定的文本色计算出一个 [`Color`]，使其在
+给定的背景色之上清晰可读。
+@@ core/src/theme/palette.rs:699
+待办：根据相对对比度的值计算系数
+@@ core/src/theme/palette.rs:722
+如果 [`Color`] 是深色，返回 true。
+@@ core/src/element.rs:14
+一个通用的 [`Widget`]。
+
+它适合用来构建可组合的用户界面，而不会在
+**视图逻辑**中泄漏实现细节。
+
+如果你有一个[内置部件][built-in widget]，应该可以用 `Into<Element>`
+把它转换成 [`Element`]。
+@@ core/src/element.rs:28
+创建一个包含给定 [`Widget`] 的新 [`Element`]。
+@@ core/src/element.rs:38
+返回 [`Element`] 的 [`Widget`] 的引用。
+@@ core/src/element.rs:43
+返回 [`Element`] 的 [`Widget`] 的可变引用。
+@@ core/src/element.rs:50
+对 [`Element`] 产生的消息应用一个变换。
+
+当你想解耦界面的不同部分，并让它们
+**可组合**时，此方法很有用。
+@@ core/src/element.rs:202
+把 [`Element`] 标记为*待解释*。
+
+[`Renderer`] 会以图形方式解释 [`Element`] 的布局。
+这对调试布局非常有用！
+@@ core/src/widget/id.rs:6
+通用部件的标识符。
+@@ core/src/widget/id.rs:11
+根据一个静态 `str` 创建一个新的 [`Id`]。
+@@ core/src/widget/id.rs:16
+创建一个唯一的 [`Id`]。
+
+此函数每次调用都会产生一个不同的 [`Id`]。
+@@ core/src/widget/operation.rs:1
+查询或更新部件的内部状态。
+@@ core/src/widget/operation.rs:18
+一段可以遍历应用程序部件树的逻辑，
+用于查询或更新某些部件状态。
+@@ core/src/widget/operation.rs:21
+请求继续遍历部件树，以便继续操作。
+
+[`Operation`] 可以调用给定的 `operate` 闭包，
+把控制权交还给部件树并继续遍历。如果
+没有调用该闭包，请求遍历的那个部件的子部件
+将被跳过。
+@@ core/src/widget/operation.rs:29
+对包含其他部件的部件进行操作。
+@@ core/src/widget/operation.rs:32
+对可以滚动的部件进行操作。
+@@ core/src/widget/operation.rs:43
+对可以获得焦点的部件进行操作。
+@@ core/src/widget/operation.rs:52
+对具有文本输入的部件进行操作。
+@@ core/src/widget/operation.rs:61
+对包含文本的部件进行操作。
+@@ core/src/widget/operation.rs:64
+对带有某种状态的自定义部件进行操作。
+@@ core/src/widget/operation.rs:73
+结束 [`Operation`] 并返回它的 [`Outcome`]。
+@@ core/src/widget/operation.rs:144
+[`Operation`] 的结果。
+@@ core/src/widget/operation.rs:146
+[`Operation`] 没有产生结果。
+@@ core/src/widget/operation.rs:149
+[`Operation`] 产生了某个结果。
+@@ core/src/widget/operation.rs:152
+[`Operation`] 之后需要接着执行另一个 [`Operation`]。
+@@ core/src/widget/operation.rs:169
+把 [`Operation`] 包装进一个黑盒，擦除它的返回类型。
+@@ core/src/widget/operation.rs:250
+使用给定的函数映射 [`Operation`] 的输出。
+@@ core/src/widget/operation.rs:420
+把 [`Operation`] 的输出与给定的函数串联起来，
+构建一个新的 [`Operation`]。
+@@ core/src/widget/operation.rs:526
+产生一个 [`Operation`]，它把给定的 [`Operation`] 应用到
+具有给定 [`Id`] 的容器的子部件上。
+@@ core/src/widget/operation/focusable.rs:1
+对可以获得焦点的部件进行操作。
+@@ core/src/widget/operation/focusable.rs:6
+可以获得焦点的部件的内部状态。
+@@ core/src/widget/operation/focusable.rs:8
+返回部件是否获得焦点。
+@@ core/src/widget/operation/focusable.rs:11
+让部件获得焦点。
+@@ core/src/widget/operation/focusable.rs:14
+让部件失去焦点。
+@@ core/src/widget/operation/focusable.rs:18
+部件树中可获得焦点的部件的汇总信息。
+@@ core/src/widget/operation/focusable.rs:21
+当前获得焦点的部件的索引（如果有）。
+@@ core/src/widget/operation/focusable.rs:24
+可获得焦点的部件的总数。
+@@ core/src/widget/operation/focusable.rs:28
+产生一个 [`Operation`]，让具有给定 [`Id`] 的部件获得焦点。
+@@ core/src/widget/operation/focusable.rs:59
+产生一个 [`Operation`]，让当前获得焦点的部件失去焦点。
+@@ core/src/widget/operation/focusable.rs:81
+产生一个 [`Operation`]，它生成一个 [`Count`]，并将其与
+给定的函数串联起来，构建一个新的 [`Operation`]。
+@@ core/src/widget/operation/focusable.rs:119
+产生一个 [`Operation`]，它查找当前获得焦点的部件，并且
+- 如果找到，让上一个可获得焦点的部件获得焦点。
+- 如果没找到，让最后一个可获得焦点的部件获得焦点。
+@@ core/src/widget/operation/focusable.rs:162
+产生一个 [`Operation`]，它查找当前获得焦点的部件，并且
+- 如果找到，让下一个可获得焦点的部件获得焦点。
+- 如果没找到，让第一个可获得焦点的部件获得焦点。
+@@ core/src/widget/operation/focusable.rs:199
+产生一个 [`Operation`]，它查找当前获得焦点的部件
+并保存其 ID。没有 ID 的部件会被忽略。
+@@ core/src/widget/operation/focusable.rs:237
+产生一个 [`Operation`]，它查找指定的可获得焦点的部件，
+并保存它是否获得焦点。没有 ID 的部件
+会被忽略。
+@@ core/src/widget/operation/scrollable.rs:1
+对可以滚动的部件进行操作。
+@@ core/src/widget/operation/scrollable.rs:5
+可以滚动的部件的内部状态。
+@@ core/src/widget/operation/scrollable.rs:7
+把部件的滚动位置在水平和垂直轴上对齐到给定的 `percentage`。
+@@ core/src/widget/operation/scrollable.rs:10
+把部件在水平和垂直轴上滚动到给定的 [`AbsoluteOffset`]。
+@@ core/src/widget/operation/scrollable.rs:13
+把部件在水平和垂直轴上滚动给定的 [`AbsoluteOffset`]。
+@@ core/src/widget/operation/scrollable.rs:22
+产生一个 [`Operation`]，把具有给定 [`Id`] 的部件对齐到
+给定的 `percentage`。
+@@ core/src/widget/operation/scrollable.rs:55
+产生一个 [`Operation`]，把具有给定 [`Id`] 的部件滚动到
+给定的 [`AbsoluteOffset`]。
+@@ core/src/widget/operation/scrollable.rs:88
+产生一个 [`Operation`]，把具有给定 [`Id`] 的部件滚动
+给定的 [`AbsoluteOffset`]。
+@@ core/src/widget/operation/scrollable.rs:118
+[`Scrollable`] 在各个方向上的绝对偏移量。
+@@ core/src/widget/operation/scrollable.rs:121
+水平偏移量
+@@ core/src/widget/operation/scrollable.rs:123
+垂直偏移量
+@@ core/src/widget/operation/scrollable.rs:136
+[`Scrollable`] 在各个方向上的相对偏移量。
+
+`0.0` 表示起点，`1.0` 表示终点。
+@@ core/src/widget/operation/scrollable.rs:141
+水平偏移量
+@@ core/src/widget/operation/scrollable.rs:143
+垂直偏移量
+@@ core/src/widget/operation/scrollable.rs:148
+指向 [`Scrollable`] 左上角的相对偏移。
+@@ core/src/widget/operation/scrollable.rs:151
+指向 [`Scrollable`] 右下角的相对偏移。
+@@ core/src/widget/operation/text_input.rs:1
+对具有文本输入的部件进行操作。
+@@ core/src/widget/operation/text_input.rs:6
+具有文本输入的部件的内部状态。
+@@ core/src/widget/operation/text_input.rs:8
+返回文本输入框当前*可见*的文本
+
+通常，它要么是输入框的值，要么是占位符。
+@@ core/src/widget/operation/text_input.rs:13
+把文本输入的光标移动到输入文本的开头。
+@@ core/src/widget/operation/text_input.rs:16
+把文本输入的光标移动到输入文本的末尾。
+@@ core/src/widget/operation/text_input.rs:19
+把文本输入的光标移动到任意位置。
+@@ core/src/widget/operation/text_input.rs:22
+选择文本输入的全部内容。
+@@ core/src/widget/operation/text_input.rs:24
+选择文本输入中给定范围的内容。
+@@ core/src/widget/operation/text_input.rs:28
+产生一个 [`Operation`]，把具有给定 [`Id`] 的部件的光标移动到
+开头。
+@@ core/src/widget/operation/text_input.rs:58
+产生一个 [`Operation`]，把具有给定 [`Id`] 的部件的光标移动到
+末尾。
+@@ core/src/widget/operation/text_input.rs:88
+产生一个 [`Operation`]，把具有给定 [`Id`] 的部件的光标移动到
+给定的位置。
+@@ core/src/widget/operation/text_input.rs:119
+产生一个 [`Operation`]，选择具有给定 [`Id`] 的部件的全部内容。
+@@ core/src/widget/operation/text_input.rs:148
+产生一个 [`Operation`]，选择具有给定 [`Id`] 的部件中给定范围的内容。
+@@ core/src/widget/text.rs:1
+文本部件通过文字展示信息。
+@@ core/src/widget/text.rs:3
+示例
+@@ core/src/widget/text.rs:36
+一段文本。
+@@ core/src/widget/text.rs:38
+示例
+@@ core/src/widget/text.rs:73
+使用给定的内容创建一个新的 [`Text`] 片段。
+@@ core/src/widget/text.rs:82
+设置 [`Text`] 的大小。
+@@ core/src/widget/text.rs:88
+设置 [`Text`] 的 [`LineHeight`]。
+@@ core/src/widget/text.rs:94
+设置 [`Text`] 的 [`Font`]。
+@@ core/src/widget/text.rs:102
+如果为 `Some`，设置 [`Text`] 的 [`Font`]。
+@@ core/src/widget/text.rs:113
+设置 [`Text`] 边界的宽度。
+@@ core/src/widget/text.rs:119
+设置 [`Text`] 边界的高度。
+@@ core/src/widget/text.rs:125
+让 [`Text`] 在水平和垂直方向上都居中。
+@@ core/src/widget/text.rs:131
+设置 [`Text`] 的 [`alignment::Horizontal`]。
+@@ core/src/widget/text.rs:137
+设置 [`Text`] 的 [`alignment::Vertical`]。
+@@ core/src/widget/text.rs:146
+设置 [`Text`] 的 [`Shaping`] 策略。
+@@ core/src/widget/text.rs:152
+设置 [`Text`] 的 [`Wrapping`] 策略。
+@@ core/src/widget/text.rs:158
+设置 [`Text`] 的样式。
+@@ core/src/widget/text.rs:168
+设置 [`Text`] 的 [`Color`]。
+@@ core/src/widget/text.rs:176
+如果为 `Some`，设置 [`Text`] 的 [`Color`]。
+@@ core/src/widget/text.rs:186
+设置 [`Text`] 的样式类。
+@@ core/src/widget/text.rs:195
+[`Text`] 部件的内部状态。
+@@ core/src/widget/text.rs:302
+生成 [`Text`] 部件的 [`layout::Node`]。
+@@ core/src/widget/text.rs:268
+[`Text`] 的格式。
+
+查看 [`Text`] 部件的各个方法，
+可以进一步了解每个字段。
+@@ core/src/widget/text.rs:335
+使用与 [`Text`] 部件相同的逻辑绘制文本。
+@@ core/src/widget/text.rs:394
+文本的外观。
+@@ core/src/widget/text.rs:397
+文本的 [`Color`]。
+
+默认值 `None` 表示使用继承的颜色。
+@@ core/src/widget/text.rs:403
+[`Text`] 的主题样式目录。
+@@ core/src/widget/text.rs:405
+此 [`Catalog`] 的条目类。
+@@ core/src/widget/text.rs:408
+此 [`Catalog`] 产生的默认类。
+@@ core/src/widget/text.rs:411
+某个类在给定交互状态下的 [`Style`]。
+@@ core/src/widget/text.rs:415
+[`Text`] 的样式函数。
+
+它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+@@ core/src/widget/text.rs:432
+默认的文本样式；颜色是继承而来的。
+@@ core/src/widget/text.rs:437
+使用默认基础色的文本。
+@@ core/src/widget/text.rs:444
+传达重要信息的文本，例如一个动作。
+@@ core/src/widget/text.rs:451
+传达次要信息的文本，例如脚注。
+@@ core/src/widget/text.rs:458
+传达正面信息的文本，例如某个成功的事件。
+@@ core/src/widget/text.rs:465
+传达轻微负面信息的文本，例如警告。
+@@ core/src/widget/text.rs:472
+传达负面信息的文本，例如错误。
+@@ core/src/widget/tree.rs:1
+把部件的内部状态保存在一棵状态树中，以保证连续性。
+@@ core/src/widget/tree.rs:8
+持久化的部件状态树。
+
+一个 [`Tree`] 通常与部件树中的某个特定部件相关联。
+@@ core/src/widget/tree.rs:13
+[`Tree`] 的标签。
+@@ core/src/widget/tree.rs:16
+[`Tree`] 的 [`State`]。
+@@ core/src/widget/tree.rs:19
+[`Tree`] 的根部件的各个子级。
+@@ core/src/widget/tree.rs:24
+创建一个空的、无状态且没有子节点的 [`Tree`]。
+@@ core/src/widget/tree.rs:33
+为给定的 [`Widget`] 创建一个新的 [`Tree`]。
+@@ core/src/widget/tree.rs:49
+把当前的树与给定的 [`Widget`] 进行协调。
+
+如果 [`Widget`] 的标签与 [`Tree`] 的标签匹配，那么
+[`Widget`] 会继续进行协调（即调用 [`Widget::diff`]）。
+
+否则，整棵 [`Tree`] 会被重新创建。
+@@ core/src/widget/tree.rs:70
+把这棵树的子节点与给定的部件列表进行协调。
+@@ core/src/widget/tree.rs:84
+把这棵树的子节点与给定的部件列表进行协调，差异比较和
+创建新的部件状态都使用自定义逻辑。
+@@ core/src/widget/tree.rs:110
+把 `current_children` 与给定的部件列表进行协调，
+差异比较和创建新的部件状态都使用自定义逻辑。
+
+该算法会通过查询 `maybe_changed` 闭包，
+尽量减小差异比较带来的影响。
+@@ core/src/widget/tree.rs:184
+待办：把这个循环与 extend 的逻辑合并（？）
+@@ core/src/widget/tree.rs:192
+部件状态的标识符。
+@@ core/src/widget/tree.rs:197
+为类型 `T` 的状态创建一个 [`Tag`]。
+@@ core/src/widget/tree.rs:205
+为无状态的部件创建一个 [`Tag`]。
+@@ core/src/widget/tree.rs:211
+部件的内部 [`State`]。
+@@ core/src/widget/tree.rs:213
+没有有意义的内部状态。
+@@ core/src/widget/tree.rs:216
+有某种有意义的内部状态。
+@@ core/src/widget/tree.rs:221
+创建一个新的 [`State`]。
+@@ core/src/widget/tree.rs:229
+把 [`State`] 向下转型为 `T`，并返回它的引用。
+@@ core/src/widget/tree.rs:231
+Panic
+@@ core/src/widget/tree.rs:232
+如果向下转型失败，或者 [`State`] 是 [`State::None`]，此方法会 panic。
+@@ core/src/widget/tree.rs:245
+把 [`State`] 向下转型为 `T`，并返回它的可变引用。
+@@ core/src/widget/tree.rs:247
+Panic
+@@ core/src/widget/tree.rs:248
+如果向下转型失败，或者 [`State`] 是 [`State::None`]，此方法会 panic。
+@@ core/src/window/direction.rs:1
+相对于窗口中心的基本方位。
+@@ core/src/window/direction.rs:4
+指向窗口的上边缘。
+@@ core/src/window/direction.rs:7
+指向窗口的下边缘。
+@@ core/src/window/direction.rs:10
+指向窗口的右边缘。
+@@ core/src/window/direction.rs:13
+指向窗口的左边缘。
+@@ core/src/window/direction.rs:16
+指向窗口的右上角。
+@@ core/src/window/direction.rs:19
+指向窗口的左上角。
+@@ core/src/window/direction.rs:22
+指向窗口的右下角。
+@@ core/src/window/direction.rs:25
+指向窗口的左下角。
+@@ core/src/window/event.rs:6
+与窗口相关的事件。
+@@ core/src/window/event.rs:9
+一个窗口被打开。
+@@ core/src/window/event.rs:11
+被打开窗口的位置。它相对于窗口所在桌面（包括虚拟桌面）
+的左上角。指的是窗口的“外部”位置，
+即窗口区域的位置，单位为逻辑像素。
+
+**注意**：在 Wayland 中不可用。
+@@ core/src/window/event.rs:17
+被创建窗口的大小。这是它的“内部”大小，即
+客户区的大小，单位为逻辑像素。
+@@ core/src/window/event.rs:22
+一个窗口被关闭。
+@@ core/src/window/event.rs:25
+一个窗口被移动。
+@@ core/src/window/event.rs:28
+一个窗口的大小被调整。
+@@ core/src/window/event.rs:31
+一个窗口的缩放因子发生了变化。
+@@ core/src/window/event.rs:34
+请求重绘一个窗口。
+
+[`Instant`] 包含当前时间。
+@@ core/src/window/event.rs:39
+用户请求关闭窗口。
+@@ core/src/window/event.rs:42
+一个窗口获得焦点。
+@@ core/src/window/event.rs:45
+一个窗口失去焦点。
+@@ core/src/window/event.rs:48
+一个文件正悬停在窗口上方。
+
+当用户同时悬停多个文件时，会为每个文件
+分别发出此事件。
+@@ core/src/window/event.rs:53
+平台差异
+@@ core/src/window/event.rs:55
+- **Wayland：** 未实现。
+@@ core/src/window/event.rs:58
+一个文件被拖放到窗口中。
+
+当用户同时拖放多个文件时，会为每个文件
+分别发出此事件。
+@@ core/src/window/event.rs:63
+平台差异
+@@ core/src/window/event.rs:65
+- **Wayland：** 未实现。
+@@ core/src/window/event.rs:68
+一个文件曾悬停在窗口上方，但已经离开窗口。
+
+即使悬停了多个文件，也只会触发一次
+`FilesHoveredLeft` 事件。
+@@ core/src/window/event.rs:73
+平台差异
+@@ core/src/window/event.rs:75
+- **Wayland：** 未实现。
+@@ core/src/window/icon.rs:1
+更改窗口的图标。
+@@ core/src/window/icon.rs:6
+根据 `sRGB` 色彩空间中的 RGBA 像素构建一个 [`Icon`]。
+@@ core/src/window/icon.rs:37
+窗口图标，通常用于标题栏或任务栏。
+@@ core/src/window/icon.rs:45
+返回 [`Icon`] 的原始数据。
+@@ core/src/window/icon.rs:61
+使用无效参数调用 [`from_rgba`] 时产生的错误。
+@@ core/src/window/icon.rs:63
+当 `rgba` 参数的长度不能被 4 整除时产生，此时 `rgba` 无法
+被安全地解释为 32bpp 的 RGBA 像素。
+@@ core/src/window/icon.rs:70
+所提供 RGBA 数据的长度。
+@@ core/src/window/icon.rs:73
+当像素数量（`rgba.len() / 4`）不等于 `width * height` 时产生。
+你的参数中至少有一个不正确。
+@@ core/src/window/icon.rs:80
+所提供的宽度。
+@@ core/src/window/icon.rs:82
+所提供的高度。
+@@ core/src/window/icon.rs:84
+`width` 与 `height` 的乘积。
+@@ core/src/window/icon.rs:86
+所提供 RGBA 数据的像素数量。
+@@ core/src/window/id.rs:5
+窗口的 id。
+@@ core/src/window/id.rs:13
+创建一个新的唯一窗口 [`Id`]。
+@@ core/src/window/level.rs:1
+窗口层级按 z 轴位置对窗口进行分组。
+
+不同窗口层级中的窗口之间的相对顺序是固定的。
+同一窗口层级内窗口的 z 轴顺序可能会随着
+用户交互而动态变化。
+@@ core/src/window/level.rs:8
+默认行为。
+@@ core/src/window/level.rs:12
+窗口将始终位于普通窗口之下。
+
+这对基于小组件（widget）的应用很有用。
+@@ core/src/window/level.rs:17
+窗口将始终位于普通窗口之上。
+@@ core/src/window/mode.rs:1
+基于窗口的应用程序的模式。
+@@ core/src/window/mode.rs:4
+应用程序显示在它自己的窗口中。
+@@ core/src/window/mode.rs:7
+应用程序占满其当前显示器的整个屏幕。
+@@ core/src/window/mode.rs:10
+应用程序被隐藏
+@@ core/src/window/position.rs:3
+窗口在给定屏幕中的位置。
+@@ core/src/window/position.rs:6
+新窗口在各平台上的默认位置。
+@@ core/src/window/position.rs:9
+窗口在屏幕上完全居中。
+@@ core/src/window/position.rs:11
+窗口按指定的坐标 `(X, Y)` 定位。
+
+当窗口启用了装饰时，Windows 10 会给窗口添加一些
+不可见的内边距。这些内边距会被计入
+位置。因此，如果你启用了装饰并希望窗口位于
+(0, 0)，就必须把位置设置为
+`(PADDING_X, PADDING_Y)`。
+@@ core/src/window/position.rs:19
+与 [`Specific`] 类似，但窗口按给定函数返回的坐标定位。
+
+该函数接收窗口大小和显示器的分辨率作为输入。
+@@ core/src/window/redraw_request.rs:3
+重绘窗口的请求。
+@@ core/src/window/redraw_request.rs:6
+在下一帧重绘。
+@@ core/src/window/redraw_request.rs:9
+在给定的时间重绘。
+@@ core/src/window/redraw_request.rs:12
+不需要重绘。
+@@ core/src/window/screenshot.rs:1
+截取窗口的屏幕截图。
+@@ core/src/window/screenshot.rs:6
+屏幕截图的数据，通过 `window::screenshot()` 捕获。
+
+此截图的 `bytes` 始终按 `sRGB` 色彩空间中的 `RGBA` 顺序排列。
+@@ core/src/window/screenshot.rs:11
+[`Screenshot`] 的 RGBA 字节。
+@@ core/src/window/screenshot.rs:13
+[`Screenshot`] 的大小，单位为物理像素。
+@@ core/src/window/screenshot.rs:15
+[`Screenshot`] 的缩放因子。在根据部件边界（单位为逻辑像素）
+换算并裁剪截图时，它会很有用。
+@@ core/src/window/screenshot.rs:33
+创建一个新的 [`Screenshot`]。
+@@ core/src/window/screenshot.rs:46
+把 [`Screenshot`] 裁剪到给定的 `region`。该区域始终相对于
+[`Screenshot`] 的左上角。
+@@ core/src/window/screenshot.rs:59
+图像始终是 RGBA8 = 每像素 4 字节
+@@ core/src/window/screenshot.rs:99
+裁剪 [`Screenshot`] 时可能发生的错误。
+@@ core/src/window/screenshot.rs:102
+裁剪区域的大小超出了边界。
+@@ core/src/window/screenshot.rs:105
+裁剪区域的大小为零。
+@@ core/src/window/settings.rs:1
+配置你的窗口。
+@@ core/src/window/settings.rs:32
+应用程序的窗口设置。
+@@ core/src/window/settings.rs:35
+窗口的初始逻辑尺寸。
+@@ core/src/window/settings.rs:38
+窗口启动时是否最大化。
+@@ core/src/window/settings.rs:41
+窗口启动时是否全屏。
+@@ core/src/window/settings.rs:44
+窗口的初始位置。
+@@ core/src/window/settings.rs:47
+窗口的最小尺寸。
+@@ core/src/window/settings.rs:50
+窗口的最大尺寸。
+@@ core/src/window/settings.rs:53
+窗口是否可见。
+@@ core/src/window/settings.rs:56
+窗口是否可以调整大小。
+@@ core/src/window/settings.rs:59
+标题栏是否带有关闭按钮
+@@ core/src/window/settings.rs:62
+标题栏是否带有最小化按钮
+@@ core/src/window/settings.rs:65
+窗口是否带有边框、标题栏等装饰。
+@@ core/src/window/settings.rs:68
+窗口是否透明。
+@@ core/src/window/settings.rs:71
+窗口是否带有模糊背景。
+
+注意：模糊效果是应用在透明窗口上的。你需要启用
+[`Settings::transparent`]，并通过 `Application::style`
+为背景色设置合适的不透明度。
+
+此选项仅在 macOS 和 Linux 上受支持。更多细节请阅读
+[winit 文档][winit]。
+@@ core/src/window/settings.rs:83
+窗口的 [`Level`]。
+@@ core/src/window/settings.rs:86
+窗口的图标。
+@@ core/src/window/settings.rs:89
+平台特定的设置。
+@@ core/src/window/settings.rs:92
+当用户请求关闭窗口时（例如用户按下关闭按钮时），
+窗口是否关闭。
+
+如果你希望在窗口真正被销毁之前执行某些行为，这会很有用。
+如果禁用此项，你必须使用 `window::close` 命令
+手动关闭窗口。
+
+默认启用。
+@@ core/src/window/settings/linux.rs:1
+Linux 的平台特定设置。
+@@ core/src/window/settings/linux.rs:3
+应用程序的平台特定窗口设置。
+@@ core/src/window/settings/linux.rs:6
+设置窗口的应用程序 id。
+
+作为最佳实践，建议选择与应用程序 .desktop 文件的
+基本名（basename）一致的应用程序 id。
+@@ core/src/window/settings/linux.rs:12
+是否让 x11 窗口绕过窗口管理器的映射
+
+此标志特别适合用来创建需要精确定位、立即显示
+且不受窗口管理器干预的 UI 元素。
+@@ core/src/window/settings/macos.rs:1
+macOS 的平台特定设置。
+@@ core/src/window/settings/macos.rs:3
+应用程序的平台特定窗口设置。
+@@ core/src/window/settings/macos.rs:6
+隐藏窗口标题。
+@@ core/src/window/settings/macos.rs:8
+让标题栏透明，并允许内容显示在它的后面。
+@@ core/src/window/settings/macos.rs:10
+让窗口内容显示在标题栏的后面。
+@@ core/src/window/settings/other.rs:1
+应用程序的平台特定窗口设置。
+@@ core/src/window/settings/wasm.rs:1
+WebAssembly 的平台特定设置。
+@@ core/src/window/settings/wasm.rs:3
+应用程序的平台特定窗口设置。
+@@ core/src/window/settings/wasm.rs:6
+将被应用程序替换的 DOM 元素的
+标识符。
+
+如果设置为 `None`，应用程序会被追加到 HTML body 中。
+
+默认设置为 `"iced"`。
+@@ core/src/window/settings/windows.rs:1
+Windows 的平台特定设置。
+@@ core/src/window/settings/windows.rs:3
+应用程序的平台特定窗口设置。
+@@ core/src/window/settings/windows.rs:6
+拖放支持
+@@ core/src/window/settings/windows.rs:9
+是否在任务栏中显示或隐藏窗口图标。
+@@ core/src/window/settings/windows.rs:12
+显示或隐藏无装饰窗口的背景投影。
+
+阴影默认是隐藏的。
+启用阴影会导致窗口顶部出现一条 1px 的细线。
+@@ core/src/window/settings/windows.rs:18
+设置窗口圆角的首选样式。
+
+从 Windows 11 Build 22000 开始支持。
+@@ core/src/window/settings/windows.rs:35
+描述窗口的角应该是什么样子。
+@@ core/src/window/settings/windows.rs:39
+对应 `DWMWCP_DEFAULT`。
+
+由系统决定何时把窗口的角变为圆角。
+@@ core/src/window/settings/windows.rs:45
+对应 `DWMWCP_DONOTROUND`。
+
+从不把窗口的角变为圆角。
+@@ core/src/window/settings/windows.rs:50
+对应 `DWMWCP_ROUND`。
+
+在合适的情况下使用圆角。
+@@ core/src/window/settings/windows.rs:55
+对应 `DWMWCP_ROUNDSMALL`。
+
+在合适的情况下使用小半径的圆角。
+@@ core/src/window/user_attention.rs:1
+要请求的用户注意力类型。
+@@ core/src/window/user_attention.rs:3
+平台差异
+@@ core/src/window/user_attention.rs:5
+- **X11：** 设置窗口管理器的 `XUrgencyHint`。不区分 [`Critical`] 和 [`Informational`]。
+@@ core/src/window/user_attention.rs:11
+平台差异
+@@ core/src/window/user_attention.rs:13
+- **macOS：** 让程序坞图标持续弹跳，直到应用程序获得焦点。
+- **Windows：** 让窗口和任务栏按钮同时闪烁，直到应用程序获得焦点。
+@@ core/src/window/user_attention.rs:16
+平台差异
+@@ core/src/window/user_attention.rs:18
+- **macOS：** 让程序坞图标弹跳一次。
+- **Windows：** 让任务栏按钮闪烁，直到应用程序获得焦点。
+@@ core/src/theme/palette.rs:647
+按给定的系数调亮一个 [`Color`]。

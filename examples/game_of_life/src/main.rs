@@ -1,5 +1,13 @@
+//! 这个示例展示了 John Conway 发明的生命游戏的
+//! 交互式版本。它把 `Canvas` 与其他部件结合起来使用。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! This example showcases an interactive version of the Game of Life, invented
 //! by John Conway. It leverages a `Canvas` together with other widgets.
+//!
+//! </details>
 mod preset;
 
 use grid::Grid;

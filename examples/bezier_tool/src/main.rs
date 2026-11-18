@@ -1,4 +1,11 @@
+//! 这个示例展示了一个用于绘制贝塞尔曲线的交互式 `Canvas`。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! This example showcases an interactive `Canvas` for drawing Bézier curves.
+//!
+//! </details>
 use iced::widget::{button, container, hover, right, space};
 use iced::{Element, Theme};
 

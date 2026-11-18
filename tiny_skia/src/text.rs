@@ -26,6 +26,7 @@ impl Pipeline {
     }
 
     // TODO: Shared engine
+    // 待办：共享引擎
     #[allow(dead_code)]
     pub fn load_font(&mut self, bytes: Cow<'static, [u8]>) {
         font_system()
@@ -274,6 +275,7 @@ impl GlyphCache {
 
         if let hash_map::Entry::Vacant(entry) = self.entries.entry(key) {
             // TODO: Outline support
+            // 待办：支持轮廓（outline）
             let image = swash.get_image_uncached(font_system, cache_key)?;
 
             let glyph_size = image.placement.width as usize
@@ -290,6 +292,7 @@ impl GlyphCache {
                     let mut i = 0;
 
                     // TODO: Blend alpha
+                    // 待办：混合 alpha
 
                     for _y in 0..image.placement.height {
                         for _x in 0..image.placement.width {
@@ -313,6 +316,7 @@ impl GlyphCache {
                     for _y in 0..image.placement.height {
                         for _x in 0..image.placement.width {
                             // TODO: Blend alpha
+                            // 待办：混合 alpha
                             buffer[i >> 2] = bytemuck::cast(
                                 tiny_skia::ColorU8::from_rgba(
                                     image.data[i + 2],
@@ -329,6 +333,7 @@ impl GlyphCache {
                 }
                 cosmic_text::SwashContent::SubpixelMask => {
                     // TODO
+                    // 待办
                 }
             }
 

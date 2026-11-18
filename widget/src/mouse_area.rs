@@ -1,4 +1,11 @@
+//! 用于捕获鼠标事件的容器。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A container for capturing mouse events.
+//!
+//! </details>
 use crate::core::layout;
 use crate::core::mouse;
 use crate::core::overlay;
@@ -10,7 +17,14 @@ use crate::core::{
     Vector, Widget,
 };
 
+/// 在发生鼠标事件时发出消息。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Emit messages on mouse events.
+///
+/// </details>
 pub struct MouseArea<
     'a,
     Message,
@@ -33,20 +47,45 @@ pub struct MouseArea<
 }
 
 impl<'a, Message, Theme, Renderer> MouseArea<'a, Message, Theme, Renderer> {
+    /// 按下鼠标左键时发出的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The message to emit on a left button press.
+    ///
+    /// </details>
     #[must_use]
     pub fn on_press(mut self, message: Message) -> Self {
         self.on_press = Some(message);
         self
     }
 
+    /// 松开鼠标左键时发出的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The message to emit on a left button release.
+    ///
+    /// </details>
     #[must_use]
     pub fn on_release(mut self, message: Message) -> Self {
         self.on_release = Some(message);
         self
     }
 
+    /// 双击时发出的消息。
+    ///
+    /// 如果与 [`on_press`]/[`on_release`] 一起使用，
+    /// 这些事件仍会照常发出。
+    ///
+    /// 事件流为：on_press -> on_release -> on_press
+    /// -> on_double_click -> on_release -> on_press ...
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The message to emit on a double click.
     ///
     /// If you use this with [`on_press`]/[`on_release`], those
@@ -54,6 +93,8 @@ impl<'a, Message, Theme, Renderer> MouseArea<'a, Message, Theme, Renderer> {
     ///
     /// The events stream will be: on_press -> on_release -> on_press
     /// -> on_double_click -> on_release -> on_press ...
+    ///
+    /// </details>
     ///
     /// [`on_press`]: Self::on_press
     /// [`on_release`]: Self::on_release
@@ -63,35 +104,70 @@ impl<'a, Message, Theme, Renderer> MouseArea<'a, Message, Theme, Renderer> {
         self
     }
 
+    /// 按下鼠标右键时发出的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The message to emit on a right button press.
+    ///
+    /// </details>
     #[must_use]
     pub fn on_right_press(mut self, message: Message) -> Self {
         self.on_right_press = Some(message);
         self
     }
 
+    /// 松开鼠标右键时发出的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The message to emit on a right button release.
+    ///
+    /// </details>
     #[must_use]
     pub fn on_right_release(mut self, message: Message) -> Self {
         self.on_right_release = Some(message);
         self
     }
 
+    /// 按下鼠标中键时发出的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The message to emit on a middle button press.
+    ///
+    /// </details>
     #[must_use]
     pub fn on_middle_press(mut self, message: Message) -> Self {
         self.on_middle_press = Some(message);
         self
     }
 
+    /// 松开鼠标中键时发出的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The message to emit on a middle button release.
+    ///
+    /// </details>
     #[must_use]
     pub fn on_middle_release(mut self, message: Message) -> Self {
         self.on_middle_release = Some(message);
         self
     }
 
+    /// 使用滚轮时发出的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The message to emit when scroll wheel is used
+    ///
+    /// </details>
     #[must_use]
     pub fn on_scroll(
         mut self,
@@ -101,28 +177,56 @@ impl<'a, Message, Theme, Renderer> MouseArea<'a, Message, Theme, Renderer> {
         self
     }
 
+    /// 鼠标进入该区域时发出的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The message to emit when the mouse enters the area.
+    ///
+    /// </details>
     #[must_use]
     pub fn on_enter(mut self, message: Message) -> Self {
         self.on_enter = Some(message);
         self
     }
 
+    /// 鼠标在该区域内移动时发出的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The message to emit when the mouse moves in the area.
+    ///
+    /// </details>
     #[must_use]
     pub fn on_move(mut self, on_move: impl Fn(Point) -> Message + 'a) -> Self {
         self.on_move = Some(Box::new(on_move));
         self
     }
 
+    /// 鼠标离开该区域时发出的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The message to emit when the mouse exits the area.
+    ///
+    /// </details>
     #[must_use]
     pub fn on_exit(mut self, message: Message) -> Self {
         self.on_exit = Some(message);
         self
     }
 
+    /// 悬停在该区域上时使用的 [`mouse::Interaction`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`mouse::Interaction`] to use when hovering the area.
+    ///
+    /// </details>
     #[must_use]
     pub fn interaction(mut self, interaction: mouse::Interaction) -> Self {
         self.interaction = Some(interaction);
@@ -130,7 +234,14 @@ impl<'a, Message, Theme, Renderer> MouseArea<'a, Message, Theme, Renderer> {
     }
 }
 
+/// [`MouseArea`] 的局部状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Local state of the [`MouseArea`].
+///
+/// </details>
 #[derive(Default)]
 struct State {
     is_hovered: bool,
@@ -140,7 +251,14 @@ struct State {
 }
 
 impl<'a, Message, Theme, Renderer> MouseArea<'a, Message, Theme, Renderer> {
+    /// 使用给定的内容创建一个 [`MouseArea`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`MouseArea`] with the given content.
+    ///
+    /// </details>
     pub fn new(
         content: impl Into<Element<'a, Message, Theme, Renderer>>,
     ) -> Self {
@@ -324,8 +442,15 @@ where
     }
 }
 
+/// 处理给定的 [`Event`]，并相应地更新 [`MouseArea`] 的 [`State`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Processes the given [`Event`] and updates the [`State`] of an [`MouseArea`]
 /// accordingly.
+///
+/// </details>
 fn update<Message: Clone, Theme, Renderer>(
     widget: &mut MouseArea<'_, Message, Theme, Renderer>,
     tree: &mut Tree,
@@ -395,6 +520,8 @@ fn update<Message: Clone, Theme, Renderer>(
 
                 // Even if this is not a double click, but the press is nevertheless
                 // processed by us and should not be popup to parent widgets.
+                // 即使这不是一次双击，这次按下也已经由我们处理，
+                // 不应该再向上传递给父部件。
                 shell.capture_event();
             }
         }

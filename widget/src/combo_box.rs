@@ -1,6 +1,13 @@
+//! 组合框显示一个可搜索、可选择的选项下拉列表。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Combo boxes display a dropdown list of searchable and selectable options.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -74,9 +81,16 @@ use crate::text_input::{self, TextInput};
 use std::cell::RefCell;
 use std::fmt::Display;
 
+/// 用于从选项列表中搜索并选择单个值的部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget for searching and selecting a single value from a list of options.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -162,9 +176,18 @@ where
     Theme: Catalog,
     Renderer: text::Renderer,
 {
+    /// 使用给定的选项列表、占位文本、当前选中的值，
+    /// 以及选中某个选项时要产生的消息，创建一个新的
+    /// [`ComboBox`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`ComboBox`] with the given list of options, a placeholder,
     /// the current selected value, and the message to produce when an option is
     /// selected.
+    ///
+    /// </details>
     pub fn new(
         state: &'a State<T>,
         placeholder: &str,
@@ -195,8 +218,16 @@ where
         }
     }
 
+    /// 设置在 [`ComboBox`] 的 [`TextInput`] 中输入文本时
+    /// 应该产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that should be produced when some text is typed into
     /// the [`TextInput`] of the [`ComboBox`].
+    ///
+    /// </details>
     pub fn on_input(
         mut self,
         on_input: impl Fn(String) -> Message + 'static,
@@ -205,8 +236,16 @@ where
         self
     }
 
+    /// 设置使用方向键悬停在 [`ComboBox`] 的某个选项上时
+    /// 产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when an option of the
     /// [`ComboBox`] is hovered using the arrow keys.
+    ///
+    /// </details>
     pub fn on_option_hovered(
         mut self,
         on_option_hovered: impl Fn(T) -> Message + 'static,
@@ -215,28 +254,58 @@ where
         self
     }
 
+    /// 设置 [`ComboBox`] 被打开时
+    /// 产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when the  [`ComboBox`] is
     /// opened.
+    ///
+    /// </details>
     pub fn on_open(mut self, message: Message) -> Self {
         self.on_open = Some(message);
         self
     }
 
+    /// 设置 [`ComboBox`] 的外部区域被按下时
+    /// 产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when the outside area
     /// of the [`ComboBox`] is pressed.
+    ///
+    /// </details>
     pub fn on_close(mut self, message: Message) -> Self {
         self.on_close = Some(message);
         self
     }
 
+    /// 设置 [`ComboBox`] 的 [`Padding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Padding`] of the [`ComboBox`].
+    ///
+    /// </details>
     pub fn padding(mut self, padding: impl Into<Padding>) -> Self {
         self.padding = padding.into();
         self.text_input = self.text_input.padding(self.padding);
         self
     }
 
+    /// 设置 [`ComboBox`] 的 [`Renderer::Font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Renderer::Font`] of the [`ComboBox`].
+    ///
+    /// </details>
     ///
     /// [`Renderer::Font`]: text::Renderer
     pub fn font(mut self, font: Renderer::Font) -> Self {
@@ -245,13 +314,27 @@ where
         self
     }
 
+    /// 设置 [`ComboBox`] 的 [`text_input::Icon`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`text_input::Icon`] of the [`ComboBox`].
+    ///
+    /// </details>
     pub fn icon(mut self, icon: text_input::Icon<Renderer::Font>) -> Self {
         self.text_input = self.text_input.icon(icon);
         self
     }
 
+    /// 设置 [`ComboBox`] 的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the text sixe of the [`ComboBox`].
+    ///
+    /// </details>
     pub fn size(mut self, size: impl Into<Pixels>) -> Self {
         let size = size.into();
 
@@ -261,7 +344,14 @@ where
         self
     }
 
+    /// 设置 [`ComboBox`] 的 [`LineHeight`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`LineHeight`] of the [`ComboBox`].
+    ///
+    /// </details>
     pub fn line_height(self, line_height: impl Into<LineHeight>) -> Self {
         Self {
             text_input: self.text_input.line_height(line_height),
@@ -269,7 +359,14 @@ where
         }
     }
 
+    /// 设置 [`ComboBox`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`ComboBox`].
+    ///
+    /// </details>
     pub fn width(self, width: impl Into<Length>) -> Self {
         Self {
             text_input: self.text_input.width(width),
@@ -277,19 +374,40 @@ where
         }
     }
 
+    /// 设置 [`ComboBox`] 菜单的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the menu of the [`ComboBox`].
+    ///
+    /// </details>
     pub fn menu_height(mut self, menu_height: impl Into<Length>) -> Self {
         self.menu_height = menu_height.into();
         self
     }
 
+    /// 设置 [`ComboBox`] 的 [`text::Shaping`] 策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`text::Shaping`] strategy of the [`ComboBox`].
+    ///
+    /// </details>
     pub fn text_shaping(mut self, shaping: text::Shaping) -> Self {
         self.text_shaping = shaping;
         self
     }
 
+    /// 设置 [`ComboBox`] 输入框的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the input of the [`ComboBox`].
+    ///
+    /// </details>
     #[must_use]
     pub fn input_style(
         mut self,
@@ -303,7 +421,14 @@ where
         self
     }
 
+    /// 设置 [`ComboBox`] 菜单的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the menu of the [`ComboBox`].
+    ///
+    /// </details>
     #[must_use]
     pub fn menu_style(
         mut self,
@@ -316,7 +441,14 @@ where
         self
     }
 
+    /// 设置 [`ComboBox`] 输入框的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the input of the [`ComboBox`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn input_class(
@@ -327,7 +459,14 @@ where
         self
     }
 
+    /// 设置 [`ComboBox`] 菜单的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the menu of the [`ComboBox`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn menu_class(
@@ -339,7 +478,14 @@ where
     }
 }
 
+/// [`ComboBox`] 的本地状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The local state of a [`ComboBox`].
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct State<T> {
     options: Vec<T>,
@@ -363,17 +509,33 @@ impl<T> State<T>
 where
     T: Display + Clone,
 {
+    /// 使用给定的选项列表为 [`ComboBox`] 创建一个新的 [`State`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`State`] for a [`ComboBox`] with the given list of options.
+    ///
+    /// </details>
     pub fn new(options: Vec<T>) -> Self {
         Self::with_selection(options, None)
     }
 
+    /// 使用给定的选项列表和选中的值，为 [`ComboBox`]
+    /// 创建一个新的 [`State`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`State`] for a [`ComboBox`] with the given list of options
     /// and selected value.
+    ///
+    /// </details>
     pub fn with_selection(options: Vec<T>, selection: Option<&T>) -> Self {
         let value = selection.map(T::to_string).unwrap_or_default();
 
         // Pre-build "matcher" strings ahead of time so that search is fast
+        // 提前构建好“匹配器”字符串，让搜索更快
         let option_matchers = build_matchers(&options);
 
         let filtered_options = Filtered::new(
@@ -392,15 +554,32 @@ where
         }
     }
 
+    /// 返回 [`State`] 的选项。
+    ///
+    /// 这些是使用 [`State::new`] 构造 [`State`] 时
+    /// 提供的选项。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the options of the [`State`].
     ///
     /// These are the options provided when the [`State`]
     /// was constructed with [`State::new`].
+    ///
+    /// </details>
     pub fn options(&self) -> &[T] {
         &self.options
     }
 
+    /// 向 [`State`] 追加一个新选项。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Pushes a new option to the [`State`].
+    ///
+    /// </details>
     pub fn push(&mut self, new_option: T) {
         let mut inner = self.inner.borrow_mut();
 
@@ -414,7 +593,14 @@ where
         );
     }
 
+    /// 交出 [`State`] 中选项的所有权。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns ownership of the options of the [`State`].
+    ///
+    /// </details>
     pub fn into_options(self) -> Vec<T> {
         self.options
     }
@@ -548,6 +734,7 @@ where
 
     fn diff(&self, _tree: &mut widget::Tree) {
         // do nothing so the children don't get cleared
+        // 什么都不做，这样子级就不会被清空
     }
 
     fn update(
@@ -572,13 +759,17 @@ where
         };
         // This is intended to check whether or not the message buffer was empty,
         // since `Shell` does not expose such functionality.
+        // 这是为了检查消息缓冲区是否为空，
+        // 因为 `Shell` 没有公开这样的功能。
         let mut published_message_to_shell = false;
 
         // Create a new list of local messages
+        // 创建一个新的本地消息列表
         let mut local_messages = Vec::new();
         let mut local_shell = Shell::new(&mut local_messages);
 
         // Provide it to the widget
+        // 把它提供给部件
         self.text_input.update(
             &mut tree.children[0],
             event,
@@ -598,6 +789,7 @@ where
         shell.request_input_method(local_shell.input_method());
 
         // Then finally react to them here
+        // 最后在这里对它们作出反应
         for message in local_messages {
             let TextInputEvent::TextChanged(new_value) = message;
 
@@ -608,6 +800,9 @@ where
             // Couple the filtered options with the `ComboBox`
             // value and only recompute them when the value changes,
             // instead of doing it in every `view` call
+            // 把过滤后的选项与 `ComboBox` 的值绑定在一起，
+            // 只在值发生变化时才重新计算，
+            // 而不是在每次调用 `view` 时都计算
             self.state.with_inner_mut(|state| {
                 menu.hovered_option = Some(0);
                 state.value = new_value;
@@ -694,6 +889,7 @@ where
                                     })
                             {
                                 // Notify the selection
+                                // 通知选中项
                                 shell.publish((on_option_hovered)(
                                     option.clone(),
                                 ));
@@ -740,6 +936,7 @@ where
                                     })
                             {
                                 // Notify the selection
+                                // 通知选中项
                                 shell.publish((on_option_hovered)(
                                     option.clone(),
                                 ));
@@ -756,18 +953,22 @@ where
         }
 
         // If the overlay menu has selected something
+        // 如果覆盖层菜单选中了某一项
         self.state.with_inner_mut(|state| {
             if let Some(selection) = menu.new_selection.take() {
                 // Clear the value and reset the options and menu
+                // 清空值，并重置选项和菜单
                 state.value = String::new();
                 state.filtered_options.update(self.state.options.clone());
                 menu.menu = menu::State::default();
 
                 // Notify the selection
+                // 通知选中项
                 shell.publish((self.on_selected)(selection));
                 published_message_to_shell = true;
 
                 // Unfocus the input
+                // 让输入框失去焦点
                 let mut local_messages = Vec::new();
                 let mut local_shell = Shell::new(&mut local_messages);
                 self.text_input.update(
@@ -796,6 +997,7 @@ where
 
         if started_focused != is_focused {
             // Focus changed, invalidate widget tree to force a fresh `view`
+            // 焦点发生了变化，让部件树失效，以强制重新执行 `view`
             shell.invalidate_widgets();
 
             if !published_message_to_shell {
@@ -952,14 +1154,35 @@ where
     }
 }
 
+/// [`ComboBox`] 的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`ComboBox`].
+///
+/// </details>
 pub trait Catalog: text_input::Catalog + menu::Catalog {
+    /// [`ComboBox`] 文本输入框的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class for the text input of the [`ComboBox`].
+    ///
+    /// </details>
     fn default_input<'a>() -> <Self as text_input::Catalog>::Class<'a> {
         <Self as text_input::Catalog>::default()
     }
 
+    /// [`ComboBox`] 菜单的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class for the menu of the [`ComboBox`].
+    ///
+    /// </details>
     fn default_menu<'a>() -> <Self as menu::Catalog>::Class<'a> {
         <Self as menu::Catalog>::default()
     }
@@ -985,6 +1208,7 @@ where
         .into_iter()
         .zip(option_matchers)
         // Make sure each part of the query is found in the option
+        // 确保查询的每个部分都能在选项中找到
         .filter_map(move |(option, matcher)| {
             if query.iter().all(|part| matcher.as_ref().contains(part)) {
                 Some(option)

@@ -5,14 +5,35 @@ use crate::quad::{self, Quad};
 use bytemuck::{Pod, Zeroable};
 use std::ops::Range;
 
+/// 用插值颜色填充的四边形。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A quad filled with interpolated colors.
+///
+/// </details>
 #[derive(Clone, Copy, Debug)]
 #[repr(C)]
 pub struct Gradient {
+    /// 四边形的背景渐变数据。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The background gradient data of the quad.
+    ///
+    /// </details>
     pub gradient: gradient::Packed,
 
+    /// [`Gradient`] 的 [`Quad`] 数据。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Quad`] data of the [`Gradient`].
+    ///
+    /// </details>
     pub quad: Quad,
 }
 
@@ -111,26 +132,37 @@ impl Pipeline {
                             step_mode: wgpu::VertexStepMode::Instance,
                             attributes: &wgpu::vertex_attr_array!(
                                 // Colors 1-2
+                                // 颜色 1-2
                                 0 => Uint32x4,
                                 // Colors 3-4
+                                // 颜色 3-4
                                 1 => Uint32x4,
                                 // Colors 5-6
+                                // 颜色 5-6
                                 2 => Uint32x4,
                                 // Colors 7-8
+                                // 颜色 7-8
                                 3 => Uint32x4,
                                 // Offsets 1-8
+                                // 偏移 1-8
                                 4 => Uint32x4,
                                 // Direction
+                                // 方向
                                 5 => Float32x4,
                                 // Position & Scale
+                                // 位置与缩放
                                 6 => Float32x4,
                                 // Border color
+                                // 边框颜色
                                 7 => Float32x4,
                                 // Border radius
+                                // 边框半径
                                 8 => Float32x4,
                                 // Border width
+                                // 边框宽度
                                 9 => Float32,
                                 // Snap
+                                // 吸附
                                 10 => Uint32,
                             ),
                         }],

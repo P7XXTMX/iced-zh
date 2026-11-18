@@ -6,7 +6,14 @@ use crate::renderer;
 use crate::widget;
 use crate::{Clipboard, Event, Layout, Shell, Size};
 
+/// 泛型的 [`Overlay`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A generic [`Overlay`].
+///
+/// </details>
 pub struct Element<'a, Message, Theme, Renderer> {
     overlay: Box<dyn Overlay<Message, Theme, Renderer> + 'a>,
 }
@@ -15,26 +22,54 @@ impl<'a, Message, Theme, Renderer> Element<'a, Message, Theme, Renderer>
 where
     Renderer: crate::Renderer,
 {
+    /// 创建一个包含给定 [`Overlay`] 的新 [`Element`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Element`] containing the given [`Overlay`].
+    ///
+    /// </details>
     pub fn new(
         overlay: Box<dyn Overlay<Message, Theme, Renderer> + 'a>,
     ) -> Self {
         Self { overlay }
     }
 
+    /// 返回 [`Element`] 的 [`Overlay`] 的引用，
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns a reference to the [`Overlay`] of the [`Element`],
+    ///
+    /// </details>
     pub fn as_overlay(&self) -> &dyn Overlay<Message, Theme, Renderer> {
         self.overlay.as_ref()
     }
 
+    /// 返回 [`Element`] 的 [`Overlay`] 的可变引用，
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns a mutable reference to the [`Overlay`] of the [`Element`],
+    ///
+    /// </details>
     pub fn as_overlay_mut(
         &mut self,
     ) -> &mut dyn Overlay<Message, Theme, Renderer> {
         self.overlay.as_mut()
     }
 
+    /// 对 [`Element`] 产生的消息应用一个变换。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Applies a transformation to the produced message of the [`Element`].
+    ///
+    /// </details>
     pub fn map<B>(
         self,
         f: &'a dyn Fn(Message) -> B,

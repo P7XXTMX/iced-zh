@@ -1,7 +1,17 @@
+//! 一个简单的画廊，显示 Civitai 的每日精选图像。
+//!
+//! 展示了在后台延迟加载图像，以及
+//! 一些流畅的动画。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A simple gallery that displays the daily featured images of Civitai.
 //!
 //! Showcases lazy loading of images in the background, as well as
 //! some smooth animations.
+//!
+//! </details>
 mod civitai;
 
 use crate::civitai::{Bytes, Error, Id, Image, Rgba, Size};

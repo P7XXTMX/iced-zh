@@ -1,4 +1,11 @@
+//! 组合现有的渲染器，创建类型安全的回退策略。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Compose existing renderers and create type-safe fallback strategies.
+//!
+//! </details>
 use crate::core::image;
 use crate::core::renderer;
 use crate::core::svg;
@@ -13,15 +20,39 @@ use crate::graphics::{self, Shell};
 
 use std::borrow::Cow;
 
+/// 带有回退策略 `B` 的渲染器 `A`。
+///
+/// 这个类型可以用来轻松组合现有的渲染器，
+/// 创建自定义的、类型安全的回退策略。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A renderer `A` with a fallback strategy `B`.
 ///
 /// This type can be used to easily compose existing renderers and
 /// create custom, type-safe fallback strategies.
+///
+/// </details>
 #[derive(Debug)]
 pub enum Renderer<A, B> {
+    /// 首选的渲染方案。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The primary rendering option.
+    ///
+    /// </details>
     Primary(A),
+    /// 次选（即回退）的渲染方案。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The secondary (or fallback) rendering option.
+    ///
+    /// </details>
     Secondary(B),
 }
 
@@ -230,29 +261,75 @@ where
     }
 }
 
+/// 带有回退策略 `B` 的合成器 `A`。
+///
+/// 它的工作方式与 [`Renderer`] 类似。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A compositor `A` with a fallback strategy `B`.
 ///
 /// It works analogously to [`Renderer`].
+///
+/// </details>
 #[derive(Debug)]
 pub enum Compositor<A, B>
 where
     A: graphics::Compositor,
     B: graphics::Compositor,
 {
+    /// 首选的合成方案。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The primary compositing option.
+    ///
+    /// </details>
     Primary(A),
+    /// 次选（即回退）的合成方案。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The secondary (or fallback) compositing option.
+    ///
+    /// </details>
     Secondary(B),
 }
 
+/// 带有回退策略 `B` 的表面 `A`。
+///
+/// 它的工作方式与 [`Renderer`] 类似。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A surface `A` with a fallback strategy `B`.
 ///
 /// It works analogously to [`Renderer`].
+///
+/// </details>
 #[derive(Debug)]
 pub enum Surface<A, B> {
+    /// 首选的表面方案。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The primary surface option.
+    ///
+    /// </details>
     Primary(A),
+    /// 次选（即回退）的表面方案。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The secondary (or fallback) surface option.
+    ///
+    /// </details>
     Secondary(B),
 }
 

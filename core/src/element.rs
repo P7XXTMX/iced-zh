@@ -11,6 +11,17 @@ use crate::{
 
 use std::borrow::Borrow;
 
+/// 一个通用的 [`Widget`]。
+///
+/// 它适合用来构建可组合的用户界面，而不会在
+/// **视图逻辑**中泄漏实现细节。
+///
+/// 如果你有一个[内置部件][built-in widget]，应该可以用 `Into<Element>`
+/// 把它转换成 [`Element`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A generic [`Widget`].
 ///
 /// It is useful to build composable user interfaces that do not leak
@@ -19,13 +30,22 @@ use std::borrow::Borrow;
 /// If you have a [built-in widget], you should be able to use `Into<Element>`
 /// to turn it into an [`Element`].
 ///
+/// </details>
+///
 /// [built-in widget]: crate::widget
 pub struct Element<'a, Message, Theme, Renderer> {
     widget: Box<dyn Widget<Message, Theme, Renderer> + 'a>,
 }
 
 impl<'a, Message, Theme, Renderer> Element<'a, Message, Theme, Renderer> {
+    /// 创建一个包含给定 [`Widget`] 的新 [`Element`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Element`] containing the given [`Widget`].
+    ///
+    /// </details>
     pub fn new(widget: impl Widget<Message, Theme, Renderer> + 'a) -> Self
     where
         Renderer: crate::Renderer,
@@ -35,29 +55,64 @@ impl<'a, Message, Theme, Renderer> Element<'a, Message, Theme, Renderer> {
         }
     }
 
+    /// 返回 [`Element`] 的 [`Widget`] 的引用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns a reference to the [`Widget`] of the [`Element`],
+    ///
+    /// </details>
     pub fn as_widget(&self) -> &dyn Widget<Message, Theme, Renderer> {
         self.widget.as_ref()
     }
 
+    /// 返回 [`Element`] 的 [`Widget`] 的可变引用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns a mutable reference to the [`Widget`] of the [`Element`],
+    ///
+    /// </details>
     pub fn as_widget_mut(
         &mut self,
     ) -> &mut dyn Widget<Message, Theme, Renderer> {
         self.widget.as_mut()
     }
 
+    /// 对 [`Element`] 产生的消息应用一个变换。
+    ///
+    /// 当你想解耦界面的不同部分，并让它们
+    /// **可组合**时，此方法很有用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Applies a transformation to the produced message of the [`Element`].
     ///
     /// This method is useful when you want to decouple different parts of your
     /// UI and make them __composable__.
     ///
-    /// # Example
+    /// </details>
+    ///
+    /// # 示例（Example）
+    /// 假设我们想使用[我们的计数器](index.html#usage)。但我们不是
+    /// 只显示一个计数器，而是想显示很多个。我们可以原封不动地
+    /// 复用 `Counter` 类型！
+    ///
+    /// 我们用组合来为新应用程序的**状态**建模：
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Imagine we want to use [our counter](index.html#usage). But instead of
     /// showing a single counter, we want to display many of them. We can reuse
     /// the `Counter` type as it is!
     ///
     /// We use composition to model the __state__ of our new application:
+    ///
+    /// </details>
     ///
     /// ```
     /// # mod counter {
@@ -70,11 +125,22 @@ impl<'a, Message, Theme, Renderer> Element<'a, Message, Theme, Renderer> {
     /// }
     /// ```
     ///
+    /// 现在我们可以存储多个计数器的状态了。然而，
+    /// 之前实现的**消息**描述的是**单个**计数器的
+    /// 用户交互。现在，我们还需要分辨是哪个
+    /// 计数器在接收用户交互。还能再用一次组合吗？
+    /// 可以。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// We can store the state of multiple counters now. However, the
     /// __messages__ we implemented before describe the user interactions
     /// of a __single__ counter. Right now, we need to also identify which
     /// counter is receiving user interactions. Can we use composition again?
     /// Yes.
+    ///
+    /// </details>
     ///
     /// ```
     /// # mod counter {
@@ -87,8 +153,16 @@ impl<'a, Message, Theme, Renderer> Element<'a, Message, Theme, Renderer> {
     /// }
     /// ```
     ///
+    /// 我们把之前的**消息**与产生它们的计数器的索引
+    /// 组合起来。现在来实现我们的**视图逻辑**：
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// We compose the previous __messages__ with the index of the counter
     /// producing them. Let's implement our __view logic__ now:
+    ///
+    /// </details>
     ///
     /// ```no_run
     /// # mod iced {
@@ -133,6 +207,7 @@ impl<'a, Message, Theme, Renderer> Element<'a, Message, Theme, Renderer> {
     /// impl ManyCounters {
     ///     pub fn view(&self) -> Element<Message> {
     ///         // We can quickly populate a `row` by mapping our counters
+    ///         // 通过映射我们的计数器，可以快速填充一个 `row`
     ///         row(
     ///             self.counters
     ///                 .iter()
@@ -140,8 +215,11 @@ impl<'a, Message, Theme, Renderer> Element<'a, Message, Theme, Renderer> {
     ///                 .enumerate()
     ///                 .map(|(index, counter)| {
     ///                     // Here we turn our `Element<counter::Message>` into
+    ///                     // 在这里，我们把 `Element<counter::Message>` 转换为
     ///                     // an `Element<Message>` by combining the `index` and the
+    ///                     // `Element<Message>`，方法是把 `index` 与
     ///                     // message of the `element`.
+    ///                     // `element` 的消息组合起来。
     ///                     counter.map(Message::Counter.with(index))
     ///                 }),
     ///         )
@@ -150,8 +228,16 @@ impl<'a, Message, Theme, Renderer> Element<'a, Message, Theme, Renderer> {
     /// }
     /// ```
     ///
+    /// 最后，我们的**更新逻辑**非常直接：简单的
+    /// 委托。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Finally, our __update logic__ is pretty straightforward: simple
     /// delegation.
+    ///
+    /// </details>
     ///
     /// ```
     /// # mod counter {
@@ -199,10 +285,20 @@ impl<'a, Message, Theme, Renderer> Element<'a, Message, Theme, Renderer> {
         Element::new(Map::new(self.widget, f))
     }
 
+    /// 把 [`Element`] 标记为*待解释*。
+    ///
+    /// [`Renderer`] 会以图形方式解释 [`Element`] 的布局。
+    /// 这对调试布局非常有用！
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Marks the [`Element`] as _to-be-explained_.
     ///
     /// The [`Renderer`] will explain the layout of the [`Element`] graphically.
     /// This can be very useful for debugging your layout!
+    ///
+    /// </details>
     ///
     /// [`Renderer`]: crate::Renderer
     pub fn explain<C: Into<Color>>(

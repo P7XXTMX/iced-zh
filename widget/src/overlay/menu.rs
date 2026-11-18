@@ -1,4 +1,11 @@
+//! 构建并显示下拉菜单。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Build and show dropdown menus.
+//!
+//! </details>
 use crate::core::alignment;
 use crate::core::border::{self, Border};
 use crate::core::layout::{self, Layout};
@@ -16,7 +23,14 @@ use crate::core::{
 use crate::core::{Element, Shell, Widget};
 use crate::scrollable::{self, Scrollable};
 
+/// 可选择选项的列表。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A list of selectable options.
+///
+/// </details>
 pub struct Menu<
     'a,
     'b,
@@ -52,8 +66,16 @@ where
     Renderer: text::Renderer + 'a,
     'b: 'a,
 {
+    /// 使用给定的 [`State`]、选项列表、选项被选中时产生的消息
+    /// 以及 [`Style`] 创建一个新的 [`Menu`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Menu`] with the given [`State`], a list of options,
     /// the message to produced when an option is selected, and its [`Style`].
+    ///
+    /// </details>
     pub fn new(
         state: &'a mut State,
         options: &'a [T],
@@ -78,25 +100,53 @@ where
         }
     }
 
+    /// 设置 [`Menu`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Menu`].
+    ///
+    /// </details>
     pub fn width(mut self, width: f32) -> Self {
         self.width = width;
         self
     }
 
+    /// 设置 [`Menu`] 的 [`Padding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Padding`] of the [`Menu`].
+    ///
+    /// </details>
     pub fn padding<P: Into<Padding>>(mut self, padding: P) -> Self {
         self.padding = padding.into();
         self
     }
 
+    /// 设置 [`Menu`] 的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the text size of the [`Menu`].
+    ///
+    /// </details>
     pub fn text_size(mut self, text_size: impl Into<Pixels>) -> Self {
         self.text_size = Some(text_size.into());
         self
     }
 
+    /// 设置 [`Menu`] 的文本 [`text::LineHeight`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the text [`text::LineHeight`] of the [`Menu`].
+    ///
+    /// </details>
     pub fn text_line_height(
         mut self,
         line_height: impl Into<text::LineHeight>,
@@ -105,24 +155,50 @@ where
         self
     }
 
+    /// 设置 [`Menu`] 的 [`text::Shaping`] 策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`text::Shaping`] strategy of the [`Menu`].
+    ///
+    /// </details>
     pub fn text_shaping(mut self, shaping: text::Shaping) -> Self {
         self.text_shaping = shaping;
         self
     }
 
+    /// 设置 [`Menu`] 的字体。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the font of the [`Menu`].
+    ///
+    /// </details>
     pub fn font(mut self, font: impl Into<Renderer::Font>) -> Self {
         self.font = Some(font.into());
         self
     }
 
+    /// 把 [`Menu`] 转换成位于给定目标位置的
+    /// 覆盖层 [`Element`]。
+    ///
+    /// `target_height` 用来决定把菜单显示在目标的上方
+    /// 还是下方，这取决于屏幕位置和
+    /// [`Menu`] 的尺寸。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Turns the [`Menu`] into an overlay [`Element`] at the given target
     /// position.
     ///
     /// The `target_height` will be used to display the menu either on top
     /// of the target or under it, depending on the screen position and the
     /// dimensions of the [`Menu`].
+    ///
+    /// </details>
     pub fn overlay(
         self,
         position: Point,
@@ -140,14 +216,28 @@ where
     }
 }
 
+/// [`Menu`] 的局部状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The local state of a [`Menu`].
+///
+/// </details>
 #[derive(Debug)]
 pub struct State {
     tree: Tree,
 }
 
 impl State {
+    /// 为 [`Menu`] 创建一个新的 [`State`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`State`] for a [`Menu`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self {
             tree: Tree::empty(),
@@ -593,41 +683,132 @@ where
     }
 }
 
+/// [`Menu`] 的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of a [`Menu`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Style {
+    /// 菜单的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Background`] of the menu.
+    ///
+    /// </details>
     pub background: Background,
+    /// 菜单的 [`Border`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Border`] of the menu.
+    ///
+    /// </details>
     pub border: Border,
+    /// 菜单的文本 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text [`Color`] of the menu.
+    ///
+    /// </details>
     pub text_color: Color,
+    /// 菜单中被选中选项的文本 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text [`Color`] of a selected option in the menu.
+    ///
+    /// </details>
     pub selected_text_color: Color,
+    /// 菜单中被选中选项的背景 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The background [`Color`] of a selected option in the menu.
+    ///
+    /// </details>
     pub selected_background: Background,
+    /// 菜单的 [`Shadow`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Shadow`] of the menu.
+    ///
+    /// </details>
     pub shadow: Shadow,
 }
 
+/// [`Menu`] 的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`Menu`].
+///
+/// </details>
 pub trait Catalog: scrollable::Catalog {
+    /// [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of the [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by the [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> <Self as Catalog>::Class<'a>;
 
+    /// [`Menu`] 的可滚动区域的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class for the scrollable of the [`Menu`].
+    ///
+    /// </details>
     fn default_scrollable<'a>() -> <Self as scrollable::Catalog>::Class<'a> {
         <Self as scrollable::Catalog>::default()
     }
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(&self, class: &<Self as Catalog>::Class<'_>) -> Style;
 }
 
+/// [`Menu`] 的样式函数。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for a [`Menu`].
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme) -> Style + 'a>;
 
 impl Catalog for Theme {
@@ -642,7 +823,14 @@ impl Catalog for Theme {
     }
 }
 
+/// [`Menu`] 列表的默认样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default style of the list of a [`Menu`].
+///
+/// </details>
 pub fn default(theme: &Theme) -> Style {
     let palette = theme.extended_palette();
 

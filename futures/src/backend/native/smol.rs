@@ -1,6 +1,20 @@
+//! `smol` 后端。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A `smol` backend.
+//!
+//! </details>
 
+/// `smol` 执行器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A `smol` executor.
+///
+/// </details>
 #[derive(Debug)]
 pub struct Executor;
 
@@ -19,13 +33,30 @@ impl crate::Executor for Executor {
 }
 
 pub mod time {
+    //! 监听时间并做出响应。
+    //!
+    //! <details>
+    //! <summary>显示英文原文</summary>
+    //!
     //! Listen and react to time.
+    //!
+    //! </details>
     use crate::subscription::{self, Hasher, Subscription};
 
+    /// 返回一个按固定间隔产生消息的 [`Subscription`]。
+    ///
+    /// 第一条消息在经过 `duration` 之后产生，此后每隔
+    /// `duration` 继续产生一条消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns a [`Subscription`] that produces messages at a set interval.
     ///
     /// The first message is produced after a `duration`, and then continues to
     /// produce more messages every `duration` after that.
+    ///
+    /// </details>
     pub fn every(
         duration: std::time::Duration,
     ) -> Subscription<std::time::Instant> {

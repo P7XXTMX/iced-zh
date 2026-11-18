@@ -1,4 +1,11 @@
+//! 使用 Elm 架构构建并复用自定义部件。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Build and reuse custom widgets using The Elm Architecture.
+//!
+//! </details>
 #![allow(deprecated)]
 use crate::core::layout::{self, Layout};
 use crate::core::mouse;
@@ -15,6 +22,23 @@ use std::cell::RefCell;
 use std::marker::PhantomData;
 use std::rc::Rc;
 
+/// 使用 Elm 架构的可复用自定义部件。
+///
+/// [`Component`] 让你可以像编写带有封装状态的 `iced` 应用程序
+/// 那样实现自定义部件。
+///
+/// 换句话说，[`Component`] 让你可以把 `iced` 应用程序变成
+/// 自定义部件，并且无需繁琐的接线就能嵌入它们。
+///
+/// [`Component`] 产生的部件可以触发 [`Event`](Component::Event)
+/// 并更新 [`Component`] 的内部状态。
+///
+/// 此外，[`Component`] 还能产生 `Message`，把相关的交互
+/// 通知给父应用程序。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A reusable, custom widget that uses The Elm Architecture.
 ///
 /// A [`Component`] allows you to implement custom widgets as if they were
@@ -29,7 +53,24 @@ use std::rc::Rc;
 /// Additionally, a [`Component`] is capable of producing a `Message` to notify
 /// the parent application of any relevant interactions.
 ///
-/// # State
+/// </details>
+///
+/// # 状态（State）
+/// 组件可以用两种方式存储状态：要么作为特质实现者
+/// 内部的数据，要么放在由运行时管理、并提供给特质方法的
+/// [`State`][Component::State] 类型中。这两种方式并不
+/// 互斥，而且优缺点正好相反。
+///
+/// 例如，如果某个状态被位于部件树不同分支的多个组件所需要，
+/// 那么让它们的公共祖先存储该状态并向下传递
+/// 会更方便。
+///
+/// 另一方面，如果某个状态只被组件自身需要，
+/// 你可以把它存为其内部 [`State`][Component::State] 的一部分。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A component can store its state in one of two ways: either as data within the
 /// implementor of the trait, or in a type [`State`][Component::State] that is managed
 /// by the runtime and provided to the trait methods. These two approaches are not
@@ -41,6 +82,8 @@ use std::rc::Rc;
 ///
 /// On the other hand, if a piece of state is only needed by the component itself,
 /// you can store it as part of its internal [`State`][Component::State].
+///
+/// </details>
 #[cfg(feature = "lazy")]
 #[deprecated(
     since = "0.13.0",
@@ -48,31 +91,71 @@ use std::rc::Rc;
     Instead, leverage the Elm Architecture directly, or implement a custom widget"
 )]
 pub trait Component<Message, Theme = crate::Theme, Renderer = crate::Renderer> {
+    /// 此 [`Component`] 的内部状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The internal state of this [`Component`].
+    ///
+    /// </details>
     type State: Default;
 
+    /// 此 [`Component`] 在内部处理的事件类型。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The type of event this [`Component`] handles internally.
+    ///
+    /// </details>
     type Event;
 
+    /// 处理一个 [`Event`](Component::Event)，并相应地更新 [`Component`] 的状态。
+    ///
+    /// 它可以为父应用程序产生一条 `Message`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Processes an [`Event`](Component::Event) and updates the [`Component`] state accordingly.
     ///
     /// It can produce a `Message` for the parent application.
+    ///
+    /// </details>
     fn update(
         &mut self,
         state: &mut Self::State,
         event: Self::Event,
     ) -> Option<Message>;
 
+    /// 产生 [`Component`] 的部件，这些部件可以在用户交互时
+    /// 触发 [`Event`](Component::Event)。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Produces the widgets of the [`Component`], which may trigger an [`Event`](Component::Event)
     /// on user interaction.
+    ///
+    /// </details>
     fn view(
         &self,
         state: &Self::State,
     ) -> Element<'_, Self::Event, Theme, Renderer>;
 
+    /// 根据给定的 [`Operation`](widget::Operation) 更新 [`Component`] 的状态
+    ///
+    /// 默认情况下，它什么都不做。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Update the [`Component`] state based on the provided [`Operation`](widget::Operation)
     ///
     /// By default, it does nothing.
+    ///
+    /// </details>
     fn operate(
         &self,
         _bounds: Rectangle,
@@ -81,10 +164,20 @@ pub trait Component<Message, Theme = crate::Theme, Renderer = crate::Renderer> {
     ) {
     }
 
+    /// 返回用于布局 [`Component`] 的 [`Size`] 提示。
+    ///
+    /// 某些部件容器可能会在构造期间用这个提示来调整
+    /// 它们的尺寸策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns a [`Size`] hint for laying out the [`Component`].
     ///
     /// This hint may be used by some widget containers to adjust their sizing strategy
     /// during construction.
+    ///
+    /// </details>
     fn size_hint(&self) -> Size<Length> {
         Size {
             width: Length::Shrink,
@@ -95,8 +188,16 @@ pub trait Component<Message, Theme = crate::Theme, Renderer = crate::Renderer> {
 
 struct Tag<T>(T);
 
+/// 把 [`Component`] 的实现者转换为可以嵌入任何应用程序的
+/// [`Element`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Turns an implementor of [`Component`] into an [`Element`] that can be
 /// embedded in any application.
+///
+/// </details>
 pub fn view<'a, C, Message, Theme, Renderer>(
     component: C,
 ) -> Element<'a, Message, Theme, Renderer>
@@ -484,7 +585,7 @@ where
         #[allow(clippy::redundant_closure_for_method_calls)]
         if overlay.with_overlay(|overlay| overlay.is_some()) {
             Some(overlay::Element::new(Box::new(OverlayInstance {
-                overlay: Some(Overlay(Some(overlay))), // Beautiful, I know
+                overlay: Some(Overlay(Some(overlay))), // Beautiful, I know（很漂亮，我知道）
             })))
         } else {
             let heads = overlay.into_heads();
@@ -492,6 +593,9 @@ where
             // - You may not like it, but this is what peak performance looks like
             // - TODO: Get rid of ouroboros, for good
             // - What?!
+            // - 你也许不喜欢，但这就是巅峰性能的样子
+            // - 待办：彻底摆脱 ouroboros
+            // - 什么？！
             *state.borrow_mut() = Some(heads.tree);
 
             None

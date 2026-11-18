@@ -558,6 +558,8 @@ fn ferris<'a>(
     center_x(
         // This should go away once we unify resource loading on native
         // platforms
+        // 等我们统一了原生平台上的资源加载之后，
+        // 这段代码就应该去掉了
         if cfg!(target_arch = "wasm32") {
             image("tour/images/ferris.png")
         } else {

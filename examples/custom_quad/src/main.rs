@@ -1,4 +1,11 @@
+//! 这个示例展示了如何绘制四边形。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! This example showcases a drawing a quad.
+//!
+//! </details>
 use iced::border;
 use iced::widget::{center, column, slider, text, toggler};
 use iced::{Center, Color, Element, Shadow, Vector};

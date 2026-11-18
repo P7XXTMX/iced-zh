@@ -3,29 +3,85 @@ use crate::pane_grid::{Axis, Pane, Split};
 
 use std::collections::BTreeMap;
 
+/// [`PaneGrid`] 的布局节点。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A layout node of a [`PaneGrid`].
+///
+/// </details>
 ///
 /// [`PaneGrid`]: super::PaneGrid
 #[derive(Debug, Clone)]
 pub enum Node {
+    /// 这个 [`Node`] 的区域被一分为二。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The region of this [`Node`] is split into two.
+    ///
+    /// </details>
     Split {
+        /// 这个 [`Node`] 的 [`Split`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The [`Split`] of this [`Node`].
+        ///
+        /// </details>
         id: Split,
 
+        /// 分割的方向。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The direction of the split.
+        ///
+        /// </details>
         axis: Axis,
 
+        /// 分割的比例，取值范围为 [0.0, 1.0]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The ratio of the split in [0.0, 1.0].
+        ///
+        /// </details>
         ratio: f32,
 
+        /// 分割左侧/上方的 [`Node`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The left/top [`Node`] of the split.
+        ///
+        /// </details>
         a: Box<Node>,
 
+        /// 分割右侧/下方的 [`Node`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The right/bottom [`Node`] of the split.
+        ///
+        /// </details>
         b: Box<Node>,
     },
+    /// 这个 [`Node`] 的区域被一个 [`Pane`] 占据。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The region of this [`Node`] is taken by a [`Pane`].
+    ///
+    /// </details>
     Pane(Pane),
 }
 
@@ -57,7 +113,14 @@ impl Count {
 }
 
 impl Node {
+    /// 返回一个遍历这个 [`Node`] 中每个 [`Split`] 的迭代器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns an iterator over each [`Split`] in this [`Node`].
+    ///
+    /// </details>
     pub fn splits(&self) -> impl Iterator<Item = &Split> {
         let mut unvisited_nodes = vec![self];
 
@@ -103,8 +166,16 @@ impl Node {
         }
     }
 
+    /// 根据窗格之间的间距和总的可用空间，
+    /// 返回 [`Node`] 中每个 [`Pane`] 的矩形区域。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the rectangular region for each [`Pane`] in the [`Node`] given
     /// the spacing between panes and the total available space.
+    ///
+    /// </details>
     pub fn pane_regions(
         &self,
         spacing: f32,
@@ -130,9 +201,18 @@ impl Node {
         regions
     }
 
+    /// 根据窗格之间的间距和总的可用空间，
+    /// 返回 [`Node`] 中每个 [`Split`] 的轴、矩形区域
+    /// 和比例。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the axis, rectangular region, and ratio for each [`Split`] in
     /// the [`Node`] given the spacing between panes and the total available
     /// space.
+    ///
+    /// </details>
     pub fn split_regions(
         &self,
         spacing: f32,

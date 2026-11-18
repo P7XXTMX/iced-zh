@@ -1,4 +1,11 @@
+//! 用于创建纯部件的辅助函数。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Helper functions to create pure widgets.
+//!
+//! </details>
 use crate::button::{self, Button};
 use crate::checkbox::{self, Checkbox};
 use crate::combo_box::{self, ComboBox};
@@ -32,11 +39,20 @@ use std::ops::RangeInclusive;
 
 pub use crate::table::table;
 
+/// 使用给定的子元素创建一个 [`Column`]。
+///
+/// 列在垂直方向上分布其子元素。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a [`Column`] with the given children.
 ///
 /// Columns distribute their children vertically.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -66,11 +82,20 @@ macro_rules! column {
     );
 }
 
+/// 使用给定的子元素创建一个 [`Row`]。
+///
+/// 行在水平方向上分布其子元素。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a [`Row`] with the given children.
 ///
 /// Rows distribute their children horizontally.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -100,7 +125,14 @@ macro_rules! row {
     );
 }
 
+/// 使用给定的子元素创建一个 [`Stack`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a [`Stack`] with the given children.
+///
+/// </details>
 ///
 /// [`Stack`]: crate::Stack
 #[macro_export]
@@ -113,7 +145,14 @@ macro_rules! stack {
     );
 }
 
+/// 使用给定的子元素创建一个 [`Grid`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a [`Grid`] with the given children.
+///
+/// </details>
 ///
 /// [`Grid`]: crate::Grid
 #[macro_export]
@@ -126,6 +165,16 @@ macro_rules! grid {
     );
 }
 
+/// 使用给定的内容创建一个新的 [`Text`] 部件。
+///
+/// 此宏使用与 [`format!`] 相同的语法，但创建的是一个新的 [`Text`] 部件。
+///
+/// 宏参数语法的细节请参见
+/// [`std::fmt` 中的格式化文档](std::fmt)。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Text`] widget with the provided content.
 ///
 /// [`Text`]: core::widget::Text
@@ -135,7 +184,9 @@ macro_rules! grid {
 /// See [the formatting documentation in `std::fmt`](std::fmt)
 /// for details of the macro argument syntax.
 ///
-/// # Examples
+/// </details>
+///
+/// # 示例（Examples）
 ///
 /// ```no_run
 /// # mod iced {
@@ -172,11 +223,18 @@ macro_rules! text {
     };
 }
 
+/// 使用给定的文本片段创建 [`Rich`] 富文本。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates some [`Rich`] text with the given spans.
+///
+/// </details>
 ///
 /// [`Rich`]: text::Rich
 ///
-/// # Example
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::core::*; }
 /// # pub type State = ();
@@ -211,11 +269,20 @@ macro_rules! rich_text {
     );
 }
 
+/// 使用给定的内容创建一个新的 [`Container`]。
+///
+/// 容器让你可以在其边界内对齐一个部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Container`] with the provided content.
 ///
 /// Containers let you align a widget inside their boundaries.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -244,10 +311,21 @@ where
     Container::new(content)
 }
 
+/// 创建一个新的 [`Container`]，它填满所有可用空间，
+/// 并让其内容居中。
+///
+/// 这等价于：
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Container`] that fills all the available space
 /// and centers its contents inside.
 ///
 /// This is equivalent to:
+///
+/// </details>
+///
 /// ```rust,no_run
 /// # use iced_widget::core::Length::Fill;
 /// # use iced_widget::Container;
@@ -266,10 +344,21 @@ where
     container(content).center(Length::Fill)
 }
 
+/// 创建一个新的 [`Container`]，它在水平方向上填满所有可用空间，
+/// 并让其内容居中。
+///
+/// 这等价于：
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Container`] that fills all the available space
 /// horizontally and centers its contents inside.
 ///
 /// This is equivalent to:
+///
+/// </details>
+///
 /// ```rust,no_run
 /// # use iced_widget::core::Length::Fill;
 /// # use iced_widget::Container;
@@ -288,10 +377,21 @@ where
     container(content).center_x(Length::Fill)
 }
 
+/// 创建一个新的 [`Container`]，它在垂直方向上填满所有可用空间，
+/// 并让其内容居中。
+///
+/// 这等价于：
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Container`] that fills all the available space
 /// vertically and centers its contents inside.
 ///
 /// This is equivalent to:
+///
+/// </details>
+///
 /// ```rust,no_run
 /// # use iced_widget::core::Length::Fill;
 /// # use iced_widget::Container;
@@ -310,10 +410,21 @@ where
     container(content).center_y(Length::Fill)
 }
 
+/// 创建一个新的 [`Container`]，它在水平方向上填满所有可用空间，
+/// 并让其内容右对齐。
+///
+/// 这等价于：
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Container`] that fills all the available space
 /// horizontally and right-aligns its contents inside.
 ///
 /// This is equivalent to:
+///
+/// </details>
+///
 /// ```rust,no_run
 /// # use iced_widget::core::Length::Fill;
 /// # use iced_widget::Container;
@@ -332,10 +443,21 @@ where
     container(content).align_right(Length::Fill)
 }
 
+/// 创建一个新的 [`Container`]，它填满所有可用空间，
+/// 并让其内容对齐到右侧居中的位置。
+///
+/// 这等价于：
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Container`] that fills all the available space
 /// and aligns its contents inside to the right center.
 ///
 /// This is equivalent to:
+///
+/// </details>
+///
 /// ```rust,no_run
 /// # use iced_widget::core::Length::Fill;
 /// # use iced_widget::Container;
@@ -356,10 +478,21 @@ where
         .center_y(Length::Fill)
 }
 
+/// 创建一个新的 [`Container`]，它在垂直方向上填满所有可用空间，
+/// 并让其内容底部对齐。
+///
+/// 这等价于：
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Container`] that fills all the available space
 /// vertically and bottom-aligns its contents inside.
 ///
 /// This is equivalent to:
+///
+/// </details>
+///
 /// ```rust,no_run
 /// # use iced_widget::core::Length::Fill;
 /// # use iced_widget::Container;
@@ -378,10 +511,21 @@ where
     container(content).align_bottom(Length::Fill)
 }
 
+/// 创建一个新的 [`Container`]，它填满所有可用空间，
+/// 并让其内容对齐到底部居中的位置。
+///
+/// 这等价于：
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Container`] that fills all the available space
 /// and aligns its contents inside to the bottom center.
 ///
 /// This is equivalent to:
+///
+/// </details>
+///
 /// ```rust,no_run
 /// # use iced_widget::core::Length::Fill;
 /// # use iced_widget::Container;
@@ -402,10 +546,21 @@ where
         .align_bottom(Length::Fill)
 }
 
+/// 创建一个新的 [`Container`]，它填满所有可用空间，
+/// 并让其内容对齐到右下角。
+///
+/// 这等价于：
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Container`] that fills all the available space
 /// and aligns its contents inside to the bottom right corner.
 ///
 /// This is equivalent to:
+///
+/// </details>
+///
 /// ```rust,no_run
 /// # use iced_widget::core::Length::Fill;
 /// # use iced_widget::Container;
@@ -426,11 +581,20 @@ where
         .align_bottom(Length::Fill)
 }
 
+/// 使用给定的内容创建一个新的 [`Pin`] 部件。
+///
+/// [`Pin`] 部件把其内容放置在自身边界内的某个固定坐标处。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Pin`] widget with the given content.
 ///
 /// A [`Pin`] widget positions its contents at some fixed coordinates inside of its boundaries.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::core::Length::Fill; }
 /// # pub type State = ();
@@ -458,11 +622,20 @@ where
     Pin::new(content)
 }
 
+/// 使用给定的子元素创建一个新的 [`Column`]。
+///
+/// 列在垂直方向上分布其子元素。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Column`] with the given children.
 ///
 /// Columns distribute their children vertically.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -486,11 +659,20 @@ where
     Column::with_children(children)
 }
 
+/// 从元素的迭代器创建一个新的 [`keyed::Column`]。
+///
+/// 带键的列在垂直方向上分布内容，同时保持连续性。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`keyed::Column`] from an iterator of elements.
 ///
 /// Keyed columns distribute content vertically while keeping continuity.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -517,11 +699,20 @@ where
     keyed::Column::with_children(children)
 }
 
+/// 从迭代器创建一个新的 [`Row`]。
+///
+/// 行在水平方向上分布其子元素。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Row`] from an iterator.
 ///
 /// Rows distribute their children horizontally.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -545,7 +736,14 @@ where
     Row::with_children(children)
 }
 
+/// 从迭代器创建一个新的 [`Grid`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Grid`] from an iterator.
+///
+/// </details>
 pub fn grid<'a, Message, Theme, Renderer>(
     children: impl IntoIterator<Item = Element<'a, Message, Theme, Renderer>>,
 ) -> Grid<'a, Message, Theme, Renderer>
@@ -555,7 +753,14 @@ where
     Grid::with_children(children)
 }
 
+/// 使用给定的子元素创建一个新的 [`Stack`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Stack`] with the given children.
+///
+/// </details>
 ///
 /// [`Stack`]: crate::Stack
 pub fn stack<'a, Message, Theme, Renderer>(
@@ -567,11 +772,22 @@ where
     Stack::with_children(children)
 }
 
+/// 包裹给定的部件，并捕获部件边界内的所有鼠标按键按下事件，
+/// 实际上就是让它变得*不透明*。
+///
+/// 这个辅助函数用来标记 [`Stack`] 中的元素，避免鼠标
+/// 事件穿透各个图层。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Wraps the given widget and captures any mouse button presses inside the bounds of
 /// the widget—effectively making it _opaque_.
 ///
 /// This helper is meant to be used to mark elements in a [`Stack`] to avoid mouse
 /// events from passing through layers.
+///
+/// </details>
 ///
 /// [`Stack`]: crate::Stack
 pub fn opaque<'a, Message, Theme, Renderer>(
@@ -729,10 +945,20 @@ where
     })
 }
 
+/// 把一个部件显示在另一个部件之上，但仅当底层部件处于悬停状态时才显示。
+///
+/// 它的工作方式与 [`stack`] 类似，但只有当光标位于底层部件上时
+/// 才会显示顶层。它可以用来减少视觉上的杂乱。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a widget on top of another one, only when the base widget is hovered.
 ///
 /// This works analogously to a [`stack`], but it will only display the layer on top
 /// when the cursor is over the base. It can be useful for removing visual clutter.
+///
+/// </details>
 ///
 /// [`stack`]: stack()
 pub fn hover<'a, Message, Theme, Renderer>(
@@ -921,6 +1147,7 @@ where
                 );
 
                 // Ignore redraw requests of invisible content
+                // 忽略不可见内容的重绘请求
                 if !is_visible {
                     Shell::replace_redraw_request(shell, redraw_request);
                 }
@@ -1005,12 +1232,24 @@ where
     })
 }
 
+/// 创建一个新的 [`Sensor`] 部件。
+///
+/// [`Sensor`] 部件可以在其内容显示、隐藏或
+/// 尺寸变化时产生消息。
+///
+/// 它甚至可以在给定的距离处提前通知你！
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Sensor`] widget.
 ///
 /// A [`Sensor`] widget can generate messages when its contents are shown,
 /// hidden, or resized.
 ///
 /// It can even notify you with anticipation at a given distance!
+///
+/// </details>
 pub fn sensor<'a, Message, Theme, Renderer>(
     content: impl Into<Element<'a, Message, Theme, Renderer>>,
 ) -> Sensor<'a, (), Message, Theme, Renderer>
@@ -1020,11 +1259,20 @@ where
     Sensor::new(content)
 }
 
+/// 使用给定的内容创建一个新的 [`Scrollable`]。
+///
+/// 可滚动区域让用户可以借助滚动条浏览任意多的内容。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Scrollable`] with the provided content.
 ///
 /// Scrollables let users navigate an endless amount of content with a scrollbar.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -1053,9 +1301,16 @@ where
     Scrollable::new(content)
 }
 
+/// 使用给定的内容创建一个新的 [`Button`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Button`] with the provided content.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -1081,12 +1336,22 @@ where
     Button::new(content)
 }
 
+/// 使用给定的 [`Element`] 和 [`tooltip::Position`]，
+/// 为给定的内容创建一个新的 [`Tooltip`]。
+///
+/// 工具提示会在鼠标悬停于某个元素上时，在其上方显示一条提示信息。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Tooltip`] for the provided content with the given
 /// [`Element`] and [`tooltip::Position`].
 ///
 /// Tooltips display a hint of information over some element when hovered.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -1119,9 +1384,16 @@ where
     Tooltip::new(content, tooltip, position)
 }
 
+/// 使用给定的内容创建一个新的 [`Text`] 部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Text`] widget with the provided content.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type State = ();
@@ -1150,7 +1422,14 @@ where
     Text::new(text)
 }
 
+/// 创建一个新的 [`Text`] 部件，显示给定的值。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Text`] widget that displays the provided value.
+///
+/// </details>
 pub fn value<'a, Theme, Renderer>(
     value: impl ToString,
 ) -> Text<'a, Theme, Renderer>
@@ -1161,11 +1440,18 @@ where
     Text::new(value.to_string())
 }
 
+/// 使用给定的文本片段创建一个新的 [`Rich`] 富文本部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Rich`] text widget with the provided spans.
+///
+/// </details>
 ///
 /// [`Rich`]: text::Rich
 ///
-/// # Example
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::core::*; }
 /// # pub type State = ();
@@ -1203,14 +1489,23 @@ where
     text::Rich::with_spans(spans)
 }
 
+/// 使用给定的内容创建一个新的文本 [`Span`]。
+///
+/// [`Span`] 是 [`Rich`] 富文本中的一个片段。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Span`] of text with the provided content.
 ///
 /// A [`Span`] is a fragment of some [`Rich`] text.
 ///
+/// </details>
+///
 /// [`Span`]: text::Span
 /// [`Rich`]: text::Rich
 ///
-/// # Example
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::core::*; }
 /// # pub type State = ();
@@ -1245,9 +1540,16 @@ pub fn span<'a, Link, Font>(
 #[doc(inline)]
 pub use crate::markdown::view as markdown;
 
+/// 创建一个新的 [`Checkbox`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Checkbox`].
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -1277,7 +1579,14 @@ pub use crate::markdown::view as markdown;
 ///     }
 /// }
 /// ```
+/// ![由 `iced_wgpu` 绘制的复选框](https://github.com/iced-rs/iced/blob/7760618fb112074bc40b148944521f312152012a/docs/images/checkbox.png?raw=true)
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// ![Checkbox drawn by `iced_wgpu`](https://github.com/iced-rs/iced/blob/7760618fb112074bc40b148944521f312152012a/docs/images/checkbox.png?raw=true)
+///
+/// </details>
 pub fn checkbox<'a, Message, Theme, Renderer>(
     is_checked: bool,
 ) -> Checkbox<'a, Message, Theme, Renderer>
@@ -1288,11 +1597,20 @@ where
     Checkbox::new(is_checked)
 }
 
+/// 创建一个新的 [`Radio`]。
+///
+/// 单选按钮让用户可以从一组选项中选择一项。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Radio`].
 ///
 /// Radio buttons let users choose a single option from a bunch of options.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -1363,11 +1681,20 @@ where
     Radio::new(label, value, selected, on_click)
 }
 
+/// 创建一个新的 [`Toggler`]。
+///
+/// 开关让用户可以通过拨动开关来做出二元选择。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Toggler`].
 ///
 /// Togglers let users make binary choices by toggling a switch.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -1407,11 +1734,20 @@ where
     Toggler::new(is_checked)
 }
 
+/// 创建一个新的 [`TextInput`]。
+///
+/// 文本输入框显示可以填入文本的字段。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`TextInput`].
 ///
 /// Text inputs display fields that can be filled with text.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -1453,11 +1789,20 @@ where
     TextInput::new(placeholder, value)
 }
 
+/// 创建一个新的 [`TextEditor`]。
+///
+/// 文本编辑器显示一个用于编辑文本的多行文本输入框。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`TextEditor`].
 ///
 /// Text editors display a multi-line text input for text editing.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -1499,11 +1844,20 @@ where
     TextEditor::new(content)
 }
 
+/// 创建一个新的 [`Slider`]。
+///
+/// 滑块让用户可以通过移动指示器来设置一个值。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Slider`].
 ///
 /// Sliders let users set a value by moving an indicator.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -1544,11 +1898,20 @@ where
     Slider::new(range, value, on_change)
 }
 
+/// 创建一个新的 [`VerticalSlider`]。
+///
+/// 滑块让用户可以通过移动指示器来设置一个值。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`VerticalSlider`].
 ///
 /// Sliders let users set a value by moving an indicator.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -1589,11 +1952,20 @@ where
     VerticalSlider::new(range, value, on_change)
 }
 
+/// 创建一个新的 [`PickList`]。
+///
+/// 选择列表显示一个可选择的选项下拉列表。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`PickList`].
 ///
 /// Pick lists display a dropdown list of selectable options.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -1669,11 +2041,20 @@ where
     PickList::new(options, selected, on_selected)
 }
 
+/// 创建一个新的 [`ComboBox`]。
+///
+/// 组合框显示一个可搜索、可选择的选项下拉列表。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`ComboBox`].
 ///
 /// Combo boxes display a dropdown list of searchable and selectable options.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -1741,14 +2122,35 @@ where
     ComboBox::new(state, placeholder, selection, on_selected)
 }
 
+/// 创建一个没有尺寸的空 [`Space`]。
+///
+/// 它被视为“恒等”部件。它不占用
+/// 任何空间，也不做任何事。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates some empty [`Space`] with no size.
 ///
 /// This is considered the "identity" widget. It will take
 /// no space and do nothing.
+///
+/// </details>
 pub fn space() -> Space {
     Space::new()
 }
 
+/// 创建一个新的 [`ProgressBar`]。
+///
+/// 进度条以可视化的方式展示耗时较长的计算机操作的进展，例如下载、文件传输或安装。
+///
+/// 它需要：
+///   * 一个由可能取值构成的闭区间，以及
+///   * [`ProgressBar`] 的当前值。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`ProgressBar`].
 ///
 /// Progress bars visualize the progression of an extended computer operation, such as a download, file transfer, or installation.
@@ -1757,7 +2159,9 @@ pub fn space() -> Space {
 ///   * an inclusive range of possible values, and
 ///   * the current value of the [`ProgressBar`].
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -1786,13 +2190,22 @@ where
     ProgressBar::new(range, value)
 }
 
+/// 创建一个新的 [`Image`]。
+///
+/// 图像用于显示各种格式（PNG、JPG 等）的位图图形。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Image`].
 ///
 /// Images display raster graphics in different formats (PNG, JPG, etc.).
 ///
+/// </details>
+///
 /// [`Image`]: crate::Image
 ///
-/// # Example
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -1813,14 +2226,23 @@ pub fn image<Handle>(handle: impl Into<Handle>) -> crate::Image<Handle> {
     crate::Image::new(handle.into())
 }
 
+/// 从给定的 [`Handle`] 创建一个新的 [`Svg`] 部件。
+///
+/// Svg 部件在你的应用程序中显示矢量图形。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Svg`] widget from the given [`Handle`].
 ///
 /// Svg widgets display vector graphics in your application.
 ///
+/// </details>
+///
 /// [`Svg`]: crate::Svg
 /// [`Handle`]: crate::svg::Handle
 ///
-/// # Example
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -1845,10 +2267,20 @@ where
     crate::Svg::new(handle)
 }
 
+/// 创建一个 [`Element`]，以给定的 `text_size` 显示 iced 的标志。
+///
+/// 例如，可以用它在“关于”界面里向你最喜欢的 GUI 库
+/// 表达一点喜爱之情。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates an [`Element`] that displays the iced logo with the given `text_size`.
 ///
 /// Useful for showing some love to your favorite GUI library in your "About" screen,
 /// for instance.
+///
+/// </details>
 pub fn iced<'a, Message, Theme, Renderer>(
     text_size: impl Into<core::Pixels>,
 ) -> Element<'a, Message, Theme, Renderer>
@@ -1893,13 +2325,22 @@ where
     .into()
 }
 
+/// 创建一个新的 [`Canvas`]。
+///
+/// 画布可以用来绘制可交互的 2D 图形。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Canvas`].
 ///
 /// Canvases can be leveraged to draw interactive 2D graphics.
 ///
+/// </details>
+///
 /// [`Canvas`]: crate::Canvas
 ///
-/// # Example: Drawing a Simple Circle
+/// # 示例：绘制一个简单的圆（Example: Drawing a Simple Circle）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type State = ();
@@ -1910,14 +2351,17 @@ where
 /// use iced::{Color, Rectangle, Renderer, Theme};
 ///
 /// // First, we define the data we need for drawing
+/// // 首先，定义绘制所需的数据
 /// #[derive(Debug)]
 /// struct Circle {
 ///     radius: f32,
 /// }
 ///
 /// // Then, we implement the `Program` trait
+/// // 然后，实现 `Program`特质
 /// impl<Message> canvas::Program<Message> for Circle {
 ///     // No internal state
+///     // 没有内部状态
 ///     type State = ();
 ///
 ///     fn draw(
@@ -1929,20 +2373,25 @@ where
 ///         _cursor: mouse::Cursor
 ///     ) -> Vec<canvas::Geometry> {
 ///         // We prepare a new `Frame`
+///         // 准备一个新的 `Frame`
 ///         let mut frame = canvas::Frame::new(renderer, bounds.size());
 ///
 ///         // We create a `Path` representing a simple circle
+///         // 创建一个表示简单圆形的 `Path`
 ///         let circle = canvas::Path::circle(frame.center(), self.radius);
 ///
 ///         // And fill it with some color
+///         // 并用某种颜色填充它
 ///         frame.fill(&circle, Color::BLACK);
 ///
 ///         // Then, we produce the geometry
+///         // 然后，生成几何图形
 ///         vec![frame.into_geometry()]
 ///     }
 /// }
 ///
 /// // Finally, we simply use our `Circle` to create the `Canvas`!
+/// // 最后，只需用我们的 `Circle` 创建 `Canvas`！
 /// fn view<'a, Message: 'a>(_state: &'a State) -> Element<'a, Message> {
 ///     canvas(Circle { radius: 50.0 }).into()
 /// }
@@ -1958,14 +2407,23 @@ where
     crate::Canvas::new(program)
 }
 
+/// 从给定的 [`Data`] 创建一个新的 [`QRCode`] 部件。
+///
+/// 二维码用一种二维矩阵条码来显示信息。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`QRCode`] widget from the given [`Data`].
 ///
 /// QR codes display information in a type of two-dimensional matrix barcode.
 ///
+/// </details>
+///
 /// [`QRCode`]: crate::QRCode
 /// [`Data`]: crate::qr_code::Data
 ///
-/// # Example
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -1995,7 +2453,14 @@ where
     crate::QRCode::new(data)
 }
 
+/// 创建一个新的 [`Shader`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Shader`].
+///
+/// </details>
 ///
 /// [`Shader`]: crate::Shader
 #[cfg(feature = "wgpu")]
@@ -2006,7 +2471,14 @@ where
     crate::Shader::new(program)
 }
 
+/// 创建一个新的 [`MouseArea`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`MouseArea`].
+///
+/// </details>
 pub fn mouse_area<'a, Message, Theme, Renderer>(
     widget: impl Into<Element<'a, Message, Theme, Renderer>>,
 ) -> MouseArea<'a, Message, Theme, Renderer>
@@ -2016,7 +2488,14 @@ where
     MouseArea::new(widget)
 }
 
+/// 把任意 `Theme` 应用到其内容上的部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that applies any `Theme` to its contents.
+///
+/// </details>
 pub fn themer<'a, Message, Theme, Renderer>(
     theme: Option<Theme>,
     content: impl Into<Element<'a, Message, Theme, Renderer>>,
@@ -2028,11 +2507,20 @@ where
     Themer::new(theme, content)
 }
 
+/// 使用给定的 [`pane_grid::State`] 和视图函数创建一个 [`PaneGrid`]。
+///
+/// 窗格网格让用户可以分割应用程序的区域，并动态地组织布局。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a [`PaneGrid`] with the given [`pane_grid::State`] and view function.
 ///
 /// Pane grids let your users split regions of your application and organize layout dynamically.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -2080,7 +2568,14 @@ where
     PaneGrid::new(state, view)
 }
 
+/// 使用给定的内容创建一个新的 [`Float`] 部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Float`] widget with the given content.
+///
+/// </details>
 pub fn float<'a, Message, Theme, Renderer>(
     content: impl Into<Element<'a, Message, Theme, Renderer>>,
 ) -> Float<'a, Message, Theme, Renderer>
@@ -2091,12 +2586,24 @@ where
     Float::new(content)
 }
 
+/// 使用一个产生其内容的闭包创建一个新的 [`Responsive`]
+/// 部件。
+///
+/// 布局期间，`view` 闭包会收到 [`Responsive`] 可用的
+/// 最大空间。你可以利用这个 [`Size`]
+/// 有条件地构建内容。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Responsive`] widget with a closure that produces its
 /// contents.
 ///
 /// The `view` closure will receive the maximum available space for
 /// the [`Responsive`] during layout. You can use this [`Size`] to
 /// conditionally build the contents.
+///
+/// </details>
 pub fn responsive<'a, Message, Theme, Renderer>(
     f: impl Fn(Size) -> Element<'a, Message, Theme, Renderer> + 'a,
 ) -> Responsive<'a, Message, Theme, Renderer>

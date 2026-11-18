@@ -1,22 +1,57 @@
+/// 二维向量。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A 2D vector.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Vector<T = f32> {
+    /// [`Vector`] 的 X 分量
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The X component of the [`Vector`]
+    ///
+    /// </details>
     pub x: T,
 
+    /// [`Vector`] 的 Y 分量
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The Y component of the [`Vector`]
+    ///
+    /// </details>
     pub y: T,
 }
 
 impl<T> Vector<T> {
+    /// 使用给定的分量创建一个新的 [`Vector`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Vector`] with the given components.
+    ///
+    /// </details>
     pub const fn new(x: T, y: T) -> Self {
         Self { x, y }
     }
 }
 
 impl Vector {
+    /// 零 [`Vector`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The zero [`Vector`].
+    ///
+    /// </details>
     pub const ZERO: Self = Self::new(0.0, 0.0);
 }
 

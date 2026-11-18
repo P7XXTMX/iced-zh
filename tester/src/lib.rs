@@ -1,4 +1,11 @@
+//! 为你的 iced 应用程序录制、编辑并运行端到端测试。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Record, edit, and run end-to-end tests for your iced applications.
+//!
+//! </details>
 pub use iced_test as test;
 pub use iced_test::core;
 pub use iced_test::program;
@@ -33,15 +40,36 @@ use crate::widget::{
 
 use std::ops::RangeInclusive;
 
+/// 将一个 [`Tester`] 附加到给定的 [`Program`] 上。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Attaches a [`Tester`] to the given [`Program`].
+///
+/// </details>
 pub fn attach<P: Program + 'static>(program: P) -> Attach<P> {
     Attach { program }
 }
 
+/// 一个附加了 [`Tester`] 的 [`Program`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`Program`] with a [`Tester`] attached to it.
+///
+/// </details>
 #[derive(Debug)]
 pub struct Attach<P> {
+    /// 附加了 [`Tester`] 的原始 [`Program`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The original [`Program`] attached to the [`Tester`].
+    ///
+    /// </details>
     pub program: P,
 }
 
@@ -106,9 +134,18 @@ where
     }
 }
 
+/// 测试器装饰一个 [`Program`] 定义，并在其上附加一个测试录制器。
+///
+/// 它既可以录制也可以回放 [`Ice`] 测试。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A tester decorates a [`Program`] definition and attaches a test recorder on top.
 ///
 /// It can be used to both record and play [`Ice`] tests.
+///
+/// </details>
 pub struct Tester<P: Program> {
     viewport: Size,
     mode: emulator::Mode,
@@ -145,7 +182,14 @@ enum Outcome {
     Success,
 }
 
+/// [`Tester`] 的消息。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The message of a [`Tester`].
+///
+/// </details>
 pub struct Message<P: Program>(Tick<P>);
 
 #[derive(Debug, Clone)]
@@ -731,7 +775,7 @@ impl<P: Program + 'static> Tester<P> {
                     column(self.instructions.iter().enumerate().map(
                         |(i, instruction)| {
                             text(instruction.to_string())
-                                .wrapping(text::Wrapping::None) // TODO: Ellipsize?
+                                .wrapping(text::Wrapping::None) // TODO: Ellipsize?（待办：是否加省略号？）
                                 .size(10)
                                 .font(Font::MONOSPACE)
                                 .style(move |theme: &Theme| text::Style {

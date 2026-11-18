@@ -1,6 +1,13 @@
+//! 文本编辑器显示一个用于编辑文本的多行文本输入框。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Text editors display a multi-line text input for text editing.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -63,9 +70,16 @@ pub use text::editor::{
     Action, Cursor, Edit, Line, LineEnding, Motion, Position, Selection,
 };
 
+/// 多行文本输入框。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A multi-line text input.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -136,7 +150,14 @@ where
     Theme: Catalog,
     Renderer: text::Renderer,
 {
+    /// 使用给定的 [`Content`] 创建一个新的 [`TextEditor`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates new [`TextEditor`] with the given [`Content`].
+    ///
+    /// </details>
     pub fn new(content: &'a Content<Renderer>) -> Self {
         Self {
             id: None,
@@ -162,7 +183,14 @@ where
         }
     }
 
+    /// 设置 [`TextEditor`] 的 [`Id`](widget::Id)。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Id`](widget::Id) of the [`TextEditor`].
+    ///
+    /// </details>
     pub fn id(mut self, id: impl Into<widget::Id>) -> Self {
         self.id = Some(id.into());
         self
@@ -176,7 +204,14 @@ where
     Theme: Catalog,
     Renderer: text::Renderer,
 {
+    /// 设置 [`TextEditor`] 的占位符。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the placeholder of the [`TextEditor`].
+    ///
+    /// </details>
     pub fn placeholder(
         mut self,
         placeholder: impl text::IntoFragment<'a>,
@@ -185,34 +220,72 @@ where
         self
     }
 
+    /// 设置 [`TextEditor`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`TextEditor`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Pixels>) -> Self {
         self.width = Length::from(width.into());
         self
     }
 
+    /// 设置 [`TextEditor`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`TextEditor`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置 [`TextEditor`] 的最小高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the minimum height of the [`TextEditor`].
+    ///
+    /// </details>
     pub fn min_height(mut self, min_height: impl Into<Pixels>) -> Self {
         self.min_height = min_height.into().0;
         self
     }
 
+    /// 设置 [`TextEditor`] 的最大高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the maximum height of the [`TextEditor`].
+    ///
+    /// </details>
     pub fn max_height(mut self, max_height: impl Into<Pixels>) -> Self {
         self.max_height = max_height.into().0;
         self
     }
 
+    /// 设置在 [`TextEditor`] 中执行某个动作时
+    /// 应该产生的消息。
+    ///
+    /// 如果没有调用这个方法，[`TextEditor`] 会被禁用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that should be produced when some action is performed in
     /// the [`TextEditor`].
     ///
     /// If this method is not called, the [`TextEditor`] will be disabled.
+    ///
+    /// </details>
     pub fn on_action(
         mut self,
         on_edit: impl Fn(Action) -> Message + 'a,
@@ -221,7 +294,14 @@ where
         self
     }
 
+    /// 设置 [`TextEditor`] 的 [`Font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Font`] of the [`TextEditor`].
+    ///
+    /// </details>
     ///
     /// [`Font`]: text::Renderer::Font
     pub fn font(mut self, font: impl Into<Renderer::Font>) -> Self {
@@ -229,13 +309,27 @@ where
         self
     }
 
+    /// 设置 [`TextEditor`] 的文本字号。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the text size of the [`TextEditor`].
+    ///
+    /// </details>
     pub fn size(mut self, size: impl Into<Pixels>) -> Self {
         self.text_size = Some(size.into());
         self
     }
 
+    /// 设置 [`TextEditor`] 的 [`text::LineHeight`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`text::LineHeight`] of the [`TextEditor`].
+    ///
+    /// </details>
     pub fn line_height(
         mut self,
         line_height: impl Into<text::LineHeight>,
@@ -244,19 +338,40 @@ where
         self
     }
 
+    /// 设置 [`TextEditor`] 的 [`Padding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Padding`] of the [`TextEditor`].
+    ///
+    /// </details>
     pub fn padding(mut self, padding: impl Into<Padding>) -> Self {
         self.padding = padding.into();
         self
     }
 
+    /// 设置 [`TextEditor`] 的 [`Wrapping`] 策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Wrapping`] strategy of the [`TextEditor`].
+    ///
+    /// </details>
     pub fn wrapping(mut self, wrapping: Wrapping) -> Self {
         self.wrapping = wrapping;
         self
     }
 
+    /// 使用给定的语法和主题高亮 [`TextEditor`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Highlights the [`TextEditor`] using the given syntax and theme.
+    ///
+    /// </details>
     #[cfg(feature = "highlighter")]
     pub fn highlight(
         self,
@@ -275,8 +390,16 @@ where
         )
     }
 
+    /// 使用给定的 [`Highlighter`]，以及一个把它的高亮结果
+    /// 转换成某种文本格式的策略，高亮 [`TextEditor`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Highlights the [`TextEditor`] with the given [`Highlighter`] and
     /// a strategy to turn its highlights into some text format.
+    ///
+    /// </details>
     pub fn highlight_with<H: text::Highlighter>(
         self,
         settings: H::Settings,
@@ -307,9 +430,18 @@ where
         }
     }
 
+    /// 设置在按键时产生按键绑定的闭包。
+    ///
+    /// 可用的绑定列表见 [`Binding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the closure to produce key bindings on key presses.
     ///
     /// See [`Binding`] for the list of available bindings.
+    ///
+    /// </details>
     pub fn key_binding(
         mut self,
         key_binding: impl Fn(KeyPress) -> Option<Binding<Message>> + 'a,
@@ -318,7 +450,14 @@ where
         self
     }
 
+    /// 设置 [`TextEditor`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`TextEditor`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme, Status) -> Style + 'a) -> Self
     where
@@ -328,7 +467,14 @@ where
         self
     }
 
+    /// 设置 [`TextEditor`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`TextEditor`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
@@ -380,7 +526,14 @@ where
     }
 }
 
+/// [`TextEditor`] 的内容。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The content of a [`TextEditor`].
+///
+/// </details>
 pub struct Content<R = crate::Renderer>(RefCell<Internal<R>>)
 where
     R: text::Renderer;
@@ -396,43 +549,92 @@ impl<R> Content<R>
 where
     R: text::Renderer,
 {
+    /// 创建一个空的 [`Content`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates an empty [`Content`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::with_text("")
     }
 
+    /// 使用给定的文本创建一个 [`Content`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Content`] with the given text.
+    ///
+    /// </details>
     pub fn with_text(text: &str) -> Self {
         Self(RefCell::new(Internal {
             editor: R::Editor::with_text(text),
         }))
     }
 
+    /// 对 [`Content`] 执行一个 [`Action`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Performs an [`Action`] on the [`Content`].
+    ///
+    /// </details>
     pub fn perform(&mut self, action: Action) {
         let internal = self.0.get_mut();
 
         internal.editor.perform(action);
     }
 
+    /// 移动当前光标，使其与给定的光标一致。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Moves the current cursor to reflect the given one.
+    ///
+    /// </details>
     pub fn move_to(&mut self, cursor: Cursor) {
         let internal = self.0.get_mut();
 
         internal.editor.move_to(cursor);
     }
 
+    /// 返回 [`Content`] 当前的光标位置。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current cursor position of the [`Content`].
+    ///
+    /// </details>
     pub fn cursor(&self) -> Cursor {
         self.0.borrow().editor.cursor()
     }
 
+    /// 返回 [`Content`] 的行数。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the amount of lines of the [`Content`].
+    ///
+    /// </details>
     pub fn line_count(&self) -> usize {
         self.0.borrow().editor.line_count()
     }
 
+    /// 返回给定索引处那一行的文本（如果存在）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the text of the line at the given index, if it exists.
+    ///
+    /// </details>
     pub fn line(&self, index: usize) -> Option<Line<'_>> {
         let internal = self.0.borrow();
         let line = internal.editor.line(index)?;
@@ -443,7 +645,14 @@ where
         })
     }
 
+    /// 返回一个遍历 [`Content`] 中各行文本的迭代器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns an iterator of the text of the lines in the [`Content`].
+    ///
+    /// </details>
     pub fn lines(&self) -> impl Iterator<Item = Line<'_>> {
         (0..)
             .map(|i| self.line(i))
@@ -451,7 +660,14 @@ where
             .flatten()
     }
 
+    /// 返回 [`Content`] 的文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the text of the [`Content`].
+    ///
+    /// </details>
     pub fn text(&self) -> String {
         let mut contents = String::new();
         let mut lines = self.lines().peekable();
@@ -471,17 +687,38 @@ where
         contents
     }
 
+    /// 返回 [`Content`] 中被选中的文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the selected text of the [`Content`].
+    ///
+    /// </details>
     pub fn selection(&self) -> Option<String> {
         self.0.borrow().editor.copy()
     }
 
+    /// 返回 [`Content`] 中用于分隔各行的 [`LineEnding`] 种类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the kind of [`LineEnding`] used for separating lines in the [`Content`].
+    ///
+    /// </details>
     pub fn line_ending(&self) -> Option<LineEnding> {
         Some(self.line(0)?.ending)
     }
 
+    /// 返回 [`Content`] 是否为空。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns whether or not the the [`Content`] is empty.
+    ///
+    /// </details>
     pub fn is_empty(&self) -> bool {
         self.0.borrow().editor.is_empty()
     }
@@ -519,7 +756,14 @@ where
     }
 }
 
+/// [`TextEditor`] 的状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The state of a [`TextEditor`].
+///
+/// </details>
 #[derive(Debug)]
 pub struct State<Highlighter: text::Highlighter> {
     focus: Option<Focus>,
@@ -562,7 +806,14 @@ impl Focus {
 }
 
 impl<Highlighter: text::Highlighter> State<Highlighter> {
+    /// 返回 [`TextEditor`] 当前是否获得焦点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns whether the [`TextEditor`] is currently focused or not.
+    ///
+    /// </details>
     pub fn is_focused(&self) -> bool {
         self.focus.is_some()
     }
@@ -1114,66 +1365,240 @@ where
     }
 }
 
+/// 到 [`TextEditor`] 中某个动作的绑定。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A binding to an action in the [`TextEditor`].
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub enum Binding<Message> {
+    /// 让 [`TextEditor`] 失去焦点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Unfocus the [`TextEditor`].
+    ///
+    /// </details>
     Unfocus,
+    /// 复制 [`TextEditor`] 的选区。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Copy the selection of the [`TextEditor`].
+    ///
+    /// </details>
     Copy,
+    /// 剪切 [`TextEditor`] 的选区。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Cut the selection of the [`TextEditor`].
+    ///
+    /// </details>
     Cut,
+    /// 把剪贴板内容粘贴到 [`TextEditor`] 中。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Paste the clipboard contents in the [`TextEditor`].
+    ///
+    /// </details>
     Paste,
+    /// 应用一个 [`Motion`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Apply a [`Motion`].
+    ///
+    /// </details>
     Move(Motion),
+    /// 使用给定的 [`Motion`] 选择文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Select text with a given [`Motion`].
+    ///
+    /// </details>
     Select(Motion),
+    /// 选择当前光标处的单词。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Select the word at the current cursor.
+    ///
+    /// </details>
     SelectWord,
+    /// 选择当前光标处的行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Select the line at the current cursor.
+    ///
+    /// </details>
     SelectLine,
+    /// 选择整个缓冲区。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Select the entire buffer.
+    ///
+    /// </details>
     SelectAll,
+    /// 插入给定的字符。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Insert the given character.
+    ///
+    /// </details>
     Insert(char),
+    /// 在当前行换行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Break the current line.
+    ///
+    /// </details>
     Enter,
+    /// 删除前一个字符。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the previous character.
+    ///
+    /// </details>
     Backspace,
+    /// 删除后一个字符。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Delete the next character.
+    ///
+    /// </details>
     Delete,
+    /// 要依次执行的一系列绑定。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A sequence of bindings to execute.
+    ///
+    /// </details>
     Sequence(Vec<Self>),
+    /// 产生给定的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Produce the given message.
+    ///
+    /// </details>
     Custom(Message),
 }
 
+/// 一次按键。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A key press.
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct KeyPress {
+    /// 按下的原始按键，未应用修饰键。
+    ///
+    /// 组合键（例如 Ctrl+C）应当使用这个按键。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The original key pressed without modifiers applied to it.
     ///
     /// You should use this key for combinations (e.g. Ctrl+C).
+    ///
+    /// </details>
     pub key: keyboard::Key,
+    /// 按下的按键，已应用修饰键。
+    ///
+    /// 任何单键绑定（例如光标移动）都应当使用这个按键。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The key pressed with modifiers applied to it.
     ///
     /// You should use this key for any single key bindings (e.g. motions).
+    ///
+    /// </details>
     pub modified_key: keyboard::Key,
+    /// 按下的物理按键。
+    ///
+    /// 与键盘布局无关的绑定应当使用这个按键。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The physical key pressed.
     ///
     /// You should use this key for layout-independent bindings.
+    ///
+    /// </details>
     pub physical_key: keyboard::key::Physical,
+    /// 键盘修饰键的状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The state of the keyboard modifiers.
+    ///
+    /// </details>
     pub modifiers: keyboard::Modifiers,
+    /// 这次按键产生的文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text produced by the key press.
+    ///
+    /// </details>
     pub text: Option<SmolStr>,
+    /// [`TextEditor`] 当前的 [`Status`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The current [`Status`] of the [`TextEditor`].
+    ///
+    /// </details>
     pub status: Status,
 }
 
 impl<Message> Binding<Message> {
+    /// 返回给定按键对应的默认 [`Binding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the default [`Binding`] for the given key press.
+    ///
+    /// </details>
     pub fn from_key_press(event: KeyPress) -> Option<Self> {
         let KeyPress {
             key,
@@ -1404,50 +1829,169 @@ fn motion(key: key::Named) -> Option<Motion> {
     }
 }
 
+/// [`TextEditor`] 可能的交互状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The possible status of a [`TextEditor`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
+    /// [`TextEditor`] 可以交互。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`TextEditor`] can be interacted with.
+    ///
+    /// </details>
     Active,
+    /// [`TextEditor`] 正处于悬停状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`TextEditor`] is being hovered.
+    ///
+    /// </details>
     Hovered,
+    /// [`TextEditor`] 已获得焦点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`TextEditor`] is focused.
+    ///
+    /// </details>
     Focused {
+        /// [`TextEditor`] 在获得焦点的同时是否处于悬停状态。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Whether the [`TextEditor`] is hovered, while focused.
+        ///
+        /// </details>
         is_hovered: bool,
     },
+    /// [`TextEditor`] 无法交互。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`TextEditor`] cannot be interacted with.
+    ///
+    /// </details>
     Disabled,
 }
 
+/// 文本输入框的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of a text input.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Style {
+    /// 文本输入框的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Background`] of the text input.
+    ///
+    /// </details>
     pub background: Background,
+    /// 文本输入框的 [`Border`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Border`] of the text input.
+    ///
+    /// </details>
     pub border: Border,
+    /// 文本输入框占位符的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of the placeholder of the text input.
+    ///
+    /// </details>
     pub placeholder: Color,
+    /// 文本输入框值的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of the value of the text input.
+    ///
+    /// </details>
     pub value: Color,
+    /// 文本输入框选区的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] of the selection of the text input.
+    ///
+    /// </details>
     pub selection: Color,
 }
 
+/// [`TextEditor`] 的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`TextEditor`].
+///
+/// </details>
 pub trait Catalog: theme::Base {
+    /// [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of the [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by the [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> Self::Class<'a>;
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(&self, class: &Self::Class<'_>, status: Status) -> Style;
 }
 
+/// [`TextEditor`] 的样式函数。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for a [`TextEditor`].
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme, Status) -> Style + 'a>;
 
 impl Catalog for Theme {
@@ -1462,7 +2006,14 @@ impl Catalog for Theme {
     }
 }
 
+/// [`TextEditor`] 的默认样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default style of a [`TextEditor`].
+///
+/// </details>
 pub fn default(theme: &Theme, status: Status) -> Style {
     let palette = theme.extended_palette();
 

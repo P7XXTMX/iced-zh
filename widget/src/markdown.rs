@@ -1,3 +1,13 @@
+//! Markdown 部件可以解析并显示 Markdown。
+//!
+//! 你可以启用 `highlighter` 特性，为代码块提供
+//! 语法高亮。
+//!
+//! 目前只支持 [`Item`] 的各个变体。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Markdown widgets can parse and display Markdown.
 //!
 //! You can enable the `highlighter` feature for syntax highlighting
@@ -5,7 +15,9 @@
 //!
 //! Only the variants of [`Item`] are currently supported.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -66,12 +78,26 @@ use std::sync::Arc;
 pub use core::text::Highlight;
 pub use pulldown_cmark::HeadingLevel;
 
+/// 表示 Markdown 文档中某个 [URI] 的 [`String`]
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`String`] representing a [URI] in a Markdown document
+///
+/// </details>
 ///
 /// [URI]: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
 pub type Uri = String;
 
+/// 一段已解析的 Markdown。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A bunch of Markdown that has been parsed.
+///
+/// </details>
 #[derive(Debug, Default)]
 pub struct Content {
     items: Vec<Item>,
@@ -86,28 +112,53 @@ struct Section {
 }
 
 impl Content {
+    /// 创建一个新的空 [`Content`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new empty [`Content`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// 通过解析给定的 Markdown 创建新的 [`Content`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates some new [`Content`] by parsing the given Markdown.
+    ///
+    /// </details>
     pub fn parse(markdown: &str) -> Self {
         let mut content = Self::new();
         content.push_str(markdown);
         content
     }
 
+    /// 向 [`Content`] 推入更多 Markdown，并以增量方式解析！
+    ///
+    /// 当你有很长的 Markdown 流时，这特别有用，例如
+    /// 大文件或可能很长的回复。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Pushes more Markdown into the [`Content`]; parsing incrementally!
     ///
     /// This is specially useful when you have long streams of Markdown; like
     /// big files or potentially long replies.
+    ///
+    /// </details>
     pub fn push_str(&mut self, markdown: &str) {
         if markdown.is_empty() {
             return;
         }
 
         // Append to last leftover text
+        // 追加到上次剩余的文本之后
         let mut leftover = std::mem::take(&mut self.state.leftover);
         leftover.push_str(markdown);
 
@@ -118,9 +169,11 @@ impl Content {
         };
 
         // Pop the last item
+        // 弹出最后一项
         let _ = self.items.pop();
 
         // Re-parse last item and new text
+        // 重新解析最后一项和新文本
         for (item, source, broken_links) in parse_with(&mut self.state, input) {
             if !broken_links.is_empty() {
                 let _ = self.incomplete.insert(
@@ -138,6 +191,7 @@ impl Content {
         self.state.leftover.push_str(&leftover[input.len()..]);
 
         // Re-parse incomplete sections if new references are available
+        // 如果有新的引用可用，重新解析不完整的部分
         if !self.incomplete.is_empty() {
             self.incomplete.retain(|index, section| {
                 if self.items.len() <= *index {
@@ -174,83 +228,276 @@ impl Content {
         }
     }
 
+    /// 返回已经可以渲染的 Markdown 条目。
+    ///
+    /// 你可以用 [`view`] 把它们转换成 [`Element`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the Markdown items, ready to be rendered.
     ///
     /// You can use [`view`] to turn them into an [`Element`].
+    ///
+    /// </details>
     pub fn items(&self) -> &[Item] {
         &self.items
     }
 
+    /// 返回 [`Content`] 中出现的 Markdown 图像的 URL。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the URLs of the Markdown images present in the [`Content`].
+    ///
+    /// </details>
     pub fn images(&self) -> &HashSet<Uri> {
         &self.state.images
     }
 }
 
+/// Markdown 条目。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A Markdown item.
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub enum Item {
+    /// 标题。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A heading.
+    ///
+    /// </details>
     Heading(pulldown_cmark::HeadingLevel, Text),
+    /// 段落。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A paragraph.
+    ///
+    /// </details>
     Paragraph(Text),
+    /// 代码块。
+    ///
+    /// 你可以启用 `highlighter` 特性来获得语法高亮。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A code block.
     ///
     /// You can enable the `highlighter` feature for syntax highlighting.
+    ///
+    /// </details>
     CodeBlock {
+        /// 代码块的语言（如果有）。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The language of the code block, if any.
+        ///
+        /// </details>
         language: Option<String>,
+        /// 代码块的原始代码。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The raw code of the code block.
+        ///
+        /// </details>
         code: String,
+        /// 代码块中带样式的文本行。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The styled lines of text in the code block.
+        ///
+        /// </details>
         lines: Vec<Text>,
     },
+    /// 列表。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A list.
+    ///
+    /// </details>
     List {
+        /// 列表的起始编号，如果它是有序列表的话。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The first number of the list, if it is ordered.
+        ///
+        /// </details>
         start: Option<u64>,
+        /// 列表的各项。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The items of the list.
+        ///
+        /// </details>
         bullets: Vec<Bullet>,
     },
+    /// 图像。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// An image.
+    ///
+    /// </details>
     Image {
+        /// 图像的目标 URL。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The destination URL of the image.
+        ///
+        /// </details>
         url: Uri,
+        /// 图像的标题。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The title of the image.
+        ///
+        /// </details>
         title: String,
+        /// 图像的替代文本。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The alternative text of the image.
+        ///
+        /// </details>
         alt: Text,
     },
+    /// 引用块。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A quote.
+    ///
+    /// </details>
     Quote(Vec<Item>),
+    /// 水平分隔线。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A horizontal separator.
+    ///
+    /// </details>
     Rule,
+    /// 表格。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A table.
+    ///
+    /// </details>
     Table {
+        /// 表格的列。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The columns of the table.
+        ///
+        /// </details>
         columns: Vec<Column>,
+        /// 表格的行。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The rows of the table.
+        ///
+        /// </details>
         rows: Vec<Row>,
     },
 }
 
+/// 表格的列。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The column of a table.
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct Column {
+    /// 列的表头。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The header of the column.
+    ///
+    /// </details>
     pub header: Vec<Item>,
+    /// 列的对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The alignment of the column.
+    ///
+    /// </details>
     pub alignment: pulldown_cmark::Alignment,
 }
 
+/// 表格的行。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The row of a table.
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct Row {
+    /// 行中的单元格。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The cells of the row.
+    ///
+    /// </details>
     cells: Vec<Vec<Item>>,
 }
 
+/// 一段已解析的 Markdown 文本。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A bunch of parsed Markdown text.
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct Text {
     spans: Vec<Span>,
@@ -267,10 +514,20 @@ impl Text {
         }
     }
 
+    /// 返回可用于给定样式的 [`rich_text()`] span。
+    ///
+    /// 此方法会为你做缓存。只有在给定的 [`Style`] 发生变化时，
+    /// 它才会重新分配。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the [`rich_text()`] spans ready to be used for the given style.
     ///
     /// This method performs caching for you. It will only reallocate if the [`Style`]
     /// provided changes.
+    ///
+    /// </details>
     pub fn spans(&self, style: Style) -> Arc<[text::Span<'static, Uri>]> {
         if Some(style) != self.last_style.get() {
             *self.last_styled_spans.borrow_mut() =
@@ -352,19 +609,61 @@ impl Span {
     }
 }
 
+/// 列表的项。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The item of a list.
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub enum Bullet {
+    /// 简单的列表项。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A simple bullet point.
+    ///
+    /// </details>
     Point {
+        /// 列表项的内容。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The contents of the bullet point.
+        ///
+        /// </details>
         items: Vec<Item>,
     },
+    /// 任务项。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A task.
+    ///
+    /// </details>
     Task {
+        /// 任务项的内容。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The contents of the task.
+        ///
+        /// </details>
         items: Vec<Item>,
+        /// 任务是否已完成。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Whether the task is done or not.
+        ///
+        /// </details>
         done: bool,
     },
 }
@@ -383,9 +682,16 @@ impl Bullet {
     }
 }
 
+/// 解析给定的 Markdown 内容。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Parse the given Markdown content.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -625,6 +931,7 @@ fn parse_with<'a>(
     let parser = parser.into_offset_iter();
 
     // We want to keep the `spans` capacity
+    // 我们希望保留 `spans` 的容量
     #[allow(clippy::drain_collect)]
     parser.filter_map(move |(event, source)| match event {
         pulldown_cmark::Event::Start(tag) => match tag {
@@ -1028,42 +1335,137 @@ fn parse_with<'a>(
     })
 }
 
+/// 控制 [`view`] 中 Markdown 渲染方式的配置。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Configuration controlling Markdown rendering in [`view`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy)]
 pub struct Settings {
+    /// 基础文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The base text size.
+    ///
+    /// </details>
     pub text_size: Pixels,
+    /// 1 级标题的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size of level 1 heading.
+    ///
+    /// </details>
     pub h1_size: Pixels,
+    /// 2 级标题的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size of level 2 heading.
+    ///
+    /// </details>
     pub h2_size: Pixels,
+    /// 3 级标题的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size of level 3 heading.
+    ///
+    /// </details>
     pub h3_size: Pixels,
+    /// 4 级标题的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size of level 4 heading.
+    ///
+    /// </details>
     pub h4_size: Pixels,
+    /// 5 级标题的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size of level 5 heading.
+    ///
+    /// </details>
     pub h5_size: Pixels,
+    /// 6 级标题的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size of level 6 heading.
+    ///
+    /// </details>
     pub h6_size: Pixels,
+    /// 代码块使用的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text size used in code blocks.
+    ///
+    /// </details>
     pub code_size: Pixels,
+    /// 元素之间使用的间距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The spacing to be used between elements.
+    ///
+    /// </details>
     pub spacing: Pixels,
+    /// Markdown 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The styling of the Markdown.
+    ///
+    /// </details>
     pub style: Style,
 }
 
 impl Settings {
+    /// 使用默认文本大小和给定的 [`Style`] 创建新的 [`Settings`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates new [`Settings`] with default text size and the given [`Style`].
+    ///
+    /// </details>
     pub fn with_style(style: impl Into<Style>) -> Self {
         Self::with_text_size(16, style)
     }
 
+    /// 使用给定的、以 [`Pixels`] 表示的基础文本大小创建新的 [`Settings`]。
+    ///
+    /// 各级标题的大小会自动调整。具体来说，
+    /// 第一级是基础大小的两倍，之后每一级
+    /// 都缩小 25%。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates new [`Settings`] with the given base text size in [`Pixels`].
     ///
     /// Heading levels will be adjusted automatically. Specifically,
     /// the first level will be twice the base size, and then every level
     /// after that will be 25% smaller.
+    ///
+    /// </details>
     pub fn with_text_size(
         text_size: impl Into<Pixels>,
         style: impl Into<Style>,
@@ -1097,27 +1499,90 @@ impl From<Theme> for Settings {
     }
 }
 
+/// 在 [`view`] 中渲染 Markdown 时的文本样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The text styling of some Markdown rendering in [`view`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Style {
+    /// 应用于普通文本的 [`Font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Font`] to be applied to basic text.
+    ///
+    /// </details>
     pub font: Font,
+    /// 应用于行内代码背景的 [`Highlight`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Highlight`] to be applied to the background of inline code.
+    ///
+    /// </details>
     pub inline_code_highlight: Highlight,
+    /// 应用于行内代码背景的 [`Padding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Padding`] to be applied to the background of inline code.
+    ///
+    /// </details>
     pub inline_code_padding: Padding,
+    /// 应用于行内代码的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] to be applied to inline code.
+    ///
+    /// </details>
     pub inline_code_color: Color,
+    /// 应用于行内代码的 [`Font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Font`] to be applied to inline code.
+    ///
+    /// </details>
     pub inline_code_font: Font,
+    /// 应用于代码块的 [`Font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Font`] to be applied to code blocks.
+    ///
+    /// </details>
     pub code_block_font: Font,
+    /// 应用于链接的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] to be applied to links.
+    ///
+    /// </details>
     pub link_color: Color,
 }
 
 impl Style {
+    /// 根据给定的 [`theme::Palette`] 创建一个新的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Style`] from the given [`theme::Palette`].
+    ///
+    /// </details>
     pub fn from_palette(palette: theme::Palette) -> Self {
         Self {
             font: Font::default(),
@@ -1152,11 +1617,20 @@ impl From<Theme> for Style {
     }
 }
 
+/// 显示一组 Markdown 条目。
+///
+/// 你可以通过 [`parse`] 获得这些条目。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Display a bunch of Markdown items.
 ///
 /// You can obtain the items with [`parse`].
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -1205,11 +1679,22 @@ where
     view_with(items, settings, &DefaultViewer)
 }
 
+/// 运行 [`view`]，但使用自定义的 [`Viewer`] 把 [`Item`] 转换成
+/// [`Element`]。
+///
+/// 如果你想自定义某些 Markdown 元素的外观，
+/// 这会很有用。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Runs [`view`] but with a custom [`Viewer`] to turn an [`Item`] into
 /// an [`Element`].
 ///
 /// This is useful if you want to customize the look of certain Markdown
 /// elements.
+///
+/// </details>
 pub fn view_with<'a, Message, Theme, Renderer>(
     items: impl IntoIterator<Item = &'a Item>,
     settings: impl Into<Settings>,
@@ -1230,7 +1715,14 @@ where
     Element::new(column(blocks).spacing(settings.spacing))
 }
 
+/// 使用给定的 [`Viewer`] 显示一个 [`Item`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays an [`Item`] using the given [`Viewer`].
+///
+/// </details>
 pub fn item<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -1269,7 +1761,14 @@ where
     }
 }
 
+/// 使用默认外观显示标题。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a heading using the default look.
+///
+/// </details>
 pub fn heading<'a, Message, Theme, Renderer>(
     settings: Settings,
     level: &'a HeadingLevel,
@@ -1313,7 +1812,14 @@ where
     .into()
 }
 
+/// 使用默认外观显示段落。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a paragraph using the default look.
+///
+/// </details>
 pub fn paragraph<'a, Message, Theme, Renderer>(
     settings: Settings,
     text: &Text,
@@ -1330,8 +1836,16 @@ where
         .into()
 }
 
+/// 使用默认外观显示无序列表，并为每个
+/// 列表项调用 [`Viewer`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays an unordered list using the default look and
 /// calling the [`Viewer`] for each bullet point item.
+///
+/// </details>
 pub fn unordered_list<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -1375,8 +1889,16 @@ where
     .into()
 }
 
+/// 使用默认外观显示有序列表，并为每个
+/// 编号项调用 [`Viewer`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays an ordered list using the default look and
 /// calling the [`Viewer`] for each numbered item.
+///
+/// </details>
 pub fn ordered_list<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -1414,7 +1936,14 @@ where
     .into()
 }
 
+/// 使用默认外观显示代码块。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a code block using the default look.
+///
+/// </details>
 pub fn code_block<'a, Message, Theme, Renderer>(
     settings: Settings,
     lines: &'a [Text],
@@ -1448,7 +1977,14 @@ where
     .into()
 }
 
+/// 使用默认外观显示引用块。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a quote using the default look.
+///
+/// </details>
 pub fn quote<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -1474,7 +2010,14 @@ where
     .into()
 }
 
+/// 使用默认外观显示分隔线。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a rule using the default look.
+///
+/// </details>
 pub fn rule<'a, Message, Theme, Renderer>()
 -> Element<'a, Message, Theme, Renderer>
 where
@@ -1485,7 +2028,14 @@ where
     rule::horizontal(2).into()
 }
 
+/// 使用默认外观显示表格。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a table using the default look.
+///
+/// </details>
 pub fn table<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -1538,7 +2088,14 @@ where
         .into()
 }
 
+/// 使用默认外观显示一列条目。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Displays a column of items with the default look.
+///
+/// </details>
 pub fn items<'a, Message, Theme, Renderer>(
     viewer: &impl Viewer<'a, Message, Theme, Renderer>,
     settings: Settings,
@@ -1559,7 +2116,14 @@ where
     .into()
 }
 
+/// 用来显示 Markdown [`Item`] 的视图策略。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A view strategy to display a Markdown [`Item`].
+///
+/// </details>
 pub trait Viewer<'a, Message, Theme = crate::Theme, Renderer = crate::Renderer>
 where
     Self: Sized + 'a,
@@ -1567,12 +2131,28 @@ where
     Theme: Catalog + 'a,
     Renderer: core::text::Renderer<Font = Font> + 'a,
 {
+    /// 当带有给定 [`Uri`] 的链接被点击时产生一条消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Produces a message when a link is clicked with the given [`Uri`].
+    ///
+    /// </details>
     fn on_link_click(url: Uri) -> Message;
 
+    /// 显示图像。
+    ///
+    /// 默认情况下，它会显示一个带有图像标题的容器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays an image.
     ///
     /// By default, it will show a container with the image title.
+    ///
+    /// </details>
     fn image(
         &self,
         settings: Settings,
@@ -1592,9 +2172,18 @@ where
         .into()
     }
 
+    /// 显示标题。
+    ///
+    /// 默认情况下，它调用 [`heading`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays a heading.
     ///
     /// By default, it calls [`heading`].
+    ///
+    /// </details>
     fn heading(
         &self,
         settings: Settings,
@@ -1605,9 +2194,18 @@ where
         heading(settings, level, text, index, Self::on_link_click)
     }
 
+    /// 显示段落。
+    ///
+    /// 默认情况下，它调用 [`paragraph`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays a paragraph.
     ///
     /// By default, it calls [`paragraph`].
+    ///
+    /// </details>
     fn paragraph(
         &self,
         settings: Settings,
@@ -1616,9 +2214,18 @@ where
         paragraph(settings, text, Self::on_link_click)
     }
 
+    /// 显示代码块。
+    ///
+    /// 默认情况下，它调用 [`code_block`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays a code block.
     ///
     /// By default, it calls [`code_block`].
+    ///
+    /// </details>
     fn code_block(
         &self,
         settings: Settings,
@@ -1632,9 +2239,18 @@ where
         code_block(settings, lines, Self::on_link_click)
     }
 
+    /// 显示无序列表。
+    ///
+    /// 默认情况下，它调用 [`unordered_list`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays an unordered list.
     ///
     /// By default, it calls [`unordered_list`].
+    ///
+    /// </details>
     fn unordered_list(
         &self,
         settings: Settings,
@@ -1643,9 +2259,18 @@ where
         unordered_list(self, settings, bullets)
     }
 
+    /// 显示有序列表。
+    ///
+    /// 默认情况下，它调用 [`ordered_list`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays an ordered list.
     ///
     /// By default, it calls [`ordered_list`].
+    ///
+    /// </details>
     fn ordered_list(
         &self,
         settings: Settings,
@@ -1655,9 +2280,18 @@ where
         ordered_list(self, settings, start, bullets)
     }
 
+    /// 显示引用块。
+    ///
+    /// 默认情况下，它调用 [`quote`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays a quote.
     ///
     /// By default, it calls [`quote`].
+    ///
+    /// </details>
     fn quote(
         &self,
         settings: Settings,
@@ -1666,9 +2300,18 @@ where
         quote(self, settings, contents)
     }
 
+    /// 显示分隔线。
+    ///
+    /// 默认情况下，它调用 [`rule`](self::rule())。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays a rule.
     ///
     /// By default, it calls [`rule`](self::rule()).
+    ///
+    /// </details>
     fn rule(
         &self,
         _settings: Settings,
@@ -1676,9 +2319,18 @@ where
         rule()
     }
 
+    /// 显示表格。
+    ///
+    /// 默认情况下，它调用 [`table`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays a table.
     ///
     /// By default, it calls [`table`].
+    ///
+    /// </details>
     fn table(
         &self,
         settings: Settings,
@@ -1702,7 +2354,14 @@ where
     }
 }
 
+/// Markdown 条目的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of Markdown items.
+///
+/// </details>
 pub trait Catalog:
     container::Catalog
     + scrollable::Catalog
@@ -1711,7 +2370,14 @@ pub trait Catalog:
     + checkbox::Catalog
     + crate::table::Catalog
 {
+    /// Markdown 代码块的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The styling class of a Markdown code block.
+    ///
+    /// </details>
     fn code_block<'a>() -> <Self as container::Catalog>::Class<'a>;
 }
 

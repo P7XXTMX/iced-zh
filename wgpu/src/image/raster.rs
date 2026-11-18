@@ -8,12 +8,33 @@ use std::sync::{Arc, Weak};
 
 pub type Image = graphics::image::Buffer;
 
+/// 缓存中与某个图像句柄对应的条目
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Entry in cache corresponding to an image handle
+///
+/// </details>
 #[derive(Debug)]
 pub enum Memory {
+    /// 位于主机端的图像数据
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Image data on host
+    ///
+    /// </details>
     Host(Image),
+    /// 存储条目
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Storage entry
+    ///
+    /// </details>
     Device {
         entry: atlas::Entry,
         bind_group: Option<Arc<wgpu::BindGroup>>,
@@ -81,6 +102,7 @@ impl Cache {
         on_drop: impl Fn(Arc<wgpu::BindGroup>),
     ) {
         // Only trim if new entries have landed in the `Cache`
+        // 只有新条目进入 `Cache` 时才清理
         if !self.should_trim {
             return;
         }
@@ -89,6 +111,7 @@ impl Cache {
 
         self.map.retain(|id, memory| {
             // Retain active allocations
+            // 保留活跃的分配
             if let Memory::Device { allocation, .. } = memory
                 && allocation
                     .as_ref()

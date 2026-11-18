@@ -34,10 +34,24 @@ pub fn attach<P: Program + 'static>(program: P) -> Attach<P> {
     Attach { program }
 }
 
+/// 一个附加了开发者工具的 [`Program`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`Program`] with some devtools attached to it.
+///
+/// </details>
 #[derive(Debug)]
 pub struct Attach<P> {
+    /// 由这些开发者工具管理的原始 [`Program`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The original [`Program`] managed by these devtools.
+    ///
+    /// </details>
     pub program: P,
 }
 
@@ -115,7 +129,14 @@ where
     }
 }
 
+/// 开发者工具的状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The state of the devtools.
+///
+/// </details>
 pub struct DevTools<P>
 where
     P: Program,

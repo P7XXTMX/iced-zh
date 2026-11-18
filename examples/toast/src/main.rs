@@ -325,6 +325,9 @@ mod toast {
             // Invalidating removed instants to None allows us to remove
             // them here so that diffing for removed / new toast instants
             // is accurate
+            // 把已移除的时刻置为 None，我们就可以在这里
+            // 移除它们，从而让针对已移除 / 新增 toast 时刻的
+            // 差异比较保持准确
             instants.retain(Option::is_some);
 
             match (instants.len(), self.toasts.len()) {

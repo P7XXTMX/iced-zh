@@ -1,3 +1,21 @@
+//! 用于 [Iced] 的 [`wgpu`] 渲染器。
+//!
+//! ![Iced 生态系统的原生路径](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/native.png?raw=true)
+//!
+//! [`wgpu`] 支持大多数现代图形后端：Vulkan、Metal、DX11 和
+//! DX12（OpenGL 和 WebGL 仍在开发中）。此外，它还将支持
+//! 即将到来的 [WebGPU API]。
+//!
+//! 目前，`iced_wgpu` 支持以下图元：
+//! - 文本，使用 [`glyphon`] 渲染。
+//! - 四边形或矩形，带圆角边框和纯色背景。
+//! - 裁剪区域，可用于实现可滚动区域或隐藏溢出的内容。
+//! - 图像和 SVG，从内存或文件系统加载。
+//! - 三角形网格，可用于自由绘制几何图形。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A [`wgpu`] renderer for [Iced].
 //!
 //! ![The native path of the Iced ecosystem](https://github.com/iced-rs/iced/blob/0525d76ff94e828b7b21634fa94a747022001c83/docs/graphs/native.png?raw=true)
@@ -12,6 +30,8 @@
 //! - Clip areas, useful to implement scrollables or hide overflowing content.
 //! - Images and SVG, loaded from memory or the file system.
 //! - Meshes of triangles, useful to draw geometry freely.
+//!
+//! </details>
 //!
 //! [Iced]: https://github.com/iced-rs/iced
 //! [`wgpu`]: https://github.com/gfx-rs/wgpu-rs
@@ -69,7 +89,14 @@ use crate::graphics::mesh;
 use crate::graphics::text::{Editor, Paragraph};
 use crate::graphics::{Shell, Viewport};
 
+/// 用于 [`iced`] 的 [`wgpu`] 图形渲染器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`wgpu`] graphics renderer for [`iced`].
+///
+/// </details>
 ///
 /// [`wgpu`]: https://github.com/gfx-rs/wgpu-rs
 /// [`iced`]: https://github.com/iced-rs/iced
@@ -89,6 +116,7 @@ pub struct Renderer {
     image: image::State,
 
     // TODO: Centralize all the image feature handling
+    // 待办：集中处理所有图像特性相关的逻辑
     #[cfg(any(feature = "svg", feature = "image"))]
     image_cache: std::cell::RefCell<image::Cache>,
 
@@ -123,6 +151,9 @@ impl Renderer {
             // TODO: Resize belt smartly (?)
             // It would be great if the `StagingBelt` API exposed methods
             // for introspection to detect when a resize may be worth it.
+            // 待办：智能地调整 belt 的大小（？）
+            // 如果 `StagingBelt` API 能暴露一些内省方法，
+            // 用来检测何时值得调整大小，那就太好了。
             staging_belt: wgpu::util::StagingBelt::new(
                 buffer::MAX_WRITE_SIZE as u64,
             ),
@@ -151,6 +182,7 @@ impl Renderer {
         self.text.trim();
 
         // TODO: Provide window id (?)
+        // 待办：提供窗口 id（？）
         self.engine.trim();
 
         #[cfg(any(feature = "svg", feature = "image"))]
@@ -177,9 +209,18 @@ impl Renderer {
         submission
     }
 
+    /// 把当前表面渲染到一个离屏缓冲区。
+    ///
+    /// 返回纹理数据的 RGBA 字节。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Renders the current surface to an offscreen buffer.
     ///
     /// Returns RGBA bytes of the texture data.
+    ///
+    /// </details>
     pub fn screenshot(
         &mut self,
         viewport: &Viewport,
@@ -195,7 +236,7 @@ impl Renderer {
 
         impl BufferDimensions {
             fn new(size: Size<u32>) -> Self {
-                let unpadded_bytes_per_row = size.width as usize * 4; //slice of buffer per row; always RGBA
+                let unpadded_bytes_per_row = size.width as usize * 4; //slice of buffer per row; always RGBA（每行对应的缓冲区切片；始终为 RGBA）
                 let alignment = wgpu::COPY_BYTES_PER_ROW_ALIGNMENT as usize; //256
                 let padded_bytes_per_row_padding = (alignment
                     - unpadded_bytes_per_row % alignment)

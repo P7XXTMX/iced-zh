@@ -241,6 +241,7 @@ impl ScrollableDemo {
                 .auto_scroll(true),
                 Direction::Multi => scrollable(
                     //horizontal content
+                    // 水平内容
                     row![
                         column![
                             text("Let's do some scrolling!"),
@@ -250,6 +251,7 @@ impl ScrollableDemo {
                         text("Horizontal - Beginning!"),
                         space().width(1200),
                         //vertical content
+                        // 垂直内容
                         column![
                             text("Horizontal - Middle!"),
                             scroll_to_end_button(),

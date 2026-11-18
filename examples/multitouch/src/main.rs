@@ -1,6 +1,15 @@
+//! 这个示例展示了如何在 `Canvas` 中使用触摸事件，
+//! 在每个指尖周围画一个圆。它只能在支持触摸的
+//! 计算机（例如 Microsoft Surface）上运行。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! This example shows how to use touch events in `Canvas` to draw
 //! a circle around each fingertip. This only works on touch-enabled
 //! computers like Microsoft Surface.
+//!
+//! </details>
 use iced::mouse;
 use iced::touch;
 use iced::widget::canvas::stroke::{self, Stroke};
@@ -89,13 +98,16 @@ impl canvas::Program<Message> for Multitouch {
             }
 
             // Collect tuples of (id, point);
+            // 收集 (id, point) 元组；
             let mut zones: Vec<(u64, Point)> =
                 self.fingers.iter().map(|(id, pt)| (id.0, *pt)).collect();
 
             // Sort by ID
+            // 按 ID 排序
             zones.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
 
             // Generate sorted list of points
+            // 生成排好序的点列表
             let vpoints: Vec<(f64, f64)> = zones
                 .iter()
                 .map(|(_, p)| (f64::from(p.x), f64::from(p.y)))

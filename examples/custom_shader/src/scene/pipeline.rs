@@ -34,6 +34,7 @@ impl Pipeline {
         format: wgpu::TextureFormat,
     ) -> Self {
         //vertices of one cube
+        // 一个立方体的顶点
         let vertices =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: Some("cubes vertex buffer"),
@@ -42,6 +43,7 @@ impl Pipeline {
             });
 
         //cube instance data
+        // 立方体实例数据
         let cubes_buffer = Buffer::new(
             device,
             "cubes instance buffer",
@@ -50,6 +52,7 @@ impl Pipeline {
         );
 
         //uniforms for all cubes
+        // 所有立方体共用的 uniform
         let uniforms = device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("cubes uniform buffer"),
             size: std::mem::size_of::<Uniforms>() as u64,
@@ -58,6 +61,7 @@ impl Pipeline {
         });
 
         //depth buffer
+        // 深度缓冲区
         let depth_texture = device.create_texture(&wgpu::TextureDescriptor {
             label: Some("cubes depth texture"),
             size: wgpu::Extent3d {
@@ -80,6 +84,7 @@ impl Pipeline {
         let normal_map_data = load_normal_map_data();
 
         //normal map
+        // 法线贴图
         let normal_texture = device.create_texture_with_data(
             queue,
             &wgpu::TextureDescriptor {
@@ -104,6 +109,7 @@ impl Pipeline {
             normal_texture.create_view(&wgpu::TextureViewDescriptor::default());
 
         //skybox texture for reflection/refraction
+        // 用于反射/折射的天空盒纹理
         let skybox_data = load_skybox_data();
 
         let skybox_texture = device.create_texture_with_data(
@@ -113,7 +119,7 @@ impl Pipeline {
                 size: wgpu::Extent3d {
                     width: SKY_TEXTURE_SIZE,
                     height: SKY_TEXTURE_SIZE,
-                    depth_or_array_layers: 6, //one for each face of the cube
+                    depth_or_array_layers: 6, //one for each face of the cube（立方体的每个面各一层）
                 },
                 mip_level_count: 1,
                 sample_count: 1,
@@ -340,16 +346,20 @@ impl Pipeline {
         cubes: &[cube::Raw],
     ) {
         //recreate depth texture if surface texture size has changed
+        // 如果表面纹理的大小发生变化，就重新创建深度纹理
         self.update_depth_texture(device, target_size);
 
         // update uniforms
+        // 更新 uniform
         queue.write_buffer(&self.uniforms, 0, bytemuck::bytes_of(uniforms));
 
         //resize cubes vertex buffer if cubes amount changed
+        // 如果立方体数量发生变化，就调整立方体顶点缓冲区的大小
         let new_size = num_cubes * std::mem::size_of::<cube::Raw>();
         self.cubes.resize(device, new_size as u64);
 
         //always write new cube data since they are constantly rotating
+        // 总是写入新的立方体数据，因为它们一直在旋转
         queue.write_buffer(&self.cubes.raw, 0, bytemuck::cast_slice(cubes));
     }
 

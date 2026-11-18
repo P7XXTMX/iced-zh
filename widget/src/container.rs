@@ -1,6 +1,13 @@
+//! 容器让你可以在其边界内对齐一个部件。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Containers let you align a widget inside their boundaries.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } }
 //! # pub type State = ();
@@ -35,9 +42,16 @@ use crate::core::{
     color,
 };
 
+/// 在自身边界内对齐其内容的部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that aligns its contents inside of its boundaries.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -83,7 +97,14 @@ where
     Theme: Catalog,
     Renderer: core::Renderer,
 {
+    /// 使用给定的内容创建一个 [`Container`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Container`] with the given content.
+    ///
+    /// </details>
     pub fn new(
         content: impl Into<Element<'a, Message, Theme, Renderer>>,
     ) -> Self {
@@ -105,56 +126,122 @@ where
         }
     }
 
+    /// 设置 [`Container`] 的 [`widget::Id`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`widget::Id`] of the [`Container`].
+    ///
+    /// </details>
     pub fn id(mut self, id: impl Into<widget::Id>) -> Self {
         self.id = Some(id.into());
         self
     }
 
+    /// 设置 [`Container`] 的 [`Padding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Padding`] of the [`Container`].
+    ///
+    /// </details>
     pub fn padding<P: Into<Padding>>(mut self, padding: P) -> Self {
         self.padding = padding.into();
         self
     }
 
+    /// 设置 [`Container`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Container`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Container`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Container`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置 [`Container`] 的最大宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the maximum width of the [`Container`].
+    ///
+    /// </details>
     pub fn max_width(mut self, max_width: impl Into<Pixels>) -> Self {
         self.max_width = max_width.into().0;
         self
     }
 
+    /// 设置 [`Container`] 的最大高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the maximum height of the [`Container`].
+    ///
+    /// </details>
     pub fn max_height(mut self, max_height: impl Into<Pixels>) -> Self {
         self.max_height = max_height.into().0;
         self
     }
 
+    /// 设置 [`Container`] 的宽度，并让其内容水平居中。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Container`] and centers its contents horizontally.
+    ///
+    /// </details>
     pub fn center_x(self, width: impl Into<Length>) -> Self {
         self.width(width).align_x(alignment::Horizontal::Center)
     }
 
+    /// 设置 [`Container`] 的高度，并让其内容垂直居中。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Container`] and centers its contents vertically.
+    ///
+    /// </details>
     pub fn center_y(self, height: impl Into<Length>) -> Self {
         self.height(height).align_y(alignment::Vertical::Center)
     }
 
+    /// 设置 [`Container`] 的宽度和高度，并让其内容在
+    /// 水平轴和垂直轴上都居中。
+    ///
+    /// 这等价于链式调用 [`center_x`] 和 [`center_y`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width and height of the [`Container`] and centers its contents in
     /// both the horizontal and vertical axes.
     ///
     /// This is equivalent to chaining [`center_x`] and [`center_y`].
+    ///
+    /// </details>
     ///
     /// [`center_x`]: Self::center_x
     /// [`center_y`]: Self::center_y
@@ -164,27 +251,62 @@ where
         self.center_x(length).center_y(length)
     }
 
+    /// 设置 [`Container`] 的宽度，并让其内容左对齐。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Container`] and aligns its contents to the left.
+    ///
+    /// </details>
     pub fn align_left(self, width: impl Into<Length>) -> Self {
         self.width(width).align_x(alignment::Horizontal::Left)
     }
 
+    /// 设置 [`Container`] 的宽度，并让其内容右对齐。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Container`] and aligns its contents to the right.
+    ///
+    /// </details>
     pub fn align_right(self, width: impl Into<Length>) -> Self {
         self.width(width).align_x(alignment::Horizontal::Right)
     }
 
+    /// 设置 [`Container`] 的高度，并让其内容顶部对齐。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Container`] and aligns its contents to the top.
+    ///
+    /// </details>
     pub fn align_top(self, height: impl Into<Length>) -> Self {
         self.height(height).align_y(alignment::Vertical::Top)
     }
 
+    /// 设置 [`Container`] 的高度，并让其内容底部对齐。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Container`] and aligns its contents to the bottom.
+    ///
+    /// </details>
     pub fn align_bottom(self, height: impl Into<Length>) -> Self {
         self.height(height).align_y(alignment::Vertical::Bottom)
     }
 
+    /// 设置 [`Container`] 水平轴上的内容对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the content alignment for the horizontal axis of the [`Container`].
+    ///
+    /// </details>
     pub fn align_x(
         mut self,
         alignment: impl Into<alignment::Horizontal>,
@@ -193,7 +315,14 @@ where
         self
     }
 
+    /// 设置 [`Container`] 垂直轴上的内容对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the content alignment for the vertical axis of the [`Container`].
+    ///
+    /// </details>
     pub fn align_y(
         mut self,
         alignment: impl Into<alignment::Vertical>,
@@ -202,14 +331,29 @@ where
         self
     }
 
+    /// 设置 [`Container`] 的内容在溢出时是否应该
+    /// 被裁剪。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets whether the contents of the [`Container`] should be clipped on
     /// overflow.
+    ///
+    /// </details>
     pub fn clip(mut self, clip: bool) -> Self {
         self.clip = clip;
         self
     }
 
+    /// 设置 [`Container`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`Container`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme) -> Style + 'a) -> Self
     where
@@ -219,7 +363,14 @@ where
         self
     }
 
+    /// 设置 [`Container`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`Container`].
+    ///
+    /// </details>
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
         self.class = class.into();
@@ -403,7 +554,14 @@ where
     }
 }
 
+/// 计算 [`Container`] 的布局。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Computes the layout of a [`Container`].
+///
+/// </details>
 pub fn layout(
     limits: &layout::Limits,
     width: Length,
@@ -431,7 +589,14 @@ pub fn layout(
     )
 }
 
+/// 根据给定的 [`Style`] 和 `bounds` 绘制 [`Container`] 的背景。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Draws the background of a [`Container`] given its [`Style`] and its `bounds`.
+///
+/// </details>
 pub fn draw_background<Renderer>(
     renderer: &mut Renderer,
     style: &Style,
@@ -457,18 +622,60 @@ pub fn draw_background<Renderer>(
     }
 }
 
+/// 容器的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of a container.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Style {
+    /// 容器的文本 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text [`Color`] of the container.
+    ///
+    /// </details>
     pub text_color: Option<Color>,
+    /// 容器的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Background`] of the container.
+    ///
+    /// </details>
     pub background: Option<Background>,
+    /// 容器的 [`Border`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Border`] of the container.
+    ///
+    /// </details>
     pub border: Border,
+    /// 容器的 [`Shadow`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Shadow`] of the container.
+    ///
+    /// </details>
     pub shadow: Shadow,
+    /// 容器是否应该对齐到像素网格。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Whether the container should be snapped to the pixel grid.
+    ///
+    /// </details>
     pub snap: bool,
 }
 
@@ -485,7 +692,14 @@ impl Default for Style {
 }
 
 impl Style {
+    /// 更新 [`Style`] 的文本颜色。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Updates the text color of the [`Style`].
+    ///
+    /// </details>
     pub fn color(self, color: impl Into<Color>) -> Self {
         Self {
             text_color: Some(color.into()),
@@ -493,7 +707,14 @@ impl Style {
         }
     }
 
+    /// 更新 [`Style`] 的边框。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Updates the border of the [`Style`].
+    ///
+    /// </details>
     pub fn border(self, border: impl Into<Border>) -> Self {
         Self {
             border: border.into(),
@@ -501,7 +722,14 @@ impl Style {
         }
     }
 
+    /// 更新 [`Style`] 的背景。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Updates the background of the [`Style`].
+    ///
+    /// </details>
     pub fn background(self, background: impl Into<Background>) -> Self {
         Self {
             background: Some(background.into()),
@@ -509,7 +737,14 @@ impl Style {
         }
     }
 
+    /// 更新 [`Style`] 的阴影。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Updates the shadow of the [`Style`].
+    ///
+    /// </details>
     pub fn shadow(self, shadow: impl Into<Shadow>) -> Self {
         Self {
             shadow: shadow.into(),
@@ -536,19 +771,54 @@ impl From<gradient::Linear> for Style {
     }
 }
 
+/// [`Container`] 的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`Container`].
+///
+/// </details>
 pub trait Catalog {
+    /// [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of the [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by the [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> Self::Class<'a>;
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(&self, class: &Self::Class<'_>) -> Style;
 }
 
+/// [`Container`] 的样式函数。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for a [`Container`].
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme) -> Style + 'a>;
 
 impl<Theme> From<Style> for StyleFn<'_, Theme> {
@@ -569,17 +839,38 @@ impl Catalog for Theme {
     }
 }
 
+/// 透明的 [`Container`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A transparent [`Container`].
+///
+/// </details>
 pub fn transparent<Theme>(_theme: &Theme) -> Style {
     Style::default()
 }
 
+/// 具有给定 [`Background`] 的 [`Container`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`Container`] with the given [`Background`].
+///
+/// </details>
 pub fn background(background: impl Into<Background>) -> Style {
     Style::default().background(background)
 }
 
+/// 带背景的圆角 [`Container`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A rounded [`Container`] with a background.
+///
+/// </details>
 pub fn rounded_box(theme: &Theme) -> Style {
     let palette = theme.extended_palette();
 
@@ -591,7 +882,14 @@ pub fn rounded_box(theme: &Theme) -> Style {
     }
 }
 
+/// 带背景和边框的 [`Container`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A bordered [`Container`] with a background.
+///
+/// </details>
 pub fn bordered_box(theme: &Theme) -> Style {
     let palette = theme.extended_palette();
 
@@ -607,7 +905,14 @@ pub fn bordered_box(theme: &Theme) -> Style {
     }
 }
 
+/// 深色背景、白色文本的 [`Container`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`Container`] with a dark background and white text.
+///
+/// </details>
 pub fn dark(_theme: &Theme) -> Style {
     style(theme::palette::Pair {
         color: color!(0x111111),
@@ -615,35 +920,70 @@ pub fn dark(_theme: &Theme) -> Style {
     })
 }
 
+/// 使用主要背景色的 [`Container`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`Container`] with a primary background color.
+///
+/// </details>
 pub fn primary(theme: &Theme) -> Style {
     let palette = theme.extended_palette();
 
     style(palette.primary.base)
 }
 
+/// 使用次要背景色的 [`Container`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`Container`] with a secondary background color.
+///
+/// </details>
 pub fn secondary(theme: &Theme) -> Style {
     let palette = theme.extended_palette();
 
     style(palette.secondary.base)
 }
 
+/// 使用成功背景色的 [`Container`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`Container`] with a success background color.
+///
+/// </details>
 pub fn success(theme: &Theme) -> Style {
     let palette = theme.extended_palette();
 
     style(palette.success.base)
 }
 
+/// 使用警告背景色的 [`Container`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`Container`] with a warning background color.
+///
+/// </details>
 pub fn warning(theme: &Theme) -> Style {
     let palette = theme.extended_palette();
 
     style(palette.warning.base)
 }
 
+/// 使用危险背景色的 [`Container`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`Container`] with a danger background color.
+///
+/// </details>
 pub fn danger(theme: &Theme) -> Style {
     let palette = theme.extended_palette();
 

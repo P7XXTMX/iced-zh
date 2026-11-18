@@ -134,24 +134,34 @@ impl Pipeline {
                         step_mode: wgpu::VertexStepMode::Instance,
                         attributes: &wgpu::vertex_attr_array!(
                             // Center
+                            // 中心
                             0 => Float32x2,
                             // Clip bounds
+                            // 裁剪边界
                             1 => Float32x4,
                             // Border radius
+                            // 边框半径
                             2 => Float32x4,
                             // Tile
+                            // 平铺
                             3 => Float32x4,
                             // Rotation
+                            // 旋转
                             4 => Float32,
                             // Opacity
+                            // 不透明度
                             5 => Float32,
                             // Atlas position
+                            // 图集位置
                             6 => Float32x2,
                             // Atlas scale
+                            // 图集缩放
                             7 => Float32x2,
                             // Layer
+                            // 图层
                             8 => Sint32,
                             // Snap
+                            // 吸附
                             9 => Uint32,
                         ),
                     }],
@@ -641,6 +651,8 @@ struct Uniforms {
     scale_factor: f32,
     // Uniforms must be aligned to their largest member,
     // this uses a mat4x4<f32> which aligns to 16, so align to that
+    // uniform 必须按其最大的成员对齐，
+    // 这里用的是 mat4x4<f32>，它按 16 对齐，所以就按 16 对齐
     _padding: [f32; 3],
 }
 

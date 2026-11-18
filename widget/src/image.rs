@@ -1,6 +1,13 @@
+//! 图像用于显示各种格式（PNG、JPG 等）的位图图形。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Images display raster graphics in different formats (PNG, JPG, etc.).
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } }
 //! # pub type State = ();
@@ -32,14 +39,28 @@ use crate::core::{
 
 pub use image::{FilterMethod, Handle};
 
+/// 使用给定的图像 `Handle` 创建一个新的 [`Viewer`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a new [`Viewer`] with the given image `Handle`.
+///
+/// </details>
 pub fn viewer<Handle>(handle: Handle) -> Viewer<Handle> {
     Viewer::new(handle)
 }
 
+/// 在保持宽高比的同时显示图像的框。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A frame that displays an image while keeping aspect ratio.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -70,7 +91,14 @@ pub struct Image<Handle = image::Handle> {
 }
 
 impl<Handle> Image<Handle> {
+    /// 使用给定的路径创建一个新的 [`Image`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Image`] with the given path.
+    ///
+    /// </details>
     pub fn new(handle: impl Into<Handle>) -> Self {
         Image {
             handle: handle.into(),
@@ -87,18 +115,44 @@ impl<Handle> Image<Handle> {
         }
     }
 
+    /// 设置 [`Image`] 边界的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Image`] boundaries.
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Image`] 边界的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Image`] boundaries.
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置 [`Image`] 是否应该在保持宽高比的前提下
+    /// 尽可能填满可用空间，并且在使用 [`Length::Shrink`]
+    /// 尺寸策略的轴上不分配
+    /// 额外的空间。
+    ///
+    /// 这类似于对 [`width`](Self::width) 和 [`height`](Self::height)
+    /// 都使用 [`Length::Fill`]，
+    /// 但没有留白的缺点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets whether the [`Image`] should try to fill as much space
     /// available as possible while keeping aspect ratio and without
     /// allocating extra space in any axis with a [`Length::Shrink`]
@@ -107,49 +161,111 @@ impl<Handle> Image<Handle> {
     /// This is similar to using [`Length::Fill`] for both the
     /// [`width`](Self::width) and the [`height`](Self::height),
     /// but without the downside of blank space.
+    ///
+    /// </details>
     pub fn expand(mut self, expand: bool) -> Self {
         self.expand = expand;
         self
     }
 
+    /// 设置 [`Image`] 的 [`ContentFit`]。
+    ///
+    /// 默认为 [`ContentFit::Contain`]
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`ContentFit`] of the [`Image`].
     ///
     /// Defaults to [`ContentFit::Contain`]
+    ///
+    /// </details>
     pub fn content_fit(mut self, content_fit: ContentFit) -> Self {
         self.content_fit = content_fit;
         self
     }
 
+    /// 设置 [`Image`] 的 [`FilterMethod`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`FilterMethod`] of the [`Image`].
+    ///
+    /// </details>
     pub fn filter_method(mut self, filter_method: FilterMethod) -> Self {
         self.filter_method = filter_method;
         self
     }
 
+    /// 对 [`Image`] 应用给定的 [`Rotation`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Applies the given [`Rotation`] to the [`Image`].
+    ///
+    /// </details>
     pub fn rotation(mut self, rotation: impl Into<Rotation>) -> Self {
         self.rotation = rotation.into();
         self
     }
 
+    /// 设置 [`Image`] 的不透明度。
+    ///
+    /// 它应该在 [0.0, 1.0] 范围内——`0.0` 表示完全透明，
+    /// `1.0` 表示完全不透明。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the opacity of the [`Image`].
     ///
     /// It should be in the [0.0, 1.0] range—`0.0` meaning completely transparent,
     /// and `1.0` meaning completely opaque.
+    ///
+    /// </details>
     pub fn opacity(mut self, opacity: impl Into<f32>) -> Self {
         self.opacity = opacity.into();
         self
     }
 
+    /// 设置 [`Image`] 的缩放比例。
+    ///
+    /// [`Image`] 被绘制的区域会以中心为基准，按给定的缩放因子进行缩放。
+    /// 这可以用来实现某些效果和动画，例如平滑的放大 / 缩小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the scale of the [`Image`].
     ///
     /// The region of the [`Image`] drawn will be scaled from the center by the given scale factor.
     /// This can be useful to create certain effects and animations, like smooth zoom in / out.
+    ///
+    /// </details>
     pub fn scale(mut self, scale: impl Into<f32>) -> Self {
         self.scale = scale.into();
         self
     }
 
+    /// 把 [`Image`] 裁剪到由 [`Rectangle`] 以绝对坐标描述的
+    /// 给定区域。
+    ///
+    /// 裁剪发生在应用任何变换或 [`ContentFit`] 之前。实际上，
+    /// 这意味着用此方法裁剪 [`Image`] 所得到的结果，应该与
+    /// 在外部（例如用图像编辑器）裁剪它、再为裁剪后的版本
+    /// 创建一个新的 [`Handle`] 相同。
+    ///
+    /// 不过，此方法要高效得多；因为它只是在渲染时利用了剪裁（scissoring），
+    /// 并没有真正进行图像裁剪。它复用已有的
+    /// 图像分配，效率应该和完全不裁剪一样高！
+    ///
+    /// 如有必要，`region` 的坐标会被限制在图像尺寸范围内。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Crops the [`Image`] to the given region described by the [`Rectangle`] in absolute
     /// coordinates.
     ///
@@ -163,15 +279,27 @@ impl<Handle> Image<Handle> {
     /// image allocations and should be as efficient as not cropping at all!
     ///
     /// The `region` coordinates will be clamped to the image dimensions, if necessary.
+    ///
+    /// </details>
     pub fn crop(mut self, region: Rectangle<u32>) -> Self {
         self.crop = Some(region);
         self
     }
 
+    /// 设置 [`Image`] 的 [`border::Radius`]。
+    ///
+    /// 目前，它只会应用在 [`Image`] 的矩形
+    /// 包围盒四周。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`border::Radius`] of the [`Image`].
     ///
     /// Currently, it will only be applied around the rectangular bounding box
     /// of the [`Image`].
+    ///
+    /// </details>
     pub fn border_radius(
         mut self,
         border_radius: impl Into<border::Radius>,
@@ -181,7 +309,14 @@ impl<Handle> Image<Handle> {
     }
 }
 
+/// 计算 [`Image`] 的布局。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Computes the layout of an [`Image`].
+///
+/// </details>
 pub fn layout<Renderer, Handle>(
     renderer: &Renderer,
     limits: &layout::Limits,
@@ -197,13 +332,16 @@ where
     Renderer: image::Renderer<Handle = Handle>,
 {
     // The raw w/h of the underlying image
+    // 底层图像的原始宽 / 高
     let image_size =
         crop(renderer.measure_image(handle).unwrap_or_default(), region);
 
     // The rotated size of the image
+    // 图像旋转后的尺寸
     let rotated_size = rotation.apply(image_size);
 
     // The size to be available to the widget prior to `Shrink`ing
+    // 在进行 `Shrink` 之前，部件可用的尺寸
     let bounds = if expand {
         limits.width(width).height(height).max()
     } else {
@@ -211,9 +349,11 @@ where
     };
 
     // The uncropped size of the image when fit to the bounds above
+    // 图像适配到上述边界时的未裁剪尺寸
     let full_size = content_fit.fit(rotated_size, bounds);
 
     // Shrink the widget to fit the resized image, if requested
+    // 如果有要求，把部件收缩到与调整后的图像相适应
     let final_size = Size {
         width: match width {
             Length::Shrink => f32::min(bounds.width, full_size.width),
@@ -308,7 +448,14 @@ fn crop(size: Size<u32>, region: Option<Rectangle<u32>>) -> Size<f32> {
     }
 }
 
+/// 绘制一个 [`Image`]
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Draws an [`Image`]
+///
+/// </details>
 pub fn draw<Renderer, Handle>(
     renderer: &mut Renderer,
     layout: Layout<'_>,

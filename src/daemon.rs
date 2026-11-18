@@ -1,4 +1,11 @@
+//! 创建并运行在后台运行的守护进程。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Create and run daemons that run in the background.
+//!
+//! </details>
 use crate::application;
 use crate::message;
 use crate::program::{self, Program};
@@ -14,6 +21,18 @@ use iced_debug as debug;
 
 use std::borrow::Cow;
 
+/// 根据启动、更新和视图逻辑创建一个 iced [`Daemon`]。
+///
+/// [`Daemon`] 默认不会打开窗口，而是静默运行，
+/// 直到它的更新逻辑返回一个来自 [`window::open`] 的 [`Task`]。
+///
+/// 此外，[`Daemon`] 在所有窗口都关闭后也不会停止运行。
+/// 要彻底终止一个 [`Daemon`]，必须中断它的进程，或者
+/// 让它的更新逻辑产生一个来自 [`exit`] 的 [`Task`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates an iced [`Daemon`] given its boot, update, and view logic.
 ///
 /// A [`Daemon`] will not open a window by default, but will run silently
@@ -22,6 +41,8 @@ use std::borrow::Cow;
 /// Furthermore, a [`Daemon`] will not stop running when all its windows are closed.
 /// In order to completely terminate a [`Daemon`], its process must be interrupted or
 /// its update logic must produce a [`Task`] from [`exit`].
+///
+/// </details>
 ///
 /// [`exit`]: crate::exit
 pub fn daemon<State, Message, Theme, Renderer>(
@@ -113,6 +134,17 @@ where
     }
 }
 
+/// iced 守护进程的底层定义与配置。
+///
+/// 你可以用这套 API 一步一步地创建并运行 iced 应用程序，
+/// 而不必把你的逻辑与某个特质或某个特定类型
+/// 耦合在一起。
+///
+/// 你可以用 [`daemon`] 辅助函数创建一个 [`Daemon`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The underlying definition and configuration of an iced daemon.
 ///
 /// You can use this API to create and run iced applications
@@ -120,6 +152,8 @@ where
 /// or a specific type.
 ///
 /// You can create a [`Daemon`] with the [`daemon`] helper.
+///
+/// </details>
 #[derive(Debug)]
 pub struct Daemon<P: Program> {
     raw: P,
@@ -128,7 +162,14 @@ pub struct Daemon<P: Program> {
 }
 
 impl<P: Program> Daemon<P> {
+    /// 运行 [`Daemon`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Runs the [`Daemon`].
+    ///
+    /// </details>
     pub fn run(self) -> Result
     where
         Self: 'static,
@@ -153,12 +194,26 @@ impl<P: Program> Daemon<P> {
         Ok(shell::run(program)?)
     }
 
+    /// 设置运行 [`Daemon`] 时使用的 [`Settings`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Settings`] that will be used to run the [`Daemon`].
+    ///
+    /// </details>
     pub fn settings(self, settings: Settings) -> Self {
         Self { settings, ..self }
     }
 
+    /// 设置 [`Daemon`] 的 [`Settings::antialiasing`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Settings::antialiasing`] of the [`Daemon`].
+    ///
+    /// </details>
     pub fn antialiasing(self, antialiasing: bool) -> Self {
         Self {
             settings: Settings {
@@ -169,7 +224,14 @@ impl<P: Program> Daemon<P> {
         }
     }
 
+    /// 设置 [`Daemon`] 的默认 [`Font`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the default [`Font`] of the [`Daemon`].
+    ///
+    /// </details>
     pub fn default_font(self, default_font: Font) -> Self {
         Self {
             settings: Settings {
@@ -180,13 +242,27 @@ impl<P: Program> Daemon<P> {
         }
     }
 
+    /// 向 [`Daemon`] 启动时要加载的字体列表中添加一个字体。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Adds a font to the list of fonts that will be loaded at the start of the [`Daemon`].
+    ///
+    /// </details>
     pub fn font(mut self, font: impl Into<Cow<'static, [u8]>>) -> Self {
         self.settings.fonts.push(font.into());
         self
     }
 
+    /// 设置 [`Daemon`] 的标题。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the title of the [`Daemon`].
+    ///
+    /// </details>
     pub fn title(
         self,
         title: impl TitleFn<P::State>,
@@ -202,7 +278,14 @@ impl<P: Program> Daemon<P> {
         }
     }
 
+    /// 设置 [`Daemon`] 的订阅逻辑。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the subscription logic of the [`Daemon`].
+    ///
+    /// </details>
     pub fn subscription(
         self,
         f: impl Fn(&P::State) -> Subscription<P::Message>,
@@ -216,7 +299,14 @@ impl<P: Program> Daemon<P> {
         }
     }
 
+    /// 设置 [`Daemon`] 的主题逻辑。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the theme logic of the [`Daemon`].
+    ///
+    /// </details>
     pub fn theme(
         self,
         f: impl ThemeFn<P::State, P::Theme>,
@@ -232,7 +322,14 @@ impl<P: Program> Daemon<P> {
         }
     }
 
+    /// 设置 [`Daemon`] 的样式逻辑。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style logic of the [`Daemon`].
+    ///
+    /// </details>
     pub fn style(
         self,
         f: impl Fn(&P::State, &P::Theme) -> theme::Style,
@@ -246,7 +343,14 @@ impl<P: Program> Daemon<P> {
         }
     }
 
+    /// 设置 [`Daemon`] 的缩放因子。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the scale factor of the [`Daemon`].
+    ///
+    /// </details>
     pub fn scale_factor(
         self,
         f: impl Fn(&P::State, window::Id) -> f32,
@@ -260,7 +364,14 @@ impl<P: Program> Daemon<P> {
         }
     }
 
+    /// 设置 [`Daemon`] 的执行器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the executor of the [`Daemon`].
+    ///
+    /// </details>
     pub fn executor<E>(
         self,
     ) -> Daemon<
@@ -276,11 +387,22 @@ impl<P: Program> Daemon<P> {
         }
     }
 
+    /// 设置 [`Daemon`] 的启动预设。
+    ///
+    /// 在测试时，可以用预设覆盖应用程序默认的
+    /// 启动策略，从而创建可复现的
+    /// 环境。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the boot presets of the [`Daemon`].
     ///
     /// Presets can be used to override the default booting strategy
     /// of your application during testing to create reproducible
     /// environments.
+    ///
+    /// </details>
     pub fn presets(
         self,
         presets: impl IntoIterator<Item = Preset<P::State, P::Message>>,
@@ -360,14 +482,33 @@ impl<P: Program> Program for Daemon<P> {
     }
 }
 
+/// 某个 [`Daemon`] 的标题逻辑。
+///
+/// `&static str` 和任何 `Fn(&State, window::Id) -> String` 闭包
+/// 都实现了这个特质。
+///
+/// 这个特质让 [`daemon`] 构建器可以接受其中任何一种。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The title logic of some [`Daemon`].
 ///
 /// This trait is implemented both for `&static str` and
 /// any closure `Fn(&State, window::Id) -> String`.
 ///
 /// This trait allows the [`daemon`] builder to take any of them.
+///
+/// </details>
 pub trait TitleFn<State> {
+    /// 生成 [`Daemon`] 的标题。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Produces the title of the [`Daemon`].
+    ///
+    /// </details>
     fn title(&self, state: &State, window: window::Id) -> String;
 }
 
@@ -386,12 +527,29 @@ where
     }
 }
 
+/// 某个 [`Daemon`] 的视图逻辑。
+///
+/// 这个特质让 [`daemon`] 构建器可以接受任何返回
+/// `Into<Element<'_, Message>>` 的闭包。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The view logic of some [`Daemon`].
 ///
 /// This trait allows the [`daemon`] builder to take any closure that
 /// returns any `Into<Element<'_, Message>>`.
+///
+/// </details>
 pub trait ViewFn<'a, State, Message, Theme, Renderer> {
+    /// 生成 [`Daemon`] 的部件。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Produces the widget of the [`Daemon`].
+    ///
+    /// </details>
     fn view(
         &self,
         state: &'a State,
@@ -415,6 +573,18 @@ where
     }
 }
 
+/// 某个 [`Daemon`] 的主题逻辑。
+///
+/// 任何实现了这个特质的类型都可以作为参数传给
+/// [`Daemon::theme`]。
+///
+/// `iced` 提供了两种实现：
+/// - 内置的 [`Theme`] 本身
+/// - 以及任何 `Fn(&State, window::Id) -> impl Into<Option<Theme>>`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme logic of some [`Daemon`].
 ///
 /// Any implementors of this trait can be provided as an argument to
@@ -423,11 +593,23 @@ where
 /// `iced` provides two implementors:
 /// - the built-in [`Theme`] itself
 /// - and any `Fn(&State, window::Id) -> impl Into<Option<Theme>>`.
+///
+/// </details>
 pub trait ThemeFn<State, Theme> {
+    /// 返回 [`Daemon`] 在当前状态和窗口下的主题。
+    ///
+    /// 如果返回 `None`，`iced` 会尝试使用与系统配色方案
+    /// 相匹配的主题。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the theme of the [`Daemon`] for the current state and window.
     ///
     /// If `None` is returned, `iced` will try to use a theme that
     /// matches the system color scheme.
+    ///
+    /// </details>
     fn theme(&self, state: &State, window: window::Id) -> Option<Theme>;
 }
 

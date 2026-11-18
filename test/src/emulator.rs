@@ -1,4 +1,11 @@
+//! 在无头运行时中运行你的应用程序。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Run your application in a headless runtime.
+//!
+//! </details>
 use crate::core;
 use crate::core::mouse;
 use crate::core::renderer;
@@ -22,6 +29,19 @@ use crate::{Instruction, Selector};
 
 use std::fmt;
 
+/// 可以运行 iced 应用程序并执行
+/// [指令](crate::Instruction)的无头运行时。
+///
+/// [`Emulator`] 会尽可能忠实于真实情况地运行它的程序。
+/// 它会用 [`Program`] 的 [`Executor`](Program::Executor)
+/// 运行订阅和任务。
+///
+/// 如果你想进行没有副作用的模拟，请改用
+/// [`Simulator`](crate::Simulator)。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A headless runtime that can run iced applications and execute
 /// [instructions](crate::Instruction).
 ///
@@ -31,6 +51,8 @@ use std::fmt;
 ///
 /// If you want to run a simulation without side effects, use a [`Simulator`](crate::Simulator)
 /// instead.
+///
+/// </details>
 pub struct Emulator<P: Program> {
     state: P::State,
     runtime: Runtime<P::Executor, mpsc::Sender<Event<P>>, Event<P>>,
@@ -44,17 +66,52 @@ pub struct Emulator<P: Program> {
     pending_tasks: usize,
 }
 
+/// 模拟事件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An emulation event.
+///
+/// </details>
 pub enum Event<P: Program> {
+    /// 必须由 [`Emulator`] [执行](Emulator::perform)的动作。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// An action that must be [performed](Emulator::perform) by the [`Emulator`].
+    ///
+    /// </details>
     Action(Action<P>),
+    /// 某条 [`Instruction`] 执行失败。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// An [`Instruction`] failed to be executed.
+    ///
+    /// </details>
     Failed(Instruction),
+    /// [`Emulator`] 已就绪。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Emulator`] is ready.
+    ///
+    /// </details>
     Ready,
 }
 
+/// 必须由 [`Emulator`] [执行](Emulator::perform)的动作。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An action that must be [performed](Emulator::perform) by the [`Emulator`].
+///
+/// </details>
 pub struct Action<P: Program>(Action_<P>);
 
 enum Action_<P: Program> {
@@ -63,11 +120,22 @@ enum Action_<P: Program> {
 }
 
 impl<P: Program + 'static> Emulator<P> {
+    /// 使用给定的 [`Mode`] 和 [`Size`] 为 [`Program`] 创建一个新的 [`Emulator`]。
+    ///
+    /// [`Emulator`] 会通过所提供的 [`mpsc::Sender`] 发送 [`Event`] 通知。
+    ///
+    /// [`Emulator`] 启动完成后，会产生一个 [`Event::Ready`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Emulator`] of the [`Program`] with the given [`Mode`] and [`Size`].
     ///
     /// The [`Emulator`] will send [`Event`] notifications through the provided [`mpsc::Sender`].
     ///
     /// When the [`Emulator`] has finished booting, an [`Event::Ready`] will be produced.
+    ///
+    /// </details>
     pub fn new(
         sender: mpsc::Sender<Event<P>>,
         program: &P,
@@ -77,10 +145,20 @@ impl<P: Program + 'static> Emulator<P> {
         Self::with_preset(sender, program, mode, size, None)
     }
 
+    /// 与 [`new`](Self::new) 类似地创建一个新的 [`Emulator`]，但还接受一个
+    /// [`program::Preset`] 作为初始状态。
+    ///
+    /// [`Emulator`] 启动完成后，会产生一个 [`Event::Ready`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Emulator`] analogously to [`new`](Self::new), but it also takes a
     /// [`program::Preset`] that will be used as the initial state.
     ///
     /// When the [`Emulator`] has finished booting, an [`Event::Ready`] will be produced.
+    ///
+    /// </details>
     pub fn with_preset(
         sender: mpsc::Sender<Event<P>>,
         program: &P,
@@ -93,6 +171,7 @@ impl<P: Program + 'static> Emulator<P> {
         let settings = program.settings();
 
         // TODO: Error handling
+        // 待办：错误处理
         let executor = P::Executor::new().expect("Create emulator executor");
 
         let renderer = executor
@@ -132,11 +211,22 @@ impl<P: Program + 'static> Emulator<P> {
         emulator
     }
 
+    /// 更新 [`Emulator`] 程序的状态。
+    ///
+    /// 这相当于调用 [`Program::update`] 函数、
+    /// 重新订阅所有订阅，并并发地运行
+    /// 得到的任务。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Updates the state of the [`Emulator`] program.
     ///
     /// This is equivalent to calling the [`Program::update`] function,
     /// resubscribing to any subscriptions, and running the resulting tasks
     /// concurrently.
+    ///
+    /// </details>
     pub fn update(&mut self, program: &P, message: P::Message) {
         let task = self
             .runtime
@@ -160,10 +250,20 @@ impl<P: Program + 'static> Emulator<P> {
         }
     }
 
+    /// 执行一个 [`Action`]。
+    ///
+    /// 每当 [`Emulator`] 发送一个 [`Event::Action`] 时，
+    /// 都必须调用这个方法才能继续执行。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Performs an [`Action`].
     ///
     /// Whenever an [`Emulator`] sends an [`Event::Action`], this
     /// method must be called to proceed with the execution.
+    ///
+    /// </details>
     pub fn perform(&mut self, program: &P, action: Action<P>) {
         match action.0 {
             Action_::CountDown => {
@@ -181,6 +281,7 @@ impl<P: Program + 'static> Emulator<P> {
                 }
                 runtime::Action::LoadFont { .. } => {
                     // TODO
+                    // 待办
                 }
                 runtime::Action::Widget(operation) => {
                     let mut user_interface = UserInterface::build(
@@ -208,6 +309,7 @@ impl<P: Program + 'static> Emulator<P> {
                 }
                 runtime::Action::Clipboard(action) => {
                     // TODO
+                    // 待办
                     dbg!(action);
                 }
                 runtime::Action::Window(action) => {
@@ -256,33 +358,50 @@ impl<P: Program + 'static> Emulator<P> {
                         }
                         _ => {
                             // Ignored
+                            // 已忽略
                         }
                     }
                 }
                 runtime::Action::System(action) => {
                     // TODO
+                    // 待办
                     dbg!(action);
                 }
                 iced_runtime::Action::Image(action) => {
                     // TODO
+                    // 待办
                     dbg!(action);
                 }
                 runtime::Action::Exit => {
                     // TODO
+                    // 待办
                 }
                 runtime::Action::Reload => {
                     // TODO
+                    // 待办
                 }
             },
         }
     }
 
+    /// 运行一条 [`Instruction`]。
+    ///
+    /// 如果 [`Instruction`] 执行成功，[`Emulator`] 会
+    /// 产生一个 [`Event::Ready`]。
+    ///
+    /// 否则，会触发一个 [`Event::Failed`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Runs an [`Instruction`].
     ///
     /// If the [`Instruction`] executes successfully, an [`Event::Ready`] will be
     /// produced by the [`Emulator`].
     ///
     /// Otherwise, an [`Event::Failed`] will be triggered.
+    ///
+    /// </details>
     pub fn run(&mut self, program: &P, instruction: Instruction) {
         let mut user_interface = UserInterface::build(
             program.view(&self.state, self.window),
@@ -428,7 +547,14 @@ impl<P: Program + 'static> Emulator<P> {
             })));
     }
 
+    /// 返回 [`Emulator`] 当前的视图。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current view of the [`Emulator`].
+    ///
+    /// </details>
     pub fn view(
         &self,
         program: &P,
@@ -436,12 +562,26 @@ impl<P: Program + 'static> Emulator<P> {
         program.view(&self.state, self.window)
     }
 
+    /// 返回 [`Emulator`] 当前的主题。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the current theme of the [`Emulator`].
+    ///
+    /// </details>
     pub fn theme(&self, program: &P) -> Option<P::Theme> {
         program.theme(&self.state, self.window)
     }
 
+    /// 为 [`Emulator`] 的当前状态生成一个 [`window::Screenshot`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Takes a [`window::Screenshot`] of the current state of the [`Emulator`].
+    ///
+    /// </details>
     pub fn screenshot(
         &mut self,
         program: &P,
@@ -460,6 +600,7 @@ impl<P: Program + 'static> Emulator<P> {
         );
 
         // TODO: Nested redraws!
+        // 待办：嵌套的重绘！
         let _ = user_interface.update(
             &[core::Event::Window(window::Event::RedrawRequested(
                 Instant::now(),
@@ -497,32 +638,80 @@ impl<P: Program + 'static> Emulator<P> {
         }
     }
 
+    /// 把 [`Emulator`] 转换为它的内部状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Turns the [`Emulator`] into its internal state.
+    ///
+    /// </details>
     pub fn into_state(self) -> (P::State, core::window::Id) {
         (self.state, self.window)
     }
 }
 
+/// [`Emulator`] 等待任务完成时使用的策略。
+///
+/// 可以用 [`Mode`] 让 [`Emulator`] 等待副作用完成之后
+/// 再继续执行。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The strategy used by an [`Emulator`] when waiting for tasks to finish.
 ///
 /// A [`Mode`] can be used to make an [`Emulator`] wait for side effects to finish before
 /// continuing execution.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Mode {
+    /// 等待某条 [`Instruction`] 产生的所有任务，以及由这些任务的结果
+    /// 间接产生的所有任务。
+    ///
+    /// 这是默认值。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Waits for all tasks spawned by an [`Instruction`], as well as all tasks indirectly
     /// spawned by the the results of those tasks.
     ///
     /// This is the default.
+    ///
+    /// </details>
     #[default]
     Zen,
+    /// 只等待某条 [`Instruction`] 直接产生的任务。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Waits only for the tasks directly spawned by an [`Instruction`].
+    ///
+    /// </details>
     Patient,
+    /// 从不等待任何任务完成。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Never waits for any tasks to finish.
+    ///
+    /// </details>
     Immediate,
 }
 
 impl Mode {
+    /// 所有可用模式的列表。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A list of all the available modes.
+    ///
+    /// </details>
     pub const ALL: &[Self] = &[Self::Zen, Self::Patient, Self::Immediate];
 }
 

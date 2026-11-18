@@ -1,0 +1,1536 @@
+@@ widget/src/action.rs:5
+可由某些部件执行的运行时动作。
+@@ widget/src/action.rs:22
+创建一个新的“捕获型” [`Action`]。捕获型 [`Action`]
+会让其他部件把它视为最终结果，并阻止进一步的
+处理。
+
+可以阻止“事件冒泡”。
+@@ widget/src/action.rs:34
+创建一个新的 [`Action`]，它会发布给定的 `Message`，
+交由应用程序处理。
+
+发布 `Message` 总是会触发一次重绘。
+@@ widget/src/action.rs:45
+创建一个新的 [`Action`]，它请求尽快进行一次重绘，
+但不发布任何 `Message`。
+@@ widget/src/action.rs:54
+创建一个新的 [`Action`]，它请求在给定的 [`Instant`]
+进行一次重绘，但不发布任何 `Message`。
+
+这可以用来高效地为内容制作动画，例如
+文本输入框里闪烁的插入符。
+@@ widget/src/action.rs:66
+把 [`Action`] 标记为“捕获型”。参见 [`Self::capture`]。
+@@ widget/src/action.rs:72
+把 [`Action`] 转换为它的内部组成部分。
+
+此方法供运行时、库或内部的部件实现
+使用。
+@@ widget/src/button.rs:1
+按钮让用户可以通过按下它们来执行动作。
+@@ widget/src/button.rs:3
+示例
+@@ widget/src/button.rs:34
+被按下时产生一条消息的通用部件。
+@@ widget/src/button.rs:36
+示例
+@@ widget/src/button.rs:53
+如果没有设置 [`Button::on_press`] 处理函数，得到的 [`Button`] 将
+处于禁用状态：
+@@ widget/src/button.rs:105
+使用给定的内容创建一个新的 [`Button`]。
+@@ widget/src/button.rs:124
+设置 [`Button`] 的宽度。
+@@ widget/src/button.rs:130
+设置 [`Button`] 的高度。
+@@ widget/src/button.rs:136
+设置 [`Button`] 的 [`Padding`]。
+@@ widget/src/button.rs:142
+设置 [`Button`] 被按下时产生的消息。
+
+除非调用了 `on_press`，否则 [`Button`] 将处于禁用状态。
+@@ widget/src/button.rs:150
+设置 [`Button`] 被按下时产生的消息。
+
+它与 [`Button::on_press`] 类似，但使用闭包来产生
+消息。
+
+该闭包只有在 [`Button`] 真正被按下时才会被调用，
+因此，如果创建消息的开销较大，此方法有助于
+减少开销。
+@@ widget/src/button.rs:166
+设置 [`Button`] 被按下时产生的消息，
+如果为 `Some` 的话。
+
+如果为 `None`，[`Button`] 将处于禁用状态。
+@@ widget/src/button.rs:175
+设置 [`Button`] 的内容在溢出时是否应该
+被裁剪。
+@@ widget/src/button.rs:182
+设置 [`Button`] 的样式。
+@@ widget/src/button.rs:192
+设置 [`Button`] 的样式类。
+@@ widget/src/button.rs:461
+[`Button`] 的默认 [`Padding`]。
+@@ widget/src/button.rs:469
+[`Button`] 可能的交互状态。
+@@ widget/src/button.rs:472
+[`Button`] 可以被按下。
+@@ widget/src/button.rs:474
+[`Button`] 可以被按下，并且正处于悬停状态。
+@@ widget/src/button.rs:476
+[`Button`] 正在被按下。
+@@ widget/src/button.rs:478
+[`Button`] 不能被按下。
+@@ widget/src/button.rs:482
+按钮的样式。
+
+如果没有通过 [`Button::style`] 指定，
+将由主题提供样式。
+@@ widget/src/button.rs:488
+按钮的 [`Background`]。
+@@ widget/src/button.rs:490
+按钮的文本 [`Color`]。
+@@ widget/src/button.rs:492
+按钮的 [`Border`]。
+@@ widget/src/button.rs:494
+按钮的 [`Shadow`]。
+@@ widget/src/button.rs:496
+按钮是否应该对齐到像素网格。
+@@ widget/src/button.rs:501
+使用给定的 [`Background`] 更新 [`Style`]。
+@@ widget/src/button.rs:522
+[`Button`] 的主题样式目录。
+
+所有可以与 [`Button`] 一起使用的主题
+都必须实现此特质。
+@@ widget/src/button.rs:527
+示例
+@@ widget/src/button.rs:568
+不过，要想对 `MyTheme` 使用 [`Button::style`]，
+[`Catalog::Class`] 必须实现
+`From<StyleFn<'_, MyTheme>>`。
+@@ widget/src/button.rs:572
+[`Catalog`] 的样式类。
+@@ widget/src/button.rs:575
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/button.rs:578
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/button.rs:582
+[`Button`] 的样式函数。
+@@ widget/src/button.rs:597
+主要按钮；表示主要动作。
+@@ widget/src/button.rs:612
+次要按钮；表示补充性的动作。
+@@ widget/src/button.rs:627
+成功按钮；表示良好的结果。
+@@ widget/src/button.rs:642
+警告按钮；表示有风险的动作。
+@@ widget/src/button.rs:657
+危险按钮；表示破坏性的动作。
+@@ widget/src/button.rs:672
+文本按钮；适合用作链接。
+@@ widget/src/button.rs:691
+使用背景色阶的按钮。
+@@ widget/src/button.rs:712
+使用较弱背景色阶的低调按钮。
+@@ widget/src/canvas.rs:1
+画布可以用来绘制可交互的 2D 图形。
+@@ widget/src/canvas.rs:3
+示例：绘制一个简单的圆
+@@ widget/src/canvas.rs:13
+首先，定义绘制所需的数据
+@@ widget/src/canvas.rs:19
+然后，实现 `Program`特质
+@@ widget/src/canvas.rs:21
+没有内部状态
+@@ widget/src/canvas.rs:32
+准备一个新的 `Frame`
+@@ widget/src/canvas.rs:35
+创建一个表示简单圆形的 `Path`
+@@ widget/src/canvas.rs:38
+并用某种颜色填充它
+@@ widget/src/canvas.rs:41
+然后，生成几何图形
+@@ widget/src/canvas.rs:46
+最后，只需用我们的 `Circle` 创建 `Canvas`！
+@@ widget/src/canvas.rs:76
+简单的缓存，存储已生成的 [`Geometry`] 以避免重复计算。
+
+除非所在图层的尺寸发生变化或被显式清除，
+否则 [`Cache`] 不会重绘它的几何图形。
+@@ widget/src/canvas.rs:82
+渲染器所支持的几何图形。
+@@ widget/src/canvas.rs:86
+渲染器所支持的帧。
+@@ widget/src/canvas.rs:89
+能够绘制 2D 图形的部件。
+@@ widget/src/canvas.rs:91
+示例：绘制一个简单的圆
+@@ widget/src/canvas.rs:101
+首先，定义绘制所需的数据
+@@ widget/src/canvas.rs:107
+然后，实现 `Program`特质
+@@ widget/src/canvas.rs:109
+没有内部状态
+@@ widget/src/canvas.rs:120
+准备一个新的 `Frame`
+@@ widget/src/canvas.rs:123
+创建一个表示简单圆形的 `Path`
+@@ widget/src/canvas.rs:126
+并用某种颜色填充它
+@@ widget/src/canvas.rs:129
+然后，生成几何图形
+@@ widget/src/canvas.rs:134
+最后，只需用我们的 `Circle` 创建 `Canvas`！
+@@ widget/src/canvas.rs:161
+创建一个新的 [`Canvas`]。
+@@ widget/src/canvas.rs:174
+设置 [`Canvas`] 的宽度。
+@@ widget/src/canvas.rs:180
+设置 [`Canvas`] 的高度。
+@@ widget/src/checkbox.rs:1
+复选框可以让用户做出二元选择。
+@@ widget/src/checkbox.rs:3
+示例
+@@ widget/src/checkbox.rs:33
+![由 `iced_wgpu` 绘制的复选框](https://github.com/iced-rs/iced/blob/7760618fb112074bc40b148944521f312152012a/docs/images/checkbox.png?raw=true)
+@@ widget/src/checkbox.rs:49
+可以被勾选的方框。
+@@ widget/src/checkbox.rs:51
+示例
+@@ widget/src/checkbox.rs:81
+![由 `iced_wgpu` 绘制的复选框](https://github.com/iced-rs/iced/blob/7760618fb112074bc40b148944521f312152012a/docs/images/checkbox.png?raw=true)
+@@ widget/src/checkbox.rs:112
+[`Checkbox`] 的默认尺寸。
+@@ widget/src/checkbox.rs:115
+创建一个新的 [`Checkbox`]。
+
+它需要：
+  * 一个布尔值，描述 [`Checkbox`] 是否被勾选
+@@ widget/src/checkbox.rs:144
+设置 [`Checkbox`] 的标签。
+@@ widget/src/checkbox.rs:150
+设置 [`Checkbox`] 被切换时调用的函数。
+它会收到 [`Checkbox`] 的新状态，并且必须产生一条
+`Message`。
+
+除非调用了 `on_toggle`，否则 [`Checkbox`] 将处于禁用状态。
+@@ widget/src/checkbox.rs:163
+设置 [`Checkbox`] 被切换时调用的函数，
+如果为 `Some` 的话。
+
+如果为 `None`，复选框将处于禁用状态。
+@@ widget/src/checkbox.rs:175
+设置 [`Checkbox`] 的尺寸。
+@@ widget/src/checkbox.rs:181
+设置 [`Checkbox`] 的宽度。
+@@ widget/src/checkbox.rs:187
+设置 [`Checkbox`] 与文本之间的间距。
+@@ widget/src/checkbox.rs:193
+设置 [`Checkbox`] 的文本大小。
+@@ widget/src/checkbox.rs:199
+设置 [`Checkbox`] 的文本 [`text::LineHeight`]。
+@@ widget/src/checkbox.rs:208
+设置 [`Checkbox`] 的 [`text::Shaping`] 策略。
+@@ widget/src/checkbox.rs:214
+设置 [`Checkbox`] 的 [`text::Wrapping`] 策略。
+@@ widget/src/checkbox.rs:220
+设置 [`Checkbox`] 文本的 [`Renderer::Font`]。
+@@ widget/src/checkbox.rs:228
+设置 [`Checkbox`] 的 [`Icon`]。
+@@ widget/src/checkbox.rs:234
+设置 [`Checkbox`] 的样式。
+@@ widget/src/checkbox.rs:244
+设置 [`Checkbox`] 的样式类。
+@@ widget/src/checkbox.rs:491
+[`Checkbox`] 中的图标。
+@@ widget/src/checkbox.rs:494
+用来显示 `code_point` 的字体，
+@@ widget/src/checkbox.rs:496
+用作图标的 Unicode 码点。
+@@ widget/src/checkbox.rs:498
+内容的字体大小。
+@@ widget/src/checkbox.rs:500
+图标的行高。
+@@ widget/src/checkbox.rs:502
+图标的文本整形策略。
+@@ widget/src/checkbox.rs:506
+[`Checkbox`] 可能的交互状态。
+@@ widget/src/checkbox.rs:509
+[`Checkbox`] 可以交互。
+@@ widget/src/checkbox.rs:511
+表示 [`Checkbox`] 当前是否被勾选。
+@@ widget/src/checkbox.rs:514
+[`Checkbox`] 可以交互，并且正处于悬停状态。
+@@ widget/src/checkbox.rs:516
+表示 [`Checkbox`] 当前是否被勾选。
+@@ widget/src/checkbox.rs:519
+[`Checkbox`] 不能交互。
+@@ widget/src/checkbox.rs:521
+表示 [`Checkbox`] 当前是否被勾选。
+@@ widget/src/checkbox.rs:526
+复选框的样式。
+@@ widget/src/checkbox.rs:529
+复选框的 [`Background`]。
+@@ widget/src/checkbox.rs:531
+复选框的图标 [`Color`]。
+@@ widget/src/checkbox.rs:533
+复选框的 [`Border`]。
+@@ widget/src/checkbox.rs:535
+复选框的文本 [`Color`]。
+@@ widget/src/checkbox.rs:539
+[`Checkbox`] 的主题样式目录。
+@@ widget/src/checkbox.rs:541
+[`Catalog`] 的样式类。
+@@ widget/src/checkbox.rs:544
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/checkbox.rs:547
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/checkbox.rs:551
+[`Checkbox`] 的样式函数。
+
+它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+@@ widget/src/checkbox.rs:568
+主要复选框；表示主要的切换项。
+@@ widget/src/checkbox.rs:597
+次要复选框；表示补充性的切换项。
+@@ widget/src/checkbox.rs:626
+成功复选框；表示正面的切换项。
+@@ widget/src/checkbox.rs:655
+危险复选框；表示负面的切换项。
+@@ widget/src/column.rs:1
+在垂直方向上分布内容。
+@@ widget/src/column.rs:13
+在垂直方向上分布其内容的容器。
+@@ widget/src/column.rs:15
+示例
+@@ widget/src/column.rs:51
+创建一个空的 [`Column`]。
+@@ widget/src/column.rs:56
+使用给定的容量创建一个 [`Column`]。
+@@ widget/src/column.rs:61
+使用给定的元素创建一个 [`Column`]。
+@@ widget/src/column.rs:70
+从一个已经分配好的 [`Vec`] 创建 [`Column`]。
+
+请记住，[`Column`] 不会检查这个 [`Vec`]，也就是说
+它不会自动适配其内容的尺寸策略。
+
+如果有任何子级使用 [`Length::Fill`] 策略，你需要相应地
+调用 [`Column::width`] 或 [`Column::height`]。
+@@ widget/src/column.rs:92
+设置元素*之间*的垂直间距。
+
+iced 中不存在针对单个元素的自定义外边距。你应该改用
+此方法！虽然灵活性差一些，但它有助于让元素之间的
+间距保持一致。
+@@ widget/src/column.rs:102
+设置 [`Column`] 的 [`Padding`]。
+@@ widget/src/column.rs:108
+设置 [`Column`] 的宽度。
+@@ widget/src/column.rs:114
+设置 [`Column`] 的高度。
+@@ widget/src/column.rs:120
+设置 [`Column`] 的最大宽度。
+@@ widget/src/column.rs:126
+设置 [`Column`] 内容的水平对齐方式。
+@@ widget/src/column.rs:132
+设置 [`Column`] 的内容在溢出时是否应该
+被裁剪。
+@@ widget/src/column.rs:139
+向 [`Column`] 添加一个元素。
+@@ widget/src/column.rs:156
+用给定的子元素扩展 [`Column`]。
+@@ widget/src/column.rs:164
+把 [`Column`] 转换为 [`Wrapping`] 列。
+
+换行后的每一列都会保留 [`Column`] 原本的对齐方式。
+@@ widget/src/column.rs:368
+会对内容进行换行的 [`Column`]。
+
+先创建一个 [`Column`]，然后调用 [`Column::wrap`]，
+即可得到一个会对内容进行换行的 [`Column`]。
+
+换行后的每一列都会保留 [`Column`] 原本的对齐方式。
+@@ widget/src/column.rs:387
+设置各列*之间*的水平间距。
+@@ widget/src/column.rs:393
+设置换行 [`Column`] 的垂直对齐方式。
+@@ widget/src/keyed/column.rs:1
+带键的列在垂直方向上分布内容，同时保持连续性。
+@@ widget/src/keyed/column.rs:13
+在垂直方向上分布其内容并保持连续性的容器。
+@@ widget/src/keyed/column.rs:15
+示例
+@@ widget/src/keyed/column.rs:57
+创建一个空的 [`Column`]。
+@@ widget/src/keyed/column.rs:62
+从已分配的 [`Vec`] 创建一个 [`Column`]。
+
+请注意，[`Column`] 不会检查这些 [`Vec`]，也就是说
+它不会自动适应其内容的尺寸策略。
+
+如果有子元素使用 [`Length::Fill`] 策略，你需要
+相应地调用 [`Column::width`] 或 [`Column::height`]。
+@@ widget/src/keyed/column.rs:85
+使用给定的容量创建一个 [`Column`]。
+@@ widget/src/keyed/column.rs:93
+使用给定的元素创建一个 [`Column`]。
+@@ widget/src/keyed/column.rs:104
+设置元素*之间*的垂直间距。
+
+iced 中不存在针对单个元素的自定义外边距。你应该改用
+此方法！虽然灵活性差一些，但它有助于让元素之间的
+间距保持一致。
+@@ widget/src/keyed/column.rs:114
+设置 [`Column`] 的 [`Padding`]。
+@@ widget/src/keyed/column.rs:120
+设置 [`Column`] 的宽度。
+@@ widget/src/keyed/column.rs:126
+设置 [`Column`] 的高度。
+@@ widget/src/keyed/column.rs:132
+设置 [`Column`] 的最大宽度。
+@@ widget/src/keyed/column.rs:138
+设置 [`Column`] 内容的水平对齐方式。
+@@ widget/src/keyed/column.rs:144
+向 [`Column`] 添加一个元素。
+@@ widget/src/keyed/column.rs:161
+向 [`Column`] 添加一个元素，如果为 `Some` 的话。
+@@ widget/src/keyed/column.rs:174
+用给定的子元素扩展 [`Column`]。
+@@ widget/src/combo_box.rs:1
+组合框显示一个可搜索、可选择的选项下拉列表。
+@@ widget/src/combo_box.rs:3
+示例
+@@ widget/src/combo_box.rs:77
+用于从选项列表中搜索并选择单个值的部件。
+@@ widget/src/combo_box.rs:79
+示例
+@@ widget/src/combo_box.rs:165
+使用给定的选项列表、占位文本、当前选中的值，
+以及选中某个选项时要产生的消息，创建一个新的
+[`ComboBox`]。
+@@ widget/src/combo_box.rs:239
+设置 [`ComboBox`] 的 [`Renderer::Font`]。
+@@ widget/src/combo_box.rs:198
+设置在 [`ComboBox`] 的 [`TextInput`] 中输入文本时
+应该产生的消息。
+@@ widget/src/combo_box.rs:208
+设置使用方向键悬停在 [`ComboBox`] 的某个选项上时
+产生的消息。
+@@ widget/src/combo_box.rs:218
+设置 [`ComboBox`] 被打开时
+产生的消息。
+@@ widget/src/combo_box.rs:225
+设置 [`ComboBox`] 的外部区域被按下时
+产生的消息。
+@@ widget/src/combo_box.rs:232
+设置 [`ComboBox`] 的 [`Padding`]。
+@@ widget/src/combo_box.rs:248
+设置 [`ComboBox`] 的 [`text_input::Icon`]。
+@@ widget/src/combo_box.rs:254
+设置 [`ComboBox`] 的文本大小。
+@@ widget/src/combo_box.rs:272
+设置 [`ComboBox`] 的宽度。
+@@ widget/src/combo_box.rs:264
+设置 [`ComboBox`] 的 [`LineHeight`]。
+@@ widget/src/combo_box.rs:280
+设置 [`ComboBox`] 菜单的高度。
+@@ widget/src/combo_box.rs:286
+设置 [`ComboBox`] 的 [`text::Shaping`] 策略。
+@@ widget/src/combo_box.rs:292
+设置 [`ComboBox`] 输入框的样式。
+@@ widget/src/combo_box.rs:306
+设置 [`ComboBox`] 菜单的样式。
+@@ widget/src/combo_box.rs:319
+设置 [`ComboBox`] 输入框的样式类。
+@@ widget/src/combo_box.rs:330
+设置 [`ComboBox`] 菜单的样式类。
+@@ widget/src/combo_box.rs:342
+[`ComboBox`] 的本地状态。
+@@ widget/src/combo_box.rs:366
+使用给定的选项列表为 [`ComboBox`] 创建一个新的 [`State`]。
+@@ widget/src/combo_box.rs:371
+使用给定的选项列表和选中的值，为 [`ComboBox`]
+创建一个新的 [`State`]。
+@@ widget/src/combo_box.rs:376
+提前构建好“匹配器”字符串，让搜索更快
+@@ widget/src/combo_box.rs:395
+返回 [`State`] 的选项。
+
+这些是使用 [`State::new`] 构造 [`State`] 时
+提供的选项。
+@@ widget/src/combo_box.rs:403
+向 [`State`] 追加一个新选项。
+@@ widget/src/combo_box.rs:417
+交出 [`State`] 中选项的所有权。
+@@ widget/src/combo_box.rs:550
+什么都不做，这样子级就不会被清空
+@@ widget/src/combo_box.rs:573
+这是为了检查消息缓冲区是否为空，
+因为 `Shell` 没有公开这样的功能。
+@@ widget/src/combo_box.rs:577
+创建一个新的本地消息列表
+@@ widget/src/combo_box.rs:581
+把它提供给部件
+@@ widget/src/combo_box.rs:600
+最后在这里对它们作出反应
+@@ widget/src/combo_box.rs:608
+把过滤后的选项与 `ComboBox` 的值绑定在一起，
+只在值发生变化时才重新计算，
+而不是在每次调用 `view` 时都计算
+@@ widget/src/combo_box.rs:696
+通知选中项
+@@ widget/src/combo_box.rs:742
+通知选中项
+@@ widget/src/combo_box.rs:758
+如果覆盖层菜单选中了某一项
+@@ widget/src/combo_box.rs:761
+清空值，并重置选项和菜单
+@@ widget/src/combo_box.rs:766
+通知选中项
+@@ widget/src/combo_box.rs:770
+让输入框失去焦点
+@@ widget/src/combo_box.rs:798
+焦点发生了变化，让部件树失效，以强制重新执行 `view`
+@@ widget/src/combo_box.rs:955
+[`ComboBox`] 的主题样式目录。
+@@ widget/src/combo_box.rs:957
+[`ComboBox`] 文本输入框的默认样式类。
+@@ widget/src/combo_box.rs:962
+[`ComboBox`] 菜单的默认样式类。
+@@ widget/src/combo_box.rs:987
+确保查询的每个部分都能在选项中找到
+@@ widget/src/lazy/component.rs:1
+使用 Elm 架构构建并复用自定义部件。
+@@ widget/src/lazy/component.rs:18
+使用 Elm 架构的可复用自定义部件。
+
+[`Component`] 让你可以像编写带有封装状态的 `iced` 应用程序
+那样实现自定义部件。
+
+换句话说，[`Component`] 让你可以把 `iced` 应用程序变成
+自定义部件，并且无需繁琐的接线就能嵌入它们。
+
+[`Component`] 产生的部件可以触发 [`Event`](Component::Event)
+并更新 [`Component`] 的内部状态。
+
+此外，[`Component`] 还能产生 `Message`，把相关的交互
+通知给父应用程序。
+@@ widget/src/lazy/component.rs:32
+状态
+@@ widget/src/lazy/component.rs:33
+组件可以用两种方式存储状态：要么作为特质实现者
+内部的数据，要么放在由运行时管理、并提供给特质方法的
+[`State`][Component::State] 类型中。这两种方式并不
+互斥，而且优缺点正好相反。
+
+例如，如果某个状态被位于部件树不同分支的多个组件所需要，
+那么让它们的公共祖先存储该状态并向下传递
+会更方便。
+
+另一方面，如果某个状态只被组件自身需要，
+你可以把它存为其内部 [`State`][Component::State] 的一部分。
+@@ widget/src/lazy/component.rs:51
+此 [`Component`] 的内部状态。
+@@ widget/src/lazy/component.rs:54
+此 [`Component`] 在内部处理的事件类型。
+@@ widget/src/lazy/component.rs:57
+处理一个 [`Event`](Component::Event)，并相应地更新 [`Component`] 的状态。
+
+它可以为父应用程序产生一条 `Message`。
+@@ widget/src/lazy/component.rs:66
+产生 [`Component`] 的部件，这些部件可以在用户交互时
+触发 [`Event`](Component::Event)。
+@@ widget/src/lazy/component.rs:73
+根据给定的 [`Operation`](widget::Operation) 更新 [`Component`] 的状态
+
+默认情况下，它什么都不做。
+@@ widget/src/lazy/component.rs:84
+返回用于布局 [`Component`] 的 [`Size`] 提示。
+
+某些部件容器可能会在构造期间用这个提示来调整
+它们的尺寸策略。
+@@ widget/src/lazy/component.rs:98
+把 [`Component`] 的实现者转换为可以嵌入任何应用程序的
+[`Element`]。
+@@ widget/src/lazy/component.rs:487
+很漂亮，我知道
+@@ widget/src/lazy/component.rs:492
+- 你也许不喜欢，但这就是巅峰性能的样子
+- 待办：彻底摆脱 ouroboros
+- 什么？！
+@@ widget/src/container.rs:1
+容器让你可以在其边界内对齐一个部件。
+@@ widget/src/container.rs:3
+示例
+@@ widget/src/container.rs:38
+在自身边界内对齐其内容的部件。
+@@ widget/src/container.rs:40
+示例
+@@ widget/src/container.rs:86
+使用给定的内容创建一个 [`Container`]。
+@@ widget/src/container.rs:108
+设置 [`Container`] 的 [`widget::Id`]。
+@@ widget/src/container.rs:114
+设置 [`Container`] 的 [`Padding`]。
+@@ widget/src/container.rs:120
+设置 [`Container`] 的宽度。
+@@ widget/src/container.rs:126
+设置 [`Container`] 的高度。
+@@ widget/src/container.rs:132
+设置 [`Container`] 的最大宽度。
+@@ widget/src/container.rs:138
+设置 [`Container`] 的最大高度。
+@@ widget/src/container.rs:144
+设置 [`Container`] 的宽度，并让其内容水平居中。
+@@ widget/src/container.rs:149
+设置 [`Container`] 的高度，并让其内容垂直居中。
+@@ widget/src/container.rs:154
+设置 [`Container`] 的宽度和高度，并让其内容在
+水平轴和垂直轴上都居中。
+
+这等价于链式调用 [`center_x`] 和 [`center_y`]。
+@@ widget/src/container.rs:167
+设置 [`Container`] 的宽度，并让其内容左对齐。
+@@ widget/src/container.rs:172
+设置 [`Container`] 的宽度，并让其内容右对齐。
+@@ widget/src/container.rs:177
+设置 [`Container`] 的高度，并让其内容顶部对齐。
+@@ widget/src/container.rs:182
+设置 [`Container`] 的高度，并让其内容底部对齐。
+@@ widget/src/container.rs:187
+设置 [`Container`] 水平轴上的内容对齐方式。
+@@ widget/src/container.rs:196
+设置 [`Container`] 垂直轴上的内容对齐方式。
+@@ widget/src/container.rs:205
+设置 [`Container`] 的内容在溢出时是否应该
+被裁剪。
+@@ widget/src/container.rs:212
+设置 [`Container`] 的样式。
+@@ widget/src/container.rs:222
+设置 [`Container`] 的样式类。
+@@ widget/src/container.rs:406
+计算 [`Container`] 的布局。
+@@ widget/src/container.rs:434
+根据给定的 [`Style`] 和 `bounds` 绘制 [`Container`] 的背景。
+@@ widget/src/container.rs:460
+容器的外观。
+@@ widget/src/container.rs:463
+容器的文本 [`Color`]。
+@@ widget/src/container.rs:465
+容器的 [`Background`]。
+@@ widget/src/container.rs:467
+容器的 [`Border`]。
+@@ widget/src/container.rs:469
+容器的 [`Shadow`]。
+@@ widget/src/container.rs:471
+容器是否应该对齐到像素网格。
+@@ widget/src/container.rs:488
+更新 [`Style`] 的文本颜色。
+@@ widget/src/container.rs:496
+更新 [`Style`] 的边框。
+@@ widget/src/container.rs:504
+更新 [`Style`] 的背景。
+@@ widget/src/container.rs:512
+更新 [`Style`] 的阴影。
+@@ widget/src/container.rs:539
+[`Container`] 的主题样式目录。
+@@ widget/src/container.rs:541
+[`Catalog`] 的样式类。
+@@ widget/src/container.rs:544
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/container.rs:547
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/container.rs:551
+[`Container`] 的样式函数。
+@@ widget/src/container.rs:572
+透明的 [`Container`]。
+@@ widget/src/container.rs:577
+具有给定 [`Background`] 的 [`Container`]。
+@@ widget/src/container.rs:582
+带背景的圆角 [`Container`]。
+@@ widget/src/container.rs:594
+带背景和边框的 [`Container`]。
+@@ widget/src/container.rs:610
+深色背景、白色文本的 [`Container`]。
+@@ widget/src/container.rs:618
+使用主要背景色的 [`Container`]。
+@@ widget/src/container.rs:625
+使用次要背景色的 [`Container`]。
+@@ widget/src/container.rs:632
+使用成功背景色的 [`Container`]。
+@@ widget/src/container.rs:639
+使用警告背景色的 [`Container`]。
+@@ widget/src/container.rs:646
+使用危险背景色的 [`Container`]。
+@@ widget/src/float.rs:1
+让元素浮动起来！
+@@ widget/src/float.rs:15
+可以让其内容浮动在其他部件之上的部件。
+@@ widget/src/float.rs:30
+使用给定的内容创建一个新的 [`Float`] 部件。
+@@ widget/src/float.rs:42
+设置应用于 [`Float`] 内容的缩放比例。
+@@ widget/src/float.rs:48
+设置应用于 [`Float`] 内容的平移逻辑。
+
+该逻辑接收内容原始（未缩放）的边界和
+视口边界。这些边界可以用来确保浮动元素
+始终留在屏幕上。
+@@ widget/src/float.rs:61
+设置 [`Float`] 的样式。
+@@ widget/src/float.rs:71
+设置 [`Float`] 的样式类。
+@@ widget/src/float.rs:395
+[`Float`] 的主题样式目录。
+
+所有可以与 [`Float`] 一起使用的主题
+都必须实现此特质。
+@@ widget/src/float.rs:400
+[`Catalog`] 的样式类。
+@@ widget/src/float.rs:403
+[`Catalog`] 产生的默认样式类。
+@@ widget/src/float.rs:406
+某个样式类在给定交互状态下的 [`Style`]。
+@@ widget/src/float.rs:410
+[`Float`] 的样式函数。
+@@ widget/src/float.rs:425
+[`Float`] 的样式。
+@@ widget/src/float.rs:428
+[`Float`] 的 [`Shadow`]。
+@@ widget/src/float.rs:430
+阴影的边框半径。
+@@ widget/src/grid.rs:1
+在网格上分布内容。
+@@ widget/src/grid.rs:12
+在响应式网格上分布其内容的容器。
+@@ widget/src/grid.rs:30
+创建一个空的 [`Grid`]。
+@@ widget/src/grid.rs:35
+使用给定的容量创建一个 [`Grid`]。
+@@ widget/src/grid.rs:40
+使用给定的元素创建一个 [`Grid`]。
+@@ widget/src/grid.rs:49
+从已分配的 [`Vec`] 创建一个 [`Grid`]。
+@@ widget/src/grid.rs:62
+设置 [`Grid`] 中单元格*之间*的间距。
+@@ widget/src/grid.rs:68
+以 [`Pixels`] 为单位设置 [`Grid`] 的宽度。
+
+默认情况下，[`Grid`] 会 [`Fill`] 它的父级。
+@@ widget/src/grid.rs:78
+设置 [`Grid`] 的高度。
+
+默认情况下，[`Grid`] 的单元格宽高比为 `1.0`（即正方形）。
+@@ widget/src/grid.rs:86
+设置 [`Grid`] 的列数。
+@@ widget/src/grid.rs:92
+让 [`Grid`] 的列数动态变化，且每列宽度永远不会
+超过给定的 `max_width`。
+@@ widget/src/grid.rs:99
+向 [`Grid`] 添加一个 [`Element`]。
+@@ widget/src/grid.rs:108
+如果是 `Some`，向 [`Grid`] 添加一个元素。
+@@ widget/src/grid.rs:120
+用给定的子元素扩展 [`Grid`]。
+@@ widget/src/grid.rs:188
+宽度 = n * (单元格 + 间距) - 间距，其中 n > 0
+@@ widget/src/grid.rs:382
+[`Grid`] 的尺寸策略。
+@@ widget/src/grid.rs:385
+[`Grid`] 会确保每个单元格都遵循给定的宽高比，
+总尺寸为所有单元格及其间距之和。
+
+该比值是 [`Grid`] 中单元格每一个垂直像素所对应的
+水平像素数。
+@@ widget/src/grid.rs:392
+[`Grid`] 会把给定 [`Length`] 内的可用空间平均分配给
+每个单元格。
+@@ widget/src/grid.rs:409
+创建一个保持给定宽高比的新 [`Sizing`] 策略。
+@@ widget/src/helpers.rs:923
+忽略不可见内容的重绘请求
+@@ widget/src/image.rs:1
+图像用于显示各种格式（PNG、JPG 等）的位图图形。
+@@ widget/src/image.rs:3
+示例
+@@ widget/src/image.rs:18
+=
+@@ widget/src/image.rs:35
+使用给定的图像 `Handle` 创建一个新的 [`Viewer`]。
+@@ widget/src/image.rs:40
+在保持宽高比的同时显示图像的框。
+@@ widget/src/image.rs:42
+示例
+@@ widget/src/image.rs:57
+=
+@@ widget/src/image.rs:73
+使用给定的路径创建一个新的 [`Image`]。
+@@ widget/src/image.rs:90
+设置 [`Image`] 边界的宽度。
+@@ widget/src/image.rs:96
+设置 [`Image`] 边界的高度。
+@@ widget/src/image.rs:102
+设置 [`Image`] 是否应该在保持宽高比的前提下
+尽可能填满可用空间，并且在使用 [`Length::Shrink`]
+尺寸策略的轴上不分配
+额外的空间。
+
+这类似于对 [`width`](Self::width) 和 [`height`](Self::height)
+都使用 [`Length::Fill`]，
+但没有留白的缺点。
+@@ widget/src/image.rs:115
+设置 [`Image`] 的 [`ContentFit`]。
+
+默认为 [`ContentFit::Contain`]
+@@ widget/src/image.rs:123
+设置 [`Image`] 的 [`FilterMethod`]。
+@@ widget/src/image.rs:129
+对 [`Image`] 应用给定的 [`Rotation`]。
+@@ widget/src/image.rs:135
+设置 [`Image`] 的不透明度。
+
+它应该在 [0.0, 1.0] 范围内——`0.0` 表示完全透明，
+`1.0` 表示完全不透明。
+@@ widget/src/image.rs:144
+设置 [`Image`] 的缩放比例。
+
+[`Image`] 被绘制的区域会以中心为基准，按给定的缩放因子进行缩放。
+这可以用来实现某些效果和动画，例如平滑的放大 / 缩小。
+@@ widget/src/image.rs:153
+把 [`Image`] 裁剪到由 [`Rectangle`] 以绝对坐标描述的
+给定区域。
+
+裁剪发生在应用任何变换或 [`ContentFit`] 之前。实际上，
+这意味着用此方法裁剪 [`Image`] 所得到的结果，应该与
+在外部（例如用图像编辑器）裁剪它、再为裁剪后的版本
+创建一个新的 [`Handle`] 相同。
+
+不过，此方法要高效得多；因为它只是在渲染时利用了剪裁（scissoring），
+并没有真正进行图像裁剪。它复用已有的
+图像分配，效率应该和完全不裁剪一样高！
+
+如有必要，`region` 的坐标会被限制在图像尺寸范围内。
+@@ widget/src/image.rs:171
+设置 [`Image`] 的 [`border::Radius`]。
+
+目前，它只会应用在 [`Image`] 的矩形
+包围盒四周。
+@@ widget/src/image.rs:184
+计算 [`Image`] 的布局。
+@@ widget/src/image.rs:199
+底层图像的原始宽 / 高
+@@ widget/src/image.rs:203
+图像旋转后的尺寸
+@@ widget/src/image.rs:206
+在进行 `Shrink` 之前，部件可用的尺寸
+@@ widget/src/image.rs:213
+图像适配到上述边界时的未裁剪尺寸
+@@ widget/src/image.rs:216
+如果有要求，把部件收缩到与调整后的图像相适应
+@@ widget/src/image.rs:311
+绘制一个 [`Image`]
+@@ widget/src/keyed.rs:1
+带键的部件可以提供提示，以确保连续性。
+@@ widget/src/keyed.rs:3
+什么是连续性？
+@@ widget/src/keyed.rs:4
+连续性是指状态持续存在的感觉。
+
+在图形用户界面中，用户期望部件具有
+一定程度的连续状态。例如，一个获得焦点的
+文本输入框，即使部件树发生了轻微的变化，
+也应该保持焦点。
+
+在 `iced` 和 Elm 架构中，连续性比较棘手，因为
+每次调用 `view` 都会重建整棵部件树。从开发者的
+角度看这非常方便，因为你可以构建极其动态的
+界面，而不必担心状态的变化。
+
+然而，代价是 `iced` 很难判断到底是什么
+发生了变化。如果你有一个列表，在顶部添加一个元素
+就可能导致列表中每个元素都失去连续性！
+@@ widget/src/keyed.rs:20
+如何保持连续性？
+@@ widget/src/keyed.rs:21
+好消息是，用户界面的部件结构通常是
+静态的。可以依靠这种结构来确保一定程度的
+连续性。`iced` 已经这样做了。
+
+然而，有时界面中的某一部分会
+相当动态。例如，一个可以在任意位置添加
+或删除条目的列表。
+
+在协调阶段有多种方式可以缓解这个问题，
+但它们都需要在一定深度上比较树并进行
+回溯……计算开销相当大。
+
+一种开销更低的做法是让用户提供一些关于
+各个部件身份的提示，这样就可以直接比较它们，
+而不必深入下去。
+
+本模块中的部件都会要求提供某种“提示”。为了
+帮助它们保持连续性，你需要确保在多次 `view` 调用之间，
+用户界面中相同条目的提示保持不变。
+@@ widget/src/keyed.rs:44
+使用给定的子元素创建一个带键的 [`Column`]。
+
+带键的列在垂直方向上分布内容，同时保持连续性。
+@@ widget/src/keyed.rs:48
+示例
+@@ widget/src/lazy.rs:28
+只在必要时才重建其内容的部件。
+@@ widget/src/lazy.rs:44
+使用给定的数据 `Dependency` 和一个能把该数据转换为部件树的
+闭包，创建一个新的 [`Lazy`] 部件。
+@@ widget/src/lazy.rs:298
+- 你也许不喜欢，但这就是巅峰性能的样子
+- 待办：彻底摆脱 ouroboros
+- 什么？！
+@@ widget/src/lib.rs:1
+使用内置部件，或者创建你自己的部件。
+@@ core/src/element.rs:56
+假设我们想使用[我们的计数器](index.html#usage)。但我们不是
+只显示一个计数器，而是想显示很多个。我们可以原封不动地
+复用 `Counter` 类型！
+
+我们用组合来为新应用程序的**状态**建模：
+@@ core/src/element.rs:73
+现在我们可以存储多个计数器的状态了。然而，
+之前实现的**消息**描述的是**单个**计数器的
+用户交互。现在，我们还需要分辨是哪个
+计数器在接收用户交互。还能再用一次组合吗？
+可以。
+@@ core/src/element.rs:90
+我们把之前的**消息**与产生它们的计数器的索引
+组合起来。现在来实现我们的**视图逻辑**：
+@@ core/src/element.rs:135
+通过映射我们的计数器，可以快速填充一个 `row`
+@@ core/src/element.rs:142
+在这里，我们把 `Element<counter::Message>` 转换为
+@@ core/src/element.rs:143
+`Element<Message>`，方法是把 `index` 与
+@@ core/src/element.rs:144
+`element` 的消息组合起来。
+@@ core/src/element.rs:153
+最后，我们的**更新逻辑**非常直接：简单的
+委托。
+@@ widget/src/markdown.rs:1
+Markdown 部件可以解析并显示 Markdown。
+
+你可以启用 `highlighter` 特性，为代码块提供
+语法高亮。
+
+目前只支持 [`Item`] 的各个变体。
+@@ widget/src/markdown.rs:8
+示例
+@@ widget/src/markdown.rs:69
+表示 Markdown 文档中某个 [URI] 的 [`String`]
+@@ widget/src/markdown.rs:74
+一段已解析的 Markdown。
+@@ widget/src/markdown.rs:1052
+Markdown 的样式。
+@@ widget/src/markdown.rs:120
+弹出最后一项
+@@ widget/src/markdown.rs:123
+重新解析最后一项和新文本
+@@ widget/src/markdown.rs:89
+创建一个新的空 [`Content`]。
+@@ widget/src/markdown.rs:94
+通过解析给定的 Markdown 创建新的 [`Content`]。
+@@ widget/src/markdown.rs:101
+向 [`Content`] 推入更多 Markdown，并以增量方式解析！
+
+当你有很长的 Markdown 流时，这特别有用，例如
+大文件或可能很长的回复。
+@@ widget/src/markdown.rs:110
+追加到上次剩余的文本之后
+@@ widget/src/markdown.rs:140
+如果有新的引用可用，重新解析不完整的部分
+@@ widget/src/markdown.rs:177
+返回已经可以渲染的 Markdown 条目。
+
+你可以用 [`view`] 把它们转换成 [`Element`]。
+@@ widget/src/markdown.rs:184
+返回 [`Content`] 中出现的 Markdown 图像的 URL。
+@@ widget/src/markdown.rs:1562
+用来显示 Markdown [`Item`] 的视图策略。
+@@ widget/src/markdown.rs:190
+Markdown 条目。
+@@ widget/src/markdown.rs:193
+标题。
+@@ widget/src/markdown.rs:195
+段落。
+@@ widget/src/markdown.rs:197
+代码块。
+
+你可以启用 `highlighter` 特性来获得语法高亮。
+@@ widget/src/markdown.rs:201
+代码块的语言（如果有）。
+@@ widget/src/markdown.rs:203
+代码块的原始代码。
+@@ widget/src/markdown.rs:205
+代码块中带样式的文本行。
+@@ widget/src/markdown.rs:208
+列表。
+@@ widget/src/markdown.rs:210
+列表的起始编号，如果它是有序列表的话。
+@@ widget/src/markdown.rs:212
+列表的各项。
+@@ widget/src/markdown.rs:215
+图像。
+@@ widget/src/markdown.rs:217
+图像的目标 URL。
+@@ widget/src/markdown.rs:219
+图像的标题。
+@@ widget/src/markdown.rs:221
+图像的替代文本。
+@@ widget/src/markdown.rs:224
+引用块。
+@@ widget/src/markdown.rs:226
+水平分隔线。
+@@ widget/src/markdown.rs:228
+表格。
+@@ widget/src/markdown.rs:230
+表格的列。
+@@ widget/src/markdown.rs:232
+表格的行。
+@@ widget/src/markdown.rs:237
+表格的列。
+@@ widget/src/markdown.rs:240
+列的表头。
+@@ widget/src/markdown.rs:242
+列的对齐方式。
+@@ widget/src/markdown.rs:246
+表格的行。
+@@ widget/src/markdown.rs:249
+行中的单元格。
+@@ widget/src/markdown.rs:253
+一段已解析的 Markdown 文本。
+@@ widget/src/markdown.rs:270
+返回可用于给定样式的 [`rich_text()`] span。
+
+此方法会为你做缓存。只有在给定的 [`Style`] 发生变化时，
+它才会重新分配。
+@@ widget/src/markdown.rs:355
+列表的项。
+@@ widget/src/markdown.rs:358
+简单的列表项。
+@@ widget/src/markdown.rs:360
+列表项的内容。
+@@ widget/src/markdown.rs:363
+任务项。
+@@ widget/src/markdown.rs:365
+任务项的内容。
+@@ widget/src/markdown.rs:367
+任务是否已完成。
+@@ widget/src/markdown.rs:386
+解析给定的 Markdown 内容。
+@@ widget/src/markdown.rs:388
+示例
+@@ widget/src/markdown.rs:1714
+Markdown 代码块的样式类。
+@@ widget/src/markdown.rs:627
+我们希望保留 `spans` 的容量
+@@ widget/src/markdown.rs:1031
+控制 [`view`] 中 Markdown 渲染方式的配置。
+@@ widget/src/markdown.rs:1103
+应用于普通文本的 [`Font`]。
+@@ widget/src/markdown.rs:1111
+应用于行内代码的 [`Font`]。
+@@ widget/src/markdown.rs:1113
+应用于代码块的 [`Font`]。
+@@ widget/src/markdown.rs:1034
+基础文本大小。
+@@ widget/src/markdown.rs:1048
+代码块使用的文本大小。
+@@ widget/src/markdown.rs:1062
+使用给定的、以 [`Pixels`] 表示的基础文本大小创建新的 [`Settings`]。
+
+各级标题的大小会自动调整。具体来说，
+第一级是基础大小的两倍，之后每一级
+都缩小 25%。
+@@ widget/src/markdown.rs:1036
+1 级标题的文本大小。
+@@ widget/src/markdown.rs:1038
+2 级标题的文本大小。
+@@ widget/src/markdown.rs:1040
+3 级标题的文本大小。
+@@ widget/src/markdown.rs:1042
+4 级标题的文本大小。
+@@ widget/src/markdown.rs:1044
+5 级标题的文本大小。
+@@ widget/src/markdown.rs:1046
+6 级标题的文本大小。
+@@ widget/src/markdown.rs:1050
+元素之间使用的间距。
+@@ widget/src/markdown.rs:1057
+使用默认文本大小和给定的 [`Style`] 创建新的 [`Settings`]。
+@@ widget/src/markdown.rs:1155
+显示一组 Markdown 条目。
+
+你可以通过 [`parse`] 获得这些条目。
+@@ widget/src/markdown.rs:1159
+示例
+@@ widget/src/markdown.rs:1208
+运行 [`view`]，但使用自定义的 [`Viewer`] 把 [`Item`] 转换成
+[`Element`]。
+
+如果你想自定义某些 Markdown 元素的外观，
+这会很有用。
+@@ widget/src/markdown.rs:1233
+使用给定的 [`Viewer`] 显示一个 [`Item`]。
+@@ widget/src/markdown.rs:1272
+使用默认外观显示标题。
+@@ widget/src/markdown.rs:1316
+使用默认外观显示段落。
+@@ widget/src/markdown.rs:1333
+使用默认外观显示无序列表，并为每个
+列表项调用 [`Viewer`]。
+@@ widget/src/markdown.rs:1378
+使用默认外观显示有序列表，并为每个
+编号项调用 [`Viewer`]。
+@@ widget/src/markdown.rs:1417
+使用默认外观显示代码块。
+@@ widget/src/markdown.rs:1451
+使用默认外观显示引用块。
+@@ widget/src/markdown.rs:1477
+使用默认外观显示分隔线。
+@@ widget/src/markdown.rs:1488
+使用默认外观显示表格。
+@@ widget/src/markdown.rs:1541
+使用默认外观显示一列条目。
+@@ widget/src/markdown.rs:1100
+在 [`view`] 中渲染 Markdown 时的文本样式。
+@@ widget/src/markdown.rs:1570
+当带有给定 [`Uri`] 的链接被点击时产生一条消息。
+@@ widget/src/markdown.rs:1573
+显示图像。
+
+默认情况下，它会显示一个带有图像标题的容器。
+@@ widget/src/markdown.rs:1595
+显示标题。
+
+默认情况下，它调用 [`heading`]。
+@@ widget/src/markdown.rs:1608
+显示段落。
+
+默认情况下，它调用 [`paragraph`]。
+@@ widget/src/markdown.rs:1619
+显示代码块。
+
+默认情况下，它调用 [`code_block`]。
+@@ widget/src/markdown.rs:1635
+显示无序列表。
+
+默认情况下，它调用 [`unordered_list`]。
+@@ widget/src/markdown.rs:1646
+显示有序列表。
+
+默认情况下，它调用 [`ordered_list`]。
+@@ widget/src/markdown.rs:1658
+显示引用块。
+
+默认情况下，它调用 [`quote`]。
+@@ widget/src/markdown.rs:1669
+显示分隔线。
+
+默认情况下，它调用 [`rule`](self::rule())。
+@@ widget/src/markdown.rs:1679
+显示表格。
+
+默认情况下，它调用 [`table`]。
+@@ widget/src/markdown.rs:1120
+根据给定的 [`theme::Palette`] 创建一个新的 [`Style`]。
+@@ widget/src/markdown.rs:1705
+Markdown 条目的主题样式目录。
+@@ widget/src/markdown.rs:1105
+应用于行内代码背景的 [`Highlight`]。
+@@ widget/src/markdown.rs:1107
+应用于行内代码背景的 [`Padding`]。
+@@ widget/src/markdown.rs:1109
+应用于行内代码的 [`Color`]。
+@@ widget/src/markdown.rs:1115
+应用于链接的 [`Color`]。
+@@ widget/src/helpers.rs:1
+用于创建纯部件的辅助函数。
+@@ widget/src/helpers.rs:35
+使用给定的子元素创建一个 [`Column`]。
+
+列在垂直方向上分布其子元素。
+@@ widget/src/helpers.rs:39
+示例
+@@ widget/src/helpers.rs:69
+使用给定的子元素创建一个 [`Row`]。
+
+行在水平方向上分布其子元素。
+@@ widget/src/helpers.rs:73
+示例
+@@ widget/src/helpers.rs:103
+使用给定的子元素创建一个 [`Stack`]。
+@@ widget/src/helpers.rs:116
+使用给定的子元素创建一个 [`Grid`]。
+@@ widget/src/helpers.rs:129
+使用给定的内容创建一个新的 [`Text`] 部件。
+
+此宏使用与 [`format!`] 相同的语法，但创建的是一个新的 [`Text`] 部件。
+
+宏参数语法的细节请参见
+[`std::fmt` 中的格式化文档](std::fmt)。
+@@ widget/src/helpers.rs:138
+示例
+@@ widget/src/helpers.rs:175
+使用给定的文本片段创建 [`Rich`] 富文本。
+@@ widget/src/helpers.rs:179
+示例
+@@ widget/src/helpers.rs:214
+使用给定的内容创建一个新的 [`Container`]。
+
+容器让你可以在其边界内对齐一个部件。
+@@ widget/src/helpers.rs:218
+示例
+@@ widget/src/helpers.rs:247
+创建一个新的 [`Container`]，它填满所有可用空间，
+并让其内容居中。
+
+这等价于：
+@@ widget/src/helpers.rs:269
+创建一个新的 [`Container`]，它在水平方向上填满所有可用空间，
+并让其内容居中。
+
+这等价于：
+@@ widget/src/helpers.rs:291
+创建一个新的 [`Container`]，它在垂直方向上填满所有可用空间，
+并让其内容居中。
+
+这等价于：
+@@ widget/src/helpers.rs:313
+创建一个新的 [`Container`]，它在水平方向上填满所有可用空间，
+并让其内容右对齐。
+
+这等价于：
+@@ widget/src/helpers.rs:335
+创建一个新的 [`Container`]，它填满所有可用空间，
+并让其内容对齐到右侧居中的位置。
+
+这等价于：
+@@ widget/src/helpers.rs:359
+创建一个新的 [`Container`]，它在垂直方向上填满所有可用空间，
+并让其内容底部对齐。
+
+这等价于：
+@@ widget/src/helpers.rs:381
+创建一个新的 [`Container`]，它填满所有可用空间，
+并让其内容对齐到底部居中的位置。
+
+这等价于：
+@@ widget/src/helpers.rs:405
+创建一个新的 [`Container`]，它填满所有可用空间，
+并让其内容对齐到右下角。
+
+这等价于：
+@@ widget/src/helpers.rs:429
+使用给定的内容创建一个新的 [`Pin`] 部件。
+
+[`Pin`] 部件把其内容放置在自身边界内的某个固定坐标处。
+@@ widget/src/helpers.rs:433
+示例
+@@ widget/src/helpers.rs:461
+使用给定的子元素创建一个新的 [`Column`]。
+
+列在垂直方向上分布其子元素。
+@@ widget/src/helpers.rs:465
+示例
+@@ widget/src/helpers.rs:489
+从元素的迭代器创建一个新的 [`keyed::Column`]。
+
+带键的列在垂直方向上分布内容，同时保持连续性。
+@@ widget/src/helpers.rs:493
+示例
+@@ widget/src/helpers.rs:520
+从迭代器创建一个新的 [`Row`]。
+
+行在水平方向上分布其子元素。
+@@ widget/src/helpers.rs:524
+示例
+@@ widget/src/helpers.rs:548
+从迭代器创建一个新的 [`Grid`]。
+@@ widget/src/helpers.rs:558
+使用给定的子元素创建一个新的 [`Stack`]。
+@@ widget/src/helpers.rs:570
+包裹给定的部件，并捕获部件边界内的所有鼠标按键按下事件，
+实际上就是让它变得*不透明*。
+
+这个辅助函数用来标记 [`Stack`] 中的元素，避免鼠标
+事件穿透各个图层。
+@@ widget/src/helpers.rs:732
+把一个部件显示在另一个部件之上，但仅当底层部件处于悬停状态时才显示。
+
+它的工作方式与 [`stack`] 类似，但只有当光标位于底层部件上时
+才会显示顶层。它可以用来减少视觉上的杂乱。
+@@ widget/src/helpers.rs:1008
+创建一个新的 [`Sensor`] 部件。
+
+[`Sensor`] 部件可以在其内容显示、隐藏或
+尺寸变化时产生消息。
+
+它甚至可以在给定的距离处提前通知你！
+@@ widget/src/helpers.rs:1023
+使用给定的内容创建一个新的 [`Scrollable`]。
+
+可滚动区域让用户可以借助滚动条浏览任意多的内容。
+@@ widget/src/helpers.rs:1027
+示例
+@@ core/src/element.rs:55
+示例
+@@ widget/src/helpers.rs:1056
+使用给定的内容创建一个新的 [`Button`]。
+@@ widget/src/helpers.rs:1058
+示例
+@@ widget/src/helpers.rs:1084
+使用给定的 [`Element`] 和 [`tooltip::Position`]，
+为给定的内容创建一个新的 [`Tooltip`]。
+
+工具提示会在鼠标悬停于某个元素上时，在其上方显示一条提示信息。
+@@ widget/src/helpers.rs:1089
+示例
+@@ widget/src/helpers.rs:1122
+使用给定的内容创建一个新的 [`Text`] 部件。
+@@ widget/src/helpers.rs:1124
+示例
+@@ widget/src/helpers.rs:1153
+创建一个新的 [`Text`] 部件，显示给定的值。
+@@ widget/src/helpers.rs:1164
+使用给定的文本片段创建一个新的 [`Rich`] 富文本部件。
+@@ widget/src/helpers.rs:1168
+示例
+@@ widget/src/helpers.rs:1206
+使用给定的内容创建一个新的文本 [`Span`]。
+
+[`Span`] 是 [`Rich`] 富文本中的一个片段。
+@@ widget/src/helpers.rs:1213
+示例
+@@ widget/src/helpers.rs:1248
+创建一个新的 [`Checkbox`]。
+@@ widget/src/helpers.rs:1250
+示例
+@@ widget/src/helpers.rs:1280
+![由 `iced_wgpu` 绘制的复选框](https://github.com/iced-rs/iced/blob/7760618fb112074bc40b148944521f312152012a/docs/images/checkbox.png?raw=true)
+@@ widget/src/helpers.rs:1291
+创建一个新的 [`Radio`]。
+
+单选按钮让用户可以从一组选项中选择一项。
+@@ widget/src/helpers.rs:1295
+示例
+@@ widget/src/helpers.rs:1366
+创建一个新的 [`Toggler`]。
+
+开关让用户可以通过拨动开关来做出二元选择。
+@@ widget/src/helpers.rs:1370
+示例
+@@ widget/src/helpers.rs:1410
+创建一个新的 [`TextInput`]。
+
+文本输入框显示可以填入文本的字段。
+@@ widget/src/helpers.rs:1414
+示例
+@@ widget/src/helpers.rs:1456
+创建一个新的 [`TextEditor`]。
+
+文本编辑器显示一个用于编辑文本的多行文本输入框。
+@@ widget/src/helpers.rs:1460
+示例
+@@ widget/src/helpers.rs:1502
+创建一个新的 [`Slider`]。
+
+滑块让用户可以通过移动指示器来设置一个值。
+@@ widget/src/helpers.rs:1506
+示例
+@@ widget/src/helpers.rs:1547
+创建一个新的 [`VerticalSlider`]。
+
+滑块让用户可以通过移动指示器来设置一个值。
+@@ widget/src/helpers.rs:1551
+示例
+@@ widget/src/helpers.rs:1592
+创建一个新的 [`PickList`]。
+
+选择列表显示一个可选择的选项下拉列表。
+@@ widget/src/helpers.rs:1596
+示例
+@@ widget/src/helpers.rs:1672
+创建一个新的 [`ComboBox`]。
+
+组合框显示一个可搜索、可选择的选项下拉列表。
+@@ widget/src/helpers.rs:1676
+示例
+@@ widget/src/helpers.rs:1744
+创建一个没有尺寸的空 [`Space`]。
+
+它被视为“恒等”部件。它不占用
+任何空间，也不做任何事。
+@@ widget/src/helpers.rs:1752
+创建一个新的 [`ProgressBar`]。
+
+进度条以可视化的方式展示耗时较长的计算机操作的进展，例如下载、文件传输或安装。
+
+它需要：
+  * 一个由可能取值构成的闭区间，以及
+  * [`ProgressBar`] 的当前值。
+@@ widget/src/helpers.rs:1760
+示例
+@@ widget/src/helpers.rs:1789
+创建一个新的 [`Image`]。
+
+图像用于显示各种格式（PNG、JPG 等）的位图图形。
+@@ widget/src/helpers.rs:1795
+示例
+@@ widget/src/helpers.rs:1810
+=
+@@ widget/src/helpers.rs:1816
+从给定的 [`Handle`] 创建一个新的 [`Svg`] 部件。
+
+Svg 部件在你的应用程序中显示矢量图形。
+@@ widget/src/helpers.rs:1823
+示例
+@@ widget/src/helpers.rs:1848
+创建一个 [`Element`]，以给定的 `text_size` 显示 iced 的标志。
+
+例如，可以用它在“关于”界面里向你最喜欢的 GUI 库
+表达一点喜爱之情。
+@@ widget/src/helpers.rs:1896
+创建一个新的 [`Canvas`]。
+
+画布可以用来绘制可交互的 2D 图形。
+@@ widget/src/helpers.rs:1902
+示例：绘制一个简单的圆
+@@ widget/src/helpers.rs:1912
+首先，定义绘制所需的数据
+@@ widget/src/helpers.rs:1918
+然后，实现 `Program`特质
+@@ widget/src/helpers.rs:1920
+没有内部状态
+@@ widget/src/helpers.rs:1931
+准备一个新的 `Frame`
+@@ widget/src/helpers.rs:1934
+创建一个表示简单圆形的 `Path`
+@@ widget/src/helpers.rs:1937
+并用某种颜色填充它
+@@ widget/src/helpers.rs:1940
+然后，生成几何图形
+@@ widget/src/helpers.rs:1945
+最后，只需用我们的 `Circle` 创建 `Canvas`！
+@@ widget/src/helpers.rs:1961
+从给定的 [`Data`] 创建一个新的 [`QRCode`] 部件。
+
+二维码用一种二维矩阵条码来显示信息。
+@@ widget/src/helpers.rs:1968
+示例
+@@ widget/src/helpers.rs:1998
+创建一个新的 [`Shader`]。
+@@ widget/src/helpers.rs:2009
+创建一个新的 [`MouseArea`]。
+@@ widget/src/helpers.rs:2019
+把任意 `Theme` 应用到其内容上的部件。
+@@ widget/src/helpers.rs:2031
+使用给定的 [`pane_grid::State`] 和视图函数创建一个 [`PaneGrid`]。
+
+窗格网格让用户可以分割应用程序的区域，并动态地组织布局。
+@@ widget/src/helpers.rs:2035
+示例
+@@ widget/src/helpers.rs:2083
+使用给定的内容创建一个新的 [`Float`] 部件。
+@@ widget/src/helpers.rs:2094
+使用一个产生其内容的闭包创建一个新的 [`Responsive`]
+部件。
+
+布局期间，`view` 闭包会收到 [`Responsive`] 可用的
+最大空间。你可以利用这个 [`Size`]
+有条件地构建内容。
+@@ widget/src/lazy/helpers.rs:9
+使用给定的数据 `Dependency` 和一个能把该数据转换为部件树的
+闭包，创建一个新的 [`Lazy`] 部件。
+@@ widget/src/lazy/helpers.rs:23
+把 [`Component`] 的实现者转换成一个 [`Element`]，
+它可以嵌入任何应用程序。
+@@ widget/src/canvas/program.rs:7
+[`Canvas`] 的状态和逻辑。
+
+[`Program`] 可以修改内部状态，并为应用程序
+产生消息。
+@@ widget/src/canvas/program.rs:17
+由 [`Program`] 修改的内部状态。
+@@ widget/src/canvas/program.rs:20
+更新 [`Program`] 的 [`State`](Self::State)。
+
+当 [`Program`] 用在 [`Canvas`] 中时，运行时会为每个 [`Event`]
+调用此方法。
+
+此方法可以选择返回一个 [`Action`]，用来把有意义的交互
+通知给应用程序、捕获该事件，或者
+请求重绘。
+
+默认情况下，此方法什么都不做，也不返回任何东西。
+@@ widget/src/canvas/program.rs:42
+绘制 [`Program`] 的状态，产生一组 [`Geometry`]。
+
+[`Geometry`] 可以很方便地用 [`Frame`] 生成，或者存储在
+[`Cache`] 中。
+@@ widget/src/canvas/program.rs:59
+返回 [`Program`] 当前的鼠标交互。
+
+即使光标位置超出了该程序所在 [`Canvas`] 的边界，
+返回的交互依然有效。
+@@ widget/src/image/viewer.rs:1
+对图像进行缩放和平移。
+@@ widget/src/image/viewer.rs:13
+显示图像的框，支持放大 / 缩小和平移。
+@@ widget/src/image/viewer.rs:27
+使用给定的 [`State`] 创建一个新的 [`Viewer`]。
+@@ widget/src/image/viewer.rs:42
+设置 [`Viewer`] 的 [`FilterMethod`]。
+@@ widget/src/image/viewer.rs:48
+设置 [`Viewer`] 的 [`ContentFit`]。
+@@ widget/src/image/viewer.rs:54
+设置 [`Viewer`] 的内边距。
+@@ widget/src/image/viewer.rs:60
+设置 [`Viewer`] 的宽度。
+@@ widget/src/image/viewer.rs:66
+设置 [`Viewer`] 的高度。
+@@ widget/src/image/viewer.rs:72
+设置应用于 [`Viewer`] 图像的最大缩放比例。
+
+默认为 `10.0`
+@@ widget/src/image/viewer.rs:80
+设置应用于 [`Viewer`] 图像的最小缩放比例。
+
+默认为 `0.25`
+@@ widget/src/image/viewer.rs:88
+设置 [`Viewer`] 的图像在放大 / 缩小时
+每次缩放的百分比。
+
+默认为 `0.10`
+@@ widget/src/image/viewer.rs:125
+底层图像的原始宽 / 高
+@@ widget/src/image/viewer.rs:132
+在进行 `Shrink` 之前，部件可用的尺寸
+@@ widget/src/image/viewer.rs:135
+图像适配到上述边界时的未裁剪尺寸
+@@ widget/src/image/viewer.rs:138
+如果有要求，把部件收缩到与调整后的图像相适应
+@@ widget/src/image/viewer.rs:364
+[`Viewer`] 的本地状态。
+@@ widget/src/image/viewer.rs:385
+创建一个新的 [`State`]。
+@@ widget/src/image/viewer.rs:390
+根据 [`Viewer`] 及其图像的边界，返回 [`State`]
+当前的偏移量。
+@@ widget/src/image/viewer.rs:405
+返回光标当前是否被 [`Viewer`] 抓取。
+@@ widget/src/image/viewer.rs:423
+根据 [`Viewer`] 的边界，返回底层图像的
+边界。会应用缩放，并保持原始的
+宽高比。

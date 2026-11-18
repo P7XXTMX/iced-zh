@@ -1,4 +1,11 @@
+//! 用于 wgpu 应用程序的自定义着色器部件。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! A custom shader widget for wgpu applications.
+//!
+//! </details>
 mod program;
 
 pub use program::Program;
@@ -18,10 +25,20 @@ pub use crate::Action;
 pub use crate::graphics::Viewport;
 pub use primitive::{Pipeline, Primitive, Storage};
 
+/// 可以使用 Iced 的 `wgpu` 后端渲染自定义着色器的部件。
+///
+/// 必须使用一个 [`Program`] 来初始化，它描述了部件的内部状态，
+/// 以及它的 [`Program::Primitive`] 如何绘制。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget which can render custom shaders with Iced's `wgpu` backend.
 ///
 /// Must be initialized with a [`Program`], which describes the internal widget state & how
 /// its [`Program::Primitive`]s are drawn.
+///
+/// </details>
 pub struct Shader<Message, P: Program<Message>> {
     width: Length,
     height: Length,
@@ -30,7 +47,14 @@ pub struct Shader<Message, P: Program<Message>> {
 }
 
 impl<Message, P: Program<Message>> Shader<Message, P> {
+    /// 创建一个新的自定义 [`Shader`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Create a new custom [`Shader`].
+    ///
+    /// </details>
     pub fn new(program: P) -> Self {
         Self {
             width: Length::Fixed(100.0),
@@ -40,13 +64,27 @@ impl<Message, P: Program<Message>> Shader<Message, P> {
         }
     }
 
+    /// 设置自定义 [`Shader`] 的 `width`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Set the `width` of the custom [`Shader`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置自定义 [`Shader`] 的 `height`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Set the `height` of the custom [`Shader`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self

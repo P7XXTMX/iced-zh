@@ -1,4 +1,11 @@
+//! 构建并绘制几何图形。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Build and draw geometry.
+//!
+//! </details>
 use crate::core::text::LineHeight;
 use crate::core::{
     self, Pixels, Point, Radians, Rectangle, Size, Svg, Transformation, Vector,
@@ -100,7 +107,14 @@ impl Cached for Geometry {
     }
 }
 
+/// 用于绘制几何图形的帧。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A frame for drawing some geometry.
+///
+/// </details>
 pub struct Frame {
     clip_bounds: Rectangle,
     buffers: BufferStack,
@@ -113,7 +127,14 @@ pub struct Frame {
 }
 
 impl Frame {
+    /// 使用给定的裁剪边界创建一个新的 [`Frame`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Frame`] with the given clip bounds.
+    ///
+    /// </details>
     pub fn new(bounds: Rectangle) -> Frame {
         Frame {
             clip_bounds: bounds,

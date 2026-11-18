@@ -55,6 +55,7 @@ impl Scene {
         match amount.cmp(&curr_cubes) {
             Ordering::Greater => {
                 // spawn
+                // 生成
                 let cubes_2_spawn = (amount - curr_cubes) as usize;
 
                 let mut cubes = 0;
@@ -69,6 +70,7 @@ impl Scene {
             }
             Ordering::Less => {
                 // chop
+                // 削减
                 let cubes_2_cut = curr_cubes - amount;
                 let new_len = self.cubes.len() - cubes_2_cut as usize;
                 self.cubes.truncate(new_len);
@@ -98,7 +100,14 @@ impl<Message> shader::Program<Message> for Scene {
     }
 }
 
+/// 可以渲染的一组 `Cube`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A collection of `Cube`s that can be rendered.
+///
+/// </details>
 #[derive(Debug)]
 pub struct Primitive {
     cubes: Vec<cube::Raw>,
@@ -139,6 +148,7 @@ impl shader::Primitive for Primitive {
         viewport: &Viewport,
     ) {
         // Upload data to GPU
+        // 把数据上传到 GPU
         pipeline.update(
             device,
             queue,
@@ -157,6 +167,7 @@ impl shader::Primitive for Primitive {
         clip_bounds: &Rectangle<u32>,
     ) {
         // Render primitive
+        // 渲染图元
         pipeline.render(
             target,
             encoder,

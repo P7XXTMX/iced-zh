@@ -4,12 +4,26 @@ use std::f32::consts::{FRAC_PI_2, PI};
 use std::fmt::Display;
 use std::ops::{Add, AddAssign, Div, Mul, RangeInclusive, Rem, Sub, SubAssign};
 
+/// 角度（度）
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Degrees
+///
+/// </details>
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Degrees(pub f32);
 
 impl Degrees {
+    /// 一个圆的角度范围（以度为单位）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The range of degrees of a circle.
+    ///
+    /// </details>
     pub const RANGE: RangeInclusive<Self> = Self(0.0)..=Self(360.0);
 }
 
@@ -71,18 +85,46 @@ impl num_traits::FromPrimitive for Degrees {
     }
 }
 
+/// 弧度
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Radians
+///
+/// </details>
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Radians(pub f32);
 
 impl Radians {
+    /// 一个圆的弧度范围。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The range of radians of a circle.
+    ///
+    /// </details>
     pub const RANGE: RangeInclusive<Self> = Self(0.0)..=Self(2.0 * PI);
 
+    /// 半个圆的弧度数。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The amount of radians in half a circle.
+    ///
+    /// </details>
     pub const PI: Self = Self(PI);
 
+    /// 计算该角度与 `bounds` 相交的直线。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Calculates the line in which the angle intercepts the `bounds`.
+    ///
+    /// </details>
     pub fn to_distance(&self, bounds: &Rectangle) -> (Point, Point) {
         let angle = self.0 - FRAC_PI_2;
         let r = Vector::new(f32::cos(angle), f32::sin(angle));

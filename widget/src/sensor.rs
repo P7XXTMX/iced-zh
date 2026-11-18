@@ -1,4 +1,11 @@
+//! 在内容进入和离开视野时生成消息。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Generate messages when content pops in and out of view.
+//!
+//! </details>
 use crate::core::layout;
 use crate::core::mouse;
 use crate::core::overlay;
@@ -12,9 +19,18 @@ use crate::core::{
     Size, Vector, Widget,
 };
 
+/// 在其内容进入和离开视野时可以生成消息的部件。
+///
+/// 它甚至可以在给定的距离处提前通知你！
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that can generate messages when its content pops in and out of view.
 ///
 /// It can even notify you with anticipation at a given distance!
+///
+/// </details>
 pub struct Sensor<
     'a,
     Key,
@@ -35,7 +51,14 @@ impl<'a, Message, Theme, Renderer> Sensor<'a, (), Message, Theme, Renderer>
 where
     Renderer: core::Renderer,
 {
+    /// 使用给定的内容创建一个新的 [`Sensor`] 部件。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Sensor`] widget with the given content.
+    ///
+    /// </details>
     pub fn new(
         content: impl Into<Element<'a, Message, Theme, Renderer>>,
     ) -> Self {
@@ -57,17 +80,35 @@ where
     Key: self::Key,
     Renderer: core::Renderer,
 {
+    /// 设置内容进入视野时要产生的消息。
+    ///
+    /// 闭包会收到内容在那一刻的 [`Size`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message to be produced when the content pops into view.
     ///
     /// The closure will receive the [`Size`] of the content in that moment.
+    ///
+    /// </details>
     pub fn on_show(mut self, on_show: impl Fn(Size) -> Message + 'a) -> Self {
         self.on_show = Some(Box::new(on_show));
         self
     }
 
+    /// 设置内容在视野内改变 [`Size`] 时要产生的消息。
+    ///
+    /// 闭包会收到内容的新 [`Size`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message to be produced when the content changes [`Size`] once its in view.
     ///
     /// The closure will receive the new [`Size`] of the content.
+    ///
+    /// </details>
     pub fn on_resize(
         mut self,
         on_resize: impl Fn(Size) -> Message + 'a,
@@ -76,15 +117,31 @@ where
         self
     }
 
+    /// 设置内容离开视野时要产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message to be produced when the content pops out of view.
+    ///
+    /// </details>
     pub fn on_hide(mut self, on_hide: Message) -> Self {
         self.on_hide = Some(on_hide);
         self
     }
 
+    /// 设置 [`Sensor`] 部件的键，用于保持连续性。
+    ///
+    /// 如果键发生变化，[`Sensor`] 部件会再次触发。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the key of the [`Sensor`] widget, for continuity.
     ///
     /// If the key changes, the [`Sensor`] widget will trigger again.
+    ///
+    /// </details>
     pub fn key<K>(
         self,
         key: K,
@@ -103,9 +160,18 @@ where
         }
     }
 
+    /// 设置 [`Sensor`] 的键，用于保持连续性；使用引用。
+    ///
+    /// 如果键发生变化，[`Sensor`] 会再次触发。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the key of the [`Sensor`], for continuity; using a reference.
     ///
     /// If the key changes, the [`Sensor`] will trigger again.
+    ///
+    /// </details>
     pub fn key_ref<K>(
         self,
         key: &'a K,
@@ -125,20 +191,41 @@ where
         }
     }
 
+    /// 设置以 [`Pixels`] 为单位的距离，用于在内容进入视野之前
+    /// 提前触发。
+    ///
+    /// 这非常适合在用户察觉之前，在幕后惰性加载
+    /// 一个很长的可滚动区域中的条目！
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the distance in [`Pixels`] to use in anticipation of the
     /// content popping into view.
     ///
     /// This can be quite useful to lazily load items in a long scrollable
     /// behind the scenes before the user can notice it!
+    ///
+    /// </details>
     pub fn anticipate(mut self, distance: impl Into<Pixels>) -> Self {
         self.anticipate = distance.into();
         self
     }
 
+    /// 设置在内容显示或隐藏之后，触发 [`on_show`] 或
+    /// [`on_hide`] 事件之前要等待的时间。
+    ///
+    /// 与 [`key`] 结合使用时，可以用来对键的变化进行防抖。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the amount of time to wait before firing an [`on_show`] or
     /// [`on_hide`] event; after the content is shown or hidden.
     ///
     /// When combined with [`key`], this can be useful to debounce key changes.
+    ///
+    /// </details>
     ///
     /// [`on_show`]: Self::on_show
     /// [`on_hide`]: Self::on_hide
@@ -380,17 +467,47 @@ where
     }
 }
 
+/// 部件的键。
+///
+/// 通常你不需要关心这个特质。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The key of a widget.
 ///
 /// You should generally not need to care about this trait.
+///
+/// </details>
 pub trait Key {
+    /// 键的拥有所有权的版本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The owned version of the key.
+    ///
+    /// </details>
     type Owned: 'static;
 
+    /// 返回键的拥有所有权的版本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the owned version of the key.
+    ///
+    /// </details>
     fn to_owned(&self) -> Self::Owned;
 
+    /// 把键与给定的拥有所有权的版本进行比较。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Compares the key with the given owned version.
+    ///
+    /// </details>
     fn eq(&self, other: &Self::Owned) -> bool;
 }
 

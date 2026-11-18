@@ -1,4 +1,11 @@
+//! 把窗口与渲染器连接起来。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Connect a window with a renderer.
+//!
+//! </details>
 use crate::core::Color;
 use crate::graphics::color;
 use crate::graphics::compositor;
@@ -7,7 +14,14 @@ use crate::graphics::{self, Shell, Viewport};
 use crate::settings::{self, Settings};
 use crate::{Engine, Renderer};
 
+/// 由 `wgpu` 驱动的 iced 窗口图形后端。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A window graphics backend for iced powered by `wgpu`.
+///
+/// </details>
 pub struct Compositor {
     instance: wgpu::Instance,
     adapter: wgpu::Adapter,
@@ -17,19 +31,54 @@ pub struct Compositor {
     settings: Settings,
 }
 
+/// 合成器错误。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A compositor error.
+///
+/// </details>
 #[derive(Debug, Clone, thiserror::Error)]
 pub enum Error {
+    /// 表面创建失败。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The surface creation failed.
+    ///
+    /// </details>
     #[error("the surface creation failed: {0}")]
     SurfaceCreationFailed(#[from] wgpu::CreateSurfaceError),
+    /// 表面不兼容。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The surface is not compatible.
+    ///
+    /// </details>
     #[error("the surface is not compatible")]
     IncompatibleSurface,
+    /// 没有找到符合所请求选项的适配器。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// No adapter was found for the options requested.
+    ///
+    /// </details>
     #[error("no adapter was found for the options requested: {0:?}")]
     NoAdapterFound(String),
+    /// 没有任何设备请求成功。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// No device request succeeded.
+    ///
+    /// </details>
     #[error("no device request succeeded: {0:?}")]
     RequestDeviceFailed(Vec<(wgpu::Limits, wgpu::RequestDeviceError)>),
 }
@@ -44,9 +93,18 @@ impl From<Error> for graphics::Error {
 }
 
 impl Compositor {
+    /// 使用给定的 [`Settings`] 请求一个新的 [`Compositor`]。
+    ///
+    /// 如果找不到兼容的图形适配器，返回 `None`。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Requests a new [`Compositor`] with the given [`Settings`].
     ///
     /// Returns `None` if no compatible graphics adapter could be found.
+    ///
+    /// </details>
     pub async fn request<W: compositor::Window>(
         settings: Settings,
         compatible_window: Option<W>,
@@ -205,7 +263,14 @@ impl Compositor {
     }
 }
 
+/// 使用给定的 [`Settings`] 和窗口创建一个 [`Compositor`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Creates a [`Compositor`] with the given [`Settings`] and window.
+///
+/// </details>
 pub async fn new<W: compositor::Window>(
     settings: Settings,
     compatible_window: W,
@@ -214,7 +279,14 @@ pub async fn new<W: compositor::Window>(
     Compositor::request(settings, Some(compatible_window), shell).await
 }
 
+/// 使用给定的 [`Compositor`] 呈现给定的图元。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Presents the given primitives with the given [`Compositor`].
+///
+/// </details>
 pub fn present(
     renderer: &mut Renderer,
     surface: &mut wgpu::Surface<'static>,
@@ -236,6 +308,7 @@ pub fn present(
             );
 
             // Present the frame
+            // 呈现这一帧
             on_pre_present();
             frame.present();
 

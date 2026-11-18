@@ -1,6 +1,7 @@
 use crate::wgpu;
 
 // A custom buffer container for dynamic resizing.
+// 支持动态调整大小的自定义缓冲区容器。
 pub struct Buffer {
     pub raw: wgpu::Buffer,
     label: &'static str,

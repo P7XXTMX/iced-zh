@@ -1,4 +1,11 @@
+//! 绘制段落。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Draw paragraphs.
+//!
+//! </details>
 use crate::core;
 use crate::core::alignment;
 use crate::core::text::{
@@ -10,7 +17,14 @@ use crate::text;
 use std::fmt;
 use std::sync::{self, Arc};
 
+/// 一段文本。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A bunch of text.
+///
+/// </details>
 #[derive(Clone, PartialEq)]
 pub struct Paragraph(Arc<Internal>);
 
@@ -28,21 +42,46 @@ struct Internal {
 }
 
 impl Paragraph {
+    /// 创建一个新的空 [`Paragraph`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new empty [`Paragraph`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// 返回 [`Paragraph`] 的缓冲区。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the buffer of the [`Paragraph`].
+    ///
+    /// </details>
     pub fn buffer(&self) -> &cosmic_text::Buffer {
         &self.internal().buffer
     }
 
+    /// 创建 [`Paragraph`] 的 [`Weak`] 引用。
+    ///
+    /// 在不需要引用保证的场合，这可以避免
+    /// 克隆 [`Paragraph`]。例如，
+    /// 在创建渲染树的时候。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Weak`] reference to the [`Paragraph`].
     ///
     /// This is useful to avoid cloning the [`Paragraph`] when
     /// referential guarantees are unnecessary. For instance,
     /// when creating a rendering tree.
+    ///
+    /// </details>
     pub fn downgrade(&self) -> Weak {
         let paragraph = self.internal();
 
@@ -355,6 +394,8 @@ impl core::text::Paragraph for Paragraph {
 
         // index represents a grapheme, not a glyph
         // Let's find the first glyph for the given grapheme cluster
+        // index 表示的是字素，而不是字形
+        // 我们来找出给定字素簇的第一个字形
         let mut last_start = None;
         let mut last_grapheme_count = 0;
         let mut graphemes_seen = 0;
@@ -443,20 +484,55 @@ impl Default for Internal {
     }
 }
 
+/// [`Paragraph`] 的弱引用。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A weak reference to a [`Paragraph`].
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct Weak {
     raw: sync::Weak<Internal>,
+    /// [`Paragraph`] 的最小边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The minimum bounds of the [`Paragraph`].
+    ///
+    /// </details>
     pub min_bounds: Size,
+    /// [`Paragraph`] 的水平对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The horizontal alignment of the [`Paragraph`].
+    ///
+    /// </details>
     pub align_x: Alignment,
+    /// [`Paragraph`] 的垂直对齐方式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The vertical alignment of the [`Paragraph`].
+    ///
+    /// </details>
     pub align_y: alignment::Vertical,
 }
 
 impl Weak {
+    /// 尝试把该引用升级为 [`Paragraph`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Tries to update the reference into a [`Paragraph`].
+    ///
+    /// </details>
     pub fn upgrade(&self) -> Option<Paragraph> {
         self.raw.upgrade().map(Paragraph)
     }

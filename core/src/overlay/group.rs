@@ -5,8 +5,16 @@ use crate::renderer;
 use crate::widget;
 use crate::{Clipboard, Event, Layout, Overlay, Shell, Size};
 
+/// 一个 [`Overlay`] 容器，显示多个覆盖层 [`overlay::Element`]
+/// 子级。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An [`Overlay`] container that displays multiple overlay [`overlay::Element`]
 /// children.
+///
+/// </details>
 pub struct Group<'a, Message, Theme, Renderer> {
     children: Vec<overlay::Element<'a, Message, Theme, Renderer>>,
 }
@@ -17,12 +25,26 @@ where
     Theme: 'a,
     Renderer: 'a + crate::Renderer,
 {
+    /// 创建一个空的 [`Group`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates an empty [`Group`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// 使用给定的元素创建一个 [`Group`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a [`Group`] with the given elements.
+    ///
+    /// </details>
     pub fn with_children(
         mut children: Vec<overlay::Element<'a, Message, Theme, Renderer>>,
     ) -> Self {
@@ -38,7 +60,14 @@ where
         Group { children }
     }
 
+    /// 把 [`Group`] 转换成一个覆盖层 [`overlay::Element`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Turns the [`Group`] into an overlay [`overlay::Element`].
+    ///
+    /// </details>
     pub fn overlay(self) -> overlay::Element<'a, Message, Theme, Renderer> {
         overlay::Element::new(Box::new(self))
     }

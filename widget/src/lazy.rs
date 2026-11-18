@@ -25,7 +25,14 @@ use std::cell::RefCell;
 use std::hash::{Hash, Hasher as H};
 use std::rc::Rc;
 
+/// 只在必要时才重建其内容的部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that only rebuilds its contents when necessary.
+///
+/// </details>
 #[cfg(feature = "lazy")]
 pub struct Lazy<'a, Message, Theme, Renderer, Dependency, View> {
     dependency: Dependency,
@@ -41,8 +48,16 @@ where
     Dependency: Hash + 'a,
     View: Into<Element<'static, Message, Theme, Renderer>>,
 {
+    /// 使用给定的数据 `Dependency` 和一个能把该数据转换为部件树的
+    /// 闭包，创建一个新的 [`Lazy`] 部件。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Lazy`] widget with the given data `Dependency` and a
     /// closure that can turn this data into a widget tree.
+    ///
+    /// </details>
     pub fn new(
         dependency: Dependency,
         view: impl Fn(&Dependency) -> View + 'a,
@@ -298,6 +313,9 @@ where
             // - You may not like it, but this is what peak performance looks like
             // - TODO: Get rid of ouroboros, for good
             // - What?!
+            // - 你也许不喜欢，但这就是巅峰性能的样子
+            // - 待办：彻底摆脱 ouroboros
+            // - 什么？！
             *self.element.borrow().as_ref().unwrap().borrow_mut() =
                 Some(heads.element);
 

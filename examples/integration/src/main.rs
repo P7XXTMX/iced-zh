@@ -29,6 +29,7 @@ pub fn main() -> Result<(), winit::error::EventLoopError> {
     tracing_subscriber::fmt::init();
 
     // Initialize winit
+    // 初始化 winit
     let event_loop = EventLoop::new()?;
 
     #[allow(clippy::large_enum_variant)]
@@ -140,10 +141,12 @@ pub fn main() -> Result<(), winit::error::EventLoopError> {
                 );
 
                 // Initialize scene and GUI controls
+                // 初始化场景和 GUI 控件
                 let scene = Scene::new(&device, format);
                 let controls = Controls::new();
 
                 // Initialize iced
+                // 初始化 iced
 
                 let renderer = {
                     let engine = Engine::new(
@@ -159,6 +162,7 @@ pub fn main() -> Result<(), winit::error::EventLoopError> {
                 };
 
                 // You should change this if you want to render continuously
+                // 如果你想持续渲染，应该修改这里
                 event_loop.set_control_flow(ControlFlow::Wait);
 
                 *self = Self::Ready {
@@ -247,6 +251,7 @@ pub fn main() -> Result<(), winit::error::EventLoopError> {
 
                             {
                                 // Clear the frame
+                                // 清空这一帧
                                 let mut render_pass = Scene::clear(
                                     &view,
                                     &mut encoder,
@@ -254,13 +259,16 @@ pub fn main() -> Result<(), winit::error::EventLoopError> {
                                 );
 
                                 // Draw the scene
+                                // 绘制场景
                                 scene.draw(&mut render_pass);
                             }
 
                             // Submit the scene
+                            // 提交场景
                             queue.submit([encoder.finish()]);
 
                             // Draw iced on top
+                            // 在其上绘制 iced
                             let mut interface = UserInterface::build(
                                 controls.view(),
                                 viewport.logical_size(),
@@ -281,12 +289,14 @@ pub fn main() -> Result<(), winit::error::EventLoopError> {
                             );
 
                             // Update the mouse cursor
+                            // 更新鼠标光标
                             if let user_interface::State::Updated {
                                 mouse_interaction,
                                 ..
                             } = state
                             {
                                 // Update the mouse cursor
+                                // 更新鼠标光标
                                 if let Some(icon) =
                                     iced_winit::conversion::mouse_interaction(
                                         mouse_interaction,
@@ -300,6 +310,7 @@ pub fn main() -> Result<(), winit::error::EventLoopError> {
                             }
 
                             // Draw the interface
+                            // 绘制界面
                             interface.draw(
                                 renderer,
                                 &Theme::Dark,
@@ -316,6 +327,7 @@ pub fn main() -> Result<(), winit::error::EventLoopError> {
                             );
 
                             // Present the frame
+                            // 呈现这一帧
                             frame.present();
                         }
                         Err(error) => match error {
@@ -327,6 +339,7 @@ pub fn main() -> Result<(), winit::error::EventLoopError> {
                             }
                             _ => {
                                 // Try rendering again next frame.
+                                // 下一帧再尝试渲染。
                                 window.request_redraw();
                             }
                         },
@@ -352,6 +365,7 @@ pub fn main() -> Result<(), winit::error::EventLoopError> {
             }
 
             // Map window event to iced event
+            // 把窗口事件映射为 iced 事件
             if let Some(event) = conversion::window_event(
                 event,
                 window.scale_factor() as f32,
@@ -361,8 +375,10 @@ pub fn main() -> Result<(), winit::error::EventLoopError> {
             }
 
             // If there are events pending
+            // 如果有待处理的事件
             if !events.is_empty() {
                 // We process them
+                // 我们就处理它们
                 let mut interface = UserInterface::build(
                     controls.view(),
                     viewport.logical_size(),
@@ -384,11 +400,13 @@ pub fn main() -> Result<(), winit::error::EventLoopError> {
                 *cache = interface.into_cache();
 
                 // update our UI with any messages
+                // 用产生的消息更新我们的 UI
                 for message in messages {
                     controls.update(message);
                 }
 
                 // and request a redraw
+                // 并请求重绘
                 window.request_redraw();
             }
         }

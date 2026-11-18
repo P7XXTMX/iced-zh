@@ -1,4 +1,11 @@
+//! 加载并操作图像。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Load and operate on images.
+//!
+//! </details>
 #[cfg(feature = "image")]
 use crate::core::Bytes;
 
@@ -6,18 +13,39 @@ use crate::core::Rectangle;
 use crate::core::image;
 use crate::core::svg;
 
+/// 位图或矢量图像。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A raster or vector image.
+///
+/// </details>
 #[allow(missing_docs)]
 #[derive(Debug, Clone, PartialEq)]
 pub enum Image {
+    /// 位图图像。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A raster image.
+    ///
+    /// </details>
     Raster {
         image: image::Image,
         bounds: Rectangle,
         clip_bounds: Rectangle,
     },
 
+    /// 矢量图像。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A vector image.
+    ///
+    /// </details>
     Vector {
         svg: svg::Svg,
         bounds: Rectangle,
@@ -26,7 +54,14 @@ pub enum Image {
 }
 
 impl Image {
+    /// 返回 [`Image`] 的边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the bounds of the [`Image`].
+    ///
+    /// </details>
     pub fn bounds(&self) -> Rectangle {
         match self {
             Image::Raster { image, bounds, .. } => {
@@ -37,12 +72,26 @@ impl Image {
     }
 }
 
+/// 图像缓冲区。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An image buffer.
+///
+/// </details>
 #[cfg(feature = "image")]
 pub type Buffer = ::image::ImageBuffer<::image::Rgba<u8>, Bytes>;
 
 #[cfg(feature = "image")]
+/// 尝试根据 [`Handle`] 加载图像。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// Tries to load an image by its [`Handle`].
+///
+/// </details>
 ///
 /// [`Handle`]: image::Handle
 pub fn load(handle: &image::Handle) -> Result<Buffer, image::Error> {
@@ -61,6 +110,7 @@ pub fn load(handle: &image::Handle) -> Result<Buffer, image::Error> {
     impl Operation {
         // Meaning of the returned value is described e.g. at:
         // https://magnushoff.com/articles/jpeg-orientation/
+        // 返回值的含义可参见（例如）上面的链接。
         fn from_exif<R>(reader: &mut R) -> Result<Self, exif::Error>
         where
             R: std::io::BufRead + std::io::Seek,

@@ -1,15 +1,43 @@
 use crate::time::Instant;
 
+/// 重绘窗口的请求。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A request to redraw a window.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum RedrawRequest {
+    /// 在下一帧重绘。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Redraw the next frame.
+    ///
+    /// </details>
     NextFrame,
 
+    /// 在给定的时间重绘。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Redraw at the given time.
+    ///
+    /// </details>
     At(Instant),
 
+    /// 不需要重绘。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// No redraw is needed.
+    ///
+    /// </details>
     Wait,
 }
 

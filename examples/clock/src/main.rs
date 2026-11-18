@@ -159,6 +159,7 @@ impl<Message> canvas::Program<Message> for Clock {
             });
 
             // Draw clock numbers
+            // 绘制时钟上的数字
             for hour in 1..=12 {
                 let angle = Radians::from(hand_rotation(hour, 12))
                     - Radians::from(Degrees(90.0));
@@ -178,6 +179,7 @@ impl<Message> canvas::Program<Message> for Clock {
             }
 
             // Draw ticks
+            // 绘制刻度
             for tick in 0..60 {
                 let angle = hand_rotation(tick, 60);
                 let width = if tick % 5 == 0 { 3.0 } else { 1.0 };

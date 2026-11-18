@@ -1,19 +1,54 @@
 use crate::alignment;
 use crate::{Padding, Point, Radians, Size, Vector};
 
+/// 与坐标轴对齐的矩形。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An axis-aligned rectangle.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Rectangle<T = f32> {
+    /// 左上角的 X 坐标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// X coordinate of the top-left corner.
+    ///
+    /// </details>
     pub x: T,
 
+    /// 左上角的 Y 坐标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Y coordinate of the top-left corner.
+    ///
+    /// </details>
     pub y: T,
 
+    /// 矩形的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Width of the rectangle.
+    ///
+    /// </details>
     pub width: T,
 
+    /// 矩形的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Height of the rectangle.
+    ///
+    /// </details>
     pub height: T,
 }
 
@@ -21,8 +56,16 @@ impl<T> Rectangle<T>
 where
     T: Default,
 {
+    /// 创建一个新的 [`Rectangle`]，其左上角位于原点，
+    /// 并具有给定的 [`Size`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Rectangle`] with its top-left corner at the origin
     /// and with the provided [`Size`].
+    ///
+    /// </details>
     pub fn with_size(size: Size<T>) -> Self {
         Self {
             x: T::default(),
@@ -34,14 +77,29 @@ where
 }
 
 impl Rectangle<f32> {
+    /// 从负无穷开始、宽度和高度均为无穷大的矩形。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A rectangle starting at negative infinity and with infinite width and height.
+    ///
+    /// </details>
     pub const INFINITE: Self = Self::new(
         Point::new(f32::NEG_INFINITY, f32::NEG_INFINITY),
         Size::INFINITE,
     );
 
+    /// 创建一个新的 [`Rectangle`]，其左上角位于给定的
+    /// [`Point`]，并具有给定的 [`Size`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Rectangle`] with its top-left corner in the given
     /// [`Point`] and with the provided [`Size`].
+    ///
+    /// </details>
     pub const fn new(top_left: Point, size: Size) -> Self {
         Self {
             x: top_left.x,
@@ -51,8 +109,16 @@ impl Rectangle<f32> {
         }
     }
 
+    /// 创建一个新的正方形 [`Rectangle`]，其中心位于原点，
+    /// 并具有给定的半径。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new square [`Rectangle`] with the center at the origin and
     /// with the given radius.
+    ///
+    /// </details>
     pub fn with_radius(radius: f32) -> Self {
         Self {
             x: -radius,
@@ -62,9 +128,18 @@ impl Rectangle<f32> {
         }
     }
 
+    /// 根据给定的顶点创建一个新的与坐标轴对齐的 [`Rectangle`]；同时返回
+    /// 为了得到期望的结果而必须应用到该 [`Rectangle`] 上的
+    /// 旋转量（以 [`Radians`] 表示）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new axis-aligned [`Rectangle`] from the given vertices; returning the
     /// rotation in [`Radians`] that must be applied to the axis-aligned [`Rectangle`]
     /// to obtain the desired result.
+    ///
+    /// </details>
     pub fn with_vertices(
         top_left: Point,
         top_right: Point,
@@ -107,40 +182,92 @@ impl Rectangle<f32> {
         )
     }
 
+    /// 返回位于 [`Rectangle`] 中心的 [`Point`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the [`Point`] at the center of the [`Rectangle`].
+    ///
+    /// </details>
     pub fn center(&self) -> Point {
         Point::new(self.center_x(), self.center_y())
     }
 
+    /// 返回位于 [`Rectangle`] 中心的 [`Point`] 的
+    /// X 坐标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the X coordinate of the [`Point`] at the center of the
     /// [`Rectangle`].
+    ///
+    /// </details>
     pub fn center_x(&self) -> f32 {
         self.x + self.width / 2.0
     }
 
+    /// 返回位于 [`Rectangle`] 中心的 [`Point`] 的
+    /// Y 坐标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the Y coordinate of the [`Point`] at the center of the
     /// [`Rectangle`].
+    ///
+    /// </details>
     pub fn center_y(&self) -> f32 {
         self.y + self.height / 2.0
     }
 
+    /// 返回 [`Rectangle`] 左上角的位置。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the position of the top left corner of the [`Rectangle`].
+    ///
+    /// </details>
     pub fn position(&self) -> Point {
         Point::new(self.x, self.y)
     }
 
+    /// 返回 [`Rectangle`] 的 [`Size`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the [`Size`] of the [`Rectangle`].
+    ///
+    /// </details>
     pub fn size(&self) -> Size {
         Size::new(self.width, self.height)
     }
 
+    /// 返回 [`Rectangle`] 的面积。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the area of the [`Rectangle`].
+    ///
+    /// </details>
     pub fn area(&self) -> f32 {
         self.width * self.height
     }
 
+    /// 如果给定的 [`Point`] 包含在 [`Rectangle`] 之内，返回 true。
+    /// 不包括右边缘和下边缘。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns true if the given [`Point`] is contained in the [`Rectangle`].
     /// Excludes the right and bottom edges.
+    ///
+    /// </details>
     pub fn contains(&self, point: Point) -> bool {
         self.x <= point.x
             && point.x < self.x + self.width
@@ -148,8 +275,16 @@ impl Rectangle<f32> {
             && point.y < self.y + self.height
     }
 
+    /// 返回给定的 [`Point`] 到 [`Rectangle`] 任意一条边的
+    /// 最小距离。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the minimum distance from the given [`Point`] to any of the edges
     /// of the [`Rectangle`].
+    ///
+    /// </details>
     pub fn distance(&self, point: Point) -> f32 {
         let center = self.center();
 
@@ -162,8 +297,16 @@ impl Rectangle<f32> {
         distance_x.hypot(distance_y)
     }
 
+    /// 计算为了把 [`Rectangle`] 放进给定的 `container` 之内
+    /// 而必须应用到它上面的偏移量。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Computes the offset that must be applied to the [`Rectangle`] to be placed
     /// inside the given `container`.
+    ///
+    /// </details>
     pub fn offset(&self, container: &Rectangle) -> Vector {
         let Some(intersection) = self.intersection(container) else {
             return Vector::ZERO;
@@ -186,8 +329,16 @@ impl Rectangle<f32> {
         )
     }
 
+    /// 如果当前的 [`Rectangle`] 位于给定的
+    /// `container` 之内，返回 true。包括右边缘和下边缘。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns true if the current [`Rectangle`] is within the given
     /// `container`. Includes the right and bottom edges.
+    ///
+    /// </details>
     pub fn is_within(&self, container: &Rectangle) -> bool {
         self.x >= container.x
             && self.y >= container.y
@@ -195,7 +346,14 @@ impl Rectangle<f32> {
             && self.y + self.height <= container.y + container.height
     }
 
+    /// 计算与给定 [`Rectangle`] 的交集。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Computes the intersection with the given [`Rectangle`].
+    ///
+    /// </details>
     pub fn intersection(
         &self,
         other: &Rectangle<f32>,
@@ -221,12 +379,26 @@ impl Rectangle<f32> {
         }
     }
 
+    /// 返回 [`Rectangle`] 是否与给定的矩形相交。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns whether the [`Rectangle`] intersects with the given one.
+    ///
+    /// </details>
     pub fn intersects(&self, other: &Self) -> bool {
         self.intersection(other).is_some()
     }
 
+    /// 计算与给定 [`Rectangle`] 的并集。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Computes the union with the given [`Rectangle`].
+    ///
+    /// </details>
     pub fn union(&self, other: &Self) -> Self {
         let x = self.x.min(other.x);
         let y = self.y.min(other.y);
@@ -245,7 +417,14 @@ impl Rectangle<f32> {
         }
     }
 
+    /// 把 [`Rectangle`] 吸附到 **无符号** 整数坐标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Snaps the [`Rectangle`] to __unsigned__ integer coordinates.
+    ///
+    /// </details>
     pub fn snap(self) -> Option<Rectangle<u32>> {
         let top_left = self.position().snap();
         let bottom_right = (self.position() + Vector::from(self.size())).snap();
@@ -265,7 +444,14 @@ impl Rectangle<f32> {
         })
     }
 
+    /// 把 [`Rectangle`] 扩大给定的量。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Expands the [`Rectangle`] a given amount.
+    ///
+    /// </details>
     pub fn expand(self, padding: impl Into<Padding>) -> Self {
         let padding = padding.into();
 
@@ -277,7 +463,14 @@ impl Rectangle<f32> {
         }
     }
 
+    /// 把 [`Rectangle`] 缩小给定的量。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Shrinks the [`Rectangle`] a given amount.
+    ///
+    /// </details>
     pub fn shrink(self, padding: impl Into<Padding>) -> Self {
         let padding = padding.into();
 
@@ -289,8 +482,16 @@ impl Rectangle<f32> {
         }
     }
 
+    /// 旋转 [`Rectangle`]，并返回包含它的
+    /// 最小 [`Rectangle`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Rotates the [`Rectangle`] and returns the smallest [`Rectangle`]
     /// containing it.
+    ///
+    /// </details>
     pub fn rotate(self, rotation: Radians) -> Self {
         let size = self.size().rotate(rotation);
         let position = Point::new(
@@ -301,8 +502,16 @@ impl Rectangle<f32> {
         Self::new(position, size)
     }
 
+    /// 在不改变位置的情况下缩放 [`Rectangle`]，相当于
+    /// 对它进行“变焦”。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Scales the [`Rectangle`] without changing its position, effectively
     /// "zooming" it.
+    ///
+    /// </details>
     pub fn zoom(self, zoom: f32) -> Self {
         Self {
             x: self.x - (self.width * (zoom - 1.0)) / 2.0,
@@ -312,9 +521,18 @@ impl Rectangle<f32> {
         }
     }
 
+    /// 返回在 [`Rectangle`] 内渲染一个给定 [`Size`] 的对象时
+    /// 所用的左上角位置；该对象锚定在
+    /// 由对齐参数指定的边或角上。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the top-left position to render an object of the given [`Size`].
     /// inside the [`Rectangle`] that is anchored to the edge or corner
     /// defined by the alignment arguments.
+    ///
+    /// </details>
     pub fn anchor(
         &self,
         size: Size,

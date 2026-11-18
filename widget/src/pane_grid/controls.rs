@@ -1,7 +1,14 @@
 use crate::container;
 use crate::core::{self, Element};
 
+/// [`Pane`] 的控件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The controls of a [`Pane`].
+///
+/// </details>
 ///
 /// [`Pane`]: super::Pane
 pub struct Controls<
@@ -22,7 +29,14 @@ where
     Theme: container::Catalog,
     Renderer: core::Renderer,
 {
+    /// 使用给定的内容创建一个新的 [`Controls`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Controls`] with the given content.
+    ///
+    /// </details>
     pub fn new(
         content: impl Into<Element<'a, Message, Theme, Renderer>>,
     ) -> Self {
@@ -32,9 +46,18 @@ where
         }
     }
 
+    /// 创建一个带有完整版本和紧凑版本的新 [`Controls`]。
+    /// 如果空间不足以在不重叠的情况下显示完整版本，
+    /// 就会改为显示紧凑版本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Controls`] with a full and compact variant.
     /// If there is not enough room to show the full variant without overlap,
     /// then the compact variant will be shown instead.
+    ///
+    /// </details>
     pub fn dynamic(
         full: impl Into<Element<'a, Message, Theme, Renderer>>,
         compact: impl Into<Element<'a, Message, Theme, Renderer>>,

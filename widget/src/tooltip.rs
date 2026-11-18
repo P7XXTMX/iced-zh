@@ -1,9 +1,19 @@
+//! 工具提示在某个元素被悬停时，在其上方显示一条提示信息。
+//!
+//! 默认情况下，工具提示会立即显示，不过可以通过
+//! [`Tooltip::delay`] 调整。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Tooltips display a hint of information over some element when hovered.
 //!
 //! By default, the tooltip is displayed immediately, however, this can be adjusted
 //! with [`Tooltip::delay`].
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } }
 //! # pub type State = ();
@@ -38,9 +48,16 @@ use crate::core::{
     Shell, Size, Vector,
 };
 
+/// 用于在一个部件上方显示另一个部件的元素。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// An element to display a widget over another.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -85,10 +102,24 @@ where
     Theme: container::Catalog,
     Renderer: text::Renderer,
 {
+    /// 由此渲染器绘制的 [`Tooltip`] 的默认内边距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default padding of a [`Tooltip`] drawn by this renderer.
+    ///
+    /// </details>
     const DEFAULT_PADDING: f32 = 5.0;
 
+    /// 创建一个新的 [`Tooltip`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Tooltip`].
+    ///
+    /// </details>
     ///
     /// [`Tooltip`]: struct.Tooltip.html
     pub fn new(
@@ -108,33 +139,70 @@ where
         }
     }
 
+    /// 设置内容与其 [`Tooltip`] 之间的间隙。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the gap between the content and its [`Tooltip`].
+    ///
+    /// </details>
     pub fn gap(mut self, gap: impl Into<Pixels>) -> Self {
         self.gap = gap.into().0;
         self
     }
 
+    /// 设置 [`Tooltip`] 的内边距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the padding of the [`Tooltip`].
+    ///
+    /// </details>
     pub fn padding(mut self, padding: impl Into<Pixels>) -> Self {
         self.padding = padding.into().0;
         self
     }
 
+    /// 设置 [`Tooltip`] 显示之前的延迟。
+    ///
+    /// 设置为 [`Duration::ZERO`] 则立即显示。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the delay before the [`Tooltip`] is shown.
     ///
     /// Set to [`Duration::ZERO`] to be shown immediately.
+    ///
+    /// </details>
     pub fn delay(mut self, delay: Duration) -> Self {
         self.delay = delay;
         self
     }
 
+    /// 设置 [`Tooltip`] 是否被限制在视口之内。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets whether the [`Tooltip`] is snapped within the viewport.
+    ///
+    /// </details>
     pub fn snap_within_viewport(mut self, snap: bool) -> Self {
         self.snap_within_viewport = snap;
         self
     }
 
+    /// 设置 [`Tooltip`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`Tooltip`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(
         mut self,
@@ -147,7 +215,14 @@ where
         self
     }
 
+    /// 设置 [`Tooltip`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`Tooltip`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
@@ -402,19 +477,61 @@ where
     }
 }
 
+/// 工具提示的位置。默认跟随光标。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The position of the tooltip. Defaults to following the cursor.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Position {
+    /// 工具提示会出现在部件的上方。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The tooltip will appear on the top of the widget.
+    ///
+    /// </details>
     #[default]
     Top,
+    /// 工具提示会出现在部件的下方。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The tooltip will appear on the bottom of the widget.
+    ///
+    /// </details>
     Bottom,
+    /// 工具提示会出现在部件的左侧。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The tooltip will appear on the left of the widget.
+    ///
+    /// </details>
     Left,
+    /// 工具提示会出现在部件的右侧。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The tooltip will appear on the right of the widget.
+    ///
+    /// </details>
     Right,
+    /// 工具提示会跟随光标。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The tooltip will follow the cursor.
+    ///
+    /// </details>
     FollowCursor,
 }
 

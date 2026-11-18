@@ -1,4 +1,11 @@
+//! 让元素浮动起来！
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Make elements float!
+//!
+//! </details>
 use crate::core;
 use crate::core::border;
 use crate::core::layout;
@@ -12,7 +19,14 @@ use crate::core::{
     Transformation, Vector, Widget,
 };
 
+/// 可以让其内容浮动在其他部件之上的部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that can make its contents float over other widgets.
+///
+/// </details>
 pub struct Float<'a, Message, Theme = crate::Theme, Renderer = crate::Renderer>
 where
     Theme: Catalog,
@@ -27,7 +41,14 @@ impl<'a, Message, Theme, Renderer> Float<'a, Message, Theme, Renderer>
 where
     Theme: Catalog,
 {
+    /// 使用给定的内容创建一个新的 [`Float`] 部件。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Float`] widget with the given content.
+    ///
+    /// </details>
     pub fn new(
         content: impl Into<Element<'a, Message, Theme, Renderer>>,
     ) -> Self {
@@ -39,17 +60,35 @@ where
         }
     }
 
+    /// 设置应用于 [`Float`] 内容的缩放比例。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the scale to be applied to the contents of the [`Float`].
+    ///
+    /// </details>
     pub fn scale(mut self, scale: f32) -> Self {
         self.scale = scale;
         self
     }
 
+    /// 设置应用于 [`Float`] 内容的平移逻辑。
+    ///
+    /// 该逻辑接收内容原始（未缩放）的边界和
+    /// 视口边界。这些边界可以用来确保浮动元素
+    /// 始终留在屏幕上。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the translation logic to be applied to the contents of the [`Float`].
     ///
     /// The logic takes the original (non-scaled) bounds of the contents and the
     /// viewport bounds. These bounds can be useful to ensure the floating elements
     /// always stay on screen.
+    ///
+    /// </details>
     pub fn translate(
         mut self,
         translate: impl Fn(Rectangle, Rectangle) -> Vector + 'a,
@@ -58,7 +97,14 @@ where
         self
     }
 
+    /// 设置 [`Float`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`Float`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme) -> Style + 'a) -> Self
     where
@@ -68,7 +114,14 @@ where
         self
     }
 
+    /// 设置 [`Float`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`Float`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
@@ -392,22 +445,60 @@ where
     }
 }
 
+/// [`Float`] 的主题样式目录。
+///
+/// 所有可以与 [`Float`] 一起使用的主题
+/// 都必须实现此特质。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`Float`].
 ///
 /// All themes that can be used with [`Float`]
 /// must implement this trait.
+///
+/// </details>
 pub trait Catalog {
+    /// [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of the [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by the [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> Self::Class<'a>;
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(&self, class: &Self::Class<'_>) -> Style;
 }
 
+/// [`Float`] 的样式函数。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for a [`Float`].
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme) -> Style + 'a>;
 
 impl Catalog for crate::Theme {
@@ -422,11 +513,32 @@ impl Catalog for crate::Theme {
     }
 }
 
+/// [`Float`] 的样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The style of a [`Float`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub struct Style {
+    /// [`Float`] 的 [`Shadow`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Shadow`] of the [`Float`].
+    ///
+    /// </details>
     pub shadow: Shadow,
+    /// 阴影的边框半径。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The border radius of the shadow.
+    ///
+    /// </details>
     pub shadow_border_radius: border::Radius,
 }

@@ -1,0 +1,472 @@
+@@ src/advanced.rs:1
+使用自定义部件等高级概念。
+@@ src/advanced.rs:3
+编写你自己的订阅。
+@@ src/advanced.rs:10
+创建自定义部件并对它们执行操作。
+@@ src/application.rs:1
+一步一步地创建并运行 iced 应用程序。
+@@ src/application.rs:3
+示例
+@@ src/application.rs:51
+根据启动、更新和视图逻辑创建一个 iced [`Application`]。
+@@ src/application.rs:53
+示例
+@@ src/application.rs:169
+iced 应用程序的底层定义与配置。
+
+你可以用这套 API 一步一步地创建并运行 iced 应用程序，
+而不必把你的逻辑与某个特质或某个特定类型
+耦合在一起。
+
+你可以用 [`application`] 辅助函数创建一个 [`Application`]。
+@@ src/application.rs:185
+运行 [`Application`]。
+@@ src/application.rs:217
+设置运行 [`Application`] 时使用的 [`Settings`]。
+@@ src/application.rs:222
+设置 [`Application`] 的 [`Settings::antialiasing`]。
+@@ src/application.rs:233
+设置 [`Application`] 的默认 [`Font`]。
+@@ src/application.rs:244
+向 [`Application`] 启动时要加载的字体列表中添加一个字体。
+@@ src/application.rs:250
+设置 [`Application`] 的 [`window::Settings`]。
+
+会覆盖之前设置的任何 [`window::Settings`]。
+@@ src/application.rs:257
+把 [`Application`] 的 [`window::Settings::position`] 设置为 [`window::Position::Centered`]。
+@@ src/application.rs:268
+设置 [`Application`] 的 [`window::Settings::exit_on_close_request`]。
+@@ src/application.rs:279
+设置 [`Application`] 的 [`window::Settings::size`]。
+@@ src/application.rs:290
+设置 [`Application`] 的 [`window::Settings::transparent`]。
+@@ src/application.rs:301
+设置 [`Application`] 的 [`window::Settings::resizable`]。
+@@ src/application.rs:312
+设置 [`Application`] 的 [`window::Settings::decorations`]。
+@@ src/application.rs:323
+设置 [`Application`] 的 [`window::Settings::position`]。
+@@ src/application.rs:334
+设置 [`Application`] 的 [`window::Settings::level`]。
+@@ src/application.rs:568
+某个 [`Application`] 的标题逻辑。
+
+`&static str` 和任何 `Fn(&State) -> String` 闭包
+都实现了这个特质。
+
+这个特质让 [`application`] 构建器可以接受其中任何一种。
+@@ src/application.rs:619
+某个 [`Application`] 的视图逻辑。
+
+这个特质让 [`application`] 构建器可以接受任何返回
+`Into<Element<'_, Message>>` 的闭包。
+@@ src/application.rs:345
+设置 [`Application`] 的标题。
+@@ src/application.rs:362
+设置 [`Application`] 的订阅逻辑。
+@@ src/application.rs:377
+设置 [`Application`] 的主题逻辑。
+@@ src/application.rs:394
+设置 [`Application`] 的样式逻辑。
+@@ src/application.rs:409
+设置 [`Application`] 的缩放因子。
+@@ src/application.rs:426
+设置 [`Application`] 的执行器。
+@@ src/application.rs:443
+设置 [`Application`] 的启动预设。
+
+在测试时，可以用预设覆盖应用程序默认的
+启动策略，从而创建可复现的
+环境。
+@@ src/application.rs:527
+初始化某个 [`Application`] 的 `State` 的逻辑。
+
+`Fn() -> State` 和 `Fn() -> (State, Task<Message>)`
+都实现了这个特质。
+
+实际上，这意味着 [`application`] 既可以接受
+`State::default` 这样的简单函数，也可以接受返回 [`Task`] 的
+更高级的函数。
+@@ src/application.rs:536
+初始化 [`Application`] 的状态。
+@@ src/application.rs:550
+某个 [`Application`] 的初始状态。
+@@ src/application.rs:552
+把某个类型转换为某个 [`Application`] 的初始状态。
+@@ src/application.rs:575
+生成 [`Application`] 的标题。
+@@ src/application.rs:640
+某个 [`Application`] 的主题逻辑。
+
+任何实现了这个特质的类型都可以作为参数传给
+[`Application::theme`]。
+
+`iced` 提供了两种实现：
+- 内置的 [`Theme`] 本身
+- 以及任何 `Fn(&State) -> impl Into<Option<Theme>>`。
+@@ src/application.rs:649
+返回 [`Application`] 在当前状态下的主题。
+
+如果返回 `None`，`iced` 会尝试使用与系统配色方案
+相匹配的主题。
+@@ src/application.rs:594
+某个 [`Application`] 的更新逻辑。
+
+这个特质让 [`application`] 构建器可以接受任何返回
+`Into<Task<Message>>` 的闭包。
+@@ src/application.rs:599
+处理消息并更新 [`Application`] 的状态。
+@@ src/application.rs:624
+生成 [`Application`] 的部件。
+@@ program/src/lib.rs:121
+使用给定的标题函数装饰一个 [`Program`]。
+@@ program/src/lib.rs:299
+使用给定的主题函数装饰一个 [`Program`]。
+@@ program/src/lib.rs:473
+使用给定的缩放因子函数装饰一个 [`Program`]。
+@@ src/application/timed.rs:1
+在更新逻辑中接收 [`Instant`] 的 [`Application`]。
+@@ src/application/timed.rs:11
+创建一个 [`Application`]，它的 `update` 函数还会接收
+每条 `Message` 对应的 [`Instant`]。
+
+这个构造函数适合用来创建*纯*的动画应用程序
+（即不依赖 [`Instant::now`] 这类有副作用的调用）。
+
+如果你希望应用程序在给定相同的消息历史时最终处于
+完全相同的状态，就需要纯度。有了这个性质，
+才能用 [`comet`] 进行正确的时间旅行调试。
+@@ src/application/timed.rs:158
+某个带时间的 [`Application`] 的更新逻辑。
+
+它与 [`application::UpdateFn`](super::UpdateFn) 类似，
+但还会接收一个 [`Instant`]。
+@@ src/application/timed.rs:163
+处理消息并更新 [`Application`] 的状态。
+@@ src/daemon.rs:1
+创建并运行在后台运行的守护进程。
+@@ src/daemon.rs:17
+根据启动、更新和视图逻辑创建一个 iced [`Daemon`]。
+
+[`Daemon`] 默认不会打开窗口，而是静默运行，
+直到它的更新逻辑返回一个来自 [`window::open`] 的 [`Task`]。
+
+此外，[`Daemon`] 在所有窗口都关闭后也不会停止运行。
+要彻底终止一个 [`Daemon`]，必须中断它的进程，或者
+让它的更新逻辑产生一个来自 [`exit`] 的 [`Task`]。
+@@ src/daemon.rs:116
+iced 守护进程的底层定义与配置。
+
+你可以用这套 API 一步一步地创建并运行 iced 应用程序，
+而不必把你的逻辑与某个特质或某个特定类型
+耦合在一起。
+
+你可以用 [`daemon`] 辅助函数创建一个 [`Daemon`]。
+@@ src/daemon.rs:131
+运行 [`Daemon`]。
+@@ src/daemon.rs:156
+设置运行 [`Daemon`] 时使用的 [`Settings`]。
+@@ src/daemon.rs:161
+设置 [`Daemon`] 的 [`Settings::antialiasing`]。
+@@ src/daemon.rs:172
+设置 [`Daemon`] 的默认 [`Font`]。
+@@ src/daemon.rs:183
+向 [`Daemon`] 启动时要加载的字体列表中添加一个字体。
+@@ src/daemon.rs:189
+设置 [`Daemon`] 的标题。
+@@ src/daemon.rs:205
+设置 [`Daemon`] 的订阅逻辑。
+@@ src/daemon.rs:219
+设置 [`Daemon`] 的主题逻辑。
+@@ src/daemon.rs:235
+设置 [`Daemon`] 的样式逻辑。
+@@ src/daemon.rs:249
+设置 [`Daemon`] 的缩放因子。
+@@ src/daemon.rs:263
+设置 [`Daemon`] 的执行器。
+@@ src/daemon.rs:279
+设置 [`Daemon`] 的启动预设。
+
+在测试时，可以用预设覆盖应用程序默认的
+启动策略，从而创建可复现的
+环境。
+@@ src/daemon.rs:363
+某个 [`Daemon`] 的标题逻辑。
+
+`&static str` 和任何 `Fn(&State, window::Id) -> String` 闭包
+都实现了这个特质。
+
+这个特质让 [`daemon`] 构建器可以接受其中任何一种。
+@@ src/daemon.rs:370
+生成 [`Daemon`] 的标题。
+@@ src/daemon.rs:389
+某个 [`Daemon`] 的视图逻辑。
+
+这个特质让 [`daemon`] 构建器可以接受任何返回
+`Into<Element<'_, Message>>` 的闭包。
+@@ src/daemon.rs:394
+生成 [`Daemon`] 的部件。
+@@ src/daemon.rs:418
+某个 [`Daemon`] 的主题逻辑。
+
+任何实现了这个特质的类型都可以作为参数传给
+[`Daemon::theme`]。
+
+`iced` 提供了两种实现：
+- 内置的 [`Theme`] 本身
+- 以及任何 `Fn(&State, window::Id) -> impl Into<Option<Theme>>`。
+@@ src/daemon.rs:427
+返回 [`Daemon`] 在当前状态和窗口下的主题。
+
+如果返回 `None`，`iced` 会尝试使用与系统配色方案
+相匹配的主题。
+@@ src/error.rs:5
+运行应用程序时发生的错误。
+@@ src/error.rs:8
+无法创建 future 执行器。
+@@ src/error.rs:12
+无法创建应用程序窗口。
+@@ src/error.rs:16
+无法创建应用程序的图形上下文。
+@@ src/lib.rs:1
+iced 是一个专注于简洁和类型安全的跨平台 GUI 库。
+灵感来自 [Elm]。
+@@ src/lib.rs:6
+免责声明
+@@ src/lib.rs:7
+iced 是**实验性**软件。如果你期望文档在入门阶段手把手地带着你，
+那么你的体验将会令人沮丧。
+
+这个库充分利用了 Rust 的全部特性：所有权、借用、生命周期、future、
+流、一等函数、特质约束、闭包等等。本文档并不打算教你其中任何一项。
+恰恰相反，它假定你已经**精通**
+所有这些。
+
+此外，和 Rust 一样，iced 非常不留情面。它不会让你轻易走捷径。
+仅凭类型签名就足以学会这个库大部分的用法。
+一切都是相互关联的。
+
+因此，对于**高级** Rust 程序员来说，iced 很容易学；不过也有许多有耐心的
+初学者学会了它，并且乐在其中。由于它以类型安全的方式利用了 Rust 提供的
+大量特性，它也可以成为探索 Rust 本身的好途径。
+
+如果你不喜欢这种说法，期望有人把知识喂到嘴边，或者在使用这个库时
+感到沮丧和吃力，那么我建议你耐心等待[这本书][the book]
+写完。
+@@ src/lib.rs:29
+袖珍指南
+@@ src/lib.rs:30
+从调用 [`run`] 开始：
+@@ src/lib.rs:40
+定义一个 `update` 函数来**改变**你的状态：
+@@ src/lib.rs:52
+定义一个 `view` 函数来**显示**你的状态：
+@@ src/lib.rs:65
+再创建一个 `Message` 枚举，把 `view` 和 `update` **连接**起来：
+@@ src/lib.rs:74
+自定义状态
+@@ src/lib.rs:75
+你可以为状态定义自己的结构体：
+@@ src/lib.rs:84
+但你必须相应地修改 `update` 和 `view`：
+@@ src/lib.rs:103
+部件与元素
+@@ src/lib.rs:104
+`view` 函数必须返回一个 [`Element`]。[`Element`] 就是一个通用的[部件][`widget`]。
+
+[`widget`] 模块包含许多函数，帮助你构建
+和使用部件。
+
+部件使用构建器模式来配置：
+@@ src/lib.rs:128
+调用 `into` 可以把部件转换成 [`Element`]。
+
+部件和元素对它们产生的消息类型是泛型的。
+`view` 返回的 [`Element`] 必须与你的 `update`
+具有相同的 `Message` 类型。
+@@ src/lib.rs:134
+布局
+@@ src/lib.rs:135
+iced 中没有统一的布局系统。每个部件各自实现
+自己的布局策略。
+
+构建布局通常就是组合使用
+[行][rows]、[列][columns]和[容器][containers]：
+@@ src/lib.rs:163
+行和列分别在水平和垂直方向上排列它们的子元素。
+可以方便地在元素之间添加[间距][Spacing]。
+
+容器在自己的边界内定位或对齐单个部件。
+@@ src/lib.rs:173
+尺寸
+@@ src/lib.rs:174
+部件的宽度和高度通常可以用 [`Length`] 来定义。
+
+- [`Fill`] 会让部件占满给定轴上的全部可用空间。
+- [`Shrink`] 会让部件使用其固有尺寸。
+
+大多数部件默认使用 [`Shrink`] 尺寸策略，但会从它们的子元素
+继承 [`Fill`] 策略。
+
+也可以使用以 [`Pixels`] 为单位的固定数值 [`Length`]：
+@@ src/lib.rs:195
+主题
+@@ src/lib.rs:196
+要更改应用程序的默认 [`Theme`]，可以定义一个 `theme`
+函数并使用 [`Application`] 构建器，而不是直接
+调用 [`run`]：
+@@ src/lib.rs:222
+`theme` 函数接收应用程序的当前状态，因此返回的
+[`Theme`] 可以完全是动态的——就像 `view` 一样。
+
+有许多内置的 [`Theme`] 变体可供使用，你也可以
+[创建自己的主题](Theme::custom)。
+@@ src/lib.rs:228
+样式
+@@ src/lib.rs:229
+与布局一样，iced 没有统一的样式系统。不过，所有
+内置部件都遵循相同的样式方式。
+
+调用部件的 `style` 方法可以改变它的外观：
+@@ src/lib.rs:245
+部件的 `style` 方法接受一个闭包，该闭包根据当前生效的
+[`Theme`] 返回部件的样式：
+@@ src/lib.rs:271
+可以处于多种不同状态的部件还会向闭包提供
+某种 [`Status`]，让你可以为每种状态使用不同的样式。
+
+你可以用 [`palette`] 或 [`extended_palette`] 方法
+取出 [`Theme`] 的 [`Palette`] 颜色。
+
+为了方便，大多数部件都在各自的模块中提供了样式函数，
+例如 [`container::rounded_box`]、[`button::primary`] 或 [`text::danger`]。
+@@ src/lib.rs:287
+并发任务
+@@ src/lib.rs:288
+`update` 函数可以*选择性地*返回一个 [`Task`]。
+
+可以利用 [`Task`] 执行异步工作，例如运行一个
+future 或一个流：
+@@ src/lib.rs:327
+任务也可以用来与 iced 运行时交互。一些模块
+公开了创建各种用途任务的函数，例如[修改
+窗口设置](window#functions)、[聚焦某个部件](widget::operation::focus_next)，或者
+[查询它的可见边界](widget::selector::find)。
+
+与 future 和流一样，任务公开了[单子式接口](Task::then)；不过它们还可以被
+[映射](Task::map)、[串联](Task::chain)、[批量合并](Task::batch)、[取消](Task::abortable)，
+等等。
+@@ src/lib.rs:336
+被动订阅
+@@ src/lib.rs:337
+应用程序可以订阅被动的数据源，例如时钟滴答或运行时事件。
+
+你需要定义一个 `subscription` 函数并使用 [`Application`] 构建器：
+@@ src/lib.rs:365
+[`Subscription`] 是[一种*声明式*的流构建器](Subscription#the-lifetime-of-a-subscription)，
+这些流不允许自行结束。只有 `subscription` 函数
+决定哪些订阅处于活动状态，就像 `view` 在每一时刻都完全决定了
+用户界面中可见的部件一样。
+
+与任务一样，一些模块公开了方便的函数来为你构建 [`Subscription`]，例如
+可以用来监听时间的 [`time::every`]，或者会把所有键盘事件通知给你的
+[`keyboard::listen`]。不过你也可以用 [`Subscription::run`] 和 [`run_with`] 创建自己的订阅。
+@@ src/lib.rs:376
+扩展应用程序
+@@ src/lib.rs:377
+`update`、`view` 和 `Message` 这个三元组可以很好地组合。
+
+一种常见的模式是利用这种可组合性，把应用程序
+拆分成不同的屏幕：
+@@ src/lib.rs:463
+屏幕的 `update` 方法可以返回一个 `Action` 枚举，父级可以利用它来
+执行任务，或者干脆切换到一个完全不同的屏幕。`Action` 的变体可以
+带有关联数据。例如，在上面的示例中，当 `Contacts::update` 返回带有
+所选联系人的 `Action::Chat` 时，就会创建 `Conversation` 屏幕。
+
+实际上，这种做法让你能够以类型安全的方式“讲一个故事”，
+把不同的屏幕连接起来。
+
+此外，[`Task::map`]、[`Element::map`] 和 [`Subscription::map`] 这些函子方法
+让组合变得顺畅自然。
+@@ src/lib.rs:551
+调试你的应用程序。
+@@ src/lib.rs:556
+创建运行时任务。
+@@ src/lib.rs:564
+访问剪贴板。
+@@ src/lib.rs:571
+选择你偏好的执行器来驱动应用程序。
+@@ src/lib.rs:577
+加载并使用字体。
+@@ src/lib.rs:583
+处理用户界面的事件。
+@@ src/lib.rs:589
+监听键盘事件并做出响应。
+@@ src/lib.rs:596
+监听鼠标事件并做出响应。
+@@ src/lib.rs:603
+获取系统信息。
+@@ src/lib.rs:611
+在其他部件之上显示可交互的元素。
+@@ src/lib.rs:613
+一个通用的覆盖层。
+
+它是使用默认 `Renderer` 的 [`overlay::Element`] 的别名。
+@@ src/lib.rs:629
+监听触摸事件并做出响应。
+@@ src/lib.rs:635
+使用内置部件或创建你自己的部件。
+@@ src/lib.rs:641
+图像用于显示各种格式（PNG、JPG 等）的位图图形。
+@@ src/lib.rs:646
+我们隐藏了由 `iced_widget` 重新导出的模块
+@@ src/lib.rs:668
+一个通用的部件。
+
+它是使用默认 `Renderer` 的 `iced_native` 元素的别名。
+@@ src/lib.rs:678
+运行一个 iced 程序的结果。
+@@ src/lib.rs:681
+根据更新和视图逻辑，使用默认的 [`Settings`] 运行一个
+基本的 iced 应用程序。
+
+这等价于把 [`application()`] 与 [`Application::run`] 串联起来。
+@@ src/lib.rs:686
+示例
+@@ src/time.rs:1
+监听时间并做出响应。
+@@ src/time.rs:17
+返回一个 [`Task`]，它通过调用 [`Instant::now`]
+产生当前的 [`Instant`]。
+
+虽然你可以在应用程序中直接调用 [`Instant::now`]，
+但这会让你的应用程序变得“不纯”（即失去引用透明性）。
+
+如果你想正确地使用 `time-travel` 特性，
+就可能需要关心纯度。
+@@ src/touch.rs:1
+监听触摸事件并做出响应。
+@@ src/window.rs:1
+在原生平台上配置应用程序的窗口。
+@@ src/window/icon.rs:1
+为应用程序的窗口设置图标。
+@@ src/window/icon.rs:11
+根据图像文件创建图标。
+
+如果运行时文件不存在，它会返回错误。你可能更愿意使用 [`from_file_data`]。
+@@ src/window/icon.rs:21
+根据图像文件的内容创建图标。
+
+这些内容可以在编译期嵌入你的应用程序，例如使用 `include_bytes!` 宏。
+你可以显式传入文件格式。否则会在运行时猜测文件格式。
+@@ src/window/icon.rs:49
+创建 [`Icon`] 时产生的错误。
+@@ src/window/icon.rs:52
+[`Icon`] 无效。
+@@ src/window/icon.rs:56
+底层操作系统创建图标失败。
+@@ src/window/icon.rs:60
+`image` crate 报告了错误。

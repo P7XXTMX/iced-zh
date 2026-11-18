@@ -1,6 +1,13 @@
+//! 选择列表显示一个由可选选项组成的下拉列表。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Pick lists display a dropdown list of selectable options.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 //! # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -80,9 +87,16 @@ use crate::overlay::menu::{self, Menu};
 use std::borrow::Borrow;
 use std::f32;
 
+/// 用于从选项列表中选择单个值的部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget for selecting a single value from a list of options.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } pub use iced_widget::Renderer; pub use iced_widget::core::*; }
 /// # pub type Element<'a, Message> = iced_widget::core::Element<'a, Message, iced_widget::Theme, iced_widget::Renderer>;
@@ -186,8 +200,16 @@ where
     Theme: Catalog,
     Renderer: text::Renderer,
 {
+    /// 使用给定的选项列表、当前选中的值，以及选项被选中时
+    /// 产生的消息，创建一个新的 [`PickList`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`PickList`] with the given list of options, the current
     /// selected value, and the message to produce when an option is selected.
+    ///
+    /// </details>
     pub fn new(
         options: L,
         selected: Option<V>,
@@ -214,37 +236,79 @@ where
         }
     }
 
+    /// 设置 [`PickList`] 的占位文本。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the placeholder of the [`PickList`].
+    ///
+    /// </details>
     pub fn placeholder(mut self, placeholder: impl Into<String>) -> Self {
         self.placeholder = Some(placeholder.into());
         self
     }
 
+    /// 设置 [`PickList`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`PickList`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Menu`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Menu`].
+    ///
+    /// </details>
     pub fn menu_height(mut self, menu_height: impl Into<Length>) -> Self {
         self.menu_height = menu_height.into();
         self
     }
 
+    /// 设置 [`PickList`] 的 [`Padding`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Padding`] of the [`PickList`].
+    ///
+    /// </details>
     pub fn padding<P: Into<Padding>>(mut self, padding: P) -> Self {
         self.padding = padding.into();
         self
     }
 
+    /// 设置 [`PickList`] 的文本大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the text size of the [`PickList`].
+    ///
+    /// </details>
     pub fn text_size(mut self, size: impl Into<Pixels>) -> Self {
         self.text_size = Some(size.into());
         self
     }
 
+    /// 设置 [`PickList`] 的文本 [`text::LineHeight`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the text [`text::LineHeight`] of the [`PickList`].
+    ///
+    /// </details>
     pub fn text_line_height(
         mut self,
         line_height: impl Into<text::LineHeight>,
@@ -253,37 +317,79 @@ where
         self
     }
 
+    /// 设置 [`PickList`] 的 [`text::Shaping`] 策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`text::Shaping`] strategy of the [`PickList`].
+    ///
+    /// </details>
     pub fn text_shaping(mut self, shaping: text::Shaping) -> Self {
         self.text_shaping = shaping;
         self
     }
 
+    /// 设置 [`PickList`] 的字体。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the font of the [`PickList`].
+    ///
+    /// </details>
     pub fn font(mut self, font: impl Into<Renderer::Font>) -> Self {
         self.font = Some(font.into());
         self
     }
 
+    /// 设置 [`PickList`] 的 [`Handle`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Handle`] of the [`PickList`].
+    ///
+    /// </details>
     pub fn handle(mut self, handle: Handle<Renderer::Font>) -> Self {
         self.handle = handle;
         self
     }
 
+    /// 设置 [`PickList`] 被打开时产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when the [`PickList`] is opened.
+    ///
+    /// </details>
     pub fn on_open(mut self, on_open: Message) -> Self {
         self.on_open = Some(on_open);
         self
     }
 
+    /// 设置 [`PickList`] 被关闭时产生的消息。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the message that will be produced when the [`PickList`] is closed.
+    ///
+    /// </details>
     pub fn on_close(mut self, on_close: Message) -> Self {
         self.on_close = Some(on_close);
         self
     }
 
+    /// 设置 [`PickList`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`PickList`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme, Status) -> Style + 'a) -> Self
     where
@@ -293,7 +399,14 @@ where
         self
     }
 
+    /// 设置 [`Menu`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of the [`Menu`].
+    ///
+    /// </details>
     #[must_use]
     pub fn menu_style(
         mut self,
@@ -306,7 +419,14 @@ where
         self
     }
 
+    /// 设置 [`PickList`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`PickList`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(
@@ -317,7 +437,14 @@ where
         self
     }
 
+    /// 设置 [`Menu`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`Menu`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn menu_class(
@@ -453,6 +580,8 @@ where
                 if state.is_open {
                     // Event wasn't processed by overlay, so cursor was clicked either outside its
                     // bounds or on the drop-down, either way we close the overlay.
+                    // 事件没有被覆盖层处理，说明光标点击的位置要么在覆盖层的
+                    // 边界之外，要么在下拉框上；无论哪种情况，我们都关闭覆盖层。
                     state.is_open = false;
 
                     if let Some(on_close) = &self.on_close {
@@ -770,7 +899,14 @@ struct State<P: text::Paragraph> {
 }
 
 impl<P: text::Paragraph> State<P> {
+    /// 为 [`PickList`] 创建一个新的 [`State`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`State`] for a [`PickList`].
+    ///
+    /// </details>
     fn new() -> Self {
         Self {
             menu: menu::State::default(),
@@ -789,26 +925,84 @@ impl<P: text::Paragraph> Default for State<P> {
     }
 }
 
+/// [`PickList`] 右侧的手柄。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The handle to the right side of the [`PickList`].
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub enum Handle<Font> {
+    /// 显示一个箭头图标（▼）。
+    ///
+    /// 这是默认值。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Displays an arrow icon (▼).
     ///
     /// This is the default.
+    ///
+    /// </details>
     Arrow {
+        /// 内容的字体大小。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Font size of the content.
+        ///
+        /// </details>
         size: Option<Pixels>,
     },
+    /// 自定义的静态手柄。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A custom static handle.
+    ///
+    /// </details>
     Static(Icon<Font>),
+    /// 自定义的动态手柄。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// A custom dynamic handle.
+    ///
+    /// </details>
     Dynamic {
+        /// [`PickList`] 关闭时使用的 [`Icon`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The [`Icon`] used when [`PickList`] is closed.
+        ///
+        /// </details>
         closed: Icon<Font>,
+        /// [`PickList`] 打开时使用的 [`Icon`]。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The [`Icon`] used when [`PickList`] is open.
+        ///
+        /// </details>
         open: Icon<Font>,
     },
+    /// 不显示手柄。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// No handle will be shown.
+    ///
+    /// </details>
     None,
 }
 
@@ -818,64 +1012,218 @@ impl<Font> Default for Handle<Font> {
     }
 }
 
+/// [`Handle`] 的图标。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The icon of a [`Handle`].
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq)]
 pub struct Icon<Font> {
+    /// 用于显示 `code_point` 的字体，
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Font that will be used to display the `code_point`,
+    ///
+    /// </details>
     pub font: Font,
+    /// 用作图标的 unicode 码位。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The unicode code point that will be used as the icon.
+    ///
+    /// </details>
     pub code_point: char,
+    /// 内容的字体大小。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Font size of the content.
+    ///
+    /// </details>
     pub size: Option<Pixels>,
+    /// 内容的行高。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Line height of the content.
+    ///
+    /// </details>
     pub line_height: text::LineHeight,
+    /// 图标的文本整形策略。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The shaping strategy of the icon.
+    ///
+    /// </details>
     pub shaping: text::Shaping,
 }
 
+/// [`PickList`] 可能的交互状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The possible status of a [`PickList`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
+    /// [`PickList`] 可以进行交互。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`PickList`] can be interacted with.
+    ///
+    /// </details>
     Active,
+    /// [`PickList`] 正被悬停。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`PickList`] is being hovered.
+    ///
+    /// </details>
     Hovered,
+    /// [`PickList`] 处于打开状态。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`PickList`] is open.
+    ///
+    /// </details>
     Opened {
+        /// [`PickList`] 在打开时是否被悬停。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Whether the [`PickList`] is hovered, while open.
+        ///
+        /// </details>
         is_hovered: bool,
     },
 }
 
+/// 选择列表的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of a pick list.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Style {
+    /// 选择列表的文本 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The text [`Color`] of the pick list.
+    ///
+    /// </details>
     pub text_color: Color,
+    /// 选择列表的占位文本 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The placeholder [`Color`] of the pick list.
+    ///
+    /// </details>
     pub placeholder_color: Color,
+    /// 选择列表的手柄 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The handle [`Color`] of the pick list.
+    ///
+    /// </details>
     pub handle_color: Color,
+    /// 选择列表的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Background`] of the pick list.
+    ///
+    /// </details>
     pub background: Background,
+    /// 选择列表的 [`Border`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Border`] of the pick list.
+    ///
+    /// </details>
     pub border: Border,
 }
 
+/// [`PickList`] 的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`PickList`].
+///
+/// </details>
 pub trait Catalog: menu::Catalog {
+    /// [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of the [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by the [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> <Self as Catalog>::Class<'a>;
 
+    /// [`PickList`] 的菜单的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class for the menu of the [`PickList`].
+    ///
+    /// </details>
     fn default_menu<'a>() -> <Self as menu::Catalog>::Class<'a> {
         <Self as menu::Catalog>::default()
     }
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(
         &self,
         class: &<Self as Catalog>::Class<'_>,
@@ -883,9 +1231,18 @@ pub trait Catalog: menu::Catalog {
     ) -> Style;
 }
 
+/// [`PickList`] 的样式函数。
+///
+/// 它只是一个装箱的闭包：`Fn(&Theme, Status) -> Style`。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for a [`PickList`].
 ///
 /// This is just a boxed closure: `Fn(&Theme, Status) -> Style`.
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme, Status) -> Style + 'a>;
 
 impl Catalog for Theme {
@@ -900,7 +1257,14 @@ impl Catalog for Theme {
     }
 }
 
+/// [`PickList`] 字段部分的默认样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default style of the field of a [`PickList`].
+///
+/// </details>
 pub fn default(theme: &Theme, status: Status) -> Style {
     let palette = theme.extended_palette();
 

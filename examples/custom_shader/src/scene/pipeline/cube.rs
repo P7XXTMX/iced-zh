@@ -4,7 +4,14 @@ use crate::wgpu;
 use glam::{Vec3, vec2, vec3};
 use rand::{Rng, thread_rng};
 
+/// 立方体的单个实例。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A single instance of a cube.
+///
+/// </details>
 #[derive(Debug, Clone)]
 pub struct Cube {
     pub rotation: glam::Quat,
@@ -65,11 +72,13 @@ pub struct Raw {
 impl Raw {
     const ATTRIBS: [wgpu::VertexAttribute; 7] = wgpu::vertex_attr_array![
         //cube transformation matrix
+        // 立方体变换矩阵
         4 => Float32x4,
         5 => Float32x4,
         6 => Float32x4,
         7 => Float32x4,
         //normal rotation matrix
+        // 法线旋转矩阵
         8 => Float32x3,
         9 => Float32x3,
         10 => Float32x3,
@@ -100,6 +109,7 @@ impl Raw {
     pub fn vertices() -> [Vertex; 36] {
         [
             //face 1
+            // 第 1 个面
             Vertex {
                 pos: vec3(-0.5, -0.5, -0.5),
                 normal: vec3(0.0, 0.0, -1.0),
@@ -137,6 +147,7 @@ impl Raw {
                 uv: vec2(0.0, 1.0),
             },
             //face 2
+            // 第 2 个面
             Vertex {
                 pos: vec3(-0.5, -0.5, 0.5),
                 normal: vec3(0.0, 0.0, 1.0),
@@ -174,6 +185,7 @@ impl Raw {
                 uv: vec2(0.0, 1.0),
             },
             //face 3
+            // 第 3 个面
             Vertex {
                 pos: vec3(-0.5, 0.5, 0.5),
                 normal: vec3(-1.0, 0.0, 0.0),
@@ -211,6 +223,7 @@ impl Raw {
                 uv: vec2(0.0, 1.0),
             },
             //face 4
+            // 第 4 个面
             Vertex {
                 pos: vec3(0.5, 0.5, 0.5),
                 normal: vec3(1.0, 0.0, 0.0),
@@ -248,6 +261,7 @@ impl Raw {
                 uv: vec2(0.0, 1.0),
             },
             //face 5
+            // 第 5 个面
             Vertex {
                 pos: vec3(-0.5, -0.5, -0.5),
                 normal: vec3(0.0, -1.0, 0.0),
@@ -285,6 +299,7 @@ impl Raw {
                 uv: vec2(0.0, 1.0),
             },
             //face 6
+            // 第 6 个面
             Vertex {
                 pos: vec3(-0.5, 0.5, -0.5),
                 normal: vec3(0.0, 1.0, 0.0),

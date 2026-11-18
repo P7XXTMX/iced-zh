@@ -1,4 +1,11 @@
+//! 构建基于窗口的 GUI 应用程序。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Build window-based GUI applications.
+//!
+//! </details>
 pub mod icon;
 pub mod screenshot;
 pub mod settings;

@@ -37,7 +37,14 @@ use crate::graphics::Viewport;
 use crate::graphics::compositor;
 use crate::graphics::text::{Editor, Paragraph};
 
+/// 用于 [`iced`] 的 [`tiny-skia`] 图形渲染器。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A [`tiny-skia`] graphics renderer for [`iced`].
+///
+/// </details>
 ///
 /// [`tiny-skia`]: https://github.com/RazrFalcon/tiny-skia
 /// [`iced`]: https://github.com/iced-rs/iced
@@ -46,7 +53,7 @@ pub struct Renderer {
     default_font: Font,
     default_text_size: Pixels,
     layers: layer::Stack,
-    engine: Engine, // TODO: Shared engine
+    engine: Engine, // TODO: Shared engine（待办：共享引擎）
 }
 
 impl Renderer {
@@ -239,6 +246,7 @@ impl core::Renderer for Renderer {
         #[cfg(feature = "image")]
         #[allow(unsafe_code)]
         // TODO: Concurrency
+        // 待办：并发
         callback(self.engine.raster_pipeline.load(_handle));
 
         #[cfg(not(feature = "image"))]

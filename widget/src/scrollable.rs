@@ -1,6 +1,13 @@
+//! 可滚动区域让用户借助滚动条浏览无限多的内容。
+//!
+//! <details>
+//! <summary>显示英文原文</summary>
+//!
 //! Scrollables let users navigate an endless amount of content with a scrollbar.
 //!
-//! # Example
+//! </details>
+//!
+//! # 示例（Example）
 //! ```no_run
 //! # mod iced { pub mod widget { pub use iced_widget::*; } }
 //! # pub type State = ();
@@ -42,10 +49,18 @@ use crate::core::{
 
 pub use operation::scrollable::{AbsoluteOffset, RelativeOffset};
 
+/// 可以借助滚动条在垂直方向上显示无限多内容的
+/// 部件。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A widget that can vertically display an infinite amount of content with a
 /// scrollbar.
 ///
-/// # Example
+/// </details>
+///
+/// # 示例（Example）
 /// ```no_run
 /// # mod iced { pub mod widget { pub use iced_widget::*; } }
 /// # pub type State = ();
@@ -89,14 +104,28 @@ where
     Theme: Catalog,
     Renderer: text::Renderer,
 {
+    /// 创建一个新的垂直 [`Scrollable`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new vertical [`Scrollable`].
+    ///
+    /// </details>
     pub fn new(
         content: impl Into<Element<'a, Message, Theme, Renderer>>,
     ) -> Self {
         Self::with_direction(content, Direction::default())
     }
 
+    /// 使用给定的 [`Direction`] 创建一个新的 [`Scrollable`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates a new [`Scrollable`] with the given [`Direction`].
+    ///
+    /// </details>
     pub fn with_direction(
         content: impl Into<Element<'a, Message, Theme, Renderer>>,
         direction: impl Into<Direction>,
@@ -129,64 +158,143 @@ where
         self
     }
 
+    /// 让 [`Scrollable`] 水平滚动，使用默认的 [`Scrollbar`] 设置。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Makes the [`Scrollable`] scroll horizontally, with default [`Scrollbar`] settings.
+    ///
+    /// </details>
     pub fn horizontal(self) -> Self {
         self.direction(Direction::Horizontal(Scrollbar::default()))
     }
 
+    /// 设置 [`Scrollable`] 的 [`Direction`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Direction`] of the [`Scrollable`].
+    ///
+    /// </details>
     pub fn direction(mut self, direction: impl Into<Direction>) -> Self {
         self.direction = direction.into();
         self.enclose()
     }
 
+    /// 设置 [`Scrollable`] 的 [`widget::Id`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`widget::Id`] of the [`Scrollable`].
+    ///
+    /// </details>
     pub fn id(mut self, id: impl Into<widget::Id>) -> Self {
         self.id = Some(id.into());
         self
     }
 
+    /// 设置 [`Scrollable`] 的宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the width of the [`Scrollable`].
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Length>) -> Self {
         self.width = width.into();
         self
     }
 
+    /// 设置 [`Scrollable`] 的高度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the height of the [`Scrollable`].
+    ///
+    /// </details>
     pub fn height(mut self, height: impl Into<Length>) -> Self {
         self.height = height.into();
         self
     }
 
+    /// 设置 [`Scrollable`] 滚动时调用的函数。
+    ///
+    /// 该函数接收 [`Scrollable`] 的 [`Viewport`]
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets a function to call when the [`Scrollable`] is scrolled.
     ///
     /// The function takes the [`Viewport`] of the [`Scrollable`]
+    ///
+    /// </details>
     pub fn on_scroll(mut self, f: impl Fn(Viewport) -> Message + 'a) -> Self {
         self.on_scroll = Some(Box::new(f));
         self
     }
 
+    /// 把 [`Scrollable`] 的垂直方向锚定到顶部。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Anchors the vertical [`Scrollable`] direction to the top.
+    ///
+    /// </details>
     pub fn anchor_top(self) -> Self {
         self.anchor_y(Anchor::Start)
     }
 
+    /// 把 [`Scrollable`] 的垂直方向锚定到底部。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Anchors the vertical [`Scrollable`] direction to the bottom.
+    ///
+    /// </details>
     pub fn anchor_bottom(self) -> Self {
         self.anchor_y(Anchor::End)
     }
 
+    /// 把 [`Scrollable`] 的水平方向锚定到左侧。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Anchors the horizontal [`Scrollable`] direction to the left.
+    ///
+    /// </details>
     pub fn anchor_left(self) -> Self {
         self.anchor_x(Anchor::Start)
     }
 
+    /// 把 [`Scrollable`] 的水平方向锚定到右侧。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Anchors the horizontal [`Scrollable`] direction to the right.
+    ///
+    /// </details>
     pub fn anchor_right(self) -> Self {
         self.anchor_x(Anchor::End)
     }
 
+    /// 设置 [`Scrollable`] 水平方向的 [`Anchor`]（如果适用）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Anchor`] of the horizontal direction of the [`Scrollable`], if applicable.
+    ///
+    /// </details>
     pub fn anchor_x(mut self, alignment: Anchor) -> Self {
         match &mut self.direction {
             Direction::Horizontal(horizontal)
@@ -199,7 +307,14 @@ where
         self
     }
 
+    /// 设置 [`Scrollable`] 垂直方向的 [`Anchor`]（如果适用）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Anchor`] of the vertical direction of the [`Scrollable`], if applicable.
+    ///
+    /// </details>
     pub fn anchor_y(mut self, alignment: Anchor) -> Self {
         match &mut self.direction {
             Direction::Vertical(vertical)
@@ -212,11 +327,22 @@ where
         self
     }
 
+    /// 把 [`Scrollbar`] 嵌入 [`Scrollable`]，而不是让它浮动在
+    /// 内容之上。
+    ///
+    /// 提供的 `spacing` 会用作 [`Scrollbar`] 与 [`Scrollable`]
+    /// 内容之间的间距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Embeds the [`Scrollbar`] into the [`Scrollable`], instead of floating on top of the
     /// content.
     ///
     /// The `spacing` provided will be used as space between the [`Scrollbar`] and the contents
     /// of the [`Scrollable`].
+    ///
+    /// </details>
     pub fn spacing(mut self, new_spacing: impl Into<Pixels>) -> Self {
         match &mut self.direction {
             Direction::Horizontal(scrollbar)
@@ -229,16 +355,33 @@ where
         self
     }
 
+    /// 设置是否允许用户用鼠标中键对 [`Scrollable`]
+    /// 进行自动滚动。
+    ///
+    /// 默认禁用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets whether the user should be allowed to auto-scroll the [`Scrollable`]
     /// with the middle mouse button.
     ///
     /// By default, it is disabled.
+    ///
+    /// </details>
     pub fn auto_scroll(mut self, auto_scroll: bool) -> Self {
         self.auto_scroll = auto_scroll;
         self
     }
 
+    /// 设置这个 [`Scrollable`] 的样式。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style of this [`Scrollable`].
+    ///
+    /// </details>
     #[must_use]
     pub fn style(mut self, style: impl Fn(&Theme, Status) -> Style + 'a) -> Self
     where
@@ -248,7 +391,14 @@ where
         self
     }
 
+    /// 设置 [`Scrollable`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the style class of the [`Scrollable`].
+    ///
+    /// </details>
     #[cfg(feature = "advanced")]
     #[must_use]
     pub fn class(mut self, class: impl Into<Theme::Class<'a>>) -> Self {
@@ -257,24 +407,73 @@ where
     }
 }
 
+/// [`Scrollable`] 的方向。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The direction of [`Scrollable`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Direction {
+    /// 垂直滚动
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Vertical scrolling
+    ///
+    /// </details>
     Vertical(Scrollbar),
+    /// 水平滚动
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Horizontal scrolling
+    ///
+    /// </details>
     Horizontal(Scrollbar),
+    /// 垂直和水平双向滚动
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Both vertical and horizontal scrolling
+    ///
+    /// </details>
     Both {
+        /// 垂直滚动条的属性。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The properties of the vertical scrollbar.
+        ///
+        /// </details>
         vertical: Scrollbar,
+        /// 水平滚动条的属性。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The properties of the horizontal scrollbar.
+        ///
+        /// </details>
         horizontal: Scrollbar,
     },
 }
 
 impl Direction {
+    /// 返回水平 [`Scrollbar`]（如果有）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the horizontal [`Scrollbar`], if any.
+    ///
+    /// </details>
     pub fn horizontal(&self) -> Option<&Scrollbar> {
         match self {
             Self::Horizontal(scrollbar) => Some(scrollbar),
@@ -283,7 +482,14 @@ impl Direction {
         }
     }
 
+    /// 返回垂直 [`Scrollbar`]（如果有）。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the vertical [`Scrollbar`], if any.
+    ///
+    /// </details>
     pub fn vertical(&self) -> Option<&Scrollbar> {
         match self {
             Self::Vertical(scrollbar) => Some(scrollbar),
@@ -317,7 +523,14 @@ impl Default for Direction {
     }
 }
 
+/// [`Scrollable`] 中的滚动条。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A scrollbar within a [`Scrollable`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Scrollbar {
     width: f32,
@@ -340,60 +553,136 @@ impl Default for Scrollbar {
 }
 
 impl Scrollbar {
+    /// 创建一个用于 [`Scrollable`] 的新 [`Scrollbar`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Creates new [`Scrollbar`] for use in a [`Scrollable`].
+    ///
+    /// </details>
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// 创建一个宽度为零的 [`Scrollbar`]，让 [`Scrollable`] 可以在没有可见
+    /// 滚动块的情况下滚动。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Create a [`Scrollbar`] with zero width to allow a [`Scrollable`] to scroll without a visible
     /// scroller.
+    ///
+    /// </details>
     pub fn hidden() -> Self {
         Self::default().width(0).scroller_width(0)
     }
 
+    /// 设置 [`Scrollbar`] 的滚动条宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the scrollbar width of the [`Scrollbar`] .
+    ///
+    /// </details>
     pub fn width(mut self, width: impl Into<Pixels>) -> Self {
         self.width = width.into().0.max(0.0);
         self
     }
 
+    /// 设置 [`Scrollbar`] 的滚动条外边距。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the scrollbar margin of the [`Scrollbar`] .
+    ///
+    /// </details>
     pub fn margin(mut self, margin: impl Into<Pixels>) -> Self {
         self.margin = margin.into().0;
         self
     }
 
+    /// 设置 [`Scrollbar`] 的滚动块宽度。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the scroller width of the [`Scrollbar`] .
+    ///
+    /// </details>
     pub fn scroller_width(mut self, scroller_width: impl Into<Pixels>) -> Self {
         self.scroller_width = scroller_width.into().0.max(0.0);
         self
     }
 
+    /// 设置 [`Scrollbar`] 的 [`Anchor`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets the [`Anchor`] of the [`Scrollbar`] .
+    ///
+    /// </details>
     pub fn anchor(mut self, alignment: Anchor) -> Self {
         self.alignment = alignment;
         self
     }
 
+    /// 设置 [`Scrollbar`] 是否应嵌入 [`Scrollable`] 之中，并在它与
+    /// 内容之间使用给定的间距。
+    ///
+    /// 嵌入的 [`Scrollbar`] 会始终显示、占用布局空间，
+    /// 并且不会浮动在内容之上。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Sets whether the [`Scrollbar`] should be embedded in the [`Scrollable`], using
     /// the given spacing between itself and the contents.
     ///
     /// An embedded [`Scrollbar`] will always be displayed, will take layout space,
     /// and will not float over the contents.
+    ///
+    /// </details>
     pub fn spacing(mut self, spacing: impl Into<Pixels>) -> Self {
         self.spacing = Some(spacing.into().0);
         self
     }
 }
 
+/// [`Scrollable`] 的滚动块在给定轴上相对于其 [`Viewport`]
+/// 的锚点。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The anchor of the scroller of the [`Scrollable`] relative to its [`Viewport`]
 /// on a given axis.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum Anchor {
+    /// 滚动块锚定在 [`Viewport`] 的起始处。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Scroller is anchoer to the start of the [`Viewport`].
+    ///
+    /// </details>
     #[default]
     Start,
+    /// 内容对齐到 [`Viewport`] 的终点。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Content is aligned to the end of the [`Viewport`].
+    ///
+    /// </details>
     End,
 }
 
@@ -855,6 +1144,8 @@ where
                                 state.keyboard_modifiers.shift();
 
                             // macOS automatically inverts the axes when Shift is pressed
+                            // 按下 Shift 时，macOS 会自动
+                            // 交换两个轴
                             let (x, y) = if cfg!(target_os = "macos")
                                 && is_shift_pressed
                             {
@@ -870,6 +1161,7 @@ where
                             };
 
                             // TODO: Configurable speed/friction (?)
+                            // 待办：可配置的速度/摩擦力（？）
                             -movement * 60.0
                         }
                         mouse::ScrollDelta::Pixels { x, y } => {
@@ -960,6 +1252,7 @@ where
                                 Interaction::TouchScrolling(cursor_position);
 
                             // TODO: bubble up touch movements if not consumed.
+                            // 待办：如果触摸移动没有被消费，就向上冒泡。
                             let _ = notify_scroll(
                                 state,
                                 &self.on_scroll,
@@ -1183,6 +1476,7 @@ where
         container::draw_background(renderer, &style.container, layout.bounds());
 
         // Draw inner content
+        // 绘制内部内容
         if scrollbars.active() {
             renderer.with_layer(visible_bounds, |renderer| {
                 renderer.with_translation(
@@ -1604,6 +1898,7 @@ fn notify_viewport<Message>(
     };
 
     // Don't publish redundant viewports to shell
+    // 不要向外壳发布重复的视口
     if let Some(last_notified) = state.last_notified {
         let last_relative_offset = last_notified.relative_offset();
         let current_relative_offset = viewport.relative_offset();
@@ -1725,7 +2020,14 @@ impl Offset {
     }
 }
 
+/// [`Scrollable`] 当前的 [`Viewport`]。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The current [`Viewport`] of the [`Scrollable`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy)]
 pub struct Viewport {
     offset_x: Offset,
@@ -1735,7 +2037,14 @@ pub struct Viewport {
 }
 
 impl Viewport {
+    /// 返回当前 [`Viewport`] 的 [`AbsoluteOffset`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the [`AbsoluteOffset`] of the current [`Viewport`].
+    ///
+    /// </details>
     pub fn absolute_offset(&self) -> AbsoluteOffset {
         let x = self
             .offset_x
@@ -1747,11 +2056,22 @@ impl Viewport {
         AbsoluteOffset { x, y }
     }
 
+    /// 返回当前 [`Viewport`] 的 [`AbsoluteOffset`]，但把它的
+    /// 对齐方式反转。
+    ///
+    /// 在切换 [`Scrollable`] 的对齐方式、同时保持其
+    /// 滚动位置时，这个方法很有用。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the [`AbsoluteOffset`] of the current [`Viewport`], but with its
     /// alignment reversed.
     ///
     /// This method can be useful to switch the alignment of a [`Scrollable`]
     /// while maintaining its scrolling position.
+    ///
+    /// </details>
     pub fn absolute_offset_reversed(&self) -> AbsoluteOffset {
         let AbsoluteOffset { x, y } = self.absolute_offset();
 
@@ -1761,7 +2081,14 @@ impl Viewport {
         }
     }
 
+    /// 返回当前 [`Viewport`] 的 [`RelativeOffset`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the [`RelativeOffset`] of the current [`Viewport`].
+    ///
+    /// </details>
     pub fn relative_offset(&self) -> RelativeOffset {
         let AbsoluteOffset { x, y } = self.absolute_offset();
 
@@ -1771,12 +2098,26 @@ impl Viewport {
         RelativeOffset { x, y }
     }
 
+    /// 返回当前 [`Viewport`] 的边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the bounds of the current [`Viewport`].
+    ///
+    /// </details>
     pub fn bounds(&self) -> Rectangle {
         self.bounds
     }
 
+    /// 返回当前 [`Viewport`] 的内容边界。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the content bounds of the current [`Viewport`].
+    ///
+    /// </details>
     pub fn content_bounds(&self) -> Rectangle {
         self.content_bounds
     }
@@ -1850,7 +2191,14 @@ impl State {
         }
     }
 
+    /// 按给定的 [`AbsoluteOffset`] 滚动。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Scroll by the provided [`AbsoluteOffset`].
+    ///
+    /// </details>
     fn scroll_by(
         &mut self,
         offset: AbsoluteOffset,
@@ -1860,8 +2208,16 @@ impl State {
         self.scroll(Vector::new(offset.x, offset.y), bounds, content_bounds);
     }
 
+    /// 给定 [`Scrollable`] 及其内容的边界，如果当前滚动位置处于吸附状态，
+    /// 就解除吸附。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Unsnaps the current scroll position, if snapped, given the bounds of the
     /// [`Scrollable`] and its contents.
+    ///
+    /// </details>
     fn unsnap(&mut self, bounds: Rectangle, content_bounds: Rectangle) {
         self.offset_x = Offset::Absolute(
             self.offset_x.absolute(bounds.width, content_bounds.width),
@@ -1871,8 +2227,16 @@ impl State {
         );
     }
 
+    /// 给定 [`Direction`]、[`Scrollable`] 的边界及其内容的边界，
+    /// 返回 [`State`] 的滚动平移量。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Returns the scrolling translation of the [`State`], given a [`Direction`],
     /// the bounds of the [`Scrollable`] and its contents.
+    ///
+    /// </details>
     fn translation(
         &self,
         direction: Direction,
@@ -1930,14 +2294,28 @@ impl State {
 }
 
 #[derive(Debug)]
+/// 两个 [`Scrollbar`] 的状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// State of both [`Scrollbar`]s.
+///
+/// </details>
 struct Scrollbars {
     y: Option<internals::Scrollbar>,
     x: Option<internals::Scrollbar>,
 }
 
 impl Scrollbars {
+    /// 如果内容溢出 [`Scrollable`] 的边界，就创建 y 和/或 x 滚动条。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Create y and/or x scrollbar(s) if content is overflowing the [`Scrollable`] bounds.
+    ///
+    /// </details>
     fn new(
         state: &State,
         direction: Direction,
@@ -1964,6 +2342,8 @@ impl Scrollbars {
 
             // Adjust the height of the vertical scrollbar if the horizontal scrollbar
             // is present
+            // 如果存在水平滚动条，就调整垂直滚动条的
+            // 高度
             let x_scrollbar_height = show_scrollbar_x
                 .map_or(0.0, |h| h.width.max(h.scroller_width) + h.margin);
 
@@ -1971,6 +2351,7 @@ impl Scrollbars {
                 width.max(scroller_width) + 2.0 * margin;
 
             // Total bounds of the scrollbar + margin + scroller width
+            // 滚动条 + 外边距 + 滚动块宽度的总边界
             let total_scrollbar_bounds = Rectangle {
                 x: bounds.x + bounds.width - total_scrollbar_width,
                 y: bounds.y,
@@ -1979,6 +2360,7 @@ impl Scrollbars {
             };
 
             // Bounds of just the scrollbar
+            // 仅滚动条本身的边界
             let scrollbar_bounds = Rectangle {
                 x: bounds.x + bounds.width
                     - total_scrollbar_width / 2.0
@@ -1994,6 +2376,7 @@ impl Scrollbars {
                 None
             } else {
                 // min height for easier grabbing with super tall content
+                // 最小高度，便于在内容特别高时抓取
                 let scroller_height =
                     (scrollbar_bounds.height * ratio).max(2.0);
                 let scroller_offset =
@@ -2035,6 +2418,8 @@ impl Scrollbars {
 
             // Need to adjust the width of the horizontal scrollbar if the vertical scrollbar
             // is present
+            // 如果存在垂直滚动条，需要调整水平滚动条的
+            // 宽度
             let scrollbar_y_width = y_scrollbar
                 .map_or(0.0, |scrollbar| scrollbar.total_bounds.width);
 
@@ -2042,6 +2427,7 @@ impl Scrollbars {
                 width.max(scroller_width) + 2.0 * margin;
 
             // Total bounds of the scrollbar + margin + scroller width
+            // 滚动条 + 外边距 + 滚动块宽度的总边界
             let total_scrollbar_bounds = Rectangle {
                 x: bounds.x,
                 y: bounds.y + bounds.height - total_scrollbar_height,
@@ -2050,6 +2436,7 @@ impl Scrollbars {
             };
 
             // Bounds of just the scrollbar
+            // 仅滚动条本身的边界
             let scrollbar_bounds = Rectangle {
                 x: bounds.x,
                 y: bounds.y + bounds.height
@@ -2065,6 +2452,7 @@ impl Scrollbars {
                 None
             } else {
                 // min width for easier grabbing with extra wide content
+                // 最小宽度，便于在内容特别宽时抓取
                 let scroller_length = (scrollbar_bounds.width * ratio).max(2.0);
                 let scroller_offset =
                     translation.x * ratio * scrollbar_bounds.width
@@ -2176,12 +2564,26 @@ pub(super) mod internals {
     }
 
     impl Scrollbar {
+        /// 返回鼠标是否位于滚动条之上。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Returns whether the mouse is over the scrollbar or not.
+        ///
+        /// </details>
         pub fn is_mouse_over(&self, cursor_position: Point) -> bool {
             self.total_bounds.contains(cursor_position)
         }
 
+        /// 根据光标位置返回 y 轴上的滚动百分比。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Returns the y-axis scrolled percentage from the cursor position.
+        ///
+        /// </details>
         pub fn scroll_percentage_y(
             &self,
             grabbed_at: f32,
@@ -2202,7 +2604,14 @@ pub(super) mod internals {
             }
         }
 
+        /// 根据光标位置返回 x 轴上的滚动百分比。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Returns the x-axis scrolled percentage from the cursor position.
+        ///
+        /// </details>
         pub fn scroll_percentage_x(
             &self,
             grabbed_at: f32,
@@ -2224,109 +2633,382 @@ pub(super) mod internals {
         }
     }
 
+    /// [`Scrollbar`] 的手柄。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The handle of a [`Scrollbar`].
+    ///
+    /// </details>
     #[derive(Debug, Clone, Copy)]
     pub struct Scroller {
+        /// [`Scroller`] 的边界。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// The bounds of the [`Scroller`].
+        ///
+        /// </details>
         pub bounds: Rectangle,
     }
 }
 
+/// [`Scrollable`] 可能的交互状态。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The possible status of a [`Scrollable`].
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
+    /// [`Scrollable`] 可以进行交互。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Scrollable`] can be interacted with.
+    ///
+    /// </details>
     Active {
+        /// 水平滚动条是否被禁用，被禁用意味着内容没有溢出。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Whether or not the horizontal scrollbar is disabled meaning the content isn't overflowing.
+        ///
+        /// </details>
         is_horizontal_scrollbar_disabled: bool,
+        /// 垂直滚动条是否被禁用，被禁用意味着内容没有溢出。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Whether or not the vertical scrollbar is disabled meaning the content isn't overflowing.
+        ///
+        /// </details>
         is_vertical_scrollbar_disabled: bool,
     },
+    /// [`Scrollable`] 正被悬停。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Scrollable`] is being hovered.
+    ///
+    /// </details>
     Hovered {
+        /// 表示水平滚动条是否正被悬停。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Indicates if the horizontal scrollbar is being hovered.
+        ///
+        /// </details>
         is_horizontal_scrollbar_hovered: bool,
+        /// 表示垂直滚动条是否正被悬停。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Indicates if the vertical scrollbar is being hovered.
+        ///
+        /// </details>
         is_vertical_scrollbar_hovered: bool,
+        /// 水平滚动条是否被禁用，被禁用意味着内容没有溢出。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Whether or not the horizontal scrollbar is disabled meaning the content isn't overflowing.
+        ///
+        /// </details>
         is_horizontal_scrollbar_disabled: bool,
+        /// 垂直滚动条是否被禁用，被禁用意味着内容没有溢出。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Whether or not the vertical scrollbar is disabled meaning the content isn't overflowing.
+        ///
+        /// </details>
         is_vertical_scrollbar_disabled: bool,
     },
+    /// [`Scrollable`] 正被拖动。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Scrollable`] is being dragged.
+    ///
+    /// </details>
     Dragged {
+        /// 表示水平滚动条是否正被拖动。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Indicates if the horizontal scrollbar is being dragged.
+        ///
+        /// </details>
         is_horizontal_scrollbar_dragged: bool,
+        /// 表示垂直滚动条是否正被拖动。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Indicates if the vertical scrollbar is being dragged.
+        ///
+        /// </details>
         is_vertical_scrollbar_dragged: bool,
+        /// 水平滚动条是否被禁用，被禁用意味着内容没有溢出。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Whether or not the horizontal scrollbar is disabled meaning the content isn't overflowing.
+        ///
+        /// </details>
         is_horizontal_scrollbar_disabled: bool,
+        /// 垂直滚动条是否被禁用，被禁用意味着内容没有溢出。
+        ///
+        /// <details>
+        /// <summary>显示英文原文</summary>
+        ///
         /// Whether or not the vertical scrollbar is disabled meaning the content isn't overflowing.
+        ///
+        /// </details>
         is_vertical_scrollbar_disabled: bool,
     },
 }
 
+/// 可滚动区域的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of a scrollable.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Style {
+    /// 可滚动区域的 [`container::Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`container::Style`] of a scrollable.
+    ///
+    /// </details>
     pub container: container::Style,
+    /// 垂直 [`Rail`] 的外观。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The vertical [`Rail`] appearance.
+    ///
+    /// </details>
     pub vertical_rail: Rail,
+    /// 水平 [`Rail`] 的外观。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The horizontal [`Rail`] appearance.
+    ///
+    /// </details>
     pub horizontal_rail: Rail,
+    /// 水平滚动条与垂直滚动条之间空隙的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Background`] of the gap between a horizontal and vertical scrollbar.
+    ///
+    /// </details>
     pub gap: Option<Background>,
+    /// [`AutoScroll`] 覆盖层的外观。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The appearance of the [`AutoScroll`] overlay.
+    ///
+    /// </details>
     pub auto_scroll: AutoScroll,
 }
 
+/// 可滚动区域的滚动条的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of the scrollbar of a scrollable.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Rail {
+    /// 滚动条的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Background`] of a scrollbar.
+    ///
+    /// </details>
     pub background: Option<Background>,
+    /// 滚动条的 [`Border`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Border`] of a scrollbar.
+    ///
+    /// </details>
     pub border: Border,
+    /// 滚动条的 [`Scroller`] 的外观。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The appearance of the [`Scroller`] of a scrollbar.
+    ///
+    /// </details>
     pub scroller: Scroller,
 }
 
+/// 可滚动区域的滚动块的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of the scroller of a scrollable.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Scroller {
+    /// 滚动块的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Background`] of the scroller.
+    ///
+    /// </details>
     pub background: Background,
+    /// 滚动块的 [`Border`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Border`] of the scroller.
+    ///
+    /// </details>
     pub border: Border,
 }
 
+/// 可滚动区域的自动滚动覆盖层的外观。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The appearance of the autoscroll overlay of a scrollable.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct AutoScroll {
+    /// [`AutoScroll`] 覆盖层的 [`Background`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Background`] of the [`AutoScroll`] overlay.
+    ///
+    /// </details>
     pub background: Background,
+    /// [`AutoScroll`] 覆盖层的 [`Border`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Border`] of the [`AutoScroll`] overlay.
+    ///
+    /// </details>
     pub border: Border,
+    /// [`AutoScroll`] 覆盖层的 [`Shadow`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Thje [`Shadow`] of the [`AutoScroll`] overlay.
+    ///
+    /// </details>
     pub shadow: Shadow,
+    /// [`AutoScroll`] 覆盖层箭头图标的 [`Color`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Color`] for the arrow icons of the [`AutoScroll`] overlay.
+    ///
+    /// </details>
     pub icon: Color,
 }
 
+/// [`Scrollable`] 的主题样式目录。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The theme catalog of a [`Scrollable`].
+///
+/// </details>
 pub trait Catalog {
+    /// [`Catalog`] 的样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The item class of the [`Catalog`].
+    ///
+    /// </details>
     type Class<'a>;
 
+    /// [`Catalog`] 产生的默认样式类。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The default class produced by the [`Catalog`].
+    ///
+    /// </details>
     fn default<'a>() -> Self::Class<'a>;
 
+    /// 某个样式类在给定交互状态下的 [`Style`]。
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// The [`Style`] of a class with the given status.
+    ///
+    /// </details>
     fn style(&self, class: &Self::Class<'_>, status: Status) -> Style;
 }
 
+/// [`Scrollable`] 的样式函数。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// A styling function for a [`Scrollable`].
+///
+/// </details>
 pub type StyleFn<'a, Theme> = Box<dyn Fn(&Theme, Status) -> Style + 'a>;
 
 impl Catalog for Theme {
@@ -2341,7 +3023,14 @@ impl Catalog for Theme {
     }
 }
 
+/// [`Scrollable`] 的默认样式。
+///
+/// <details>
+/// <summary>显示英文原文</summary>
+///
 /// The default style of a [`Scrollable`].
+///
+/// </details>
 pub fn default(theme: &Theme, status: Status) -> Style {
     let palette = theme.extended_palette();
 

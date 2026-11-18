@@ -90,7 +90,7 @@ struct Group {
     atlas: cryoglyph::TextAtlas,
     version: usize,
     should_trim: bool,
-    handle: Arc<()>, // Keeps track of active uploads
+    handle: Arc<()>, // Keeps track of active uploads（跟踪活跃的上传）
 }
 
 impl Storage {
@@ -160,6 +160,7 @@ impl Storage {
                     }
 
                     // Only trim if glyphs have changed
+                    // 只有字形发生变化时才清理
                     group.should_trim =
                         group.should_trim || upload.version != cache.version;
 
@@ -239,6 +240,9 @@ impl Storage {
                 // We only need to worry about glyph fighting
                 // when the atlas may be shared by multiple
                 // uploads.
+                // 只有当图集可能被多次上传共享时，
+                // 我们才需要担心字形
+                // 互相争抢的问题。
                 if !id.is_singleton() {
                     log::debug!(
                         "Invalidating text atlas: {id:?} \
@@ -365,6 +369,9 @@ impl State {
                             // If the atlas cannot grow, then all bets are off.
                             // Instead of panicking, we will just pray that the result
                             // will be somewhat readable...
+                            // 如果图集无法增长，那就没有任何保证了。
+                            // 我们不会 panic，而只是祈祷结果
+                            // 多少还能看……
                         }
                     }
                 }

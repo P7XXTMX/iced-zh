@@ -73,14 +73,28 @@ impl Builder {
         Self(builder)
     }
 
+    /// 添加一条线段。点必须位于 0,0 和 1,1 之间
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Adds a line segment. Points must be between 0,0 and 1,1
+    ///
+    /// </details>
     pub fn line_to(mut self, to: impl Into<Point>) -> Self {
         self.0.line_to(Self::point(to));
 
         self
     }
 
+    /// 添加一条二次贝塞尔曲线。点必须位于 0,0 和 1,1 之间
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Adds a quadratic bézier curve. Points must be between 0,0 and 1,1
+    ///
+    /// </details>
     pub fn quadratic_bezier_to(
         mut self,
         ctrl: impl Into<Point>,
@@ -92,7 +106,14 @@ impl Builder {
         self
     }
 
+    /// 添加一条三次贝塞尔曲线。各点必须位于 0,0 和 1,1 之间
+    ///
+    /// <details>
+    /// <summary>显示英文原文</summary>
+    ///
     /// Adds a cubic bézier curve. Points must be between 0,0 and 1,1
+    ///
+    /// </details>
     pub fn cubic_bezier_to(
         mut self,
         ctrl1: impl Into<Point>,
