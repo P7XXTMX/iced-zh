@@ -723,9 +723,17 @@ _**注意：**这个类型还很不完整！如果你需要跟踪
 盒子每一侧要填充的空间大小
 
 你可以利用 `From` 特质方便地构建 [`Padding`]：
+@@ core/src/padding.rs:11
+四边各 20px
+@@ core/src/padding.rs:12
+上下、左右
 @@ core/src/padding.rs:15
 通常，部件的 `padding` 方法会要求一个 `Into<Padding>`，
 因此你可以轻松地这样写：
+@@ core/src/padding.rs:32
+四边各 20px
+@@ core/src/padding.rs:33
+上下、左右
 @@ core/src/padding.rs:37
 上内边距
 @@ core/src/padding.rs:39

@@ -819,6 +819,8 @@ __警告：__ 所有文本都会渲染在 `Canvas` 所有图层的
 =
 @@ graphics/src/text.rs:411
 =
+@@ graphics/src/text.rs:417
+暂时禁用所有文本微调
 @@ graphics/src/text.rs:420
 计算给定缓冲区中的选区区域。
 @@ graphics/src/text.rs:452

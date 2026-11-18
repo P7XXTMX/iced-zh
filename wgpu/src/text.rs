@@ -626,7 +626,7 @@ fn prepare(
                     + if font_size.is_multiple_of(2) {
                         0.25
                     } else if font_size.is_multiple_of(5) {
-                        -0.45 // Deliberately avoid 0.5 to circumvent erratic rounding due to floating precision errors
+                        -0.45 // Deliberately avoid 0.5 to circumvent erratic rounding due to floating precision errors（有意避开 0.5，以规避浮点精度误差造成的舍入不稳定）
                     } else {
                         -0.25
                     };

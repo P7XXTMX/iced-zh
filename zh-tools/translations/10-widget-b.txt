@@ -358,6 +358,8 @@
 
 比例是 [0, 1] 范围内的值，表示 [`Split`]
 在两个窗格之间的确切位置。
+@@ widget/src/pane_grid.rs:1194
+辅助函数
 @@ widget/src/pane_grid.rs:1213
 [`PaneGrid`] 的外观。
 @@ widget/src/pane_grid.rs:1216

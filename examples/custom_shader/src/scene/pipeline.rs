@@ -111,7 +111,7 @@ impl Pipeline {
                 size: wgpu::Extent3d {
                     width: SKY_TEXTURE_SIZE,
                     height: SKY_TEXTURE_SIZE,
-                    depth_or_array_layers: 6, //one for each face of the cube
+                    depth_or_array_layers: 6, //one for each face of the cube（立方体的每个面各一层）
                 },
                 mip_level_count: 1,
                 sample_count: 1,

@@ -50,6 +50,8 @@ DX12（OpenGL 和 WebGL 仍在开发中）。此外，它还将支持
 把当前表面渲染到一个离屏缓冲区。
 
 返回纹理数据的 RGBA 字节。
+@@ wgpu/src/lib.rs:190
+每行对应的缓冲区切片；始终为 RGBA
 @@ wgpu/src/lib.rs:641
 让当前已映射的缓冲区做好用于提交的准备。
 
@@ -423,6 +425,8 @@ WebGPU 要求：
 @@ wgpu/src/text.rs:615
 这是一个取巧的做法！凭经验、不明就里地得出
 它试图微调经过 hinting 的文本，以改善光栅化效果
+@@ wgpu/src/text.rs:620
+有意避开 0.5，以规避浮点精度误差造成的舍入不稳定
 @@ wgpu/src/image/raster.rs:11
 缓存中与某个图像句柄对应的条目
 @@ wgpu/src/image/raster.rs:14
@@ -1314,6 +1318,8 @@ ice 测试把某个配置和一个指令序列编码在一起。
 法线贴图
 @@ examples/custom_shader/src/scene/pipeline.rs:98
 用于反射/折射的天空盒纹理
+@@ examples/custom_shader/src/scene/pipeline.rs:108
+立方体的每个面各一层
 @@ examples/custom_shader/src/scene/pipeline.rs:318
 如果表面纹理的大小发生变化，就重新创建深度纹理
 @@ examples/custom_shader/src/scene/pipeline.rs:321

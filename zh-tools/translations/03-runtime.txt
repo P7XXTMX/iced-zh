@@ -292,6 +292,8 @@ Iced 尽量不规定你该如何编写事件循环。如何在你的系统中
 一种朴素做法：
 @@ runtime/src/user_interface.rs:72
 初始化
+@@ runtime/src/user_interface.rs:76
+这里应该是一个真正的窗口，例如 `winit` 的窗口
 @@ runtime/src/user_interface.rs:80
 应用程序循环
 @@ runtime/src/user_interface.rs:82
@@ -312,6 +314,8 @@ Iced 尽量不规定你该如何编写事件循环。如何在你的系统中
 @@ runtime/src/user_interface.rs:136
 让我们补全[上一个示例](#example)，使我们的
 [计数器](index.html#usage)能够改变状态：
+@@ runtime/src/user_interface.rs:161
+这里应该是一个真正的窗口，例如 `winit` 的窗口
 @@ runtime/src/user_interface.rs:166
 初始化我们的事件存储
 @@ runtime/src/user_interface.rs:171
@@ -330,6 +334,8 @@ Iced 尽量不规定你该如何编写事件循环。如何在你的系统中
 @@ runtime/src/user_interface.rs:489
 [补全上一个示例](#example-1)之后，我们终于可以绘制
 我们的[计数器](index.html#usage)了：
+@@ runtime/src/user_interface.rs:516
+这里应该是一个真正的窗口，例如 `winit` 的窗口
 @@ runtime/src/user_interface.rs:525
 获取系统事件……
 @@ runtime/src/user_interface.rs:534

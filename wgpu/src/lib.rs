@@ -238,7 +238,7 @@ impl Renderer {
 
         impl BufferDimensions {
             fn new(size: Size<u32>) -> Self {
-                let unpadded_bytes_per_row = size.width as usize * 4; //slice of buffer per row; always RGBA
+                let unpadded_bytes_per_row = size.width as usize * 4; //slice of buffer per row; always RGBA（每行对应的缓冲区切片；始终为 RGBA）
                 let alignment = wgpu::COPY_BYTES_PER_ROW_ALIGNMENT as usize; //256
                 let padded_bytes_per_row_padding =
                     (alignment - unpadded_bytes_per_row % alignment) % alignment;

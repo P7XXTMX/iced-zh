@@ -124,7 +124,7 @@ where
     /// let mut counter = Counter::new();
     /// let mut cache = user_interface::Cache::new();
     /// let mut renderer = Renderer::default();
-    /// let mut window = window::Headless; // This should be a proper window, like a `winit` one
+    /// let mut window = window::Headless; // This should be a proper window, like a `winit` one（这里应该是一个真正的窗口，例如 `winit` 的窗口）
     /// let mut waker = shell::Waker::noop();
     /// let mut window_size = Size::new(1024.0, 768.0);
     ///
@@ -232,7 +232,7 @@ where
     /// let mut counter = Counter::new();
     /// let mut cache = user_interface::Cache::new();
     /// let mut renderer = Renderer::default();
-    /// let mut window = window::Headless; // This should be a proper window, like a `winit` one
+    /// let mut window = window::Headless; // This should be a proper window, like a `winit` one（这里应该是一个真正的窗口，例如 `winit` 的窗口）
     /// let mut waker = shell::Waker::noop();
     /// let mut window_size = Size::new(1024.0, 768.0);
     /// let mut cursor = mouse::Cursor::default();
@@ -609,7 +609,7 @@ where
     /// let mut counter = Counter::new();
     /// let mut cache = user_interface::Cache::new();
     /// let mut renderer = Renderer::default();
-    /// let mut window = window::Headless; // This should be a proper window, like a `winit` one
+    /// let mut window = window::Headless; // This should be a proper window, like a `winit` one（这里应该是一个真正的窗口，例如 `winit` 的窗口）
     /// let mut waker = shell::Waker::noop();
     /// let mut window_size = Size::new(1024.0, 768.0);
     /// let mut cursor = mouse::Cursor::default();

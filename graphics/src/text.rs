@@ -707,7 +707,7 @@ pub fn hint_factor(_size: Pixels, _scale_factor: Option<f32>) -> Option<f32> {
     //     None
     // }
 
-    None // Disable all text hinting for now
+    None // Disable all text hinting for now（暂时禁用所有文本微调）
 }
 
 /// 计算给定缓冲区中的选区区域。

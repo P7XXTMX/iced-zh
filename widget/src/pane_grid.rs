@@ -1496,6 +1496,7 @@ pub struct ResizeEvent {
 /*
  * Helpers
  */
+// 辅助函数
 fn hovered_split<'a>(
     mut splits: impl Iterator<Item = (&'a Split, &'a (Axis, Rectangle, f32))>,
     spacing: f32,

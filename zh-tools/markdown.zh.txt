@@ -1,4 +1,4 @@
-@@@ README.md
+@@@ README.md 160176e8877c
 <div align="center">
 
 <img src="docs/logo.svg" width="140px" />
@@ -166,7 +166,7 @@ Iced 最初诞生于一次尝试：把 [Elm] 和 [Elm 架构][The Elm Architectu
 
 Iced 的开发由 [Kraken.com] 的 [Cryptowatch] 团队赞助
 
-@@@ CONTRIBUTING.md
+@@@ CONTRIBUTING.md 1669bbeebe83
 # 贡献
 
 感谢你考虑为 Iced 做贡献！可以先看看[路线图][the roadmap]，了解这个库目前的状态。
@@ -184,11 +184,11 @@ Iced 的开发由 [Kraken.com] 的 [Cryptowatch] 团队赞助
 - 提交 bug 报告和使用场景
 - 分享、讨论、研究和探索新的想法或 crate
 
-@@@ ROADMAP.md
+@@@ ROADMAP.md a7f3b67768ce
 # 路线图
 我们现在有了[一份详细的图形化路线图](https://whimsical.com/roadmap-iced-7vhq6R35Lp3TmYH4WeYwLM)！
 
-@@@ DEPENDENCIES.md
+@@@ DEPENDENCIES.md 7516d982f73e
 # 依赖
 
 Iced 需要一些系统依赖才能工作，而并非所有操作系统
@@ -280,7 +280,7 @@ in pkgs.mkShell {
 }
 ```
 
-@@@ core/README.md
+@@@ core/README.md de11acad5456
 # `iced_core`
 [![Documentation](https://docs.rs/iced_core/badge.svg)][documentation]
 [![Crates.io](https://img.shields.io/crates/v/iced_core.svg)](https://crates.io/crates/iced_core)
@@ -295,7 +295,7 @@ in pkgs.mkShell {
   <img alt="基础" src="../docs/graphs/foundations.png" width="50%">
 </p>
 
-@@@ runtime/README.md
+@@@ runtime/README.md 35c7eb5ee999
 # `iced_runtime`
 [![Documentation](https://docs.rs/iced_runtime/badge.svg)][documentation]
 [![Crates.io](https://img.shields.io/crates/v/iced_runtime.svg)](https://crates.io/crates/iced_runtime)
@@ -307,7 +307,7 @@ in pkgs.mkShell {
 __Iced 发展很快，`master` 分支可能包含破坏性变更！__ 如果你想了解
 某个特定的发布版本，请查看[发布列表][the release list]。
 
-@@@ wgpu/README.md
+@@@ wgpu/README.md 8e9602ea6230
 # `iced_wgpu`
 [![Documentation](https://docs.rs/iced_wgpu/badge.svg)][documentation]
 [![Crates.io](https://img.shields.io/crates/v/iced_wgpu.svg)](https://crates.io/crates/iced_wgpu)
@@ -322,7 +322,7 @@ __Iced 发展很快，`master` 分支可能包含破坏性变更！__ 如果你�
   <img alt="原生目标" src="../docs/graphs/native.png" width="80%">
 </p>
 
-@@@ winit/README.md
+@@@ winit/README.md c60e81f95a8d
 # `iced_winit`
 [![Documentation](https://docs.rs/iced_winit/badge.svg)][documentation]
 [![Crates.io](https://img.shields.io/crates/v/iced_winit.svg)](https://crates.io/crates/iced_winit)
@@ -337,7 +337,7 @@ __Iced 发展很快，`master` 分支可能包含破坏性变更！__ 如果你�
   <img alt="原生目标" src="../docs/graphs/native.png" width="80%">
 </p>
 
-@@@ examples/README.md
+@@@ examples/README.md 232b60422999
 # 示例（Examples）
 __Iced 发展很快，`master` 分支可能包含破坏性变更！__ 如果你想浏览与最新发布版本兼容的示例，
 请[切换到 `latest` 分支](https://github.com/iced-rs/iced/tree/latest/examples#examples)。
@@ -439,7 +439,7 @@ cargo run --package <example>
   <img src="https://iced.rs/examples/coffee.gif">
 </div>
 
-@@@ examples/arc/README.md
+@@@ examples/arc/README.md 303253da6f5e
 ## Arc（圆弧）
 
 一个使用 `Canvas` 部件绘制旋转圆弧的应用程序。
@@ -453,7 +453,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package arc
 ```
 
-@@@ examples/bezier_tool/README.md
+@@@ examples/bezier_tool/README.md 6dc1378548ee
 ## Bézier tool（贝塞尔工具）
 
 一个类似画图的工具，使用 `Canvas` 部件绘制贝塞尔曲线。
@@ -469,7 +469,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package bezier_tool
 ```
 
-@@@ examples/checkbox/README.md
+@@@ examples/checkbox/README.md 76e6764c4564
 ## Checkbox（复选框）
 
 一个可以勾选的方框。
@@ -481,7 +481,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package checkbox
 ```
 
-@@@ examples/clock/README.md
+@@@ examples/clock/README.md 175091805b6e
 ## Clock（时钟）
 
 一个使用 `Canvas` 部件绘制时钟及其指针来显示当前时间的应用程序。
@@ -497,7 +497,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package clock
 ```
 
-@@@ examples/color_palette/README.md
+@@@ examples/color_palette/README.md 9c1359374708
 ## Color palette（调色板）
 
 一个基于用户自定义根颜色的调色板生成器。
@@ -512,7 +512,7 @@ cargo run --package clock
 cargo run --package color_palette
 ```
 
-@@@ examples/combo_box/README.md
+@@@ examples/combo_box/README.md 9cd224adc20c
 ## Combo-Box（组合框）
 
 一个由可搜索、可选择的选项组成的下拉列表。
@@ -530,7 +530,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package combo_box
 ```
 
-@@@ examples/counter/README.md
+@@@ examples/counter/README.md c6ecf85f8b59
 ## Counter（计数器）
 
 [`README`](../../README.md) 中讲解的经典计数器示例。
@@ -553,7 +553,7 @@ cd examples/counter
 trunk serve
 ```
 
-@@@ examples/custom_widget/README.md
+@@@ examples/custom_widget/README.md b80e898fc566
 ## Custom widget（自定义部件）
 
 演示如何构建一个绘制圆形的自定义部件。
@@ -569,7 +569,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package custom_widget
 ```
 
-@@@ examples/download_progress/README.md
+@@@ examples/download_progress/README.md 19cb296694aa
 ## Download progress（下载进度）
 
 一个基本的应用程序，异步下载多个 100 MB 的虚拟文件并跟踪下载进度。
@@ -586,7 +586,7 @@ cargo run --package custom_widget
 cargo run --package download_progress
 ```
 
-@@@ examples/events/README.md
+@@@ examples/events/README.md fd7f9b473a88
 ## Events（事件）
 
 使用条件 `Subscription` 显示的原生事件日志。
@@ -598,7 +598,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package events
 ```
 
-@@@ examples/exit/README.md
+@@@ examples/exit/README.md 969c9182178d
 ## Exit（退出）
 
 如何根据用户输入退出应用程序。
@@ -610,7 +610,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package exit
 ```
 
-@@@ examples/game_of_life/README.md
+@@@ examples/game_of_life/README.md 60033c1ae3b3
 ## Game of Life（生命游戏）
 
 [生命游戏][Game of Life]的交互式版本，生命游戏由 [John Horton Conway] 发明。
@@ -628,7 +628,7 @@ __[`main`]__ 文件包含了这个示例的相关代码。
 cargo run --package game_of_life
 ```
 
-@@@ examples/geometry/README.md
+@@@ examples/geometry/README.md 16be8d191d69
 ## Geometry（几何图形）
 
 一个自定义部件，展示如何用 [`iced_wgpu`](../../wgpu) 中的 `Mesh2D` 图元绘制几何图形。
@@ -644,7 +644,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package geometry
 ```
 
-@@@ examples/integration/README.md
+@@@ examples/integration/README.md bac0640cd577
 ## `wgpu` integration（`wgpu` 集成）
 
 演示如何把 Iced 集成到一个已有的 [`wgpu`] 应用程序中。
@@ -660,7 +660,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package integration
 ```
 
-@@@ examples/loading_spinners/README.md
+@@@ examples/loading_spinners/README.md 75b888040a89
 ## Loading Spinners（加载指示器）
 
 带动画的不确定进度加载指示器的示例实现。
@@ -670,7 +670,7 @@ cargo run --package integration
 cargo run --package loading_spinners
 ```
 
-@@@ examples/pane_grid/README.md
+@@@ examples/pane_grid/README.md 65357b23c025
 ## Pane grid（窗格网格）
 
 一个由窗格组成的网格，窗格可以分割、调整大小和重新排列。
@@ -696,7 +696,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package pane_grid
 ```
 
-@@@ examples/pick_list/README.md
+@@@ examples/pick_list/README.md 6dc80bf46db7
 ## Pick-list（选择列表）
 
 一个由可选选项组成的下拉列表。
@@ -714,7 +714,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package pick_list
 ```
 
-@@@ examples/pokedex/README.md
+@@@ examples/pokedex/README.md 8e8562ac4e09
 # Pokédex（宝可梦图鉴）
 一个使用 [PokéAPI] 加载随机宝可梦图鉴条目的应用程序。
 
@@ -729,7 +729,7 @@ cargo run --package pick_list
 cargo run --package pokedex
 ```
 
-@@@ examples/progress_bar/README.md
+@@@ examples/progress_bar/README.md a87829c6278e
 ## Progress bar（进度条）
 
 一个简单的进度条，可以用滑块来填充。
@@ -745,7 +745,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package progress_bar
 ```
 
-@@@ examples/qr_code/README.md
+@@@ examples/qr_code/README.md 0d1abaa7080a
 ## QR Code Generator（二维码生成器）
 
 一个基本的二维码生成器，展示了 `QRCode` 部件。
@@ -761,7 +761,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package qr_code
 ```
 
-@@@ examples/scrollable/README.md
+@@@ examples/scrollable/README.md e157d8d7cd54
 # Scrollable（可滚动区域）
 一个展示 Scrollable 各种尺寸和样式选项的示例。
 
@@ -778,7 +778,7 @@ cargo run --package qr_code
 cargo run --package scrollable
 ```
 
-@@@ examples/sierpinski_triangle/README.md
+@@@ examples/sierpinski_triangle/README.md 8b7676d18398
 ## Sierpinski Triangle Emulator（谢尔宾斯基三角形模拟器）
 
 一个简单的[谢尔宾斯基三角形](https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle)模拟器，使用画布和滑块。
@@ -794,7 +794,7 @@ cargo run --package scrollable
 cargo run --package sierpinski_triangle
 ```
 
-@@@ examples/slider/README.md
+@@@ examples/slider/README.md 829d82850627
 ## Slider（滑块）
 
 `Slider` 由一个条和一个手柄组成，用来从一个取值范围中选择单个值。
@@ -810,7 +810,7 @@ cargo run --package sierpinski_triangle
 cargo run --package slider
 ```
 
-@@@ examples/solar_system/README.md
+@@@ examples/solar_system/README.md 81ffd3a5ca61
 ## Solar system（太阳系）
 
 一个用 `Canvas` 部件绘制的动画太阳系，展示如何组合不同的变换。
@@ -826,7 +826,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package solar_system
 ```
 
-@@@ examples/stopwatch/README.md
+@@@ examples/stopwatch/README.md 1cf370bdf886
 ## Stopwatch（秒表）
 
 一个带有开始/停止和重置按钮的秒表，展示如何监听时间。
@@ -842,7 +842,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package stopwatch
 ```
 
-@@@ examples/styling/README.md
+@@@ examples/styling/README.md fd12300d32cb
 # Styling（样式）
 一个展示自定义样式的示例，带有亮色和暗色主题。
 
@@ -857,7 +857,7 @@ cargo run --package stopwatch
 cargo run --package styling
 ```
 
-@@@ examples/svg/README.md
+@@@ examples/svg/README.md 9f53c1774c83
 ## SVG
 
 一个利用 `Svg` 部件渲染 [Ghostscript Tiger] 的应用程序。
@@ -873,7 +873,7 @@ __[`main`]__ 文件包含了这个示例的全部代码。
 cargo run --package svg
 ```
 
-@@@ examples/todos/README.md
+@@@ examples/todos/README.md 2a3a35d4d153
 ## Todos（待办事项）
 
 一个受 [TodoMVC] 启发的待办事项管理器。它展示了动态布局、文本输入、复选框、可滚动区域、图标和异步操作！它会在后台自动保存你的任务，即使你还没有输入完。
@@ -898,7 +898,7 @@ cd examples/todos
 trunk serve
 ```
 
-@@@ examples/tour/README.md
+@@@ examples/tour/README.md 2d64dbc7dc43
 ## Tour（导览）
 
 一个简单的 UI 导览，既可以在原生平台上运行，也可以在 Web 上运行！它展示了可以用 Iced 构建的各种部件。
@@ -923,7 +923,7 @@ cd examples/tour
 trunk serve
 ```
 
-@@@ examples/websocket/README.md
+@@@ examples/websocket/README.md 16e983daf34a
 ## Websocket
 
 一个简单的示例，它与一个回显服务器保持 WebSocket 连接。

@@ -24,8 +24,8 @@ use crate::{Pixels, Size};
 /// ```
 /// # use iced_core::Padding;
 /// #
-/// let padding = Padding::from(20);              // 20px on all sides
-/// let padding = Padding::from([10, 20]);        // top/bottom, left/right
+/// let padding = Padding::from(20);              // 20px on all sides（四边各 20px）
+/// let padding = Padding::from([10, 20]);        // top/bottom, left/right（上下、左右）
 /// ```
 ///
 /// 通常，部件的 `padding` 方法会要求一个 `Into<Padding>`，
@@ -53,8 +53,8 @@ use crate::{Pixels, Size};
 ///     }
 /// }
 ///
-/// let widget = Widget::new().padding(20);              // 20px on all sides
-/// let widget = Widget::new().padding([10, 20]);        // top/bottom, left/right
+/// let widget = Widget::new().padding(20);              // 20px on all sides（四边各 20px）
+/// let widget = Widget::new().padding([10, 20]);        // top/bottom, left/right（上下、左右）
 /// ```
 #[derive(Debug, Copy, Clone, PartialEq, Default)]
 pub struct Padding {
